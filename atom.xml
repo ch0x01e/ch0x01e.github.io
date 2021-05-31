@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>http://example.com</id>
+    <title>ch1e&#39;s Blog</title>
+    <link href="http://example.com" />
+    <updated>2021-05-31T11:54:11.377Z</updated>
+    <entry>
+        <id>http://example.com/2021/05/31/introduce/</id>
+        <title>ch1e的自述</title>
+        <link rel="alternate" href="http://example.com/2021/05/31/introduce/"/>
+        <content type="html">&lt;h1 id=&#34;自我介绍&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#自我介绍&#34;&gt;#&lt;/a&gt; 自我介绍&lt;/h1&gt;
+&lt;p&gt;我是一个普通本科院校的大一学生，计算机科学与技术专业，对信息安全接触时间不到一年，从小就想当一名&lt;ruby&gt;牛逼哄哄&lt;rp&gt;【&lt;/rp&gt;&lt;rt&gt;shayebuhui&lt;/rt&gt;&lt;rp&gt;】&lt;/rp&gt;&lt;/ruby&gt;的白帽黑客，这个愿望也在大一得到了实现，我加入了学校的信息安全协会，成为了一名啥也不是的小弟，在这看到了各种大佬。我目前正在学习信息安全中的 Web 方向，对网站二次开发，PHP，Html，Css，C++ 以及 C 都有所涉猎，未来会继续朝着这个方向努力，并且扩大我的学习领域，目标是成为俺 SSN 大哥那样的全栈爷。&lt;/p&gt;
+</content>
+        <updated>2021-05-31T11:54:11.377Z</updated>
+    </entry>
+    <entry>
+        <id>http://example.com/2021/05/31/jihua/</id>
+        <title>ch1e的个人学习计划</title>
+        <link rel="alternate" href="http://example.com/2021/05/31/jihua/"/>
+        <content type="html">&lt;div class=&#34;note info&#34;&gt;
+&lt;p&gt;😘这里是 ch1e 在 2021 年的个人学习计划表&lt;/p&gt;
+&lt;/div&gt;
+&lt;ul class=&#34;task-list&#34;&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_0&#34; checked=&#34;true&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_0&#34;&gt; 自学 html+js&lt;/label&gt;&lt;/li&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_1&#34; checked=&#34;true&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_1&#34;&gt; 自学 PHP&lt;/label&gt;&lt;/li&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_2&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_2&#34;&gt; 自学计算机网络&lt;/label&gt;&lt;/li&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_3&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_3&#34;&gt; 看完《逆向工程权威指南》&lt;/label&gt;&lt;/li&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_4&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_4&#34;&gt; 看完《汇编语言》&lt;/label&gt;&lt;/li&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_5&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_5&#34;&gt; 学习 Python&lt;/label&gt;&lt;/li&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_6&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_6&#34;&gt; 挖掘 Edusrc&lt;/label&gt;&lt;/li&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_7&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_7&#34;&gt; 学习自己编写 Poc 以及 Exp&lt;/label&gt;&lt;/li&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_8&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_8&#34;&gt; 二次开发一套 CMS 的模板&lt;/label&gt;&lt;/li&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_9&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_9&#34;&gt; 学习 Mysql 数据库&lt;/label&gt;&lt;/li&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_10&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_10&#34;&gt; 学习内网渗透&lt;/label&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;note success&#34;&gt;
+&lt;p&gt;😘这里是 ch1e 在 2021 年的日常计划表&lt;/p&gt;
+&lt;/div&gt;
+&lt;ul class=&#34;task-list&#34;&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_11&#34; checked=&#34;true&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_11&#34;&gt; 每日坚持锻炼&lt;/label&gt;&lt;/li&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_12&#34; checked=&#34;true&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_12&#34;&gt; 每日坚持护肤&lt;/label&gt;&lt;/li&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_13&#34; checked=&#34;true&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_13&#34;&gt; 每日坚持早睡&lt;/label&gt;&lt;/li&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_14&#34; checked=&#34;true&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_14&#34;&gt; 每日坚持吃饭&lt;/label&gt;&lt;/li&gt;
+&lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_15&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_15&#34;&gt; 每日坚持吃水果&lt;/label&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+        <updated>2021-05-31T11:54:11.377Z</updated>
+    </entry>
+</feed>
