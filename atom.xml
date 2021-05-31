@@ -4,6 +4,16 @@
     <title>ch1e&#39;s Blog</title>
     <link href="http://example.com" />
     <updated>2021-05-31T13:08:25.548Z</updated>
+    <category term="web安全" />
+    <category term="misc" />
+    <category term="渗透测试" />
+    <category term="内网渗透" />
+    <category term="pwn" />
+    <category term="reverse" />
+    <category term="web开发" />
+    <category term="数据库" />
+    <category term="src挖掘" />
+    <category term="密码学" />
     <entry>
         <id>http://example.com/2021/05/31/01-VS%20Code%E7%9A%84%E4%BD%BF%E7%94%A8/</id>
         <title>VS Code的使用</title>
@@ -1089,5 +1099,22 @@
 &lt;/ul&gt;
 </content>
         <updated>2021-05-31T11:54:11.377Z</updated>
+    </entry>
+    <entry>
+        <id>http://example.com/2013/12/24/tags/</id>
+        <title>Tags</title>
+        <link rel="alternate" href="http://example.com/2013/12/24/tags/"/>
+        <content type="html"></content>
+        <category term="web安全" />
+        <category term="misc" />
+        <category term="渗透测试" />
+        <category term="内网渗透" />
+        <category term="pwn" />
+        <category term="reverse" />
+        <category term="web开发" />
+        <category term="数据库" />
+        <category term="src挖掘" />
+        <category term="密码学" />
+        <updated>2013-12-24T15:29:53.000Z</updated>
     </entry>
 </feed>

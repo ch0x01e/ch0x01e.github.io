@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+        <title>ch1e&#39;s Blog • Posts by &#34;misc&#34; tag</title>
+        <link>http://example.com</link>
+        <description></description>
+        <language>zh-CN</language>
+        <pubDate>Tue, 24 Dec 2013 23:29:53 +0800</pubDate>
+        <lastBuildDate>Tue, 24 Dec 2013 23:29:53 +0800</lastBuildDate>
+        <category>web安全</category>
+        <category>misc</category>
+        <category>渗透测试</category>
+        <category>内网渗透</category>
+        <category>pwn</category>
+        <category>reverse</category>
+        <category>web开发</category>
+        <category>数据库</category>
+        <category>src挖掘</category>
+        <category>密码学</category>
+        <item>
+            <guid isPermalink="true">http://example.com/2013/12/24/tags/</guid>
+            <title>Tags</title>
+            <link>http://example.com/2013/12/24/tags/</link>
+            <category>web安全</category>
+            <category>misc</category>
+            <category>渗透测试</category>
+            <category>内网渗透</category>
+            <category>pwn</category>
+            <category>reverse</category>
+            <category>web开发</category>
+            <category>数据库</category>
+            <category>src挖掘</category>
+            <category>密码学</category>
+            <pubDate>Tue, 24 Dec 2013 23:29:53 +0800</pubDate>
+            <description><![CDATA[  ]]></description>
+        </item>
+    </channel>
+</rss>

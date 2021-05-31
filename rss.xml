@@ -7,6 +7,16 @@
         <language>zh-CN</language>
         <pubDate>Mon, 31 May 2021 21:08:25 +0800</pubDate>
         <lastBuildDate>Mon, 31 May 2021 21:08:25 +0800</lastBuildDate>
+        <category>web安全</category>
+        <category>misc</category>
+        <category>渗透测试</category>
+        <category>内网渗透</category>
+        <category>pwn</category>
+        <category>reverse</category>
+        <category>web开发</category>
+        <category>数据库</category>
+        <category>src挖掘</category>
+        <category>密码学</category>
         <item>
             <guid isPermalink="true">http://example.com/2021/05/31/01-VS%20Code%E7%9A%84%E4%BD%BF%E7%94%A8/</guid>
             <title>VS Code的使用</title>
@@ -1092,6 +1102,23 @@
 &lt;li class=&#34;task-list-item&#34;&gt;&lt;input type=&#34;checkbox&#34; id=&#34;cbx_15&#34; disabled=&#34;true&#34;&gt;&lt;label for=&#34;cbx_15&#34;&gt; 每日坚持吃水果&lt;/label&gt;&lt;/li&gt;
 &lt;/ul&gt;
  ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">http://example.com/2013/12/24/tags/</guid>
+            <title>Tags</title>
+            <link>http://example.com/2013/12/24/tags/</link>
+            <category>web安全</category>
+            <category>misc</category>
+            <category>渗透测试</category>
+            <category>内网渗透</category>
+            <category>pwn</category>
+            <category>reverse</category>
+            <category>web开发</category>
+            <category>数据库</category>
+            <category>src挖掘</category>
+            <category>密码学</category>
+            <pubDate>Tue, 24 Dec 2013 23:29:53 +0800</pubDate>
+            <description><![CDATA[  ]]></description>
         </item>
     </channel>
 </rss>
