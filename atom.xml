@@ -22,10 +22,6 @@
 &lt;p&gt;前端开发的编辑器软件，我首先推荐 VS Code，其次推荐 Sublime Text。&lt;/p&gt;
 &lt;p&gt;有人说 WebStorm 也不错？但真实情况是，自从 VS Code 问世之后，用 WebStorm 的人越来越少了。&lt;/p&gt;
 &lt;p&gt;PS：文件的后缀名不能决定文件格式，只能决定打开文件打开的方式。&lt;/p&gt;
-&lt;h3 id=&#34;vs-code-的使用&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#vs-code-的使用&#34;&gt;#&lt;/a&gt; VS Code 的使用&lt;/h3&gt;
-&lt;p&gt;详情请移步至：&lt;a href=&#34;/00-%E5%89%8D%E7%AB%AF%E5%B7%A5%E5%85%B7/01-VS%20Code%E7%9A%84%E4%BD%BF%E7%94%A8.md&#34;&gt;第一次使用 VS Code 时你应该知道的一切配置&lt;/a&gt;&lt;/p&gt;
-&lt;h3 id=&#34;sublime-text-的使用&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#sublime-text-的使用&#34;&gt;#&lt;/a&gt; Sublime Text 的使用&lt;/h3&gt;
-&lt;p&gt;详情请移步至：&lt;a href=&#34;/00-%E5%89%8D%E7%AB%AF%E5%B7%A5%E5%85%B7/04-Sublime%20Text%E5%9C%A8%E5%89%8D%E7%AB%AF%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8.md&#34;&gt;Sublime Text 使用技巧&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;html的概述&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#html的概述&#34;&gt;#&lt;/a&gt; HTML 的概述&lt;/h2&gt;
 &lt;h3 id=&#34;html的概念&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#html的概念&#34;&gt;#&lt;/a&gt; HTML 的概念&lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;HTML&lt;/strong&gt; 全称为 HyperText Markup Language，译为&lt;font color=#0000ff&gt;&lt;strong&gt;超文本标记语言&lt;/strong&gt;&lt;/font&gt;。&lt;/p&gt;
@@ -405,13 +401,12 @@ XHTML 是&lt;font color=&#34;blue&#34;&gt;&lt;strong&gt;严格的、纯净的&lt
 &lt;li&gt;&lt;code&gt;Hspace&lt;/code&gt; （已废弃）：指图片左右的边距。&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;Vspace&lt;/code&gt; （已废弃）：指图片上下的边距。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;最后，送上妹子的近照一张。楼主已经仁至义尽了：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL2ltZy5zbXlodmFlLmNvbS8yMDE1LTEwLTAxLWNuYmxvZ3NfaHRtbF8yMDE1MDIxOTIxNDkxMl8xMTk5NC5qcGc=&#34;&gt;http://img.smyhvae.com/2015-10-01-cnblogs_html_20150219214912_11994.jpg&lt;/span&gt;&lt;/p&gt;
 </content>
         <updated>2021-06-02T12:44:50.207Z</updated>
     </entry>
     <entry>
         <id>http://example.com/2021/06/02/05-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%AD%97%E4%BD%93%E6%A0%87%E7%AD%BE%E5%92%8C%E8%B6%85%E9%93%BE%E6%8E%A5/</id>
-        <title></title>
+        <title>HTML标签：字体标签和超链接</title>
         <link rel="alternate" href="http://example.com/2021/06/02/05-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%AD%97%E4%BD%93%E6%A0%87%E7%AD%BE%E5%92%8C%E8%B6%85%E9%93%BE%E6%8E%A5/"/>
         <content type="html">&lt;h2 id=&#34;本文主要内容&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#本文主要内容&#34;&gt;#&lt;/a&gt; 本文主要内容&lt;/h2&gt;
 &lt;p&gt;字体标签：  &lt;code&gt;&amp;lt;font&amp;gt;&lt;/code&gt; 、  &lt;code&gt;&amp;lt;b&amp;gt;&lt;/code&gt; 、  &lt;code&gt;&amp;lt;u&amp;gt;&lt;/code&gt;  、 &lt;code&gt;&amp;lt;sup&amp;gt;&lt;/code&gt;  、 &lt;code&gt;&amp;lt;sub&amp;gt;&lt;/code&gt;&lt;/p&gt;
