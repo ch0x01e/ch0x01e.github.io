@@ -14,6 +14,7 @@
     <category term="reverse" />
     <category term="src挖掘" />
     <category term="密码学" />
+    <category term="网络协议" />
     <entry>
         <id>http://example.com/2021/06/07/sql%E6%B3%A8%E5%85%A5/</id>
         <title>SQL注入笔记</title>
