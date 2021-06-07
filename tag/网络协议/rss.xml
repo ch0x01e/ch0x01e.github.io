@@ -37,11 +37,7 @@
 &lt;p&gt;为什么连接是 3 次握手，关闭是 4 次挥手？&lt;/p&gt;
 &lt;p&gt;7 层模型与 4 层模型的区别？每一层的作用是什么？&lt;/p&gt;
 &lt;p&gt;交换机与路由器的区别？&lt;/p&gt;
-&lt;p&gt;跨平台的原理（Java、C++）&lt;/p&gt;
-&lt;p&gt;Java 跨平台的原理：&lt;br&gt;
-&lt;img data-src=&#34;image/a3607e27beac4f7ae117b3f32b9251ef.png&#34; alt=&#34;a3607e27beac4f7ae117b3f32b9251ef.png&#34;&gt;&lt;/p&gt;
-&lt;p&gt;解释型语言跨平台的原理与 Java 类似：例如 JavaScript，甚至不需要经过编译，有浏览器即可解析。&lt;/p&gt;
-&lt;hr&gt;
+&lt;h2 id=&#34;跨平台的原理c&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#跨平台的原理c&#34;&gt;#&lt;/a&gt; 跨平台的原理（C++）&lt;/h2&gt;
 &lt;p&gt;C++ 跨平台的原理：使用平台相关的编译器生成对应平台的可执行文件&lt;br&gt;
 &lt;img data-src=&#34;https://i.loli.net/2021/06/07/DNjezCU3lvyRuOi.png&#34; alt=&#34;5f3f40f5b85d85ead8d793614c789b7c.png&#34;&gt;&lt;/p&gt;
 &lt;h1 id=&#34;网络互连模型osi参考模型&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#网络互连模型osi参考模型&#34;&gt;#&lt;/a&gt; 网络互连模型（OSI 参考模型）&lt;/h1&gt;
@@ -291,6 +287,24 @@
 &lt;p&gt;根据 200 判断出这是个 C 类网络，默认子网掩码 24 位&lt;/p&gt;
 &lt;p&gt;由于该网段子网掩码 16 位，比默认少，所以是超网&lt;/p&gt;
  ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">http://example.com/2013/12/24/tags/</guid>
+            <title>Tags</title>
+            <link>http://example.com/2013/12/24/tags/</link>
+            <category>web开发</category>
+            <category>数据库</category>
+            <category>web安全</category>
+            <category>misc</category>
+            <category>渗透测试</category>
+            <category>内网渗透</category>
+            <category>pwn</category>
+            <category>reverse</category>
+            <category>src挖掘</category>
+            <category>密码学</category>
+            <category>网络协议</category>
+            <pubDate>Tue, 24 Dec 2013 23:29:53 +0800</pubDate>
+            <description><![CDATA[  ]]></description>
         </item>
     </channel>
 </rss>
