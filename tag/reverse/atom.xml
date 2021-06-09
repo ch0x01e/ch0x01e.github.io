@@ -5,6 +5,7 @@
     <link href="http://example.com" />
     <updated>2013-12-24T15:29:53.000Z</updated>
     <category term="web开发" />
+    <category term="网络协议" />
     <category term="数据库" />
     <category term="web安全" />
     <category term="misc" />
@@ -14,13 +15,13 @@
     <category term="reverse" />
     <category term="src挖掘" />
     <category term="密码学" />
-    <category term="网络协议" />
     <entry>
         <id>http://example.com/2013/12/24/tags/</id>
         <title>Tags</title>
         <link rel="alternate" href="http://example.com/2013/12/24/tags/"/>
         <content type="html"></content>
         <category term="web开发" />
+        <category term="网络协议" />
         <category term="数据库" />
         <category term="web安全" />
         <category term="misc" />
@@ -30,7 +31,6 @@
         <category term="reverse" />
         <category term="src挖掘" />
         <category term="密码学" />
-        <category term="网络协议" />
         <updated>2013-12-24T15:29:53.000Z</updated>
     </entry>
 </feed>
