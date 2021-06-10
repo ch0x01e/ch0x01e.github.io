@@ -8,24 +8,68 @@
         <pubDate>Tue, 08 Jun 2021 17:58:48 +0800</pubDate>
         <lastBuildDate>Tue, 08 Jun 2021 17:58:48 +0800</lastBuildDate>
         <category>web开发</category>
-        <category>网络协议</category>
         <category>数据库</category>
         <category>web安全</category>
-        <category>misc</category>
-        <category>渗透测试</category>
-        <category>内网渗透</category>
-        <category>pwn</category>
-        <category>reverse</category>
-        <category>src挖掘</category>
-        <category>密码学</category>
+        <category>网络协议</category>
         <item>
-            <guid isPermalink="true">http://example.com/2021/06/08/MAC%E5%9C%B0%E5%9D%80-IP%E5%9C%B0%E5%9D%80-%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81/</guid>
-            <title>MAC地址~IP地址~子网掩码</title>
-            <link>http://example.com/2021/06/08/MAC%E5%9C%B0%E5%9D%80-IP%E5%9C%B0%E5%9D%80-%E5%AD%90%E7%BD%91%E6%8E%A9%E7%A0%81/</link>
+            <guid isPermalink="true">http://example.com/2021/06/08/wangluoxieyi/</guid>
+            <title>网络协议学习笔记</title>
+            <link>http://example.com/2021/06/08/wangluoxieyi/</link>
             <category>网络协议</category>
             <pubDate>Tue, 08 Jun 2021 17:58:48 +0800</pubDate>
-            <description><![CDATA[ &lt;h1 id=&#34;mac地址ip地址子网掩码&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#mac地址ip地址子网掩码&#34;&gt;#&lt;/a&gt; MAC 地址&lt;sub&gt; IP 地址&lt;/sub&gt;子网掩码&lt;/h1&gt;
-&lt;h2 id=&#34;计算器之间的连接方式-路由器router&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#计算器之间的连接方式-路由器router&#34;&gt;#&lt;/a&gt; &lt;strong&gt;计算器之间的连接方式 - 路由器（Router）&lt;/strong&gt;&lt;/h2&gt;
+            <description><![CDATA[ &lt;h1 id=&#34;为什么要学习网络协议&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#为什么要学习网络协议&#34;&gt;#&lt;/a&gt; 为什么要学习网络协议&lt;/h1&gt;
+&lt;p&gt;互联网、移动互联网、物联网，都离不开网络协议：&lt;/p&gt;
+&lt;p&gt;最熟悉的网络协议：HTTP&lt;/p&gt;
+&lt;p&gt;为了满足各种需求，有各式各样的网络协议（HTTPS、SMTP、MQTT、RTMP 等）&lt;/p&gt;
+&lt;p&gt;网络协议方面的面试题目近年来要求提高了：&lt;/p&gt;
+&lt;p&gt;TCP 和 UDP 的区别？说一下它们的报文格式？&lt;/p&gt;
+&lt;p&gt;TCP 的流量控制和和拥塞控制？TCP 如何实现可靠性传输？&lt;/p&gt;
+&lt;p&gt;为什么连接是 3 次握手，关闭是 4 次挥手？&lt;/p&gt;
+&lt;p&gt;7 层模型与 4 层模型的区别？每一层的作用是什么？&lt;/p&gt;
+&lt;p&gt;交换机与路由器的区别？&lt;/p&gt;
+&lt;h2 id=&#34;跨平台的原理c&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#跨平台的原理c&#34;&gt;#&lt;/a&gt; 跨平台的原理（C++）&lt;/h2&gt;
+&lt;p&gt;C++ 跨平台的原理：使用平台相关的编译器生成对应平台的可执行文件&lt;br&gt;
+&lt;img src=&#34;https://i.loli.net/2021/06/07/DNjezCU3lvyRuOi.png&#34; alt=&#34;5f3f40f5b85d85ead8d793614c789b7c.png&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;网络互连模型osi参考模型&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#网络互连模型osi参考模型&#34;&gt;#&lt;/a&gt; 网络互连模型（OSI 参考模型）&lt;/h1&gt;
+&lt;p&gt;什么是协议？为什么要有协议？&lt;/p&gt;
+&lt;p&gt;协议就是通用的标准。&lt;/p&gt;
+&lt;p&gt;如果没有一个国际通用的标准，那么各大公司按照自己的标准来，相互之间的交互就会很麻烦。比如我编写的代码在微软的服务器可以运行，但是要在苹果的服务器运行又需要重新编写…&lt;/p&gt;
+&lt;p&gt;为了更好地促进互联网络的研究和发展，国际标准化组织 ISO 在 1985 年制定了网络互连模型 OSI 参考模型 (Open System Interconnect Reference Model)，具有 7 层结构。&lt;/p&gt;
+&lt;p&gt;实际上 OSI 参考模型 (7 层) 更偏理论，而 TCP/IP 协议 (4 层) 在才是在实际中使用的协议，而为了研究和学习计算机网络，又常将之划分为 5 层。&lt;br&gt;
+&lt;img src=&#34;https://i.loli.net/2021/06/07/eA8hKwMJmxYRDS6.png&#34; alt=&#34;514d29d6d5f1df79e4b884c1a23a6175.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;请求过程：不管什么协议都是经过下列的包装 + 解包的过程。&lt;br&gt;
+&lt;img src=&#34;https://i.loli.net/2021/06/07/MnCPGleIfmTS2Ho.png&#34; alt=&#34;0aa3a16fcde263c90c45128f4a91de9d.png&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;计算机之间的通信基础&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#计算机之间的通信基础&#34;&gt;#&lt;/a&gt; 计算机之间的通信基础&lt;/h1&gt;
+&lt;p&gt;1、需要得知对方的 IP 地址&lt;/p&gt;
+&lt;p&gt;2、最终是根据 MAC 地址（网卡地址），输送数据到网卡，被网卡接收&lt;/p&gt;
+&lt;p&gt;如果网卡发现数据的目标 MAC 地址是自己，就会将数据传递给上一层进行处理&lt;/p&gt;
+&lt;p&gt;如果网卡发现数据的目标 MAC 地址不是自己，就会将数据丢弃，不会传递给上一层&lt;/p&gt;
+&lt;h2 id=&#34;计算机之间的连接方式&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#计算机之间的连接方式&#34;&gt;#&lt;/a&gt; 计算机之间的连接方式&lt;/h2&gt;
+&lt;h2 id=&#34;网线直连&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#网线直连&#34;&gt;#&lt;/a&gt; 网线直连&lt;/h2&gt;
+&lt;p&gt;需要用交叉线（不是直通线）&lt;br&gt;
+&lt;img src=&#34;https://i.loli.net/2021/06/07/mcnhVLQsUq7veZf.png&#34; alt=&#34;144c54767f7626e299598cd495a73622.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;拓展：由此图可以看出 ping 走的是 ICMP 协议。&lt;/p&gt;
+&lt;p&gt;ARP 协议的作用：已知 IP 地址，通过广播获取 MAC 地址。&lt;/p&gt;
+&lt;p&gt;为什么右边出现 3 个 ARP 包，实际上是一次完整的发送请求，接收响应的过程。&lt;br&gt;
+&lt;img src=&#34;https://i.loli.net/2021/06/07/c6LprotnIDY92wl.png&#34; alt=&#34;6d15767ef538c59c42f7fa3063965d7e.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://i.loli.net/2021/06/07/YSuCihqZK8gTt1v.png&#34; alt=&#34;364fb1532ac77173b689582c15efdb46.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;拓展：MAC 地址为全 F 即全 1，代表广播，所有机器都可以接收。&lt;/p&gt;
+&lt;h2 id=&#34;同轴电缆coaxial&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#同轴电缆coaxial&#34;&gt;#&lt;/a&gt; 同轴电缆 (Coaxial)&lt;/h2&gt;
+&lt;p&gt;注意：同轴电缆只要有一个地方线断了，整个线路都瘫痪了。&lt;/p&gt;
+&lt;h2 id=&#34;集线器hub&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#集线器hub&#34;&gt;#&lt;/a&gt; 集线器 (Hub)&lt;/h2&gt;
+&lt;p&gt;集线器相比同轴电缆唯一的优点就是：哪怕连着集线器的某一个设备中间线路出问题，不会影响到连着集线器的其他设备。&lt;/p&gt;
+&lt;h2 id=&#34;4网桥bridge&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#4网桥bridge&#34;&gt;#&lt;/a&gt; 4. 网桥（Bridge）&lt;/h2&gt;
+&lt;p&gt;所谓隔绝冲突域是通过：记录设备的 MAC 地址在左还是在右。&lt;/p&gt;
+&lt;p&gt;例如，6 向 7 发数据包，&lt;/p&gt;
+&lt;p&gt;当 6 发出请求 ARP 广播时，网桥会记录 6 的 MAC 地址在左；&lt;/p&gt;
+&lt;p&gt;当 7 发出响应 ARP 广播时，网桥会记录 7 的 MAC 地址在左。&lt;/p&gt;
+&lt;h2 id=&#34;交换机switch&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#交换机switch&#34;&gt;#&lt;/a&gt; 交换机（Switch）&lt;/h2&gt;
+&lt;p&gt;有记忆功能，可以记住发过的。连接的设备必须在同一网段、同一广播域。&lt;/p&gt;
+&lt;p&gt;若全球所有设备都用交换机连接：&lt;/p&gt;
+&lt;p&gt;1、他们必然处于同一网段，因此 IP 地址可能会不够用&lt;/p&gt;
+&lt;p&gt;2、即使使用交换机，第一次发送数据包仍然需要 ARP 广播，耗费大量时间。&lt;/p&gt;
+&lt;p&gt;3、形成广播风暴，只要有一个设备发送 ARP 广播，全球设备都能收到&lt;/p&gt;
+&lt;h2 id=&#34;路由器router&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#路由器router&#34;&gt;#&lt;/a&gt; 路由器（Router)&lt;/h2&gt;
 &lt;p&gt;网线直连，同轴电缆，集线器，网桥，交换机&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;连接的设备必须在同一个网段&lt;/li&gt;
@@ -42,9 +86,9 @@
 &lt;p&gt;&lt;strong&gt;计算机 2 发送信息给计算机 5，需要经过网关，需要输入默认网关，如果不设置网关会跨不了网段&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;此时计算机 2 给计算机 5 发送信息还得需要知道网关的 MAC 地址，所以第一次发送的信息的时候会发送一次 ARP 广播来获取网关的 MAC 地址&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;此外，Fa1 口还需要知道计算机 5 的 MAC 地址，所以还需要再进行一次 ARP 广播&lt;/strong&gt;&lt;br&gt;
-&lt;a href=&#34;https://imgtu.com/i/2cthsf&#34;&gt;&lt;img data-src=&#34;https://z3.ax1x.com/2021/06/09/2cthsf.png&#34; alt=&#34;2cthsf.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&#34;https://imgtu.com/i/2cthsf&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/09/2cthsf.png&#34; alt=&#34;2cthsf.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;路由器左右两端必须不同网段，如果下图右边计算机 1 为 192.168.1.11，发送信息的时候会发现是在同一网段，会直接发送寻找计算机 1MAC 地址的 ARP 广播，而不是去寻找路由器 Fa0/0 端口的 MAC 地址&lt;br&gt;
-&lt;a href=&#34;https://imgtu.com/i/2ctfQP&#34;&gt;&lt;img data-src=&#34;https://z3.ax1x.com/2021/06/09/2ctfQP.png&#34; alt=&#34;2ctfQP.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&#34;https://imgtu.com/i/2ctfQP&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/09/2ctfQP.png&#34; alt=&#34;2ctfQP.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;mac地址&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#mac地址&#34;&gt;#&lt;/a&gt; &lt;strong&gt;MAC 地址&lt;/strong&gt;&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;每个网卡都有一个 6 字节（48bit）的 MAC 地址由组织唯一标识符和网络接口标识符&lt;/li&gt;
@@ -67,7 +111,7 @@
 &lt;p&gt;IP 地址：互联网上的每一个主机都有一个 IP 地址&lt;/p&gt;
 &lt;p&gt;最初是 IPv4 版本，32bit（4 字节），2019.11.25，全球的 IP 地址已经用完&lt;/p&gt;
 &lt;p&gt;后面退出了 IPv6 版本，128bit (16 字节)&lt;br&gt;
-&lt;a href=&#34;https://imgtu.com/i/2ct4L8&#34;&gt;&lt;img data-src=&#34;https://z3.ax1x.com/2021/06/09/2ct4L8.png&#34; alt=&#34;2ct4L8.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&#34;https://imgtu.com/i/2ct4L8&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/09/2ct4L8.png&#34; alt=&#34;2ct4L8.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;ip地址的组成&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#ip地址的组成&#34;&gt;#&lt;/a&gt; IP 地址的组成&lt;/h2&gt;
 &lt;p&gt;IP 地址由两部分组成：网络标识 (网络 ID)，主机标识（主机 ID）&lt;/p&gt;
 &lt;p&gt;同一网段的计算机，网络 ID 相同&lt;/p&gt;
@@ -122,302 +166,55 @@
 &lt;p&gt;等长子网划分：一个网段分成多个子网，每个子网的可用 IP 地址数量是一样的&lt;/p&gt;
 &lt;p&gt;变长子网划分：每个子网的可用 ip 地址数可用是不一样的&lt;/p&gt;
 &lt;p&gt;例如 191.100.0.0/16 划分成好几个相同的子网段&lt;br&gt;
-&lt;a href=&#34;https://imgtu.com/i/2ctIeS&#34;&gt;&lt;img data-src=&#34;https://z3.ax1x.com/2021/06/09/2ctIeS.png&#34; alt=&#34;2ctIeS.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&#34;https://imgtu.com/i/2ctIeS&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/09/2ctIeS.png&#34; alt=&#34;2ctIeS.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;如上图，子网掩码从 24 个 1 变成 25 个 1   本来有一个 C 类网段，192.168.0.0/24  这时候网络 ID 变成了 25 位，主机位是 7 位&lt;/p&gt;
 &lt;p&gt;这样就产生出了两个新的子网段，192.168.0.0/25  和 192.168.0.128/25&lt;/p&gt;
 &lt;p&gt;A 子网：192.168.0.0/25 子网掩码：255.255.255.128&lt;/p&gt;
 &lt;p&gt;192.168.0.1-192.168.0.126&lt;/p&gt;
 &lt;p&gt;B 子网：192.168.0.128/25 子网掩码：255.255.255.128&lt;/p&gt;
 &lt;p&gt;192.168.0.129-192.168.0.254&lt;/p&gt;
+&lt;h1 id=&#34;超网静态路由&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#超网静态路由&#34;&gt;#&lt;/a&gt; &lt;strong&gt;超网 &amp;amp; 静态路由&lt;/strong&gt;&lt;/h1&gt;
+&lt;p&gt;Q：192.168.0.10/24 和 192.168.10.10/16 两台设备之间连接能正常通信吗&lt;/p&gt;
+&lt;p&gt;A：网段不同，前者是 192.168.0.0 后者是 192.168.10.0，不能正常通信&lt;br&gt;
+&lt;a href=&#34;https://imgtu.com/i/2gLXbn&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/10/2gLXbn.png&#34; alt=&#34;2gLXbn.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;计算机 0 和计算机 1 通信时，计算机 0 只知道计算机 1 的 ip 地址，不知道计算机 1 的子网掩码，所以计算机 0 如果要发消息给计算机 1 时，是使用计算机 0 的子网掩码和计算机 1 的 IP 进行按位与操作&lt;/p&gt;
+&lt;p&gt;通信需要双方都可以给对方发消息，虽然计算机 1 可以给计算机 0 发消息，但是计算机 0 没法给计算机 1 发消息&lt;/p&gt;
+&lt;h2 id=&#34;超网&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#超网&#34;&gt;#&lt;/a&gt; &lt;strong&gt;超网&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;超网：跟子网反过来，他是将多个连续的网段合并成一个更大的网段&lt;/p&gt;
+&lt;p&gt;需求：原本 200 台计算机使用 192.168.0.0/24 网段，现在希望增加 200 台设备到同一个网段&lt;/p&gt;
+&lt;p&gt;合并网段的条件：必须是连续的，比如 192.168.0.0 和 192.168.1.0 反之，192.168.0.0 和 192.168.2.0 不能合并&lt;/p&gt;
+&lt;p&gt;Q：192.168.1.0 和 192.168.2.0 可以通过向左移动 1 位子网掩码进行合并吗？&lt;/p&gt;
+&lt;p&gt;A：不可以，合并网段有一个规律&lt;br&gt;
+&lt;a href=&#34;https://imgtu.com/i/2gLxU0&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/10/2gLxU0.png&#34; alt=&#34;2gLxU0.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;规律如果第一个网段的网络号能被n整除那么由他开始连续的n个网段能通过左移k位子网掩码进行合并&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#规律如果第一个网段的网络号能被n整除那么由他开始连续的n个网段能通过左移k位子网掩码进行合并&#34;&gt;#&lt;/a&gt; 规律：如果第一个网段的网络号能被 n 整除，那么由他开始连续的 n 个网段，能通过左移 k 位子网掩码进行合并&lt;/h3&gt;
+&lt;p&gt;比如第一个网段的网络号以二进制 00 结尾，那么由他开始的连续四个网段，可以通过左移 2 位子网掩码进行合并&lt;/p&gt;
+&lt;h3 id=&#34;合并两个网段&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#合并两个网段&#34;&gt;#&lt;/a&gt; &lt;strong&gt;合并两个网段&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;例如 200 台在 192.168.0.0/24 网段，200 台在 192.168.1.0/24   合并 192.168.0.0/24，和 192.168.1.0/24 为一个网段 ：192.168.0.0/23（子网掩码向左移动一位）&lt;br&gt;
+&lt;a href=&#34;https://imgtu.com/i/2gLvEq&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/10/2gLvEq.png&#34; alt=&#34;2gLvEq.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;子网掩码往右是划分子网，往左是划分超网，大概都是两倍的关系&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;思考：192.168.0.255/23 这个 IP 地址可以给计算机使用吗&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;解：子网掩码 23 位，主机位有 9 位，如果只是 255，不是全为 1，而是 011111111&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;意味着这不是广播地址，如果是 192.168.1.255/23 这个 IP 则不能给计算机使用，这个是当前网段的广播 IP 地址&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;合并4个网段&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#合并4个网段&#34;&gt;#&lt;/a&gt; &lt;strong&gt;合并 4 个网段&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/2gLLuj&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/10/2gLLuj.png&#34; alt=&#34;2gLLuj.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;将 192.168.0.0/24 192.168.0.1/24 192.168.0.2/24 192.168.0.3/24 合并为 192.168.0.0/22 网段&lt;/p&gt;
+&lt;h1 id=&#34;判断一个网段是子网还是超网&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#判断一个网段是子网还是超网&#34;&gt;#&lt;/a&gt; &lt;strong&gt;判断一个网段是子网还是超网&lt;/strong&gt;&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;首先判断网段的类型，是 A 类还是 B 类还是 C 类&lt;/li&gt;
+&lt;li&gt;看子网掩码是在默认之网掩码变多还是变少&lt;/li&gt;
+&lt;li&gt;比如 c 类网段，子网掩码默认 24 位，如果子网掩码小于 24，则是超网，大于 24 是子网&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id=&#34;路由&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#路由&#34;&gt;#&lt;/a&gt; 路由&lt;/h1&gt;
+&lt;p&gt;在不同网段之间转发数据需要路由器支持&lt;/p&gt;
+&lt;p&gt;默认情况下，路由器只知道跟他直连的网段，非直连的网段需要通过静态路由，动态路由告诉他&lt;/p&gt;
+&lt;p&gt;静态路由：管理员手动添加路由信息，适用于小规模网络&lt;/p&gt;
+&lt;p&gt;动态路由：路由器通过路由选择协议（比如 RIP，OSPF）自动获取路由器信息，适用于大规模网络&lt;br&gt;
+&lt;a href=&#34;https://imgtu.com/i/2gLODs&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/10/2gLODs.png&#34; alt=&#34;2gLODs.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;四个角一共四个不同的网段，路由器 0 两个网关都对应两个网段，192.168.1.1/24 和 192.168.1.10/24 在同一网段&lt;/p&gt;
+&lt;p&gt;如果路由器 0 要给路由器 1 发信息，路由器 1 是路由器 0 的下一跳，并且添加路由的时候网络和掩码填写需要通信的机子的网段&lt;/p&gt;
+&lt;p&gt;比如计算机 0 要给计算机 2 发信息，添加静态路由时的网络和掩码填写 193.168.2.0 和 255.255.255.0&lt;/p&gt;
+&lt;p&gt;并且路由器 0 和路由器 1 的两个 Serial2/0 口必须配置并且在同一网段&lt;/p&gt;
  ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">http://example.com/2021/05/31/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE1/</guid>
-            <title>网络协议学习（一）</title>
-            <link>http://example.com/2021/05/31/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE1/</link>
-            <category>网络协议</category>
-            <pubDate>Mon, 31 May 2021 23:02:02 +0800</pubDate>
-            <description><![CDATA[ &lt;h1 id=&#34;1基本概念-mac地址-ip地址-子网划分-超网&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#1基本概念-mac地址-ip地址-子网划分-超网&#34;&gt;#&lt;/a&gt; （1）基本概念、MAC 地址、IP 地址、子网划分、超网&lt;/h1&gt;
-&lt;p&gt;数据是如何从一个设备传递到另一个设备的？&lt;/p&gt;
-&lt;p&gt;答：网络协议&lt;/p&gt;
-&lt;h1 id=&#34;为什么要学习网络协议&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#为什么要学习网络协议&#34;&gt;#&lt;/a&gt; 为什么要学习网络协议&lt;/h1&gt;
-&lt;p&gt;互联网、移动互联网、物联网，都离不开网络协议：&lt;/p&gt;
-&lt;p&gt;最熟悉的网络协议：HTTP&lt;/p&gt;
-&lt;p&gt;为了满足各种需求，有各式各样的网络协议（HTTPS、SMTP、MQTT、RTMP 等）&lt;/p&gt;
-&lt;p&gt;网络协议方面的面试题目近年来要求提高了：&lt;/p&gt;
-&lt;p&gt;TCP 和 UDP 的区别？说一下它们的报文格式？&lt;/p&gt;
-&lt;p&gt;TCP 的流量控制和和拥塞控制？TCP 如何实现可靠性传输？&lt;/p&gt;
-&lt;p&gt;为什么连接是 3 次握手，关闭是 4 次挥手？&lt;/p&gt;
-&lt;p&gt;7 层模型与 4 层模型的区别？每一层的作用是什么？&lt;/p&gt;
-&lt;p&gt;交换机与路由器的区别？&lt;/p&gt;
-&lt;h2 id=&#34;跨平台的原理c&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#跨平台的原理c&#34;&gt;#&lt;/a&gt; 跨平台的原理（C++）&lt;/h2&gt;
-&lt;p&gt;C++ 跨平台的原理：使用平台相关的编译器生成对应平台的可执行文件&lt;br&gt;
-&lt;img data-src=&#34;https://i.loli.net/2021/06/07/DNjezCU3lvyRuOi.png&#34; alt=&#34;5f3f40f5b85d85ead8d793614c789b7c.png&#34;&gt;&lt;/p&gt;
-&lt;h1 id=&#34;网络互连模型osi参考模型&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#网络互连模型osi参考模型&#34;&gt;#&lt;/a&gt; 网络互连模型（OSI 参考模型）&lt;/h1&gt;
-&lt;p&gt;什么是协议？为什么要有协议？&lt;/p&gt;
-&lt;p&gt;协议就是通用的标准。&lt;/p&gt;
-&lt;p&gt;如果没有一个国际通用的标准，那么各大公司按照自己的标准来，相互之间的交互就会很麻烦。比如我编写的代码在微软的服务器可以运行，但是要在苹果的服务器运行又需要重新编写…&lt;/p&gt;
-&lt;p&gt;为了更好地促进互联网络的研究和发展，国际标准化组织 ISO 在 1985 年制定了网络互连模型 OSI 参考模型 (Open System Interconnect Reference Model)，具有 7 层结构。&lt;/p&gt;
-&lt;p&gt;实际上 OSI 参考模型 (7 层) 更偏理论，而 TCP/IP 协议 (4 层) 在才是在实际中使用的协议，而为了研究和学习计算机网络，又常将之划分为 5 层。&lt;br&gt;
-&lt;img data-src=&#34;https://i.loli.net/2021/06/07/eA8hKwMJmxYRDS6.png&#34; alt=&#34;514d29d6d5f1df79e4b884c1a23a6175.png&#34;&gt;&lt;/p&gt;
-&lt;p&gt;请求过程：不管什么协议都是经过下列的包装 + 解包的过程。&lt;br&gt;
-&lt;img data-src=&#34;https://i.loli.net/2021/06/07/MnCPGleIfmTS2Ho.png&#34; alt=&#34;0aa3a16fcde263c90c45128f4a91de9d.png&#34;&gt;&lt;/p&gt;
-&lt;h1 id=&#34;计算机之间的通信基础&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#计算机之间的通信基础&#34;&gt;#&lt;/a&gt; 计算机之间的通信基础&lt;/h1&gt;
-&lt;p&gt;1、需要得知对方的 IP 地址&lt;/p&gt;
-&lt;p&gt;2、最终是根据 MAC 地址（网卡地址），输送数据到网卡，被网卡接收&lt;/p&gt;
-&lt;p&gt;如果网卡发现数据的目标 MAC 地址是自己，就会将数据传递给上一层进行处理&lt;/p&gt;
-&lt;p&gt;如果网卡发现数据的目标 MAC 地址不是自己，就会将数据丢弃，不会传递给上一层&lt;/p&gt;
-&lt;h2 id=&#34;计算机之间的连接方式&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#计算机之间的连接方式&#34;&gt;#&lt;/a&gt; 计算机之间的连接方式&lt;/h2&gt;
-&lt;h2 id=&#34;1网线直连&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#1网线直连&#34;&gt;#&lt;/a&gt; 1. 网线直连&lt;/h2&gt;
-&lt;p&gt;需要用交叉线（不是直通线）&lt;br&gt;
-&lt;img data-src=&#34;https://i.loli.net/2021/06/07/mcnhVLQsUq7veZf.png&#34; alt=&#34;144c54767f7626e299598cd495a73622.png&#34;&gt;&lt;/p&gt;
-&lt;p&gt;拓展：由此图可以看出 ping 走的是 ICMP 协议。&lt;/p&gt;
-&lt;p&gt;ARP 协议的作用：已知 IP 地址，通过广播获取 MAC 地址。&lt;/p&gt;
-&lt;p&gt;为什么右边出现 3 个 ARP 包，实际上是一次完整的发送请求，接收响应的过程。&lt;br&gt;
-&lt;img data-src=&#34;https://i.loli.net/2021/06/07/c6LprotnIDY92wl.png&#34; alt=&#34;6d15767ef538c59c42f7fa3063965d7e.png&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://i.loli.net/2021/06/07/YSuCihqZK8gTt1v.png&#34; alt=&#34;364fb1532ac77173b689582c15efdb46.png&#34;&gt;&lt;/p&gt;
-&lt;p&gt;拓展：MAC 地址为全 F 即全 1，代表广播，所有机器都可以接收。&lt;/p&gt;
-&lt;h2 id=&#34;2同轴电缆coaxial&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#2同轴电缆coaxial&#34;&gt;#&lt;/a&gt; 2. 同轴电缆 (Coaxial)&lt;/h2&gt;
-&lt;p&gt;注意：同轴电缆只要有一个地方线断了，整个线路都瘫痪了。&lt;/p&gt;
-&lt;h2 id=&#34;3-集线器hub&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#3-集线器hub&#34;&gt;#&lt;/a&gt; 3. 集线器 (Hub)&lt;/h2&gt;
-&lt;p&gt;集线器相比同轴电缆唯一的优点就是：哪怕连着集线器的某一个设备中间线路出问题，不会影响到连着集线器的其他设备。&lt;/p&gt;
-&lt;h2 id=&#34;4网桥bridge&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#4网桥bridge&#34;&gt;#&lt;/a&gt; 4. 网桥（Bridge）&lt;/h2&gt;
-&lt;p&gt;所谓隔绝冲突域是通过：记录设备的 MAC 地址在左还是在右。&lt;/p&gt;
-&lt;p&gt;例如，6 向 7 发数据包，&lt;/p&gt;
-&lt;p&gt;当 6 发出请求 ARP 广播时，网桥会记录 6 的 MAC 地址在左；&lt;/p&gt;
-&lt;p&gt;当 7 发出响应 ARP 广播时，网桥会记录 7 的 MAC 地址在左。&lt;/p&gt;
-&lt;h2 id=&#34;交换机switch&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#交换机switch&#34;&gt;#&lt;/a&gt; 交换机（Switch）&lt;/h2&gt;
-&lt;p&gt;有记忆功能，可以记住发过的。连接的设备必须在同一网段、同一广播域。&lt;/p&gt;
-&lt;p&gt;若全球所有设备都用交换机连接：&lt;/p&gt;
-&lt;p&gt;1、他们必然处于同一网段，因此 IP 地址可能会不够用&lt;/p&gt;
-&lt;p&gt;2、即使使用交换机，第一次发送数据包仍然需要 ARP 广播，耗费大量时间。&lt;/p&gt;
-&lt;p&gt;3、形成广播风暴，只要有一个设备发送 ARP 广播，全球设备都能收到&lt;/p&gt;
-&lt;h2 id=&#34;路由器router&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#路由器router&#34;&gt;#&lt;/a&gt; &lt;strong&gt;路由器（Router）&lt;/strong&gt;&lt;/h2&gt;
-&lt;p&gt;主机在发数据之前，首先会判断目标主机的 IP 地址跟它是否在同一个网段：&lt;/p&gt;
-&lt;p&gt;在同一个网段：ARP 广播、通过交换机 / 集线器传递数据&lt;/p&gt;
-&lt;p&gt;不在同一个网段：通过路由器转发数据&lt;/p&gt;
-&lt;p&gt;网关：在路由器上，跨网段的时候需要经过它。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;网线直连、同轴电缆、集线器、网桥、交换机&lt;br&gt;
- * 连接的设备必须在同一网段&lt;br&gt;
- * 连接的设备处在同一广播域&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;路由器
-&lt;ul&gt;
-&lt;li&gt;可以在不同网段之间转发数据
-&lt;ul&gt;
-&lt;li&gt;隔绝广播域&lt;br&gt;
-&lt;img data-src=&#34;https://i.loli.net/2021/06/07/BVSYZPHuzLyoepO.png&#34; alt=&#34;6f481f486ae0f6b93e21d39e3ce349a2.png&#34;&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&#34;mac地址40-55-82-0a-8c-6d&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#mac地址40-55-82-0a-8c-6d&#34;&gt;#&lt;/a&gt; MAC 地址（40-55-82-0A-8C-6D）&lt;/h1&gt;
-&lt;p&gt;每个网卡都有一个 6 字节 (48bit) 的 MAC 地址 (Media Access Control Address)&lt;/p&gt;
-&lt;p&gt;MAC 地址全球唯一，固化在网卡的 ROM 中，由 IEEE802 标准规定&lt;/p&gt;
-&lt;p&gt;前 3 字节：OUI (Organizationally Unique Identifier)，组织唯一标识符&lt;/p&gt;
-&lt;p&gt;由 IEEE 的注册管理机构分配给厂商&lt;/p&gt;
-&lt;p&gt;后 3 字节：网络接口标识符&lt;/p&gt;
-&lt;p&gt;由厂商自行分配&lt;/p&gt;
-&lt;p&gt;OUI 查询：可以根据 OUI 查询出对应的厂商&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3N0YW5kYXJkcy1vdWkuaWVlZS5vcmcvb3VpLnR4dA==&#34;&gt;http://standards-oui.ieee.org/oui.txt&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9tYWMuYm1jeC5jb20v&#34;&gt;https://mac.bmcx.com/&lt;/span&gt;&lt;/p&gt;
-&lt;h2 id=&#34;表示格式windows-linux&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#表示格式windows-linux&#34;&gt;#&lt;/a&gt; 表示格式（Windows、Linux）&lt;/h2&gt;
-&lt;p&gt;Windows---- &lt;code&gt;40-55-82-0A-8C-6D&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;Linux、Android、Mac、iOS（类 Unix 操作系统）---- &lt;code&gt;40:55:82:0A:8C:6D&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;Packet Tracer---- &lt;code&gt;4055.820A.8C6D&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;注：当 48 位全为 1 时，代表广播地址： &lt;code&gt;FF-FF-FF-FF-FF-FF&lt;/code&gt;&lt;/p&gt;
-&lt;h2 id=&#34;mac地址操作ipconfig-all&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#mac地址操作ipconfig-all&#34;&gt;#&lt;/a&gt; MAC 地址操作（ipconfig /all）&lt;/h2&gt;
-&lt;p&gt;查看 MAC 地址：ipconfig /all&lt;/p&gt;
-&lt;p&gt;修改 MAC 地址：更改适配器选项 - 属性 - 配置 - 高级 - 网络地址（填写的时候需要把 减号 - 去掉）&lt;/p&gt;
-&lt;p&gt;注： 有时可以通过修改 MAC 地址蹭网。&lt;/p&gt;
-&lt;h2 id=&#34;mac地址的获取arp-a&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#mac地址的获取arp-a&#34;&gt;#&lt;/a&gt; MAC 地址的获取（arp -a）&lt;/h2&gt;
-&lt;p&gt;当不知道对方主机的 MAC 地址时，可以通过发送 ARP 广播获取对方的 MAC 地址&lt;/p&gt;
-&lt;p&gt;获取成功后，会缓存 IP 地址、MAC 地址的映射信息，俗称：ARP 缓存&lt;/p&gt;
-&lt;p&gt;通过 ARP 广播获取的 MAC 地址，属于动态（dynamic）缓存&lt;/p&gt;
-&lt;p&gt;存储时间比较短（默认是 2 分钟），过期就自动删除&lt;/p&gt;
-&lt;p&gt;arp -a [主机地址]：查看 ARP 缓存&lt;/p&gt;
-&lt;p&gt;arp -d [主机地址]：删除 ARP 缓存&lt;/p&gt;
-&lt;p&gt;arp -s 主机地址 MAC 地址：增加一条缓存信息（这是静态缓存，存储时间较久，不同系统的存储时间不同）&lt;/p&gt;
-&lt;h2 id=&#34;arpaddress-resolution-protocol&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#arpaddress-resolution-protocol&#34;&gt;#&lt;/a&gt; ARP（Address Resolution Protocol）&lt;/h2&gt;
-&lt;p&gt;ARP (Address Resolution Protocol)，地址解析协议&lt;/p&gt;
-&lt;p&gt;作用：通过 IP 地址 获取 MAC 地址&lt;/p&gt;
-&lt;p&gt;RARP (Reverse Address Resolution Protocol)，逆地址解析协议&lt;/p&gt;
-&lt;p&gt;使用与 ARP 相同的报头结构&lt;/p&gt;
-&lt;p&gt;作用与 ARP 相反，用于将 MAC 地址转换为 IP 地址&lt;/p&gt;
-&lt;p&gt;后来被 BOOTP、DHCP 所取代&lt;/p&gt;
-&lt;h2 id=&#34;icmpinternet-control-message-protocol&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#icmpinternet-control-message-protocol&#34;&gt;#&lt;/a&gt; ICMP（Internet Control Message Protocol）&lt;/h2&gt;
-&lt;p&gt;ICMP (Internet Control Message Protocol)，互联网控制消息协议&lt;/p&gt;
-&lt;p&gt;IPv4 中的 ICMP 被称作 ICMPv4，IPv6 中的 ICMP 则被称作 ICMPv6&lt;/p&gt;
-&lt;p&gt;通常用于返回错误信息&lt;/p&gt;
-&lt;p&gt;比如 TTL 值过期、目的不可达&lt;/p&gt;
-&lt;p&gt;ICMP 的错误消息总是包括了源数据并返回给发送者&lt;/p&gt;
-&lt;h1 id=&#34;ip地址127001&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#ip地址127001&#34;&gt;#&lt;/a&gt; IP 地址（127.0.0.1）&lt;/h1&gt;
-&lt;p&gt;IP 地址 (Internet Protocol Address)：互联网上的每一个主机都有一个 IP 地址&lt;/p&gt;
-&lt;p&gt;最初是 IPv4 版本，32bit（4 字节），2019 年 11 月 25 日，全球的 IP 地址已经用完&lt;/p&gt;
-&lt;p&gt;后面推出了 IPv6 版本，128bit（16 字节）&lt;/p&gt;
-&lt;p&gt;我们在学习中讨论的都是 IPV4&lt;/p&gt;
-&lt;h2 id=&#34;ip地址的组成网络id-主机id&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#ip地址的组成网络id-主机id&#34;&gt;#&lt;/a&gt; IP 地址的组成（网络 ID + 主机 ID）&lt;/h2&gt;
-&lt;p&gt;IP 地址 由 2 部分组成：网络标识（网络 ID）、主机标识（主机 ID）&lt;/p&gt;
-&lt;p&gt;通过子网掩码（subnet mask）可以得知 网络 ID 、主机 ID&lt;/p&gt;
-&lt;p&gt;主机所在的网段 = 子网掩码 &amp;amp; IP 地址&lt;/p&gt;
-&lt;p&gt;例如：&lt;/p&gt;
-&lt;p&gt;IP 地址：192.168.1.10&lt;/p&gt;
-&lt;p&gt;子网掩码：255.255.255.0&lt;/p&gt;
-&lt;p&gt;1100 0000 . 1010 1000 . 0000 0001 . 0000 1010&lt;/p&gt;
-&lt;p&gt;&amp;amp;    1111 1111 . 1111 1111 . 1111 1111 . 0000 0000&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;1100 0000 . 1010 1000 . 0000 0001 . 0000 0000&lt;/p&gt;
-&lt;p&gt;网段：192.168.1.0&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;注意：&lt;strong&gt;网段是由子网掩码&lt;/strong&gt;计算&lt;/strong&gt;得出，只有 IP 地址无法得知网段。&lt;/p&gt;
-&lt;p&gt;IP 地址：130.168.1.10&lt;/p&gt;
-&lt;p&gt;子网掩码：255.255.0.0&lt;/p&gt;
-&lt;p&gt;网段：130.168.0.0&lt;/p&gt;
-&lt;p&gt;该网段最多有 256*256-2 个 IP 地址&lt;/p&gt;
-&lt;p&gt;-2 是因为：全 0 代表网段，全 1（255）代表广播&lt;/p&gt;
-&lt;p&gt;注意：网段和广播无法分配 IP 地址&lt;/p&gt;
-&lt;p&gt;计算机和其他计算机通信前，会先判断目标主机和自己是否在同一网段：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;同一网段：不需要由路由器进行转发&lt;/li&gt;
-&lt;li&gt;不同网段：交由路由器进行转发&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;ip地址的分类a类-b类-c类-d类-e类&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#ip地址的分类a类-b类-c类-d类-e类&#34;&gt;#&lt;/a&gt; IP 地址的分类（A 类、B 类、C 类、D 类、E 类）&lt;/h2&gt;
-&lt;p&gt;注：判断 IP 地址的类别只要看第一部分即可。&lt;/p&gt;
-&lt;p&gt;只有 A\B\C 类地址才能分配给主机&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;主机 ID 为全 0，表示主机所在的网段，如 192.168.1.0&lt;/li&gt;
-&lt;li&gt;主机 ID 为全 1，表示主机所在网段的全部主机（广播），如 192.168.1.255&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;可以尝试用 ping 给某个网段的全部主机发数据&lt;/p&gt;
-&lt;p&gt;A 类地址：默认子网掩码是 255.0.0.0&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://i.loli.net/2021/06/07/2gzwUjYBcdrtmXa.png&#34; alt=&#34;057dc3803da874f044f541009403cf2c.png&#34;&gt;&lt;/p&gt;
-&lt;p&gt;网络 ID&lt;/p&gt;
-&lt;p&gt;0 不能用，127 作为保留网段。其中 127.0.0.1 是本地环回地址（Loopback），代表本机地址&lt;/p&gt;
-&lt;p&gt;可以分配给主机的第 1 部分的取值范围是：1~126&lt;/p&gt;
-&lt;p&gt;主机 ID&lt;/p&gt;
-&lt;p&gt;第 2、3、4 部分的取值范围是：0~255&lt;/p&gt;
-&lt;p&gt;每个 A 类网络能容纳的最大主机数是：256&lt;em&gt;256&lt;/em&gt;256–2 = 2 的 24 次方–2 = 16777214&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;B 类地址：默认子网掩码是 255.255.0.0&lt;br&gt;
-&lt;img data-src=&#34;https://i.loli.net/2021/06/07/vrqd1bxF3hCR9sk.png&#34; alt=&#34;77c532df96ac4e4fa8dd9a685f8e4825.png&#34;&gt;&lt;/p&gt;
-&lt;p&gt;网络 ID&lt;/p&gt;
-&lt;p&gt;第 1 部分的取值范围是：128~191&lt;/p&gt;
-&lt;p&gt;第 2 部分的取值范围是：0~255&lt;/p&gt;
-&lt;p&gt;主机 ID&lt;/p&gt;
-&lt;p&gt;第 3、4 部分的取值范围是：0~255&lt;/p&gt;
-&lt;p&gt;每个 B 类网络能容纳的最大主机数是：256*256-2 = 2 的 16 次方 - 2 = 65534&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;C 类地址：默认子网掩码是 255.255.255.0&lt;/p&gt;
-&lt;p&gt;目前用的最多的是 C 类地址！&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://i.loli.net/2021/06/07/2gzwUjYBcdrtmXa.png&#34; alt=&#34;057dc3803da874f044f541009403cf2c.png&#34;&gt;&lt;/p&gt;
-&lt;p&gt;网络 ID&lt;/p&gt;
-&lt;p&gt;第 1 部分的取值范围是：192~223&lt;/p&gt;
-&lt;p&gt;第 2、3 部分的取值范围是：0~255&lt;/p&gt;
-&lt;p&gt;主机 ID&lt;/p&gt;
-&lt;p&gt;第 4 部分的取值范围是：0~255&lt;/p&gt;
-&lt;p&gt;每个 C 类网络能容纳的最大主机数是：256-2 = 254&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;D 类地址：没有子网掩码，用于多播（组播）地址&lt;/p&gt;
-&lt;p&gt;以 1110 开头，多播地址&lt;/p&gt;
-&lt;p&gt;第一部分取值是：224~239&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;E 类地址：以 1111 开头，保留为今后使用&lt;/p&gt;
-&lt;p&gt;第一部分取值是：240~255&lt;/p&gt;
-&lt;h2 id=&#34;子网掩码的cidr表示方法192168110024&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#子网掩码的cidr表示方法192168110024&#34;&gt;#&lt;/a&gt; 子网掩码的 CIDR 表示方法（192.168.1.100/24）&lt;/h2&gt;
-&lt;p&gt;CIDR (Classless Inter-Domain Routing)，无类别域间路由&lt;/p&gt;
-&lt;p&gt;子网掩码的 CIDR 表示方法&lt;/p&gt;
-&lt;p&gt;192.168.1.100/24，代表子网掩码有 24 个 1，也就是 255.255.255.0&lt;/p&gt;
-&lt;p&gt;123.210.100.200/16，代表子网掩码有 16 个 1，也就是 255.255.0.0&lt;/p&gt;
-&lt;p&gt;计算工具：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuc29qc29uLmNvbS9jb252ZXJ0L3N1Ym5ldG1hc2suaHRtbA==&#34;&gt;https://www.sojson.com/convert/subnetmask.html&lt;/span&gt;&lt;/p&gt;
-&lt;h1 id=&#34;子网划分&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#子网划分&#34;&gt;#&lt;/a&gt; 子网划分&lt;/h1&gt;
-&lt;h2 id=&#34;为什么要进行子网划分&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#为什么要进行子网划分&#34;&gt;#&lt;/a&gt; 为什么要进行子网划分？&lt;/h2&gt;
-&lt;p&gt;如果需要让 200 台主机在同一个网段内，可以分配一个 C 类网段，比如 192.168.1.0/24&lt;/p&gt;
-&lt;p&gt;共 254 个可用 IP 地址：192.168.1.1~192.168.1.254&lt;/p&gt;
-&lt;p&gt;多出 54 个空闲的 IP 地址，这种情况并不算浪费资源&lt;/p&gt;
-&lt;p&gt;如果需要让 500 台主机在同一个网段内，那就分配一个 B 类网段，比如 191.100.0.0/16&lt;/p&gt;
-&lt;p&gt;共 65534 个可用 IP 地址：191.100.0.1~191.100.255.254&lt;/p&gt;
-&lt;p&gt;多出 65034 个空闲的 IP 地址，这种情况属于极大的浪费资源&lt;/p&gt;
-&lt;p&gt;如何尽量避免浪费 IP 地址资源？&lt;/p&gt;
-&lt;p&gt;合理进行子网划分&lt;/p&gt;
-&lt;h2 id=&#34;子网划分-2&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#子网划分-2&#34;&gt;#&lt;/a&gt; 子网划分&lt;/h2&gt;
-&lt;p&gt;子网划分：借用主机位作子网位，划分出多个子网&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;等长子网划分：将一个网段等分成多个子网，每个子网的可用 IP 地址数量一样&lt;br&gt;
- * 变长子网划分：每个子网的可用 IP 地址数量可以是不一样的&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;子网划分器：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cDovL3d3dy5hYjEyNi5jb20vd2ViLzM1NTIuaHRtbA==&#34;&gt;http://www.ab126.com/web/3552.html&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;子网划分的步骤&lt;/p&gt;
-&lt;p&gt;确定子网的子网掩码长度&lt;/p&gt;
-&lt;p&gt;确定子网中第 1 个、最后 1 个主机可用的 IP 地址&lt;/p&gt;
-&lt;h2 id=&#34;等长子网划分-c类子网划分2-4-8等分&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#等长子网划分-c类子网划分2-4-8等分&#34;&gt;#&lt;/a&gt; 等长子网划分 - C 类子网划分（2、4、8 等分）&lt;/h2&gt;
-&lt;p&gt;例：&lt;/p&gt;
-&lt;p&gt;本来有一个 C 类网段: 192.168.0.0/24&lt;/p&gt;
-&lt;p&gt;划分成两个子网后:&lt;/p&gt;
-&lt;p&gt;A 子网: 192.168.0.0/25 子网掩码: 255.255.255.128&lt;/p&gt;
-&lt;p&gt;可用 IP 地址: 192.168.0.1 ~ 192.168.0.126 共 126 个&lt;/p&gt;
-&lt;p&gt;B 子网: 192.168.0.128/25 子网掩码: 255.255.255.128&lt;/p&gt;
-&lt;p&gt;可用 IP 地址: 192.168.0.129 ~ 192.168.0.254 共 126 个&lt;/p&gt;
-&lt;h2 id=&#34;等长子网划分-a-b类子网划分&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#等长子网划分-a-b类子网划分&#34;&gt;#&lt;/a&gt; 等长子网划分 - A、B 类子网划分&lt;/h2&gt;
-&lt;p&gt;B 类子网划分：&lt;br&gt;
-&lt;img data-src=&#34;https://i.loli.net/2021/06/07/57oYGFLtqHD92JM.png&#34; alt=&#34;3bd68199e2ce90c2e49409a4cf0a2216.png&#34;&gt;&lt;/p&gt;
-&lt;h2 id=&#34;变长子网划分&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#变长子网划分&#34;&gt;#&lt;/a&gt; 变长子网划分&lt;/h2&gt;
-&lt;p&gt;&lt;img data-src=&#34;https://i.loli.net/2021/06/07/HADBGLS5Kk9zThv.png&#34; alt=&#34;9bf7d7d662ad2bb4dd8031b9a62eb522.png&#34;&gt;&lt;/p&gt;
-&lt;h1 id=&#34;超网-合并网段&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#超网-合并网段&#34;&gt;#&lt;/a&gt; 超网 - 合并网段&lt;/h1&gt;
-&lt;p&gt;超网：跟子网反过来，它是将多个连续的网段合并成一个更大的网段&lt;/p&gt;
-&lt;p&gt;需求：原本有 200 台计算机使用 192.168.0.0/24 网段，现在希望增加 200 台设备到同一个网段&lt;/p&gt;
-&lt;p&gt;200 台在 192.168.0.0/24 网段，200 台在 192.168.1.0/24 网段&lt;/p&gt;
-&lt;p&gt;合并 192.168.0.0/24、192.168.1.0/24 为一个网段：192.168.0.0/23&lt;/p&gt;
-&lt;p&gt;（子网掩码往左移动 1 位）&lt;br&gt;
-&lt;img data-src=&#34;https://i.loli.net/2021/06/07/EXDh28cdzxWUVkL.png&#34; alt=&#34;1da25a65d807f4e23cd76c895390fffa.png&#34;&gt;&lt;/p&gt;
-&lt;p&gt;问：192.168.0.255/23 这个 IP 地址，可以分配给计算机使用么？&lt;/p&gt;
-&lt;p&gt;192.168.0.255/24 是广播，不能分配给计算机。&lt;/p&gt;
-&lt;p&gt;主机部分并不全为 1，所以是可以分配给计算机使用的。&lt;/p&gt;
-&lt;h2 id=&#34;合并4个网段&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#合并4个网段&#34;&gt;#&lt;/a&gt; 合并 4 个网段&lt;/h2&gt;
-&lt;p&gt;子网掩码向左移动 2 位，可以合并 4 个网段&lt;/p&gt;
-&lt;p&gt;将 192.168.0.0/24、192.168.1.0/24、192.168.2.0/24、192.168.3.0/24 合并为 192.168.0.0/22 网段&lt;/p&gt;
-&lt;h2 id=&#34;子网合并的规律&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#子网合并的规律&#34;&gt;#&lt;/a&gt; 子网合并的规律&lt;/h2&gt;
-&lt;p&gt;假设 n 是 2 的 k 次幂（k≥1），子网掩码左移 k 位能够将能够合并 n 个网段&lt;/p&gt;
-&lt;p&gt;假设 n 是 2 的 k 次幂（k≥1），如果第一个网段的网络号能被 n 整除，那么由它开始连续的 n 个网段，能通过左移 k 位子网掩码进行合并。&lt;/p&gt;
-&lt;p&gt;第一个网段的网络号以二进制 0 结尾，那么由它开始连续的 2 个网段，能通过左移 1 位子网掩码进行合并&lt;/p&gt;
-&lt;p&gt;第一个网段的网络号以二进制 00 结尾，那么由它开始连续的 4 个网段，能通过左移 2 位子网掩码进行合并&lt;/p&gt;
-&lt;p&gt;第一个网段的网络号以二进制 000 结尾，那么由它开始连续的 8 个网段，能通过左移 3 位子网掩码进行合并&lt;/p&gt;
-&lt;h1 id=&#34;判断一个网段是子网还是超网&#34;&gt;&lt;a class=&#34;markdownIt-Anchor&#34; href=&#34;#判断一个网段是子网还是超网&#34;&gt;#&lt;/a&gt; 判断一个网段是子网还是超网&lt;/h1&gt;
-&lt;p&gt;首先看该网段的类型，是 A 类网络、B 类网络、C 类网络？&lt;/p&gt;
-&lt;p&gt;A 类子网掩码的位数是 8（255.0.0.0）&lt;/p&gt;
-&lt;p&gt;B 类子网掩码的位数是 16（255.255.0.0）&lt;/p&gt;
-&lt;p&gt;C 类子网掩码的位数是 24（255.255.255.0）&lt;/p&gt;
-&lt;p&gt;如果该网段的子网掩码位数比默认子网掩码多，就是子网&lt;/p&gt;
-&lt;p&gt;如果该网段的子网掩码位数比默认子网掩码少，则是超网&lt;/p&gt;
-&lt;p&gt;例如：&lt;/p&gt;
-&lt;p&gt;判断 25.100.0.0/16 是子网还是超网：&lt;/p&gt;
-&lt;p&gt;根据 25 判断出这是个 A 类网络，默认子网掩码 8 位&lt;/p&gt;
-&lt;p&gt;由于该网段子网掩码 16 位，比默认多，所以是子网&lt;/p&gt;
-&lt;p&gt;判断 200.100.0.0/16 是子网还是超网：&lt;/p&gt;
-&lt;p&gt;根据 200 判断出这是个 C 类网络，默认子网掩码 24 位&lt;/p&gt;
-&lt;p&gt;由于该网段子网掩码 16 位，比默认少，所以是超网&lt;/p&gt;
- ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">http://example.com/2013/12/24/tags/</guid>
-            <title>Tags</title>
-            <link>http://example.com/2013/12/24/tags/</link>
-            <category>web开发</category>
-            <category>网络协议</category>
-            <category>数据库</category>
-            <category>web安全</category>
-            <category>misc</category>
-            <category>渗透测试</category>
-            <category>内网渗透</category>
-            <category>pwn</category>
-            <category>reverse</category>
-            <category>src挖掘</category>
-            <category>密码学</category>
-            <pubDate>Tue, 24 Dec 2013 23:29:53 +0800</pubDate>
-            <description><![CDATA[  ]]></description>
         </item>
     </channel>
 </rss>

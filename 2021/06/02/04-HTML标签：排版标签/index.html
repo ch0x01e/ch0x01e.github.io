@@ -1,157 +1,146 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HTML标签：排版标签 | ch1e's Blog</title><meta name="keywords" content="web开发"><meta name="author" content="ch1e"><meta name="copyright" content="ch1e"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="# 本文主要内容 排版标签：   &lt;h1&gt;   &lt;p&gt;   &lt;hr &#x2F;&gt;   &lt;br &#x2F;&gt;   &lt;div&gt;   &lt;span&gt;   &lt;center&gt;   &lt;pre&gt;   下面来详细介绍一下排版标签。 # 标题标签 标题使用 &lt;h1&gt;  至 &lt;h6&gt;  标签进行定义。 &lt;h1&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTML标签：排版标签">
+<meta property="og:url" content="http://example.com/2021/06/02/04-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E6%8E%92%E7%89%88%E6%A0%87%E7%AD%BE/index.html">
+<meta property="og:site_name" content="ch1e&#39;s Blog">
+<meta property="og:description" content="# 本文主要内容 排版标签：   &lt;h1&gt;   &lt;p&gt;   &lt;hr &#x2F;&gt;   &lt;br &#x2F;&gt;   &lt;div&gt;   &lt;span&gt;   &lt;center&gt;   &lt;pre&gt;   下面来详细介绍一下排版标签。 # 标题标签 标题使用 &lt;h1&gt;  至 &lt;h6&gt;  标签进行定义。 &lt;h1&amp;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/xingjiahui/CDN/index_01.png">
+<meta property="article:published_time" content="2021-06-02T12:44:50.200Z">
+<meta property="article:modified_time" content="2021-06-07T10:49:57.466Z">
+<meta property="article:author" content="ch1e">
+<meta property="article:tag" content="web开发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/xingjiahui/CDN/index_01.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2021/06/02/04-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E6%8E%92%E7%89%88%E6%A0%87%E7%AD%BE/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'HTML标签：排版标签',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-06-07 18:49:57'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
 
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
 
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
 
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
 
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#FFF">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-
-<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
-  <meta http-equiv="Cache-Control" content="no-transform">
-  <meta http-equiv="Cache-Control" content="no-siteapp">
-
-
-<link rel="alternate" type="application/rss+xml" title="ch1e's Blog" href="http://example.com/rss.xml" />
-<link rel="alternate" type="application/atom+xml" title="ch1e's Blog" href="http://example.com/atom.xml" />
-<link rel="alternate" type="application/json" title="ch1e's Blog" href="http://example.com/feed.json" />
-
-<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
-
-<link rel="stylesheet" href="/css/app.css?v=0.2.5">
-
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
   
-  <meta name="keywords" content="web开发" />
-
-
-<link rel="canonical" href="http://example.com/2021/06/02/04-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E6%8E%92%E7%89%88%E6%A0%87%E7%AD%BE/">
-
-
-
-  <title>
-HTML标签：排版标签 |
-ch1e-cjlusec = ch1e's Blog = 现科最爱看美女的废物</title>
-<meta name="generator" content="Hexo 5.4.0"></head>
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div id="loading">
-    <div class="cat">
-      <div class="body"></div>
-      <div class="head">
-        <div class="face"></div>
-      </div>
-      <div class="foot">
-        <div class="tummy-end"></div>
-        <div class="bottom"></div>
-        <div class="legs left"></div>
-        <div class="legs right"></div>
-      </div>
-      <div class="paw">
-        <div class="hands left"></div>
-        <div class="hands right"></div>
-      </div>
-    </div>
-  </div>
-  <div id="container">
-    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="inner">
-        <div id="brand">
-          <div class="pjax">
-          
-  <h1 itemprop="name headline">HTML标签：排版标签
-  </h1>
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
   
-<div class="meta">
-  <span class="item" title="创建时间：2021-06-02 20:44:50">
-    <span class="icon">
-      <i class="ic i-calendar"></i>
-    </span>
-    <span class="text">发表于</span>
-    <time itemprop="dateCreated datePublished" datetime="2021-06-02T20:44:50+08:00">2021-06-02</time>
-  </span>
-</div>
-
-
-          </div>
-        </div>
-        <nav id="nav">
-  <div class="inner">
-    <div class="toggle">
-      <div class="lines" aria-label="切换导航栏">
-        <span class="line"></span>
-        <span class="line"></span>
-        <span class="line"></span>
-      </div>
-    </div>
-    <ul class="menu">
-      <li class="item title"><a href="/" rel="start">ch1e-cjlusec</a></li>
-    </ul>
-    <ul class="right">
-      <li class="item theme">
-        <i class="ic i-sun"></i>
-      </li>
-      <li class="item search">
-        <i class="ic i-search"></i>
-      </li>
-    </ul>
-  </div>
-</nav>
-
-      </div>
-      <div id="imgs" class="pjax">
-        <ul>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gipevarprfj20zk0m8npd.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giciukx8a7j20zk0m8aio.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gicis3attqj20zk0m8k7l.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gicm0fdw5cj20zk0m8hdt.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1giclhpw3lwj20zk0m8gvw.jpg"></li>
-          <li class="item" data-background-image="https://tva4.sinaimg.cn/large/6833939bly1gipeyvx1d4j20zk0m8hdt.jpg"></li>
-        </ul>
-      </div>
-    </header>
-    <div id="waves">
-      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
-        <defs>
-          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
-        </defs>
-        <g class="parallax">
-          <use xlink:href="#gentle-wave" x="48" y="0" />
-          <use xlink:href="#gentle-wave" x="48" y="3" />
-          <use xlink:href="#gentle-wave" x="48" y="5" />
-          <use xlink:href="#gentle-wave" x="48" y="7" />
-        </g>
-      </svg>
-    </div>
-    <main>
-      <div class="inner">
-        <div id="main" class="pjax">
-          
-  <div class="article wrap">
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
     
-<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
-<i class="ic i-home"></i>
-<span><a href="/">首页</a></span>
-</div>
-
-    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="zh-CN">
-  <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/02/04-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E6%8E%92%E7%89%88%E6%A0%87%E7%AD%BE/">
-
-  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="image" content="/images/avatar.jpg">
-    <meta itemprop="name" content="ch1e">
-    <meta itemprop="description" content="现科最爱看美女的废物, ">
-  </span>
-
-  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="ch1e's Blog">
-  </span>
-
-  <div class="body md" itemprop="articleBody">
-    
-
-    <h2 id="本文主要内容"><a class="markdownIt-Anchor" href="#本文主要内容">#</a> 本文主要内容</h2>
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&amp;spec=100" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 朋友圈</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="http://tc.qqblog.top"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/xingjiahui/CDN/index_01.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">ch1e's Blog</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 朋友圈</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="http://tc.qqblog.top"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">HTML标签：排版标签</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-06-02T12:44:50.200Z" title="发表于 2021-06-02 20:44:50">2021-06-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-06-07T10:49:57.466Z" title="更新于 2021-06-07 18:49:57">2021-06-07</time></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="本文主要内容"><a class="markdownIt-Anchor" href="#本文主要内容">#</a> 本文主要内容</h2>
 <p>排版标签：</p>
 <ul>
 <li>
@@ -184,7 +173,7 @@ ch1e-cjlusec = ch1e's Blog = 现科最爱看美女的废物</title>
 <p>标题使用 <code>&lt;h1&gt;</code>  至 <code>&lt;h6&gt;</code>  标签进行定义。 <code>&lt;h1&gt;</code>  定义最大的标题， <code>&lt;h6&gt;</code>  定义最小的标题。具有 align 属性，属性值可以是：left、center、right。</p>
 <p>代码举例：</p>
 <figure class="highlight html"><figcaption data-lang="HTML"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">html</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>en<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="4"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>UTF-8<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="5"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>viewport<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>width=device-width, initial-scale=1.0<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="6"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>Document<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="9"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">></span></span>H1：千古壹号，永不止步<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="10"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h2</span><span class="token punctuation">></span></span>H3：千古壹号，永不止步<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h2</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="11"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h3</span><span class="token punctuation">></span></span>H3：千古壹号，永不止步<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h3</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="12"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h4</span><span class="token punctuation">></span></span>H4：千古壹号，永不止步<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h4</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="13"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h5</span><span class="token punctuation">></span></span>H5：千古壹号，永不止步<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h5</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="14"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h6</span><span class="token punctuation">></span></span>H6：千古壹号，永不止步<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h6</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="16"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span></pre></td></tr></table></figure><p>效果演示：</p>
-<p><img data-src="http://img.smyhvae.com/20200402_1050.png" alt=""></p>
+<p><img src="http://img.smyhvae.com/20200402_1050.png" alt=""></p>
 <h2 id="html-注释"><a class="markdownIt-Anchor" href="#html-注释">#</a> HTML 注释</h2>
 <p>HTML 注释的格式如下：</p>
 <figure class="highlight html"><figcaption data-lang="HTML"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">&lt;!-- 我是 html 注释  --></span></pre></td></tr></table></figure><h2 id="段落标签p"><a class="markdownIt-Anchor" href="#段落标签p">#</a> 段落标签 <code>&lt;p&gt;</code></h2>
@@ -196,7 +185,7 @@ ch1e-cjlusec = ch1e's Blog = 现科最爱看美女的废物</title>
 <li><code>align=&quot;属性值&quot;</code> ：对齐方式。属性值包括 left center right。</li>
 </ul>
 <p>属性举例：</p>
-<p><img data-src="http://img.smyhvae.com/2015-10-01-cnblogs_html166440-1dcd2ad6e6353559.png" alt="Paste_Image.png"></p>
+<p><img src="http://img.smyhvae.com/2015-10-01-cnblogs_html166440-1dcd2ad6e6353559.png" alt="Paste_Image.png"></p>
 <p>HTML 标签是分等级的，HTML 将所有的标签分为两种：</p>
 <ul>
 <li>
@@ -209,7 +198,7 @@ ch1e-cjlusec = ch1e's Blog = 现科最爱看美女的废物</title>
 <p>从学习 p 的第一天开始，就要牢牢记住：<strong>p 标签是一个文本级标签，p 里面只能放文字、图片、表单元素</strong>。其他的一律不能放。</p>
 <p>错误写法：（尝试把 h 放到 p 里）</p>
 <figure class="highlight html"><figcaption data-lang="HTML"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="2"></td><td><pre>		我是一个小段落</pre></td></tr><tr><td data-num="3"></td><td><pre>		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">></span></span>我是一级标题<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="4"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span></pre></td></tr></table></figure><p>网页效果如下：</p>
-<p><img data-src="http://img.smyhvae.com/20170630_1102.png" alt=""></p>
+<p><img src="http://img.smyhvae.com/20170630_1102.png" alt=""></p>
 <p>上图显示，浏览器不允许你这么做，我们使用 Chrome 的 F12 审查元素发现，浏览器自己把 p 封闭掉了，不让你去包裹 h1。</p>
 <p>PS：Chrome 浏览器是 HTML5 支持度最好的浏览器。提供了非常好的开发工具，非常适合我们开发人员使用。审查元素功能的快捷键是 F12。</p>
 <h2 id="水平线标签hr"><a class="markdownIt-Anchor" href="#水平线标签hr">#</a> 水平线标签 <code>&lt;hr /&gt;</code></h2>
@@ -219,7 +208,7 @@ ch1e-cjlusec = ch1e's Blog = 现科最爱看美女的废物</title>
 <p>水平分隔线（horizontal rule）可以在视觉上将文档分隔成各个部分。在网页中常常看到一些水平线将段落与段落之间隔开，使得文档结构清晰，层次分明。</p>
 <p>代码举例：</p>
 <figure class="highlight html"><figcaption data-lang="HTML"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">html</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>en<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="4"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>UTF-8<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="5"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>viewport<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>width=device-width, initial-scale=1.0<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="6"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">></span></span>Document<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="9"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">></span></span>自古情深留不住<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="10"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>hr</span> <span class="token punctuation">/></span></span></pre></td></tr><tr><td data-num="11"></td><td><pre>	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">></span></span>总是套路得人心<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span></pre></td></tr></table></figure><p>运行效果：</p>
-<p><img data-src="http://img.smyhvae.com/20200401_1930.png" alt=""></p>
+<p><img src="http://img.smyhvae.com/20200401_1930.png" alt=""></p>
 <p>属性介绍：</p>
 <ul>
 <li><code>align=&quot;属性值&quot;</code> ：设定线条置放位置。属性值可选择：left right center。</li>
@@ -229,11 +218,11 @@ ch1e-cjlusec = ch1e's Blog = 现科最爱看美女的废物</title>
 <li><code>noshade</code> ：不要阴影，即设定线条为平面显示。若没有这个属性则表明线条具阴影或立体。</li>
 </ul>
 <p>属性效果演示：</p>
-<p><img data-src="http://img.smyhvae.com/2015-10-01-cnblogs_html_05.png" alt="Paste_Image.png"></p>
+<p><img src="http://img.smyhvae.com/2015-10-01-cnblogs_html_05.png" alt="Paste_Image.png"></p>
 <h2 id="换行标签br"><a class="markdownIt-Anchor" href="#换行标签br">#</a> 换行标签 <code>&lt;br /&gt;</code></h2>
 <p>如果希望某段文本强制换行显示，就需要使用换行标签。</p>
 <figure class="highlight html"><figcaption data-lang="HTML"></figcaption><table><tr><td data-num="1"></td><td><pre>This <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span><span class="token punctuation">/></span></span> is a para<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>br</span><span class="token punctuation">/></span></span>graph with line breaks</pre></td></tr></table></figure><p>效果如下：</p>
-<p><img data-src="http://img.smyhvae.com/2015-10-01-cnblogs_html03.png" alt=""></p>
+<p><img src="http://img.smyhvae.com/2015-10-01-cnblogs_html03.png" alt=""></p>
 <h2 id="div和span标签"><a class="markdownIt-Anchor" href="#div和span标签">#</a>  <code>&lt;div&gt;</code>  和 <code>&lt;span&gt;</code>  标签</h2>
 <p>div 和 span 是非常重要的标签，div 的语义是 division “分割”； span 的语义就是 span“范围、跨度”。想必你应该听说过 “div + css” 布局。</p>
 <h3 id="div和span的介绍"><a class="markdownIt-Anchor" href="#div和span的介绍">#</a> div 和 span 的介绍</h3>
@@ -246,7 +235,7 @@ ch1e-cjlusec = ch1e's Blog = 现科最爱看美女的废物</title>
 </li>
 </ul>
 <p>代码举例：</p>
-<p><img data-src="http://img.smyhvae.com/2015-10-01-cnblogs_html_08.png" alt="Paste_Image.png"></p>
+<p><img src="http://img.smyhvae.com/2015-10-01-cnblogs_html_08.png" alt="Paste_Image.png"></p>
 <p>div 标签的属性：</p>
 <ul>
 <li><code>align=&quot;属性值&quot;</code> ：设置块儿的位置。属性值可选择：left、right、 center。</li>
@@ -264,237 +253,22 @@ div 标签是一个<strong>容器级</strong>标签，里面什么都能放，�
 <h2 id="内容居中标签-center"><a class="markdownIt-Anchor" href="#内容居中标签-center">#</a> 内容居中标签  <code>&lt;center&gt;</code></h2>
 <p>此时 center 代表是一个标签，而不是一个属性值了。只要是在这个标签里面的内容，都会居于浏览器的中间。<br>
 效果演示：</p>
-<p><img data-src="http://img.smyhvae.com/2015-10-01-cnblogs_html_06.png" alt="Paste_Image.png"></p>
+<p><img src="http://img.smyhvae.com/2015-10-01-cnblogs_html_06.png" alt="Paste_Image.png"></p>
 <p>到了 HTML5 里面，center 标签不建议使用，建议使用 css 布局来实现。</p>
 <h2 id="预定义预格式化标签pre"><a class="markdownIt-Anchor" href="#预定义预格式化标签pre">#</a> 预定义（预格式化）标签 <code>&lt;pre&gt;</code></h2>
 <p>含义：将保留标签内部所有的空白字符 (空格、换行符)，原封不动地输出结果（告诉浏览器不要忽略空格和空行）。</p>
 <p>说明：真正排网页过程中， <code>&lt;pre&gt;</code>  标签几乎用不着。<br>
 效果演示：</p>
-<p><img data-src="http://img.smyhvae.com/2015-10-01-cnblogs_html_07.png" alt="Paste_Image.png"></p>
+<p><img src="http://img.smyhvae.com/2015-10-01-cnblogs_html_07.png" alt="Paste_Image.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">ch1e</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2021/06/02/04-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E6%8E%92%E7%89%88%E6%A0%87%E7%AD%BE/">http://example.com/2021/06/02/04-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E6%8E%92%E7%89%88%E6%A0%87%E7%AD%BE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ch1e's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/web%E5%BC%80%E5%8F%91/">web开发</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/xingjiahui/CDN/index_01.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/06/02/05-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%AD%97%E4%BD%93%E6%A0%87%E7%AD%BE%E5%92%8C%E8%B6%85%E9%93%BE%E6%8E%A5/"><img class="prev-cover" src="https://cdn.jsdelivr.net/gh/irozhi/irils-imgs//picgo/bg1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">HTML标签：字体标签和超链接</div></div></a></div><div class="next-post pull-right"><a href="/2021/05/31/01-VS%20Code%E7%9A%84%E4%BD%BF%E7%94%A8/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/xingjiahui/CDN/index_01.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">VS Code的使用</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/06/02/05-HTML标签：字体标签和超链接/" title="HTML标签：字体标签和超链接"><img class="cover" src="https://cdn.jsdelivr.net/gh/irozhi/irils-imgs//picgo/bg1.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-02</div><div class="title">HTML标签：字体标签和超链接</div></div></a></div><div><a href="/2021/06/02/06-HTML标签：图片标签/" title="HTML标签：图片标签"><img class="cover" src="https://cdn.jsdelivr.net/gh/irozhi/irils-imgs//picgo/bg1.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-02</div><div class="title">HTML标签：图片标签</div></div></a></div><div><a href="/2021/06/02/chushiHTML/" title="初识HTML"><img class="cover" src="https://cdn.jsdelivr.net/gh/huyw96/hexo-butterfly-code@v1.0/source/img/bg/bg1.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-02</div><div class="title">初识HTML</div></div></a></div><div><a href="/2021/05/31/01-VS Code的使用/" title="VS Code的使用"><img class="cover" src="https://cdn.jsdelivr.net/gh/xingjiahui/CDN/index_01.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-31</div><div class="title">VS Code的使用</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&amp;spec=100" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">ch1e</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ZwqGG"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:1444440144@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1444440144&amp;site=qq" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">现科最爱看美女的ch1e，web方向的摸鱼选手，还在学习中</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E6%96%87%E4%B8%BB%E8%A6%81%E5%86%85%E5%AE%B9"><span class="toc-number">1.</span> <span class="toc-text"> 本文主要内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E9%A2%98%E6%A0%87%E7%AD%BE"><span class="toc-number">2.</span> <span class="toc-text"> 标题标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#html-%E6%B3%A8%E9%87%8A"><span class="toc-number">3.</span> <span class="toc-text"> HTML 注释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AE%B5%E8%90%BD%E6%A0%87%E7%AD%BEp"><span class="toc-number">4.</span> <span class="toc-text"> 段落标签 &lt;p&gt;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B0%B4%E5%B9%B3%E7%BA%BF%E6%A0%87%E7%AD%BEhr"><span class="toc-number">5.</span> <span class="toc-text"> 水平线标签 &lt;hr &#x2F;&gt;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8D%A2%E8%A1%8C%E6%A0%87%E7%AD%BEbr"><span class="toc-number">6.</span> <span class="toc-text"> 换行标签 &lt;br &#x2F;&gt;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#div%E5%92%8Cspan%E6%A0%87%E7%AD%BE"><span class="toc-number">7.</span> <span class="toc-text">  &lt;div&gt;  和 &lt;span&gt;  标签</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#div%E5%92%8Cspan%E7%9A%84%E4%BB%8B%E7%BB%8D"><span class="toc-number">7.1.</span> <span class="toc-text"> div 和 span 的介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#div%E5%92%8Cspan%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">7.2.</span> <span class="toc-text"> div 和 span 的区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AE%B9%E5%B1%85%E4%B8%AD%E6%A0%87%E7%AD%BE-center"><span class="toc-number">8.</span> <span class="toc-text"> 内容居中标签  &lt;center&gt;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E5%AE%9A%E4%B9%89%E9%A2%84%E6%A0%BC%E5%BC%8F%E5%8C%96%E6%A0%87%E7%AD%BEpre"><span class="toc-number">9.</span> <span class="toc-text"> 预定义（预格式化）标签 &lt;pre&gt;</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/06/08/wangluoxieyi/" title="网络协议学习笔记"><img src="https://cdn.jsdelivr.net/gh/irozhi/irils-imgs//picgo/bg1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网络协议学习笔记"/></a><div class="content"><a class="title" href="/2021/06/08/wangluoxieyi/" title="网络协议学习笔记">网络协议学习笔记</a><time datetime="2021-06-08T09:58:48.000Z" title="发表于 2021-06-08 17:58:48">2021-06-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/07/sql%E6%B3%A8%E5%85%A5/" title="SQL注入笔记"><img src="https://gitee.com/ZDDR/blog_img/raw/master/img/index_img/%E5%8D%9A%E5%AE%A2%E5%B0%81%E9%9D%A2%E5%9B%BE.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SQL注入笔记"/></a><div class="content"><a class="title" href="/2021/06/07/sql%E6%B3%A8%E5%85%A5/" title="SQL注入笔记">SQL注入笔记</a><time datetime="2021-06-07T10:24:59.678Z" title="发表于 2021-06-07 18:24:59">2021-06-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/02/chushiHTML/" title="初识HTML"><img src="https://cdn.jsdelivr.net/gh/huyw96/hexo-butterfly-code@v1.0/source/img/bg/bg1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="初识HTML"/></a><div class="content"><a class="title" href="/2021/06/02/chushiHTML/" title="初识HTML">初识HTML</a><time datetime="2021-06-02T12:44:50.210Z" title="发表于 2021-06-02 20:44:50">2021-06-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/02/06-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%9B%BE%E7%89%87%E6%A0%87%E7%AD%BE/" title="HTML标签：图片标签"><img src="https://cdn.jsdelivr.net/gh/irozhi/irils-imgs//picgo/bg1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="HTML标签：图片标签"/></a><div class="content"><a class="title" href="/2021/06/02/06-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%9B%BE%E7%89%87%E6%A0%87%E7%AD%BE/" title="HTML标签：图片标签">HTML标签：图片标签</a><time datetime="2021-06-02T12:44:50.207Z" title="发表于 2021-06-02 20:44:50">2021-06-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/02/05-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%AD%97%E4%BD%93%E6%A0%87%E7%AD%BE%E5%92%8C%E8%B6%85%E9%93%BE%E6%8E%A5/" title="HTML标签：字体标签和超链接"><img src="https://cdn.jsdelivr.net/gh/irozhi/irils-imgs//picgo/bg1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="HTML标签：字体标签和超链接"/></a><div class="content"><a class="title" href="/2021/06/02/05-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%AD%97%E4%BD%93%E6%A0%87%E7%AD%BE%E5%92%8C%E8%B6%85%E9%93%BE%E6%8E%A5/" title="HTML标签：字体标签和超链接">HTML标签：字体标签和超链接</a><time datetime="2021-06-02T12:44:50.204Z" title="发表于 2021-06-02 20:44:50">2021-06-02</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By ch1e</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
 
-      <div class="tags">
-          <a href="/tags/web%E5%BC%80%E5%8F%91/" rel="tag"><i class="ic i-tag"></i> web开发</a>
-      </div>
-  </div>
-
-   <footer>
-
-    <div class="meta">
-  <span class="item">
-    <span class="icon">
-      <i class="ic i-calendar-check"></i>
-    </span>
-    <span class="text">更新于</span>
-    <time title="修改时间：2021-06-07 18:49:57" itemprop="dateModified" datetime="2021-06-07T18:49:57+08:00">2021-06-07</time>
-  </span>
-</div>
-
-      
-
-<div id="copyright">
-<ul>
-  <li class="author">
-    <strong>本文作者： </strong>ch1e <i class="ic i-at"><em>@</em></i>ch1e's Blog
-  </li>
-  <li class="link">
-    <strong>本文链接：</strong>
-    <a href="http://example.com/2021/06/02/04-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E6%8E%92%E7%89%88%E6%A0%87%E7%AD%BE/" title="HTML标签：排版标签">http://example.com/2021/06/02/04-HTML标签：排版标签/</a>
-  </li>
-  <li class="license">
-    <strong>版权声明： </strong>本站所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> 许可协议。转载请注明出处！
-  </li>
-</ul>
-</div>
-
-  </footer>
-
-</article>
-
-  </div>
-  
-
-<div class="post-nav">
-    <div class="item left">
-      
-
-  <a href="/2021/05/31/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE1/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeun65urj20zk0m81ii.jpg" title="网络协议学习（一）">
-  <span class="type">上一篇</span>
-  <span class="category"><i class="ic i-flag"></i> </span>
-  <h3>网络协议学习（一）</h3>
-  </a>
-
-    </div>
-    <div class="item right">
-      
-
-  <a href="/2021/06/02/05-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%AD%97%E4%BD%93%E6%A0%87%E7%AD%BE%E5%92%8C%E8%B6%85%E9%93%BE%E6%8E%A5/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva4.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipexj2jgzj20zk0m8b09.jpg" title="HTML标签：字体标签和超链接">
-  <span class="type">下一篇</span>
-  <span class="category"><i class="ic i-flag"></i> </span>
-  <h3>HTML标签：字体标签和超链接</h3>
-  </a>
-
-    </div>
-</div>
-
-  
-  <div class="wrap" id="comments"></div>
-
-
-        </div>
-        <div id="sidebar">
-          
-
-<div class="inner">
-
-  <div class="panels">
-    <div class="inner">
-      <div class="contents panel pjax" data-title="文章目录">
-          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E6%96%87%E4%B8%BB%E8%A6%81%E5%86%85%E5%AE%B9"><span class="toc-number">1.</span> <span class="toc-text"> 本文主要内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E9%A2%98%E6%A0%87%E7%AD%BE"><span class="toc-number">2.</span> <span class="toc-text"> 标题标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#html-%E6%B3%A8%E9%87%8A"><span class="toc-number">3.</span> <span class="toc-text"> HTML 注释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AE%B5%E8%90%BD%E6%A0%87%E7%AD%BEp"><span class="toc-number">4.</span> <span class="toc-text"> 段落标签 &lt;p&gt;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B0%B4%E5%B9%B3%E7%BA%BF%E6%A0%87%E7%AD%BEhr"><span class="toc-number">5.</span> <span class="toc-text"> 水平线标签 &lt;hr &#x2F;&gt;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8D%A2%E8%A1%8C%E6%A0%87%E7%AD%BEbr"><span class="toc-number">6.</span> <span class="toc-text"> 换行标签 &lt;br &#x2F;&gt;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#div%E5%92%8Cspan%E6%A0%87%E7%AD%BE"><span class="toc-number">7.</span> <span class="toc-text">  &lt;div&gt;  和 &lt;span&gt;  标签</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#div%E5%92%8Cspan%E7%9A%84%E4%BB%8B%E7%BB%8D"><span class="toc-number">7.1.</span> <span class="toc-text"> div 和 span 的介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#div%E5%92%8Cspan%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">7.2.</span> <span class="toc-text"> div 和 span 的区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AE%B9%E5%B1%85%E4%B8%AD%E6%A0%87%E7%AD%BE-center"><span class="toc-number">8.</span> <span class="toc-text"> 内容居中标签  &lt;center&gt;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E5%AE%9A%E4%B9%89%E9%A2%84%E6%A0%BC%E5%BC%8F%E5%8C%96%E6%A0%87%E7%AD%BEpre"><span class="toc-number">9.</span> <span class="toc-text"> 预定义（预格式化）标签 &lt;pre&gt;</span></a></li></ol>
-      </div>
-      <div class="related panel pjax" data-title="系列文章">
-      </div>
-      <div class="overview panel" data-title="站点概览">
-        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <img class="image" itemprop="image" alt="ch1e"
-      data-src="/images/avatar.jpg">
-  <p class="name" itemprop="name">ch1e</p>
-  <div class="description" itemprop="description"></div>
-</div>
-
-<nav class="state">
-    <div class="item posts">
-      <a href="/archives/">
-        <span class="count">11</span>
-        <span class="name">文章</span>
-      </a>
-    </div>
-    <div class="item tags">
-      <a href="/tags/">
-        <span class="count">11</span>
-        <span class="name">标签</span>
-      </a>
-    </div>
-</nav>
-
-<div class="social">
-      <span class="exturl item about" data-url="aHR0cDovL3RjLnFxYmxvZy50b3Av" title="http:&#x2F;&#x2F;tc.qqblog.top&#x2F;"><i class="ic i-address-card"></i></span>
-      <span class="exturl item email" data-url="bWFpbHRvOjE0NDQ0MDE0NEBxcS5jb20=" title="mailto:144440144@qq.com"><i class="ic i-envelope"></i></span>
-</div>
-
-<ul class="menu">
-  
-    
-  <li class="item">
-    <a href="/" rel="section"><i class="ic i-home"></i>首页</a>
-  </li>
-
-    
-  <li class="item">
-    <span class="exturl" data-url="aHR0cDovL3RjLnFxYmxvZy50b3A="><i class="ic i-user"></i>关于</span>
-  </li>
-
-        
-  <li class="item dropdown">
-      <a href="javascript:void(0);"><i class="ic i-feather"></i>文章</a>
-    <ul class="submenu">
-
-        
-  <li class="item">
-    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>归档</a>
-  </li>
-
-        
-  <li class="item">
-    <a href="/tags/" rel="section"><i class="ic i-tags"></i>标签</a>
-  </li>
-
-  </ul>
-    
-  <li class="item">
-    <a href="/friends/" rel="section"><i class="ic i-heart"></i>朋友圈</a>
-  </li>
-
-
-</ul>
-
-      </div>
-    </div>
-  </div>
-
-  <ul id="quick">
-    <li class="prev pjax">
-        <a href="/2021/05/31/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE1/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a>
-    </li>
-    <li class="up"><i class="ic i-arrow-up"></i></li>
-    <li class="down"><i class="ic i-arrow-down"></i></li>
-    <li class="next pjax">
-        <a href="/2021/06/02/05-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%AD%97%E4%BD%93%E6%A0%87%E7%AD%BE%E5%92%8C%E8%B6%85%E9%93%BE%E6%8E%A5/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a>
-    </li>
-    <li class="percent"></li>
-  </ul>
-</div>
-
-
-        </div>
-        <div class="dimmer"></div>
-      </div>
-    </main>
-    <footer id="footer">
-      <div class="inner">
-        <div class="widgets">
-          
-
-        </div>
-        <div class="status">
-  <div class="copyright">
-    
-    &copy; 2010 – 
-    <span itemprop="copyrightYear">2021</span>
-    <span class="with-love">
-      <i class="ic i-sakura rotate"></i>
-    </span>
-    <span class="author" itemprop="copyrightHolder">ch1e @ ch1e-cjlusec</span>
-  </div>
-  <div class="powered-by">
-    基于 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
-  </div>
-</div>
-
-      </div>
-    </footer>
-  </div>
-<script data-config type="text/javascript">
-  var LOCAL = {
-    path: '2021/06/02/04-HTML标签：排版标签/',
-    favicon: {
-      show: "（●´3｀●）やれやれだぜ",
-      hide: "(´Д｀)大変だ！"
-    },
-    search : {
-      placeholder: "文章搜索",
-      empty: "关于 「 ${query} 」，什么也没搜到",
-      stats: "${time} ms 内找到 ${hits} 条结果"
-    },
-    valine: true,fancybox: true,copyright: '复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。',
-    ignores : [
-      function(uri) {
-        return uri.includes('#');
-      },
-      function(uri) {
-        return new RegExp(LOCAL.path+"$").test(uri);
-      }
-    ]
-  };
-</script>
-
-<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
-
-<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
-
-<script src="/js/app.js?v=0.2.5"></script>
-
-
-
-
-</body>
-</html>
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="true"></script></div></body></html>
