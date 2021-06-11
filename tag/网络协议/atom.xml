@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>http://example.com</id>
+    <id>https://ch1e.gitee.io</id>
     <title>ch1e&#39;s Blog • Posts by &#34;网络协议&#34; tag</title>
-    <link href="http://example.com" />
+    <link href="https://ch1e.gitee.io" />
     <updated>2021-06-08T09:58:48.000Z</updated>
     <category term="web开发" />
     <category term="数据库" />
     <category term="web安全" />
     <category term="网络协议" />
     <entry>
-        <id>http://example.com/2021/06/08/wangluoxieyi/</id>
+        <id>https://ch1e.gitee.io/2021/06/08/wangluoxieyi/</id>
         <title>网络协议学习笔记</title>
-        <link rel="alternate" href="http://example.com/2021/06/08/wangluoxieyi/"/>
+        <link rel="alternate" href="https://ch1e.gitee.io/2021/06/08/wangluoxieyi/"/>
         <content type="html">&lt;h1 id=&#34;为什么要学习网络协议&#34;&gt;&lt;a href=&#34;#为什么要学习网络协议&#34; class=&#34;headerlink&#34; title=&#34;为什么要学习网络协议&#34;&gt;&lt;/a&gt;为什么要学习网络协议&lt;/h1&gt;&lt;p&gt;互联网、移动互联网、物联网，都离不开网络协议：&lt;/p&gt;
 &lt;p&gt;最熟悉的网络协议：HTTP&lt;/p&gt;
 &lt;p&gt;为了满足各种需求，有各式各样的网络协议（HTTPS、SMTP、MQTT、RTMP等）&lt;/p&gt;

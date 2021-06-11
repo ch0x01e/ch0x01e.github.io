@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>http://example.com</id>
+    <id>https://ch1e.gitee.io</id>
     <title>ch1e&#39;s Blog • Posts by &#34;web开发&#34; tag</title>
-    <link href="http://example.com" />
+    <link href="https://ch1e.gitee.io" />
     <updated>2021-06-02T12:44:50.210Z</updated>
     <category term="web开发" />
     <category term="数据库" />
     <category term="web安全" />
     <category term="网络协议" />
     <entry>
-        <id>http://example.com/2021/06/02/chushiHTML/</id>
+        <id>https://ch1e.gitee.io/2021/06/02/chushiHTML/</id>
         <title>初识HTML</title>
-        <link rel="alternate" href="http://example.com/2021/06/02/chushiHTML/"/>
+        <link rel="alternate" href="https://ch1e.gitee.io/2021/06/02/chushiHTML/"/>
         <content type="html">&lt;h2 id=&#34;编辑器相关&#34;&gt;&lt;a href=&#34;#编辑器相关&#34; class=&#34;headerlink&#34; title=&#34;编辑器相关&#34;&gt;&lt;/a&gt;编辑器相关&lt;/h2&gt;&lt;p&gt;前端开发的编辑器软件，我首先推荐 VS Code，其次推荐Sublime Text。&lt;/p&gt;
 &lt;p&gt;有人说 WebStorm 也不错？但真实情况是，自从VS Code 问世之后，用 WebStorm 的人越来越少了。&lt;/p&gt;
 &lt;p&gt;PS：文件的后缀名不能决定文件格式，只能决定打开文件打开的方式。&lt;/p&gt;
@@ -49,33 +49,11 @@
 &lt;/ul&gt;
 &lt;h2 id=&#34;书写第一个-HTML-页面&#34;&gt;&lt;a href=&#34;#书写第一个-HTML-页面&#34; class=&#34;headerlink&#34; title=&#34;书写第一个 HTML 页面&#34;&gt;&lt;/a&gt;书写第一个 HTML 页面&lt;/h2&gt;&lt;p&gt;我们打开 VS Code 软件，新建一个文件，名叫&lt;code&gt;test.html&lt;/code&gt;（注意，文件名是&lt;code&gt;test&lt;/code&gt;，后缀名是&lt;code&gt;html&lt;/code&gt;），保存到本地。&lt;/p&gt;
 &lt;p&gt;紧接着，在文件里，输入&lt;code&gt;html:5&lt;/code&gt;，然后按一下键盘上的&lt;code&gt;Tab&lt;/code&gt;键，就可以自动生成如下内容：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;!DOCTYPE html&amp;gt;
-&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
-&amp;lt;head&amp;gt;
-    &amp;lt;meta charset=&amp;quot;UTF-8&amp;quot;&amp;gt;
-    &amp;lt;meta name=&amp;quot;viewport&amp;quot; content=&amp;quot;width=device-width, initial-scale=1.0&amp;quot;&amp;gt;
-    &amp;lt;title&amp;gt;Document&amp;lt;/title&amp;gt;
-&amp;lt;/head&amp;gt;
-&amp;lt;body&amp;gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;!DOCTYPE &lt;span class=&#34;meta-keyword&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;lang&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;charset&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;UTF-8&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;name&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;viewport&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;width=device-width, initial-scale=1.0&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;Document&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;上面的内容，就是 html 页面的骨架。我们在此基础之上，新增几个标签，完整代码如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;!DOCTYPE html&amp;gt;
-&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
-&amp;lt;head&amp;gt;
-    &amp;lt;meta charset=&amp;quot;UTF-8&amp;quot;&amp;gt;
-    &amp;lt;meta name=&amp;quot;viewport&amp;quot; content=&amp;quot;width=device-width, initial-scale=1.0&amp;quot;&amp;gt;
-    &amp;lt;title&amp;gt;Document&amp;lt;/title&amp;gt;
-&amp;lt;/head&amp;gt;
-&amp;lt;body&amp;gt;
-    &amp;lt;h3&amp;gt;我是三级标题&amp;lt;/h3&amp;gt;
-    &amp;lt;img src=&amp;quot;&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt;
-    &amp;lt;a href=&amp;quot;https://www.jd.com&amp;quot;&amp;gt;我是超链接，可以点击一下&amp;lt;/a&amp;gt;
-&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;!DOCTYPE &lt;span class=&#34;meta-keyword&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;lang&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;charset&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;UTF-8&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;name&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;viewport&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;width=device-width, initial-scale=1.0&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;Document&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;h3&lt;/span&gt;&amp;gt;&lt;/span&gt;我是三级标题&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;h3&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;img&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;src&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;alt&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;href&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;https://www.jd.com&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;我是超链接，可以点击一下&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;标签写完之后，我们用 chrome 浏览器打开上面这个&lt;code&gt;test.html&lt;/code&gt;文件，看看页面效果：&lt;/p&gt;
 &lt;p&gt;到此，第一个简单的 HTML 页面就写完了。是不是很有成就感？&lt;/p&gt;
 &lt;h2 id=&#34;HTML结构详解&#34;&gt;&lt;a href=&#34;#HTML结构详解&#34; class=&#34;headerlink&#34; title=&#34;HTML结构详解&#34;&gt;&lt;/a&gt;HTML结构详解&lt;/h2&gt;&lt;p&gt;HTML标签通常是成对出现的（&lt;font color=&#34;blue&#34;&gt;&lt;strong&gt;双边标记&lt;/strong&gt;&lt;/font&gt;），比如 &lt;code&gt;&amp;lt;div&amp;gt;&lt;/code&gt; 和 &lt;code&gt;&amp;lt;/div&amp;gt;&lt;/code&gt;；也有少部分单标签（&lt;font color=&#34;blue&#34;&gt;&lt;strong&gt;单边标记&lt;/strong&gt;&lt;/font&gt;），如：&lt;code&gt;&amp;lt;br /&amp;gt;&lt;/code&gt;、&lt;code&gt;&amp;lt;hr /&amp;gt;&lt;/code&gt;和&lt;code&gt;&amp;lt;img src=&amp;quot;images/1.jpg&amp;quot; /&amp;gt;&lt;/code&gt;等。&lt;/p&gt;
@@ -110,43 +88,14 @@
 &lt;/tr&gt;
 &lt;/tbody&gt;&lt;/table&gt;
 &lt;h3 id=&#34;快速生成-html-的骨架&#34;&gt;&lt;a href=&#34;#快速生成-html-的骨架&#34; class=&#34;headerlink&#34; title=&#34;快速生成 html 的骨架&#34;&gt;&lt;/a&gt;快速生成 html 的骨架&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;方式1&lt;/strong&gt;：在 VS Code 中新建 html 文件，输入&lt;code&gt;html:5&lt;/code&gt;，按 &lt;code&gt;Tab&lt;/code&gt;键后，自动生成的代码如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;!DOCTYPE html&amp;gt;
-&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
-&amp;lt;head&amp;gt;
-    &amp;lt;meta charset=&amp;quot;UTF-8&amp;quot;&amp;gt;
-    &amp;lt;meta name=&amp;quot;viewport&amp;quot; content=&amp;quot;width=device-width, initial-scale=1.0&amp;quot;&amp;gt;
-    &amp;lt;meta http-equiv=&amp;quot;Content-Type&amp;quot; content=&amp;quot;text/html;charset=UTF-8&amp;quot;&amp;gt;
-    &amp;lt;title&amp;gt;Document&amp;lt;/title&amp;gt;
-&amp;lt;/head&amp;gt;
-&amp;lt;body&amp;gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;!DOCTYPE &lt;span class=&#34;meta-keyword&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;lang&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;charset&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;UTF-8&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;name&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;viewport&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;width=device-width, initial-scale=1.0&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;http-equiv&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;Content-Type&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;text/html;charset=UTF-8&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;Document&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;strong&gt;方式2&lt;/strong&gt;：在Sublime Text中安装&lt;code&gt;Emmet&lt;/code&gt;插件。新建html文件，输入&lt;code&gt;html:5&lt;/code&gt;，按&lt;code&gt;Tab&lt;/code&gt;键后，自动生成的代码如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;!DOCTYPE html&amp;gt;
-&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
-&amp;lt;head&amp;gt;
-    &amp;lt;meta charset=&amp;quot;UTF-8&amp;quot;&amp;gt;
-    &amp;lt;title&amp;gt;Document&amp;lt;/title&amp;gt;
-&amp;lt;/head&amp;gt;
-&amp;lt;body&amp;gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;!DOCTYPE &lt;span class=&#34;meta-keyword&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;lang&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;charset&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;UTF-8&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;Document&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;strong&gt;方式3&lt;/strong&gt;：在Sublime Text中安装&lt;code&gt;Emmet&lt;/code&gt;插件。新建html文件，输入&lt;code&gt;html:xt&lt;/code&gt;，按&lt;code&gt;Tab&lt;/code&gt;键后，自动生成的代码如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;!DOCTYPE html PUBLIC &amp;quot;-//W3C//DTD XHTML 1.0 Transitional//EN&amp;quot; &amp;quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&amp;quot;&amp;gt;
-&amp;lt;html xmlns=&amp;quot;http://www.w3.org/1999/xhtml&amp;quot; xml:lang=&amp;quot;en&amp;quot;&amp;gt;
-&amp;lt;head&amp;gt;
-    &amp;lt;meta http-equiv=&amp;quot;Content-Type&amp;quot; content=&amp;quot;text/html;charset=UTF-8&amp;quot;&amp;gt;
-    &amp;lt;title&amp;gt;Document&amp;lt;/title&amp;gt;
-&amp;lt;/head&amp;gt;
-&amp;lt;body&amp;gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;!DOCTYPE &lt;span class=&#34;meta-keyword&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;meta-keyword&#34;&gt;PUBLIC&lt;/span&gt; &lt;span class=&#34;meta-string&#34;&gt;&amp;quot;-//W3C//DTD XHTML 1.0 Transitional//EN&amp;quot;&lt;/span&gt; &lt;span class=&#34;meta-string&#34;&gt;&amp;quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;xmlns&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;http://www.w3.org/1999/xhtml&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;xml:lang&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;http-equiv&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;Content-Type&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;text/html;charset=UTF-8&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;Document&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;上面的方式2和方式3中，我们会发现，第一行的内容有些不太一样，这就是我们接下来要讲的&lt;strong&gt;文档声明头&lt;/strong&gt;。&lt;/p&gt;
 &lt;h3 id=&#34;1、文档声明头&#34;&gt;&lt;a href=&#34;#1、文档声明头&#34; class=&#34;headerlink&#34; title=&#34;1、文档声明头&#34;&gt;&lt;/a&gt;1、文档声明头&lt;/h3&gt;&lt;p&gt;任何一个标准的HTML页面，第一行一定是一个以&lt;code&gt;&amp;lt;!DOCTYPE ……&amp;gt;&lt;/code&gt;开头的语句。这一行，就是文档声明头，即 DocType Declaration，简称DTD。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;DTD可告知浏览器文档使用哪种 HTML 或 XHTML 规范&lt;/strong&gt;。&lt;/p&gt;
@@ -165,11 +114,11 @@
 &lt;p&gt;&lt;strong&gt;Frameset&lt;/strong&gt;：表示“框架”，在框架的页面使用。&lt;/p&gt;
 &lt;p&gt;在sublime输入的html:xt，x表示XHTML，t表示transitional。&lt;/p&gt;
 &lt;p&gt;在HTML5中极大的简化了DTD，也就是说HTML5中就没有XHTML了。HTML5的DTD（文档声明头）如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;&amp;lt;!DOCTYPE html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;h3 id=&#34;2、页面语言-lang&#34;&gt;&lt;a href=&#34;#2、页面语言-lang&#34; class=&#34;headerlink&#34; title=&#34;2、页面语言 lang&#34;&gt;&lt;/a&gt;2、页面语言 &lt;code&gt;lang&lt;/code&gt;&lt;/h3&gt;&lt;p&gt;下面这行标签，用于指定页面的语言类型：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;lang&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;最常见的语言类型有两种：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;en：定义页面语言为英语。&lt;/p&gt;
@@ -177,22 +126,8 @@
 &lt;li&gt;&lt;p&gt;zh-CN：定义页面语言为中文。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;2、头标签-head&#34;&gt;&lt;a href=&#34;#2、头标签-head&#34; class=&#34;headerlink&#34; title=&#34;2、头标签 head&#34;&gt;&lt;/a&gt;2、头标签 &lt;code&gt;head&lt;/code&gt;&lt;/h3&gt;&lt;h4 id=&#34;html5-的比较完整的骨架：&#34;&gt;&lt;a href=&#34;#html5-的比较完整的骨架：&#34; class=&#34;headerlink&#34; title=&#34;html5 的比较完整的骨架：&#34;&gt;&lt;/a&gt;html5 的比较完整的骨架：&lt;/h4&gt;&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;!DOCTYPE html&amp;gt;
-&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
-&amp;lt;head&amp;gt;
-    &amp;lt;meta charset=&amp;quot;UTF-8&amp;quot;&amp;gt;
-    &amp;lt;meta name=&amp;quot;viewport&amp;quot; content=&amp;quot;width=device-width, initial-scale=1.0&amp;quot;&amp;gt;
-    &amp;lt;meta http-equiv=&amp;quot;Content-Type&amp;quot; content=&amp;quot;text/html;charset=UTF-8&amp;quot;&amp;gt;
-    &amp;lt;meta name=&amp;quot;Author&amp;quot; content=&amp;quot;&amp;quot;&amp;gt;
-    &amp;lt;meta name=&amp;quot;Keywords&amp;quot; content=&amp;quot;厉害很厉害&amp;quot; /&amp;gt;
-    &amp;lt;meta name=&amp;quot;Description&amp;quot; content=&amp;quot;网易是中国领先的互联网技术公司，为用户提供免费邮箱、游戏、搜索引擎服务，开设新闻、娱乐、体育等30多个内容频道，及博客、视频、论坛等互动交流，网聚人的力量。&amp;quot; /&amp;gt;
-    &amp;lt;title&amp;gt;Document&amp;lt;/title&amp;gt;
-&amp;lt;/head&amp;gt;
-&amp;lt;body&amp;gt;
+&lt;h3 id=&#34;2、头标签-head&#34;&gt;&lt;a href=&#34;#2、头标签-head&#34; class=&#34;headerlink&#34; title=&#34;2、头标签 head&#34;&gt;&lt;/a&gt;2、头标签 &lt;code&gt;head&lt;/code&gt;&lt;/h3&gt;&lt;h4 id=&#34;html5-的比较完整的骨架：&#34;&gt;&lt;a href=&#34;#html5-的比较完整的骨架：&#34; class=&#34;headerlink&#34; title=&#34;html5 的比较完整的骨架：&#34;&gt;&lt;/a&gt;html5 的比较完整的骨架：&lt;/h4&gt;&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;!DOCTYPE &lt;span class=&#34;meta-keyword&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;lang&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;charset&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;UTF-8&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;name&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;viewport&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;width=device-width, initial-scale=1.0&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;http-equiv&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;Content-Type&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;text/html;charset=UTF-8&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;name&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;Author&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;name&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;Keywords&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;厉害很厉害&amp;quot;&lt;/span&gt; /&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;name&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;Description&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;网易是中国领先的互联网技术公司，为用户提供免费邮箱、游戏、搜索引擎服务，开设新闻、娱乐、体育等30多个内容频道，及博客、视频、论坛等互动交流，网聚人的力量。&amp;quot;&lt;/span&gt; /&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;Document&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;面试题：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;问：网页的head标签里面，表示的是页面的配置，有什么配置？&lt;/li&gt;
@@ -210,42 +145,40 @@
 &lt;p&gt;meta表示“元”。“元”配置，就是表示基本的配置项目。&lt;/p&gt;
 &lt;p&gt;常见的几种 meta 标签如下：&lt;/p&gt;
 &lt;p&gt;（1）字符集 charset：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;meta http-equiv=&amp;quot;Content-Type&amp;quot; content=&amp;quot;text/html;charset=UTF-8&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;http-equiv&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;Content-Type&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;text/html;charset=UTF-8&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;字符集用meta标签中的&lt;code&gt;charset&lt;/code&gt;定义，charset就是character set（即“字符集”），即&lt;strong&gt;网页的编码方式&lt;/strong&gt;。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;字符集&lt;/strong&gt;(Character set)是多个字符的集合。计算机要准确的处理各种字符集文字，需要进行字符编码，以便计算机能够识别和存储各种文字。&lt;/p&gt;
 &lt;p&gt;上面这行代码非常关键， 是必须要写的代码，否则可能导致乱码。比如你保存的时候，meta写的和声明的不匹配，那么浏览器就是乱码。&lt;/p&gt;
 &lt;p&gt;utf-8是目前最常用的字符集编码方式，常用的字符集编码方式还有gbk和gb2312等。关于“编码方式”，我们在下一段会详细介绍。&lt;/p&gt;
 &lt;p&gt;（2）视口 viewport：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;    &amp;lt;meta name=&amp;quot;viewport&amp;quot; content=&amp;quot;width=device-width, initial-scale=1.0&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;name&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;viewport&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;width=device-width, initial-scale=1.0&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;&lt;code&gt;width=device-width&lt;/code&gt; ：表示视口宽度等于屏幕宽度。&lt;/p&gt;
 &lt;p&gt;viewport 这个知识点，初学者还比较难理解，以后学 Web 移动端的时候会用到。&lt;/p&gt;
 &lt;p&gt;（3）定义“关键词”：&lt;/p&gt;
 &lt;p&gt;举例如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;meta name=&amp;quot;Keywords&amp;quot; content=&amp;quot;网易,邮箱,游戏,新闻,体育,娱乐,女性,亚运,论坛,短信&amp;quot; /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;name&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;Keywords&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;网易,邮箱,游戏,新闻,体育,娱乐,女性,亚运,论坛,短信&amp;quot;&lt;/span&gt; /&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;这些关键词，就是告诉搜索引擎，这个网页是干嘛的，能够提高搜索命中率。让别人能够找到你，搜索到你。&lt;/p&gt;
 &lt;p&gt;（4）定义“页面描述”：&lt;/p&gt;
 &lt;p&gt;meta除了可以设置字符集，还可以设置关键字和页面描述。&lt;/p&gt;
 &lt;p&gt;只要设置Description页面描述，那么百度搜索结果，就能够显示这些语句，这个技术叫做&lt;strong&gt;SEO&lt;/strong&gt;（search engine optimization，搜索引擎优化）。&lt;/p&gt;
 &lt;p&gt;设置页面描述的举例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;meta name=&amp;quot;Description&amp;quot; content=&amp;quot;网易是中国领先的互联网技术公司，为用户提供免费邮箱、游戏、搜索引擎服务，开设新闻、娱乐、体育等30多个内容频道，及博客、视频、论坛等互动交流，网聚人的力量。&amp;quot; /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;name&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;Description&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;网易是中国领先的互联网技术公司，为用户提供免费邮箱、游戏、搜索引擎服务，开设新闻、娱乐、体育等30多个内容频道，及博客、视频、论坛等互动交流，网聚人的力量。&amp;quot;&lt;/span&gt; /&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;效果如下：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/20170629_1743.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;上面的几种&lt;code&gt;&amp;lt;meta&amp;gt;&lt;/code&gt;标签都不用记，但是另外还有一个&lt;code&gt;&amp;lt;meta&amp;gt;&lt;/code&gt;标签是需要记住的：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;meta http-equiv=&amp;quot;refresh&amp;quot; content=&amp;quot;3;http://www.baidu.com&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;http-equiv&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;refresh&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;3;http://www.baidu.com&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;上面这个标签的意思是说，3秒之后，自动跳转到百度页面。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;title 标签&lt;/strong&gt;:&lt;/p&gt;
 &lt;p&gt;用于设置网页标题：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;    &amp;lt;title&amp;gt;网页的标题&amp;lt;/title&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;网页的标题&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;title标签也是有助于SEO搜索引擎优化的。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;base标签&lt;/strong&gt;：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;base href=&amp;quot;/&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;base&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;href&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;base 标签用于指定基础的路径。指定之后，所有的 a 链接都是以这个路径为基准。&lt;/p&gt;
 &lt;h3 id=&#34;3、-lt-body-gt-标签&#34;&gt;&lt;a href=&#34;#3、-lt-body-gt-标签&#34; class=&#34;headerlink&#34; title=&#34;3、&amp;lt;body&amp;gt;标签&#34;&gt;&lt;/a&gt;3、&lt;code&gt;&amp;lt;body&amp;gt;&lt;/code&gt;标签&lt;/h3&gt;&lt;p&gt;&lt;code&gt;&amp;lt;body&amp;gt;&lt;/code&gt;标签的属性有：&lt;/p&gt;
 &lt;ul&gt;
@@ -327,13 +260,13 @@
         <updated>2021-06-02T12:44:50.210Z</updated>
     </entry>
     <entry>
-        <id>http://example.com/2021/06/02/06-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%9B%BE%E7%89%87%E6%A0%87%E7%AD%BE/</id>
+        <id>https://ch1e.gitee.io/2021/06/02/06-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%9B%BE%E7%89%87%E6%A0%87%E7%AD%BE/</id>
         <title>HTML标签：图片标签</title>
-        <link rel="alternate" href="http://example.com/2021/06/02/06-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%9B%BE%E7%89%87%E6%A0%87%E7%AD%BE/"/>
+        <link rel="alternate" href="https://ch1e.gitee.io/2021/06/02/06-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%9B%BE%E7%89%87%E6%A0%87%E7%AD%BE/"/>
         <content type="html">&lt;h2 id=&#34;img标签介绍&#34;&gt;&lt;a href=&#34;#img标签介绍&#34; class=&#34;headerlink&#34; title=&#34;img标签介绍&#34;&gt;&lt;/a&gt;img标签介绍&lt;/h2&gt;&lt;h3 id=&#34;介绍&#34;&gt;&lt;a href=&#34;#介绍&#34; class=&#34;headerlink&#34; title=&#34;介绍&#34;&gt;&lt;/a&gt;介绍&lt;/h3&gt;&lt;p&gt;img: 英文全称 image（图像），代表的是一张图片。&lt;/p&gt;
 &lt;p&gt;如果要想在网页中显示图像，就可以使用img 标签，它是一个单标签。语法如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;img src=&amp;quot;图片的URL&amp;quot; /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;img&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;src&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;图片的URL&amp;quot;&lt;/span&gt; /&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;h3 id=&#34;能插入的图片类型&#34;&gt;&lt;a href=&#34;#能插入的图片类型&#34; class=&#34;headerlink&#34; title=&#34;能插入的图片类型&#34;&gt;&lt;/a&gt;能插入的图片类型&lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;&lt;p&gt;能够插入的图片类型是：jpg(jpeg)、gif、png、bmp等。&lt;/p&gt;
 &lt;/li&gt;
@@ -348,20 +281,14 @@
 &lt;p&gt;在写&lt;strong&gt;图片的路径&lt;/strong&gt;时，有两种写法：相对路径、绝对路径&lt;/p&gt;
 &lt;h3 id=&#34;写法一：图片的相对路径&#34;&gt;&lt;a href=&#34;#写法一：图片的相对路径&#34; class=&#34;headerlink&#34; title=&#34;写法一：图片的相对路径&#34;&gt;&lt;/a&gt;写法一：图片的相对路径&lt;/h3&gt;&lt;p&gt;相对当前页面所在的路径。两个标记 &lt;code&gt;.&lt;/code&gt; 和 &lt;code&gt;..&lt;/code&gt; 分表代表当前目录和上一层目录。&lt;/p&gt;
 &lt;p&gt;举例1：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;!-- 当前目录中的图片 --&amp;gt;
-&amp;lt;img src=&amp;quot;2.jpg&amp;quot;&amp;gt;
-&amp;lt;img src=&amp;quot;.\2.jpg&amp;quot;&amp;gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;&amp;lt;!-- 当前目录中的图片 --&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;img&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;src&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;2.jpg&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;img&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;src&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;.\2.jpg&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;&amp;lt;!-- 上一级目录中的图片 --&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;img&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;src&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;..\2.jpg&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-&amp;lt;!-- 上一级目录中的图片 --&amp;gt;
-&amp;lt;img src=&amp;quot;..\2.jpg&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;相对路径不会出现这种情况：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;aaa/../bbb/1.jpg
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;aaa/../bbb/1.jpg&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;&lt;code&gt;../&lt;/code&gt;要么不写，要么就写在开头。&lt;/p&gt;
 &lt;p&gt;举例2：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;img src=&amp;quot;images/1.jpg&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;img&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;src&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;images/1.jpg&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;上方代码的意思是说，当前html页面有一个并列的文件夹&lt;code&gt;images&lt;/code&gt;，在文件夹&lt;code&gt;images&lt;/code&gt;中存放了一张图片&lt;code&gt;1.jpg&lt;/code&gt;&lt;br&gt;效果：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/20151001_19.jpg&#34; alt=&#34;Paste_Image.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;相对路径的面试题。现有如下文件层级图：&lt;/p&gt;
@@ -370,23 +297,23 @@
 &lt;p&gt;分析：&lt;/p&gt;
 &lt;p&gt;现在document是最大的文件夹，里面有两个文件夹work和photo。work中又有一个文件夹叫做myweb。myweb文件夹里面有index.html。  所以index.html在myweb文件夹里面，上一级就是work文件夹，上两级就是document文件夹。通过document文件夹当做一个中转站，进入photo文件夹，看到了1.png。&lt;/p&gt;
 &lt;p&gt;答案：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;img src=&amp;quot;../../photo/1.png&amp;quot; /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;img&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;src&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;../../photo/1.png&amp;quot;&lt;/span&gt; /&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;h3 id=&#34;写法二：图片的绝对路径&#34;&gt;&lt;a href=&#34;#写法二：图片的绝对路径&#34; class=&#34;headerlink&#34; title=&#34;写法二：图片的绝对路径&#34;&gt;&lt;/a&gt;写法二：图片的绝对路径&lt;/h3&gt;&lt;p&gt;绝对路径包括以下两种：&lt;/p&gt;
 &lt;p&gt;（1）以盘符开始的绝对路径。举例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;img src=&amp;quot;C:\Users\Desktop\html\images\1.jpg&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;img&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;src&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;C:\Users\Desktop\html\images\1.jpg&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;（2）网络路径。举例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;img src=&amp;quot;http://img.smyhvae.com/20200122_200901.png&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;img&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;src&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;http://img.smyhvae.com/20200122_200901.png&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;大家打开上面的img中的链接，可能有惊喜哦。&lt;/p&gt;
 &lt;h3 id=&#34;相对路径和绝对路径的总结&#34;&gt;&lt;a href=&#34;#相对路径和绝对路径的总结&#34; class=&#34;headerlink&#34; title=&#34;相对路径和绝对路径的总结&#34;&gt;&lt;/a&gt;相对路径和绝对路径的总结&lt;/h3&gt;&lt;p&gt;相对路径的好处：站点不管拷贝到哪里，文件和图片的相对路径关系都是不变的。相对路径使用有一个前提，就是网页文件和你的图片，必须在一个服务器上。&lt;/p&gt;
 &lt;p&gt;问题：我的网页在C盘，图片却在D盘，能不能插入呢？&lt;/p&gt;
 &lt;p&gt;答案： 用相对路径不能，用绝对路径也不能。&lt;/p&gt;
 &lt;p&gt;注意：可以使用file://来插入，但是这种方法，没有任何意义！因为服务器上没有所谓c盘、d盘。&lt;/p&gt;
 &lt;p&gt;下面的方法是行的，但是没有任何工程上的意义，这是因为服务器没有盘符，linux系统没有盘符：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;img src=&amp;quot;file://C:\Users\Pictures\明星\1.jpg&amp;quot; alt=&amp;quot;&amp;quot; /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;img&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;src&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;file://C:\Users\Pictures\明星\1.jpg&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;alt&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;&amp;quot;&lt;/span&gt; /&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;&lt;strong&gt;总结一下&lt;/strong&gt;：&lt;/p&gt;
 &lt;p&gt;无论是在 a 标签还是 img 标签上，如果要用路径。只有两种路径能用，就是相对路径和绝对路径：&lt;/p&gt;
 &lt;ul&gt;
@@ -417,8 +344,8 @@
 &lt;p&gt;title 属性不该被用作一幅图片在 alt 之外的补充说明信息。如果一幅图片需要小标题，使用 figure 或 figcaption 元素。&lt;/p&gt;
 &lt;p&gt;title 元素的值一般作为提示条(tooltip)呈现给用户，在光标于图片上停下后显示出来。尽管这确实能给用户提供更多的信息，您不该假定用户真的能看到：用户可能只有键盘或触摸屏。如果要把特别重要的信息提供给用户，可以选择上面提供的一种方法将其内联显示，而不是使用 title。&lt;/p&gt;
 &lt;p&gt;举例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;img src=&amp;quot;images/1.jpg&amp;quot; width=&amp;quot;300&amp;quot; height=&amp;quot;`188&amp;quot; title=&amp;quot;这是美女&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;img&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;src&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;images/1.jpg&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;width&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;300&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;height&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;`188&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;title&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;这是美女&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;效果：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/2015-10-01-cnblogs_html_20.png&#34; alt=&#34;Paste_Image.png&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;align-属性&#34;&gt;&lt;a href=&#34;#align-属性&#34; class=&#34;headerlink&#34; title=&#34;align 属性&#34;&gt;&lt;/a&gt;align 属性&lt;/h3&gt;&lt;ul&gt;
@@ -447,9 +374,9 @@
         <updated>2021-06-02T12:44:50.207Z</updated>
     </entry>
     <entry>
-        <id>http://example.com/2021/06/02/05-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%AD%97%E4%BD%93%E6%A0%87%E7%AD%BE%E5%92%8C%E8%B6%85%E9%93%BE%E6%8E%A5/</id>
+        <id>https://ch1e.gitee.io/2021/06/02/05-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%AD%97%E4%BD%93%E6%A0%87%E7%AD%BE%E5%92%8C%E8%B6%85%E9%93%BE%E6%8E%A5/</id>
         <title>HTML标签：字体标签和超链接</title>
-        <link rel="alternate" href="http://example.com/2021/06/02/05-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%AD%97%E4%BD%93%E6%A0%87%E7%AD%BE%E5%92%8C%E8%B6%85%E9%93%BE%E6%8E%A5/"/>
+        <link rel="alternate" href="https://ch1e.gitee.io/2021/06/02/05-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E5%AD%97%E4%BD%93%E6%A0%87%E7%AD%BE%E5%92%8C%E8%B6%85%E9%93%BE%E6%8E%A5/"/>
         <content type="html">&lt;h2 id=&#34;本文主要内容&#34;&gt;&lt;a href=&#34;#本文主要内容&#34; class=&#34;headerlink&#34; title=&#34;本文主要内容&#34;&gt;&lt;/a&gt;本文主要内容&lt;/h2&gt;&lt;p&gt;字体标签： &lt;code&gt;&amp;lt;font&amp;gt;&lt;/code&gt;、 &lt;code&gt;&amp;lt;b&amp;gt;&lt;/code&gt;、 &lt;code&gt;&amp;lt;u&amp;gt;&lt;/code&gt; 、&lt;code&gt;&amp;lt;sup&amp;gt;&lt;/code&gt; 、&lt;code&gt;&amp;lt;sub&amp;gt;&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;超链接 &lt;code&gt;&amp;lt;a&amp;gt;&lt;/code&gt;&lt;/p&gt;
 &lt;h2 id=&#34;字体标签&#34;&gt;&lt;a href=&#34;#字体标签&#34; class=&#34;headerlink&#34; title=&#34;字体标签&#34;&gt;&lt;/a&gt;字体标签&lt;/h2&gt;&lt;h3 id=&#34;特殊字符（转义字符）&#34;&gt;&lt;a href=&#34;#特殊字符（转义字符）&#34; class=&#34;headerlink&#34; title=&#34;特殊字符（转义字符）&#34;&gt;&lt;/a&gt;特殊字符（转义字符）&lt;/h3&gt;&lt;ul&gt;
@@ -464,8 +391,7 @@
 &lt;li&gt; &lt;code&gt;&amp;amp;#32464;&lt;/code&gt;：文字&lt;code&gt;绐&lt;/code&gt;。其实，&lt;code&gt;#32464&lt;/code&gt;是汉字&lt;code&gt;绐&lt;/code&gt;的unicode编码。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;比如说，你想把&lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;作为一个文本在页面上显示，直接写&lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;是肯定不行的，因为这代表的是一个段落标签，所以这里需要用到&lt;strong&gt;转义字符&lt;/strong&gt;。应该这么写：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;这是一个HTML语言的&amp;amp;lt;p&amp;amp;gt;标签
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;这是一个HTML语言的&lt;span class=&#34;symbol&#34;&gt;&amp;amp;lt;&lt;/span&gt;p&lt;span class=&#34;symbol&#34;&gt;&amp;amp;gt;&lt;/span&gt;标签&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;正确的效果如下：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/2015-10-01-cnblogs_html_11.png&#34; alt=&#34;Paste_Image.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;错误的效果如下：&lt;/p&gt;
@@ -572,39 +498,38 @@
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;举例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;font face=&amp;quot;微软雅黑&amp;quot; color=&amp;quot;#FF0000&amp;quot; size=&amp;quot;10&amp;quot;&amp;gt;vae&amp;lt;/font&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;font&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;face&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;微软雅黑&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;color&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;#FF0000&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;size&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;10&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;vae&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;font&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;效果：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/2015-10-01-cnblogs_html_10.png&#34; alt=&#34;Paste_Image.png&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;上标-lt-sup-gt-下标-lt-sub-gt&#34;&gt;&lt;a href=&#34;#上标-lt-sup-gt-下标-lt-sub-gt&#34; class=&#34;headerlink&#34; title=&#34;上标&amp;lt;sup&amp;gt;   下标&amp;lt;sub&amp;gt;&#34;&gt;&lt;/a&gt;上标&lt;code&gt;&amp;lt;sup&amp;gt;&lt;/code&gt;   下标&lt;code&gt;&amp;lt;sub&amp;gt;&lt;/code&gt;&lt;/h3&gt;&lt;p&gt;上小标这两个标签容易混淆，怎么记呢？这样记：&lt;code&gt;b&lt;/code&gt;的意思是&lt;code&gt;bottom：底部&lt;/code&gt;&lt;br&gt;举例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;O&amp;lt;sup&amp;gt;2&amp;lt;/sup&amp;gt;    5&amp;lt;sub&amp;gt;3&amp;lt;/sub&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;O&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;sup&lt;/span&gt;&amp;gt;&lt;/span&gt;2&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;sup&lt;/span&gt;&amp;gt;&lt;/span&gt;    5&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;sub&lt;/span&gt;&amp;gt;&lt;/span&gt;3&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;sub&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;效果：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/2015-10-01-cnblogs_html_16.png&#34; alt=&#34;Paste_Image.png&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;三、超链接&#34;&gt;&lt;a href=&#34;#三、超链接&#34; class=&#34;headerlink&#34; title=&#34;三、超链接&#34;&gt;&lt;/a&gt;三、超链接&lt;/h2&gt;&lt;p&gt;超链接有三种形式，下面分别讲讲。&lt;/p&gt;
 &lt;h3 id=&#34;1、外部链接：链接到外部文件&#34;&gt;&lt;a href=&#34;#1、外部链接：链接到外部文件&#34; class=&#34;headerlink&#34; title=&#34;1、外部链接：链接到外部文件&#34;&gt;&lt;/a&gt;1、外部链接：链接到外部文件&lt;/h3&gt;&lt;p&gt;举例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;a href=&amp;quot;02页面.html&amp;quot;&amp;gt;点击进入另外一个文件&amp;lt;/a&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;href&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;02页面.html&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;点击进入另外一个文件&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;a是英语&lt;code&gt;anchor&lt;/code&gt;“锚”的意思，就好像这个页面往另一个页面扔出了一个锚。是一个文本级的标签。&lt;/p&gt;
 &lt;p&gt;href（hypertext reference）：超文本地址。读作“喝瑞夫”，不要读作“喝夫”。&lt;/p&gt;
 &lt;p&gt;效果：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/2015-10-01-cnblogs_html_17.png&#34; alt=&#34;Paste_Image.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;当然，我们也可以直接点进链接，访问一个网址。代码举例如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;a href=&amp;quot;http://www.baidu.com&amp;quot; target=&amp;quot;_blank&amp;quot;&amp;gt;点我点我&amp;lt;/a&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;href&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;http://www.baidu.com&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;target&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;_blank&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;点我点我&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;h3 id=&#34;2、锚链接&#34;&gt;&lt;a href=&#34;#2、锚链接&#34; class=&#34;headerlink&#34; title=&#34;2、锚链接&#34;&gt;&lt;/a&gt;2、锚链接&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;锚链接&lt;/strong&gt;：给超链接起一个名字，作用是&lt;strong&gt;在本页面或者其他页面的的不同位置进行跳转&lt;/strong&gt;。比如说，在网页底部有一个向上箭头，点击箭头后回到顶部，这个就可以利用锚链接。&lt;/p&gt;
 &lt;p&gt;首先我们要创建一个&lt;strong&gt;锚点&lt;/strong&gt;，也就是说，使用&lt;code&gt;name&lt;/code&gt;属性或者&lt;code&gt;id&lt;/code&gt;属性给那个特定的位置起个名字。效果如下：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/2015-10-01-cnblogs_html_18.png&#34; alt=&#34;Paste_Image.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;上图中解释：&lt;/p&gt;
 &lt;p&gt;第11行代码表示，顶部这个锚的名字叫做name1。&lt;br&gt;然后在底部设置超链接，点击时将回到顶部（此时，网页中的url的末尾也出现了&lt;code&gt;#name1&lt;/code&gt;）。注意&lt;strong&gt;上图中红框部分的&lt;code&gt;#&lt;/code&gt;号不要忘记了&lt;/strong&gt;，表示跳到名为name1的特定位置，这是规定。如果少了&lt;code&gt;#&lt;/code&gt;号，点击之后，就会跳到name1这个文件或者name1这个文件夹中去。&lt;/p&gt;
 &lt;p&gt;如果我们将上图中的第28行代码写成：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;a href=&amp;quot;a.html#name1&amp;quot;&amp;gt;回到顶部&amp;lt;/a&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;href&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;a.html#name1&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;回到顶部&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;那就表示，点击之后，跳转到&lt;code&gt;a.html&lt;/code&gt;页面的&lt;code&gt;name1锚点&lt;/code&gt;中去。&lt;/p&gt;
 &lt;p&gt;说明：name属性是HTML4.0以前使用的，id属性是HTML4.0后才开始使用。为了向前兼容，因此，name和id这两个属性都要写上，并且值是一样的。&lt;/p&gt;
 &lt;h3 id=&#34;3、邮件链接&#34;&gt;&lt;a href=&#34;#3、邮件链接&#34; class=&#34;headerlink&#34; title=&#34;3、邮件链接&#34;&gt;&lt;/a&gt;3、邮件链接&lt;/h3&gt;&lt;p&gt;代码举例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;a href=&amp;quot;mailto:xxx@163.com&amp;quot;&amp;gt;点击进入我的邮箱&amp;lt;/a&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;href&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;mailto:xxx@163.com&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;点击进入我的邮箱&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;效果：点击之后，会弹出outlook，作用不大。&lt;/p&gt;
 &lt;h3 id=&#34;超链接的属性&#34;&gt;&lt;a href=&#34;#超链接的属性&#34; class=&#34;headerlink&#34; title=&#34;超链接的属性&#34;&gt;&lt;/a&gt;超链接的属性&lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;&lt;code&gt;href&lt;/code&gt;：目标URL&lt;/li&gt;
@@ -619,39 +544,31 @@
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;code&gt;title&lt;/code&gt;属性举例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;a href=&amp;quot;09_img.html&amp;quot; title=&amp;quot;很好看哦&amp;quot;&amp;gt;结婚照&amp;lt;/a&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;href&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;09_img.html&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;title&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;很好看哦&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;结婚照&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;效果如下：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/20170630_1415.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;target&lt;/code&gt;属性举例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;a href=&amp;quot;1.html&amp;quot; title=&amp;quot;悬停文本&amp;quot; target=&amp;quot;_blank&amp;quot;&amp;gt;链接的内容&amp;lt;/a&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;href&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;1.html&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;title&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;悬停文本&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;target&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;_blank&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;链接的内容&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;blank就是“空白”的意思，就表示新建一个空白窗口。为啥有一个_ ，就是规定，无需解释。&lt;br&gt;也就是说，如果不写&lt;code&gt;target=”_blank”&lt;/code&gt;那么就是在相同的标签页打开，如果写了&lt;code&gt;target=”_blank”&lt;/code&gt;，就是在新的空白标签页中打开。&lt;/p&gt;
 &lt;h4 id=&#34;备注1：分清楚img和a标签的各自的属性&#34;&gt;&lt;a href=&#34;#备注1：分清楚img和a标签的各自的属性&#34; class=&#34;headerlink&#34; title=&#34;备注1：分清楚img和a标签的各自的属性&#34;&gt;&lt;/a&gt;备注1：分清楚img和a标签的各自的属性&lt;/h4&gt;&lt;p&gt;区别如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;img src=&amp;quot;1.jpg&amp;quot; /&amp;gt;
-&amp;lt;a href=&amp;quot;1.html&amp;quot;&amp;gt;&amp;lt;/a&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;img&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;src&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;1.jpg&amp;quot;&lt;/span&gt; /&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;href&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;1.html&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;h4 id=&#34;备注2：a是一个文本级的标签&#34;&gt;&lt;a href=&#34;#备注2：a是一个文本级的标签&#34; class=&#34;headerlink&#34; title=&#34;备注2：a是一个文本级的标签&#34;&gt;&lt;/a&gt;备注2：a是一个文本级的标签&lt;/h4&gt;&lt;p&gt;比如一个段落中的所有文字都能够被点击，那么应该是p包裹a：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;p&amp;gt;
-    &amp;lt;a href=&amp;quot;&amp;quot;&amp;gt;段落段落段落段落段落段落&amp;lt;/a&amp;gt;
-&amp;lt;/p&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;href&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;段落段落段落段落段落段落&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;而不是a包裹p：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;a href=&amp;quot;&amp;quot;&amp;gt;
-    &amp;lt;p&amp;gt;
-        段落段落段落段落段落段落
-    &amp;lt;/p&amp;gt;
-&amp;lt;/a&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;href&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;		段落段落段落段落段落段落&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;a的语义要小于p，a就是可以当做文本来处理，所以p里面相当于放的就是纯文字。&lt;/p&gt;
 </content>
         <category term="web开发" />
         <updated>2021-06-02T12:44:50.204Z</updated>
     </entry>
     <entry>
-        <id>http://example.com/2021/06/02/04-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E6%8E%92%E7%89%88%E6%A0%87%E7%AD%BE/</id>
+        <id>https://ch1e.gitee.io/2021/06/02/04-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E6%8E%92%E7%89%88%E6%A0%87%E7%AD%BE/</id>
         <title>HTML标签：排版标签</title>
-        <link rel="alternate" href="http://example.com/2021/06/02/04-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E6%8E%92%E7%89%88%E6%A0%87%E7%AD%BE/"/>
+        <link rel="alternate" href="https://ch1e.gitee.io/2021/06/02/04-HTML%E6%A0%87%E7%AD%BE%EF%BC%9A%E6%8E%92%E7%89%88%E6%A0%87%E7%AD%BE/"/>
         <content type="html">&lt;h2 id=&#34;本文主要内容&#34;&gt;&lt;a href=&#34;#本文主要内容&#34; class=&#34;headerlink&#34; title=&#34;本文主要内容&#34;&gt;&lt;/a&gt;本文主要内容&lt;/h2&gt;&lt;p&gt;排版标签：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;&lt;code&gt;&amp;lt;h1&amp;gt;&lt;/code&gt;&lt;/p&gt;
@@ -674,34 +591,18 @@
 &lt;p&gt;下面来详细介绍一下排版标签。&lt;/p&gt;
 &lt;h2 id=&#34;标题标签&#34;&gt;&lt;a href=&#34;#标题标签&#34; class=&#34;headerlink&#34; title=&#34;标题标签&#34;&gt;&lt;/a&gt;标题标签&lt;/h2&gt;&lt;p&gt;标题使用&lt;code&gt;&amp;lt;h1&amp;gt;&lt;/code&gt;至&lt;code&gt;&amp;lt;h6&amp;gt;&lt;/code&gt;标签进行定义。&lt;code&gt;&amp;lt;h1&amp;gt;&lt;/code&gt;定义最大的标题，&lt;code&gt;&amp;lt;h6&amp;gt;&lt;/code&gt;定义最小的标题。具有align属性，属性值可以是：left、center、right。&lt;/p&gt;
 &lt;p&gt;代码举例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;!DOCTYPE html&amp;gt;
-&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
-&amp;lt;head&amp;gt;
-    &amp;lt;meta charset=&amp;quot;UTF-8&amp;quot;&amp;gt;
-    &amp;lt;meta name=&amp;quot;viewport&amp;quot; content=&amp;quot;width=device-width, initial-scale=1.0&amp;quot;&amp;gt;
-    &amp;lt;title&amp;gt;Document&amp;lt;/title&amp;gt;
-&amp;lt;/head&amp;gt;
-&amp;lt;body&amp;gt;
-    &amp;lt;h1&amp;gt;H1：千古壹号，永不止步&amp;lt;/h1&amp;gt;
-    &amp;lt;h2&amp;gt;H3：千古壹号，永不止步&amp;lt;/h2&amp;gt;
-    &amp;lt;h3&amp;gt;H3：千古壹号，永不止步&amp;lt;/h3&amp;gt;
-    &amp;lt;h4&amp;gt;H4：千古壹号，永不止步&amp;lt;/h4&amp;gt;
-    &amp;lt;h5&amp;gt;H5：千古壹号，永不止步&amp;lt;/h5&amp;gt;
-    &amp;lt;h6&amp;gt;H6：千古壹号，永不止步&amp;lt;/h6&amp;gt;
-&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;!DOCTYPE &lt;span class=&#34;meta-keyword&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;lang&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;charset&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;UTF-8&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;name&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;viewport&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;width=device-width, initial-scale=1.0&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;Document&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;h1&lt;/span&gt;&amp;gt;&lt;/span&gt;H1：千古壹号，永不止步&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;h1&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;h2&lt;/span&gt;&amp;gt;&lt;/span&gt;H3：千古壹号，永不止步&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;h2&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;h3&lt;/span&gt;&amp;gt;&lt;/span&gt;H3：千古壹号，永不止步&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;h3&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;h4&lt;/span&gt;&amp;gt;&lt;/span&gt;H4：千古壹号，永不止步&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;h4&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;h5&lt;/span&gt;&amp;gt;&lt;/span&gt;H5：千古壹号，永不止步&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;h5&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;h6&lt;/span&gt;&amp;gt;&lt;/span&gt;H6：千古壹号，永不止步&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;h6&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;效果演示：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/20200402_1050.png&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;HTML-注释&#34;&gt;&lt;a href=&#34;#HTML-注释&#34; class=&#34;headerlink&#34; title=&#34;HTML 注释&#34;&gt;&lt;/a&gt;HTML 注释&lt;/h2&gt;&lt;p&gt;HTML 注释的格式如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;!-- 我是 html 注释  --&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;&amp;lt;!-- 我是 html 注释  --&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;h2 id=&#34;段落标签-lt-p-gt&#34;&gt;&lt;a href=&#34;#段落标签-lt-p-gt&#34; class=&#34;headerlink&#34; title=&#34;段落标签&amp;lt;p&amp;gt;&#34;&gt;&lt;/a&gt;段落标签&lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;&lt;/h2&gt;&lt;p&gt;段落，是英语“paragraph“缩写。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;作用&lt;/strong&gt;：可以把 HTML 文档分割为若干段落。在网页中如果要把文字有条理地显示出来，离不开段落标签。就如同我们平常写文章一样，整个网页也可以分为若干个段落。&lt;/p&gt;
 &lt;p&gt;代码举例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;p&amp;gt;This is a paragraph&amp;lt;/p&amp;gt;
-&amp;lt;p&amp;gt;This is another paragraph&amp;lt;/p&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;This is a paragraph&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;This is another paragraph&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;属性：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;align=&amp;quot;属性值&amp;quot;&lt;/code&gt;：对齐方式。属性值包括left center right。&lt;/li&gt;
@@ -717,11 +618,8 @@
 &lt;/ul&gt;
 &lt;p&gt;从学习p的第一天开始，就要牢牢记住：&lt;strong&gt;p标签是一个文本级标签，p里面只能放文字、图片、表单元素&lt;/strong&gt;。其他的一律不能放。&lt;/p&gt;
 &lt;p&gt;错误写法：（尝试把 h 放到 p 里）&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;    &amp;lt;p&amp;gt;
-        我是一个小段落
-        &amp;lt;h1&amp;gt;我是一级标题&amp;lt;/h1&amp;gt;
-    &amp;lt;/p&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	我是一个小段落&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;h1&lt;/span&gt;&amp;gt;&lt;/span&gt;我是一级标题&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;h1&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;网页效果如下：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/20170630_1102.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;上图显示，浏览器不允许你这么做，我们使用Chrome的F12审查元素发现，浏览器自己把p封闭掉了，不让你去包裹h1。&lt;/p&gt;
@@ -731,20 +629,8 @@
 &lt;/blockquote&gt;
 &lt;p&gt;水平分隔线（horizontal rule）可以在视觉上将文档分隔成各个部分。在网页中常常看到一些水平线将段落与段落之间隔开，使得文档结构清晰，层次分明。&lt;/p&gt;
 &lt;p&gt;代码举例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;!DOCTYPE html&amp;gt;
-&amp;lt;html lang=&amp;quot;en&amp;quot;&amp;gt;
-&amp;lt;head&amp;gt;
-    &amp;lt;meta charset=&amp;quot;UTF-8&amp;quot;&amp;gt;
-    &amp;lt;meta name=&amp;quot;viewport&amp;quot; content=&amp;quot;width=device-width, initial-scale=1.0&amp;quot;&amp;gt;
-    &amp;lt;title&amp;gt;Document&amp;lt;/title&amp;gt;
-&amp;lt;/head&amp;gt;
-&amp;lt;body&amp;gt;
-    &amp;lt;p&amp;gt;自古情深留不住&amp;lt;/p&amp;gt;
-    &amp;lt;hr /&amp;gt;
-    &amp;lt;p&amp;gt;总是套路得人心&amp;lt;/p&amp;gt;
-&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;!DOCTYPE &lt;span class=&#34;meta-keyword&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;lang&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;en&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;charset&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;UTF-8&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;meta&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;name&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;viewport&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;content&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;width=device-width, initial-scale=1.0&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;Document&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;title&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;head&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;自古情深留不住&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;hr&lt;/span&gt; /&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;总是套路得人心&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;body&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;html&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;运行效果：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/20200401_1930.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;属性介绍：&lt;/p&gt;
@@ -758,8 +644,7 @@
 &lt;p&gt;属性效果演示：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/2015-10-01-cnblogs_html_05.png&#34; alt=&#34;Paste_Image.png&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;换行标签-lt-br-gt&#34;&gt;&lt;a href=&#34;#换行标签-lt-br-gt&#34; class=&#34;headerlink&#34; title=&#34;换行标签&amp;lt;br /&amp;gt;&#34;&gt;&lt;/a&gt;换行标签&lt;code&gt;&amp;lt;br /&amp;gt;&lt;/code&gt;&lt;/h2&gt;&lt;p&gt;如果希望某段文本强制换行显示，就需要使用换行标签。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;This &amp;lt;br/&amp;gt; is a para&amp;lt;br/&amp;gt;graph with line breaks
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;This &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;br&lt;/span&gt;/&amp;gt;&lt;/span&gt; is a para&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;br&lt;/span&gt;/&amp;gt;&lt;/span&gt;graph with line breaks&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;效果如下：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/2015-10-01-cnblogs_html03.png&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;lt-div-gt-和-lt-span-gt-标签&#34;&gt;&lt;a href=&#34;#lt-div-gt-和-lt-span-gt-标签&#34; class=&#34;headerlink&#34; title=&#34;&amp;lt;div&amp;gt;和&amp;lt;span&amp;gt;标签&#34;&gt;&lt;/a&gt;&lt;code&gt;&amp;lt;div&amp;gt;&lt;/code&gt;和&lt;code&gt;&amp;lt;span&amp;gt;&lt;/code&gt;标签&lt;/h2&gt;&lt;p&gt;div和span是非常重要的标签，div的语义是division“分割”； span的语义就是span“范围、跨度”。想必你应该听说过“div + css”布局。&lt;/p&gt;
@@ -780,25 +665,11 @@
 &lt;p&gt;div在浏览器中，默认是不会增加任何的效果的，但是语义变了，div中的所有元素是一个小区域。&lt;br&gt;div标签是一个&lt;strong&gt;容器级&lt;/strong&gt;标签，里面什么都能放，甚至可以放div自己。&lt;/p&gt;
 &lt;p&gt;span也是表达“小区域、小跨度”的标签，但只是一个&lt;strong&gt;文本级&lt;/strong&gt;的标签。&lt;br&gt;就是说，span里面只能放置文字、图片、表单元素。 span里面不能放p、h、ul、dl、ol、div。&lt;/p&gt;
 &lt;p&gt;span举例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;p&amp;gt;
-    简介简介简介简介简介简介简介简介
-    &amp;lt;span&amp;gt;
-        &amp;lt;a href=&amp;quot;&amp;quot;&amp;gt;详细信息&amp;lt;/a&amp;gt;
-        &amp;lt;a href=&amp;quot;&amp;quot;&amp;gt;购买&amp;lt;/a&amp;gt;
-    &amp;lt;/span&amp;gt;
-&amp;lt;/p&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	简介简介简介简介简介简介简介简介&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;span&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;		&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;href&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;详细信息&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;		&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;href&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;购买&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;a&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;span&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;p&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;div举例：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;div class=&amp;quot;header&amp;quot;&amp;gt;
-    &amp;lt;div class=&amp;quot;logo&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;
-    &amp;lt;div class=&amp;quot;nav&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;
-&amp;lt;/div&amp;gt;
-&amp;lt;div class=&amp;quot;content&amp;quot;&amp;gt;
-    &amp;lt;div class=&amp;quot;guanggao&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;
-    &amp;lt;div class=&amp;quot;dongxi&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;
-&amp;lt;/div&amp;gt;
-&amp;lt;div class=&amp;quot;footer&amp;quot;&amp;gt;&amp;lt;/div&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;class&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;header&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;class&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;logo&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;class&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;nav&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;class&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;content&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;class&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;guanggao&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;class&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;dongxi&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;class&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;footer&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;div&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;我们亲切地称这种模式叫做“&lt;strong&gt;div+css&lt;/strong&gt;”：&lt;strong&gt;div标签负责布局、结构、分块，css负责样式&lt;/strong&gt;。&lt;/p&gt;
 &lt;h2 id=&#34;内容居中标签-lt-center-gt&#34;&gt;&lt;a href=&#34;#内容居中标签-lt-center-gt&#34; class=&#34;headerlink&#34; title=&#34;内容居中标签 &amp;lt;center&amp;gt;&#34;&gt;&lt;/a&gt;内容居中标签 &lt;code&gt;&amp;lt;center&amp;gt;&lt;/code&gt;&lt;/h2&gt;&lt;p&gt;此时center代表是一个标签，而不是一个属性值了。只要是在这个标签里面的内容，都会居于浏览器的中间。&lt;br&gt;效果演示：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/2015-10-01-cnblogs_html_06.png&#34; alt=&#34;Paste_Image.png&#34;&gt;&lt;/p&gt;
@@ -811,9 +682,9 @@
         <updated>2021-06-02T12:44:50.200Z</updated>
     </entry>
     <entry>
-        <id>http://example.com/2021/05/31/01-VS%20Code%E7%9A%84%E4%BD%BF%E7%94%A8/</id>
+        <id>https://ch1e.gitee.io/2021/05/31/01-VS%20Code%E7%9A%84%E4%BD%BF%E7%94%A8/</id>
         <title>VS Code的使用</title>
-        <link rel="alternate" href="http://example.com/2021/05/31/01-VS%20Code%E7%9A%84%E4%BD%BF%E7%94%A8/"/>
+        <link rel="alternate" href="https://ch1e.gitee.io/2021/05/31/01-VS%20Code%E7%9A%84%E4%BD%BF%E7%94%A8/"/>
         <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;VS Code 软件实在是太酷、太好用了，越来越多的新生代互联网青年正在使用它。&lt;/p&gt;
 &lt;p&gt;前端男神&lt;strong&gt;尤雨溪&lt;/strong&gt;大大这样评价 VS Code：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/20200619_0133.png&#34;&gt;&lt;/p&gt;
@@ -1302,11 +1173,8 @@
 &lt;h3 id=&#34;6、将当前行代码高亮显示（更改光标所在行的背景色）&#34;&gt;&lt;a href=&#34;#6、将当前行代码高亮显示（更改光标所在行的背景色）&#34; class=&#34;headerlink&#34; title=&#34;6、将当前行代码高亮显示（更改光标所在行的背景色）&#34;&gt;&lt;/a&gt;6、将当前行代码高亮显示（更改光标所在行的背景色）&lt;/h3&gt;&lt;p&gt;当我们把光标放在某一行时，这一行的背景色并没有发生变化。如果想&lt;strong&gt;高亮显示&lt;/strong&gt;当前行的代码，需要设置两步：&lt;/p&gt;
 &lt;p&gt;（1）在设置项里搜索&lt;code&gt;editor.renderLineHighlight&lt;/code&gt;，将选项值设置为&lt;code&gt;all&lt;/code&gt;或者&lt;code&gt;line&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;（2）在设置项里增加如下内容：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;json&#34;&gt;&amp;quot;workbench.colorCustomizations&amp;quot;: &amp;#123;
-    &amp;quot;editor.lineHighlightBackground&amp;quot;: &amp;quot;#00000090&amp;quot;,
-    &amp;quot;editor.lineHighlightBorder&amp;quot;: &amp;quot;#ffffff30&amp;quot;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight json&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;string&#34;&gt;&amp;quot;workbench.colorCustomizations&amp;quot;&lt;/span&gt;: &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;attr&#34;&gt;&amp;quot;editor.lineHighlightBackground&amp;quot;&lt;/span&gt;: &lt;span class=&#34;string&#34;&gt;&amp;quot;#00000090&amp;quot;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;attr&#34;&gt;&amp;quot;editor.lineHighlightBorder&amp;quot;&lt;/span&gt;: &lt;span class=&#34;string&#34;&gt;&amp;quot;#ffffff30&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;上方代码，第一行代码的意思是：修改光标所在行的背景色（背景色设置为全黑，不透明度 90%）；第二行代码的意思是：修改光标所在行的边框色。&lt;/p&gt;
 &lt;h3 id=&#34;7、改完代码后立即自动保存&#34;&gt;&lt;a href=&#34;#7、改完代码后立即自动保存&#34; class=&#34;headerlink&#34; title=&#34;7、改完代码后立即自动保存&#34;&gt;&lt;/a&gt;7、改完代码后立即自动保存&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;方式一&lt;/strong&gt;：&lt;/p&gt;
 &lt;p&gt;改完代码后，默认不会自动保存。你可以在设置项里搜索&lt;code&gt;files.autoSave&lt;/code&gt;，修改配置项如下：&lt;/p&gt;
@@ -1406,38 +1274,22 @@
 &lt;p&gt;你也可以在控制面板输入&lt;code&gt;Markdown: 打开预览&lt;/code&gt;，直接全屏预览 markdown 文件。&lt;/p&gt;
 &lt;h3 id=&#34;24、Emmet-in-VS-Code&#34;&gt;&lt;a href=&#34;#24、Emmet-in-VS-Code&#34; class=&#34;headerlink&#34; title=&#34;24、Emmet in VS Code&#34;&gt;&lt;/a&gt;24、Emmet in VS Code&lt;/h3&gt;&lt;p&gt;&lt;code&gt;Emmet&lt;/code&gt;可以极大的提高 html 和 css 的编写效率，它提供了一种非常简练的语法规则。&lt;/p&gt;
 &lt;p&gt;举个例子，我们在编辑器中输入缩写代码：&lt;code&gt;ul&amp;gt;li*6&lt;/code&gt; ，然后按下 Tab 键，即可得到如下代码片段：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;html&#34;&gt;&amp;lt;ul&amp;gt;
-  &amp;lt;li&amp;gt;&amp;lt;/li&amp;gt;
-  &amp;lt;li&amp;gt;&amp;lt;/li&amp;gt;
-  &amp;lt;li&amp;gt;&amp;lt;/li&amp;gt;
-  &amp;lt;li&amp;gt;&amp;lt;/li&amp;gt;
-  &amp;lt;li&amp;gt;&amp;lt;/li&amp;gt;
-  &amp;lt;li&amp;gt;&amp;lt;/li&amp;gt;
-&amp;lt;/ul&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight html&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;ul&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;li&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;ul&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;VS Code 默认支持 Emmet。更多 Emmet 语法规则，请自行查阅。&lt;/p&gt;
 &lt;h3 id=&#34;25、修改字体，使用「Fira-Code」字体&#34;&gt;&lt;a href=&#34;#25、修改字体，使用「Fira-Code」字体&#34; class=&#34;headerlink&#34; title=&#34;25、修改字体，使用「Fira Code」字体&#34;&gt;&lt;/a&gt;25、修改字体，使用「Fira Code」字体&lt;/h3&gt;&lt;p&gt;这款字体很漂亮，很适合用来写代码：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/20200516_1633.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;安装步骤如下：&lt;/p&gt;
 &lt;p&gt;（1）进入 &lt;a href=&#34;https://github.com/tonsky/FiraCode&#34;&gt;https://github.com/tonsky/FiraCode&lt;/a&gt; 网站，下载并安装「Fira Code」字体。&lt;/p&gt;
 &lt;p&gt;（2）打开 VS Code 的「设置」，搜索&lt;code&gt;font&lt;/code&gt;，修改相关配置为如下内容：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;json&#34;&gt;&amp;quot;editor.fontFamily&amp;quot;: &amp;quot;&amp;#39;Fira Code&amp;#39;,Menlo, Monaco, &amp;#39;Courier New&amp;#39;, monospace&amp;quot;, // 设置字体显示
-&amp;quot;editor.fontLigatures&amp;quot;: false,//控制是否启用字体连字，true启用，false不启用
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight json&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;string&#34;&gt;&amp;quot;editor.fontFamily&amp;quot;&lt;/span&gt;: &lt;span class=&#34;string&#34;&gt;&amp;quot;&amp;#x27;Fira Code&amp;#x27;,Menlo, Monaco, &amp;#x27;Courier New&amp;#x27;, monospace&amp;quot;&lt;/span&gt;, &lt;span class=&#34;comment&#34;&gt;// 设置字体显示&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;string&#34;&gt;&amp;quot;editor.fontLigatures&amp;quot;&lt;/span&gt;: &lt;span class=&#34;literal&#34;&gt;false&lt;/span&gt;,&lt;span class=&#34;comment&#34;&gt;//控制是否启用字体连字，true启用，false不启用&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;上方的第二行配置，取决于个人习惯，我是直接设置为&lt;code&gt;&amp;quot;editor.fontLigatures&amp;quot;: null&lt;/code&gt;，因为我不太习惯连字。&lt;/p&gt;
 &lt;h3 id=&#34;26、代码格式化：Prettier&#34;&gt;&lt;a href=&#34;#26、代码格式化：Prettier&#34; class=&#34;headerlink&#34; title=&#34;26、代码格式化：Prettier&#34;&gt;&lt;/a&gt;26、代码格式化：Prettier&lt;/h3&gt;&lt;p&gt;我们可以使用 &lt;code&gt;Prettier&lt;/code&gt;进行代码格式化，会让代码的展示更加美观。步骤如下：&lt;/p&gt;
 &lt;p&gt;（1）安装插件 &lt;code&gt;Prettier&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;（2）在项目的根路径下，新建文件&lt;code&gt;.prettierrc&lt;/code&gt;，并在文件中添加如下内容：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;json&#34;&gt;&amp;#123;
-  &amp;quot;printWidth&amp;quot;: 150,
-  &amp;quot;tabWidth&amp;quot;: 4,
-  &amp;quot;semi&amp;quot;: true,
-  &amp;quot;singleQuote&amp;quot;: true,
-  &amp;quot;trailingComma&amp;quot;: &amp;quot;es5&amp;quot;,
-  &amp;quot;tslintIntegration&amp;quot;: true,
-  &amp;quot;insertSpaceBeforeFunctionParenthesis&amp;quot;: false
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight json&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;printWidth&amp;quot;&lt;/span&gt;: &lt;span class=&#34;number&#34;&gt;150&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;tabWidth&amp;quot;&lt;/span&gt;: &lt;span class=&#34;number&#34;&gt;4&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;semi&amp;quot;&lt;/span&gt;: &lt;span class=&#34;literal&#34;&gt;true&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;singleQuote&amp;quot;&lt;/span&gt;: &lt;span class=&#34;literal&#34;&gt;true&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;trailingComma&amp;quot;&lt;/span&gt;: &lt;span class=&#34;string&#34;&gt;&amp;quot;es5&amp;quot;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;tslintIntegration&amp;quot;&lt;/span&gt;: &lt;span class=&#34;literal&#34;&gt;true&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;insertSpaceBeforeFunctionParenthesis&amp;quot;&lt;/span&gt;: &lt;span class=&#34;literal&#34;&gt;false&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;上面的内容，是我自己的配置，你可以参考。&lt;/p&gt;
 &lt;p&gt;更多配置，可以参考官方文档：&lt;a href=&#34;https://prettier.io/docs/en/options.html&#34;&gt;https://prettier.io/docs/en/options.html&lt;/a&gt;&lt;/p&gt;
 &lt;h3 id=&#34;27、文件传输：sftp&#34;&gt;&lt;a href=&#34;#27、文件传输：sftp&#34; class=&#34;headerlink&#34; title=&#34;27、文件传输：sftp&#34;&gt;&lt;/a&gt;27、文件传输：sftp&lt;/h3&gt;&lt;p&gt;如果你需要将本地文件通过 ftp 的形式上传到局域网的服务器，可以安装&lt;code&gt;sftp&lt;/code&gt;这个插件，很好用。在公司会经常用到。&lt;/p&gt;
@@ -1457,36 +1309,8 @@
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;举例如下：(注意，其中的注释需要去掉)&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;json&#34;&gt;&amp;#123;
-  &amp;quot;host&amp;quot;: &amp;quot;192.168.xxx.xxx&amp;quot;, //服务器ip
-  &amp;quot;port&amp;quot;: 22, //端口，sftp模式是22
-  &amp;quot;username&amp;quot;: &amp;quot;&amp;quot;, //用户名
-  &amp;quot;password&amp;quot;: &amp;quot;&amp;quot;, //密码
-  &amp;quot;protocol&amp;quot;: &amp;quot;sftp&amp;quot;, //模式
-  &amp;quot;agent&amp;quot;: null,
-  &amp;quot;privateKeyPath&amp;quot;: null,
-  &amp;quot;passphrase&amp;quot;: null,
-  &amp;quot;passive&amp;quot;: false,
-  &amp;quot;interactiveAuth&amp;quot;: false,
-  &amp;quot;remotePath&amp;quot;: &amp;quot;/root/node/build/&amp;quot;, //服务器上的文件地址
-  &amp;quot;context&amp;quot;: &amp;quot;./server/build&amp;quot;, //本地的文件地址
+&lt;figure class=&#34;highlight json&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;29&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;host&amp;quot;&lt;/span&gt;: &lt;span class=&#34;string&#34;&gt;&amp;quot;192.168.xxx.xxx&amp;quot;&lt;/span&gt;, &lt;span class=&#34;comment&#34;&gt;//服务器ip&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;port&amp;quot;&lt;/span&gt;: &lt;span class=&#34;number&#34;&gt;22&lt;/span&gt;, &lt;span class=&#34;comment&#34;&gt;//端口，sftp模式是22&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;username&amp;quot;&lt;/span&gt;: &lt;span class=&#34;string&#34;&gt;&amp;quot;&amp;quot;&lt;/span&gt;, &lt;span class=&#34;comment&#34;&gt;//用户名&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;password&amp;quot;&lt;/span&gt;: &lt;span class=&#34;string&#34;&gt;&amp;quot;&amp;quot;&lt;/span&gt;, &lt;span class=&#34;comment&#34;&gt;//密码&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;: &lt;span class=&#34;string&#34;&gt;&amp;quot;sftp&amp;quot;&lt;/span&gt;, &lt;span class=&#34;comment&#34;&gt;//模式&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;agent&amp;quot;&lt;/span&gt;: &lt;span class=&#34;literal&#34;&gt;null&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;privateKeyPath&amp;quot;&lt;/span&gt;: &lt;span class=&#34;literal&#34;&gt;null&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;passphrase&amp;quot;&lt;/span&gt;: &lt;span class=&#34;literal&#34;&gt;null&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;passive&amp;quot;&lt;/span&gt;: &lt;span class=&#34;literal&#34;&gt;false&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;interactiveAuth&amp;quot;&lt;/span&gt;: &lt;span class=&#34;literal&#34;&gt;false&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;remotePath&amp;quot;&lt;/span&gt;: &lt;span class=&#34;string&#34;&gt;&amp;quot;/root/node/build/&amp;quot;&lt;/span&gt;, &lt;span class=&#34;comment&#34;&gt;//服务器上的文件地址&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;context&amp;quot;&lt;/span&gt;: &lt;span class=&#34;string&#34;&gt;&amp;quot;./server/build&amp;quot;&lt;/span&gt;, &lt;span class=&#34;comment&#34;&gt;//本地的文件地址&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;uploadOnSave&amp;quot;&lt;/span&gt;: &lt;span class=&#34;literal&#34;&gt;true&lt;/span&gt;, &lt;span class=&#34;comment&#34;&gt;//监听保存并上传&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;syncMode&amp;quot;&lt;/span&gt;: &lt;span class=&#34;string&#34;&gt;&amp;quot;update&amp;quot;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;watcher&amp;quot;&lt;/span&gt;: &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;comment&#34;&gt;//监听外部文件&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;attr&#34;&gt;&amp;quot;files&amp;quot;&lt;/span&gt;: &lt;span class=&#34;literal&#34;&gt;false&lt;/span&gt;, &lt;span class=&#34;comment&#34;&gt;//外部文件的绝对路径&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;attr&#34;&gt;&amp;quot;autoUpload&amp;quot;&lt;/span&gt;: &lt;span class=&#34;literal&#34;&gt;false&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;attr&#34;&gt;&amp;quot;autoDelete&amp;quot;&lt;/span&gt;: &lt;span class=&#34;literal&#34;&gt;false&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &amp;#125;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;span class=&#34;attr&#34;&gt;&amp;quot;ignore&amp;quot;&lt;/span&gt;: [&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;comment&#34;&gt;//忽略项&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;string&#34;&gt;&amp;quot;**/.vscode/**&amp;quot;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;string&#34;&gt;&amp;quot;**/.git/**&amp;quot;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;string&#34;&gt;&amp;quot;**/.DS_Store&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  ]&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-  &amp;quot;uploadOnSave&amp;quot;: true, //监听保存并上传
-  &amp;quot;syncMode&amp;quot;: &amp;quot;update&amp;quot;,
-  &amp;quot;watcher&amp;quot;: &amp;#123;
-    //监听外部文件
-    &amp;quot;files&amp;quot;: false, //外部文件的绝对路径
-    &amp;quot;autoUpload&amp;quot;: false,
-    &amp;quot;autoDelete&amp;quot;: false
-  &amp;#125;,
-  &amp;quot;ignore&amp;quot;: [
-    //忽略项
-    &amp;quot;**/.vscode/**&amp;quot;,
-    &amp;quot;**/.git/**&amp;quot;,
-    &amp;quot;**/.DS_Store&amp;quot;
-  ]
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;（3）在 VS Code 的当前文件里，选择「右键 -&amp;gt; upload」，就可以将本地的代码上传到 指定的 ftp 服务器上（也就是在上方 &lt;code&gt;host&lt;/code&gt; 中配置的服务器 ip）。&lt;/p&gt;
 &lt;p&gt;我们还可以选择「右键 -&amp;gt; Diff with Remote」，就可以将本地的代码和 ftp 服务器上的代码做对比。&lt;/p&gt;
 &lt;h2 id=&#34;七、VS-Code-配置云同步&#34;&gt;&lt;a href=&#34;#七、VS-Code-配置云同步&#34; class=&#34;headerlink&#34; title=&#34;七、VS Code 配置云同步&#34;&gt;&lt;/a&gt;七、VS Code 配置云同步&lt;/h2&gt;&lt;p&gt;我们可以将配置云同步，这样的话，当我们换个电脑时，即可将配置一键同步到本地，就不需要重新安装插件了，也不需要重新配置软件。&lt;/p&gt;
@@ -1543,11 +1367,11 @@
 &lt;h3 id=&#34;9、vscode-icons&#34;&gt;&lt;a href=&#34;#9、vscode-icons&#34; class=&#34;headerlink&#34; title=&#34;9、vscode-icons&#34;&gt;&lt;/a&gt;9、vscode-icons&lt;/h3&gt;&lt;p&gt;vscode-icons 会根据文件的后缀名来显示不同的图标，让你更直观地知道每种文件是什么类型的。&lt;/p&gt;
 &lt;h3 id=&#34;10、Project-Manager&#34;&gt;&lt;a href=&#34;#10、Project-Manager&#34; class=&#34;headerlink&#34; title=&#34;10、Project Manager&#34;&gt;&lt;/a&gt;10、Project Manager&lt;/h3&gt;&lt;p&gt;工作中，我们经常会来回切换多个项目，每次都要找到对应项目的目录再打开，比较麻烦。Project Manager 插件可以解决这样的烦恼，它提供了专门的视图来展示你的项目，我们可以把常用的项目保存在这里，需要时一键切换，十分方便。&lt;/p&gt;
 &lt;h3 id=&#34;11、TODO-Highlight&#34;&gt;&lt;a href=&#34;#11、TODO-Highlight&#34; class=&#34;headerlink&#34; title=&#34;11、TODO Highlight&#34;&gt;&lt;/a&gt;11、TODO Highlight&lt;/h3&gt;&lt;p&gt;写代码过程中，突然发现一个 Bug，但是又不想停下来手中的活，以免打断思路，怎么办？按照代码规范，我们一般是在代码中加个 TODO 注释。比如：（注意，一定要写成大写&lt;code&gt;TODO&lt;/code&gt;，而不是小写的&lt;code&gt;todo&lt;/code&gt;）&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;//TODO:这里有个bug，我一会儿再收拾你
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;//TODO:这里有个bug，我一会儿再收拾你&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;或者：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;//FIXME:我也不知道为啥， but it works only that way.
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;//FIXME:我也不知道为啥， but it works only that way.&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;安装了插件 &lt;code&gt;TODO Highlight&lt;/code&gt;之后，按住「Cmd + Shift + P」打开命令面板，输入「Todohighlist」，选择相关的命令，我们就可以看到一个 todoList 的清单。&lt;/p&gt;
 &lt;h3 id=&#34;12、WakaTime-【荐】&#34;&gt;&lt;a href=&#34;#12、WakaTime-【荐】&#34; class=&#34;headerlink&#34; title=&#34;12、WakaTime 【荐】&#34;&gt;&lt;/a&gt;12、WakaTime 【荐】&lt;/h3&gt;&lt;p&gt;统计在 VS Code 里写代码的时间。统计效果如下：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;http://img.smyhvae.com/20200618_2300.png&#34;&gt;&lt;/p&gt;

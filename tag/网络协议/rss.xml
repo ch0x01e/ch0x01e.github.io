@@ -2,7 +2,7 @@
 <rss version="2.0">
     <channel>
         <title>ch1e&#39;s Blog • Posts by &#34;网络协议&#34; tag</title>
-        <link>http://example.com</link>
+        <link>https://ch1e.gitee.io</link>
         <description></description>
         <language>zh-CN</language>
         <pubDate>Tue, 08 Jun 2021 17:58:48 +0800</pubDate>
@@ -12,9 +12,9 @@
         <category>web安全</category>
         <category>网络协议</category>
         <item>
-            <guid isPermalink="true">http://example.com/2021/06/08/wangluoxieyi/</guid>
+            <guid isPermalink="true">https://ch1e.gitee.io/2021/06/08/wangluoxieyi/</guid>
             <title>网络协议学习笔记</title>
-            <link>http://example.com/2021/06/08/wangluoxieyi/</link>
+            <link>https://ch1e.gitee.io/2021/06/08/wangluoxieyi/</link>
             <category>网络协议</category>
             <pubDate>Tue, 08 Jun 2021 17:58:48 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;为什么要学习网络协议&#34;&gt;&lt;a href=&#34;#为什么要学习网络协议&#34; class=&#34;headerlink&#34; title=&#34;为什么要学习网络协议&#34;&gt;&lt;/a&gt;为什么要学习网络协议&lt;/h1&gt;&lt;p&gt;互联网、移动互联网、物联网，都离不开网络协议：&lt;/p&gt;
