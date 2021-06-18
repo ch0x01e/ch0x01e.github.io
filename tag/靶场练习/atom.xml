@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://ch1e.gitee.io</id>
+    <title>ch1e&#39;s Blog • Posts by &#34;靶场练习&#34; tag</title>
+    <link href="https://ch1e.gitee.io" />
+    <updated>2021-06-18T12:52:44.113Z</updated>
+    <category term="web开发" />
+    <category term="C++" />
+    <category term="靶场练习" />
+    <category term="web安全" />
+    <category term="数据库" />
+    <category term="网络协议" />
+    <entry>
+        <id>https://ch1e.gitee.io/2021/06/18/pikachu/</id>
+        <title>pikachu靶场通关手册(持续更新中)</title>
+        <link rel="alternate" href="https://ch1e.gitee.io/2021/06/18/pikachu/"/>
+        <content type="html">&lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;最近发现，之前学的各种东西已经比较生疏了，所以重新来通关一个靶场来回忆一下&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&#34;暴力破解&#34;&gt;&lt;a href=&#34;#暴力破解&#34; class=&#34;headerlink&#34; title=&#34;暴力破解&#34;&gt;&lt;/a&gt;暴力破解&lt;/h1&gt;&lt;h2 id=&#34;基于表单的暴力破解&#34;&gt;&lt;a href=&#34;#基于表单的暴力破解&#34; class=&#34;headerlink&#34; title=&#34;基于表单的暴力破解&#34;&gt;&lt;/a&gt;基于表单的暴力破解&lt;/h2&gt;&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9Vp11&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9Vp11.png&#34; alt=&#34;R9Vp11.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;看到这个，再看到题目名字，直接使用burp中的爆破功能，我们抓取他登陆的包&lt;/p&gt;
+&lt;p&gt;然后导入我们的字典，开始爆破，成功得出账号密码分别是admin和123456&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9ZAK0&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9ZAK0.png&#34; alt=&#34;R9ZAK0.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;验证码绕过-on-server&#34;&gt;&lt;a href=&#34;#验证码绕过-on-server&#34; class=&#34;headerlink&#34; title=&#34;验证码绕过(on server)&#34;&gt;&lt;/a&gt;验证码绕过(on server)&lt;/h2&gt;&lt;p&gt;1.保持bp的抓包状态，随便输入账号和密码，先不输入验证码。&lt;/p&gt;
+&lt;p&gt;2.打开bp，右击选择send to repeater，把请求发送到 repeater&lt;/p&gt;
+&lt;p&gt;3.打开Repeater，点击GO,观察状态。&lt;/p&gt;
+&lt;p&gt;4.这时，右侧会显示验证码不能为空，因为此前没有输入验证码&lt;/p&gt;
+&lt;p&gt;5.如果随便输入一个验证码，此时显示验证码错误！&lt;/p&gt;
+&lt;p&gt;6.然后把pikachu平台中的正确的验证码输入进去，则显示账号或密码错误！说明了后台会把提交的验证码进行验证，看是否正确，接下来进行暴力破解！&lt;/p&gt;
+&lt;p&gt;7.然后把pikachu平台中的正确的验证码输入进去，则显示账号或密码错误！说明了后台会把提交的验证码进行验证，看是否正确，接下来进行暴力破解！步骤和基于表单的暴力破解是一样。将Proxy中抓到的，右击发送到Intruder，然后添加账户和密码变量，放入字典。&lt;/p&gt;
+&lt;p&gt;（我这里因为知道了他账号密码，所以就直接不上字典了）&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9ekJH&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9ekJH.png&#34; alt=&#34;R9ekJH.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;验证码绕过-on-click&#34;&gt;&lt;a href=&#34;#验证码绕过-on-click&#34; class=&#34;headerlink&#34; title=&#34;验证码绕过(on click)&#34;&gt;&lt;/a&gt;验证码绕过(on click)&lt;/h2&gt;&lt;p&gt;验证码输入正确、为空、输入错误分别提示login success，请输入验证码，验证码输入错误。&lt;/p&gt;
+&lt;p&gt;什么都不输入或只输入用户名和密码点击登录，页面弹出“请输入验证码！”的提示框，而不是用户名和密码不存在&lt;/p&gt;
+&lt;p&gt; 我们查看源码，输入的验证码在本地验证，我们可以在burp suite不输入验证码或者输入错的验证码完成爆破&lt;/p&gt;
+&lt;p&gt;burp suite抓包，删除验证码，发送到intruder模块&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9eopd&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9eopd.png&#34; alt=&#34;R9eopd.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;token防爆破？&#34;&gt;&lt;a href=&#34;#token防爆破？&#34; class=&#34;headerlink&#34; title=&#34;token防爆破？&#34;&gt;&lt;/a&gt;token防爆破？&lt;/h2&gt;&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9min0&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9min0.png&#34; alt=&#34;R9min0.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;抓包，发现有一个token&lt;/p&gt;
+&lt;p&gt;点击右键发送至intruder。&lt;/p&gt;
+&lt;p&gt;点击intruder模块中positions选择攻击类型为Pitchfork，设置password与token为变量。&lt;/p&gt;
+&lt;p&gt;选择options，Grep-Extract 打勾点击add。&lt;/p&gt;
+&lt;p&gt;点击refetch response 找到响应包中的token的值选择点击确定。然后在&lt;/p&gt;
+&lt;p&gt;Redirections中选择always。&lt;/p&gt;
+&lt;p&gt;点击payloads set 1 type类型选择runtime file加载密码字典，set 2 type选择&lt;/p&gt;
+&lt;p&gt;recursive grep 复制刚才的token值粘贴至first request：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9nOJg&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9nOJg.png&#34; alt=&#34;R9nOJg.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;点击start attack进行破解。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意，这里需要把线程数设置为1，否则爆破不了&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9ntaT&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9ntaT.png&#34; alt=&#34;R9ntaT.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;Cross-Site-Scripting&#34;&gt;&lt;a href=&#34;#Cross-Site-Scripting&#34; class=&#34;headerlink&#34; title=&#34;Cross-Site Scripting&#34;&gt;&lt;/a&gt;Cross-Site Scripting&lt;/h1&gt;&lt;h2 id=&#34;反射型XSS（get）&#34;&gt;&lt;a href=&#34;#反射型XSS（get）&#34; class=&#34;headerlink&#34; title=&#34;反射型XSS（get）&#34;&gt;&lt;/a&gt;反射型XSS（get）&lt;/h2&gt;&lt;h2 id=&#34;反射型XSS（post）&#34;&gt;&lt;a href=&#34;#反射型XSS（post）&#34; class=&#34;headerlink&#34; title=&#34;反射型XSS（post）&#34;&gt;&lt;/a&gt;反射型XSS（post）&lt;/h2&gt;&lt;h2 id=&#34;存储型XSS&#34;&gt;&lt;a href=&#34;#存储型XSS&#34; class=&#34;headerlink&#34; title=&#34;存储型XSS&#34;&gt;&lt;/a&gt;存储型XSS&lt;/h2&gt;&lt;h2 id=&#34;DOM型XSS&#34;&gt;&lt;a href=&#34;#DOM型XSS&#34; class=&#34;headerlink&#34; title=&#34;DOM型XSS&#34;&gt;&lt;/a&gt;DOM型XSS&lt;/h2&gt;&lt;h2 id=&#34;DOM型XSS-x&#34;&gt;&lt;a href=&#34;#DOM型XSS-x&#34; class=&#34;headerlink&#34; title=&#34;DOM型XSS-x&#34;&gt;&lt;/a&gt;DOM型XSS-x&lt;/h2&gt;&lt;h2 id=&#34;xss之盲打&#34;&gt;&lt;a href=&#34;#xss之盲打&#34; class=&#34;headerlink&#34; title=&#34;xss之盲打&#34;&gt;&lt;/a&gt;xss之盲打&lt;/h2&gt;&lt;h2 id=&#34;xss之过滤&#34;&gt;&lt;a href=&#34;#xss之过滤&#34; class=&#34;headerlink&#34; title=&#34;xss之过滤&#34;&gt;&lt;/a&gt;xss之过滤&lt;/h2&gt;&lt;h2 id=&#34;xss之htmlspecialchars&#34;&gt;&lt;a href=&#34;#xss之htmlspecialchars&#34; class=&#34;headerlink&#34; title=&#34;xss之htmlspecialchars&#34;&gt;&lt;/a&gt;xss之htmlspecialchars&lt;/h2&gt;&lt;h2 id=&#34;xss之href输出&#34;&gt;&lt;a href=&#34;#xss之href输出&#34; class=&#34;headerlink&#34; title=&#34;xss之href输出&#34;&gt;&lt;/a&gt;xss之href输出&lt;/h2&gt;&lt;h2 id=&#34;xss之js输出&#34;&gt;&lt;a href=&#34;#xss之js输出&#34; class=&#34;headerlink&#34; title=&#34;xss之js输出&#34;&gt;&lt;/a&gt;xss之js输出&lt;/h2&gt;&lt;h1 id=&#34;CSRF&#34;&gt;&lt;a href=&#34;#CSRF&#34; class=&#34;headerlink&#34; title=&#34;CSRF&#34;&gt;&lt;/a&gt;CSRF&lt;/h1&gt;&lt;h2 id=&#34;CSRF（get）&#34;&gt;&lt;a href=&#34;#CSRF（get）&#34; class=&#34;headerlink&#34; title=&#34;CSRF（get）&#34;&gt;&lt;/a&gt;CSRF（get）&lt;/h2&gt;&lt;p&gt;首先点击右边的提示，使用他提供的账号登陆&lt;/p&gt;
+&lt;p&gt;然后开启代理，burp抓包，抓取提交修改信息的包&lt;/p&gt;
+&lt;p&gt;把报文中GET请求的东西复制下来，输入url+复制的东西&lt;/p&gt;
+&lt;p&gt;如果被攻击者此时登录状态或cookie/session没有过期，则她的信息被修改，步骤如下图&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9llDA&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9llDA.png&#34; alt=&#34;R9llDA.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;CSRF（post）&#34;&gt;&lt;a href=&#34;#CSRF（post）&#34; class=&#34;headerlink&#34; title=&#34;CSRF（post）&#34;&gt;&lt;/a&gt;CSRF（post）&lt;/h2&gt;&lt;h2 id=&#34;CSRF-Token&#34;&gt;&lt;a href=&#34;#CSRF-Token&#34; class=&#34;headerlink&#34; title=&#34;CSRF Token&#34;&gt;&lt;/a&gt;CSRF Token&lt;/h2&gt;&lt;h1 id=&#34;SQL-Inject&#34;&gt;&lt;a href=&#34;#SQL-Inject&#34; class=&#34;headerlink&#34; title=&#34;SQL-Inject&#34;&gt;&lt;/a&gt;SQL-Inject&lt;/h1&gt;&lt;h1 id=&#34;RCE&#34;&gt;&lt;a href=&#34;#RCE&#34; class=&#34;headerlink&#34; title=&#34;RCE&#34;&gt;&lt;/a&gt;RCE&lt;/h1&gt;&lt;h1 id=&#34;File-Inlusion&#34;&gt;&lt;a href=&#34;#File-Inlusion&#34; class=&#34;headerlink&#34; title=&#34;File Inlusion&#34;&gt;&lt;/a&gt;File Inlusion&lt;/h1&gt;&lt;h1 id=&#34;Unsafe-Filedownload&#34;&gt;&lt;a href=&#34;#Unsafe-Filedownload&#34; class=&#34;headerlink&#34; title=&#34;Unsafe Filedownload&#34;&gt;&lt;/a&gt;Unsafe Filedownload&lt;/h1&gt;&lt;h1 id=&#34;Unsafe-Fileupload&#34;&gt;&lt;a href=&#34;#Unsafe-Fileupload&#34; class=&#34;headerlink&#34; title=&#34;Unsafe Fileupload&#34;&gt;&lt;/a&gt;Unsafe Fileupload&lt;/h1&gt;&lt;h1 id=&#34;Over-Permisson&#34;&gt;&lt;a href=&#34;#Over-Permisson&#34; class=&#34;headerlink&#34; title=&#34;Over Permisson&#34;&gt;&lt;/a&gt;Over Permisson&lt;/h1&gt;&lt;h1 id=&#34;目录遍历&#34;&gt;&lt;a href=&#34;#目录遍历&#34; class=&#34;headerlink&#34; title=&#34;目录遍历&#34;&gt;&lt;/a&gt;目录遍历&lt;/h1&gt;&lt;h1 id=&#34;敏感信息泄露&#34;&gt;&lt;a href=&#34;#敏感信息泄露&#34; class=&#34;headerlink&#34; title=&#34;敏感信息泄露&#34;&gt;&lt;/a&gt;敏感信息泄露&lt;/h1&gt;&lt;h1 id=&#34;PHP反序列化&#34;&gt;&lt;a href=&#34;#PHP反序列化&#34; class=&#34;headerlink&#34; title=&#34;PHP反序列化&#34;&gt;&lt;/a&gt;PHP反序列化&lt;/h1&gt;&lt;h1 id=&#34;XXE&#34;&gt;&lt;a href=&#34;#XXE&#34; class=&#34;headerlink&#34; title=&#34;XXE&#34;&gt;&lt;/a&gt;XXE&lt;/h1&gt;&lt;h1 id=&#34;URL重定向&#34;&gt;&lt;a href=&#34;#URL重定向&#34; class=&#34;headerlink&#34; title=&#34;URL重定向&#34;&gt;&lt;/a&gt;URL重定向&lt;/h1&gt;&lt;h1 id=&#34;SSRF&#34;&gt;&lt;a href=&#34;#SSRF&#34; class=&#34;headerlink&#34; title=&#34;SSRF&#34;&gt;&lt;/a&gt;SSRF&lt;/h1&gt;</content>
+        <category term="靶场练习" />
+        <category term="web安全" />
+        <updated>2021-06-18T12:52:44.113Z</updated>
+    </entry>
+</feed>

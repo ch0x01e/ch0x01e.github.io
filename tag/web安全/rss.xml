@@ -5,19 +5,68 @@
         <link>https://ch1e.gitee.io</link>
         <description></description>
         <language>zh-CN</language>
-        <pubDate>Mon, 07 Jun 2021 18:24:59 +0800</pubDate>
-        <lastBuildDate>Mon, 07 Jun 2021 18:24:59 +0800</lastBuildDate>
+        <pubDate>Fri, 18 Jun 2021 20:52:44 +0800</pubDate>
+        <lastBuildDate>Fri, 18 Jun 2021 20:52:44 +0800</lastBuildDate>
         <category>web开发</category>
         <category>C++</category>
-        <category>数据库</category>
+        <category>靶场练习</category>
         <category>web安全</category>
+        <category>数据库</category>
         <category>网络协议</category>
+        <item>
+            <guid isPermalink="true">https://ch1e.gitee.io/2021/06/18/pikachu/</guid>
+            <title>pikachu靶场通关手册(持续更新中)</title>
+            <link>https://ch1e.gitee.io/2021/06/18/pikachu/</link>
+            <category>靶场练习</category>
+            <category>web安全</category>
+            <pubDate>Fri, 18 Jun 2021 20:52:44 +0800</pubDate>
+            <description><![CDATA[ &lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;最近发现，之前学的各种东西已经比较生疏了，所以重新来通关一个靶场来回忆一下&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&#34;暴力破解&#34;&gt;&lt;a href=&#34;#暴力破解&#34; class=&#34;headerlink&#34; title=&#34;暴力破解&#34;&gt;&lt;/a&gt;暴力破解&lt;/h1&gt;&lt;h2 id=&#34;基于表单的暴力破解&#34;&gt;&lt;a href=&#34;#基于表单的暴力破解&#34; class=&#34;headerlink&#34; title=&#34;基于表单的暴力破解&#34;&gt;&lt;/a&gt;基于表单的暴力破解&lt;/h2&gt;&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9Vp11&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9Vp11.png&#34; alt=&#34;R9Vp11.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;看到这个，再看到题目名字，直接使用burp中的爆破功能，我们抓取他登陆的包&lt;/p&gt;
+&lt;p&gt;然后导入我们的字典，开始爆破，成功得出账号密码分别是admin和123456&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9ZAK0&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9ZAK0.png&#34; alt=&#34;R9ZAK0.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;验证码绕过-on-server&#34;&gt;&lt;a href=&#34;#验证码绕过-on-server&#34; class=&#34;headerlink&#34; title=&#34;验证码绕过(on server)&#34;&gt;&lt;/a&gt;验证码绕过(on server)&lt;/h2&gt;&lt;p&gt;1.保持bp的抓包状态，随便输入账号和密码，先不输入验证码。&lt;/p&gt;
+&lt;p&gt;2.打开bp，右击选择send to repeater，把请求发送到 repeater&lt;/p&gt;
+&lt;p&gt;3.打开Repeater，点击GO,观察状态。&lt;/p&gt;
+&lt;p&gt;4.这时，右侧会显示验证码不能为空，因为此前没有输入验证码&lt;/p&gt;
+&lt;p&gt;5.如果随便输入一个验证码，此时显示验证码错误！&lt;/p&gt;
+&lt;p&gt;6.然后把pikachu平台中的正确的验证码输入进去，则显示账号或密码错误！说明了后台会把提交的验证码进行验证，看是否正确，接下来进行暴力破解！&lt;/p&gt;
+&lt;p&gt;7.然后把pikachu平台中的正确的验证码输入进去，则显示账号或密码错误！说明了后台会把提交的验证码进行验证，看是否正确，接下来进行暴力破解！步骤和基于表单的暴力破解是一样。将Proxy中抓到的，右击发送到Intruder，然后添加账户和密码变量，放入字典。&lt;/p&gt;
+&lt;p&gt;（我这里因为知道了他账号密码，所以就直接不上字典了）&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9ekJH&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9ekJH.png&#34; alt=&#34;R9ekJH.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;验证码绕过-on-click&#34;&gt;&lt;a href=&#34;#验证码绕过-on-click&#34; class=&#34;headerlink&#34; title=&#34;验证码绕过(on click)&#34;&gt;&lt;/a&gt;验证码绕过(on click)&lt;/h2&gt;&lt;p&gt;验证码输入正确、为空、输入错误分别提示login success，请输入验证码，验证码输入错误。&lt;/p&gt;
+&lt;p&gt;什么都不输入或只输入用户名和密码点击登录，页面弹出“请输入验证码！”的提示框，而不是用户名和密码不存在&lt;/p&gt;
+&lt;p&gt; 我们查看源码，输入的验证码在本地验证，我们可以在burp suite不输入验证码或者输入错的验证码完成爆破&lt;/p&gt;
+&lt;p&gt;burp suite抓包，删除验证码，发送到intruder模块&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9eopd&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9eopd.png&#34; alt=&#34;R9eopd.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;token防爆破？&#34;&gt;&lt;a href=&#34;#token防爆破？&#34; class=&#34;headerlink&#34; title=&#34;token防爆破？&#34;&gt;&lt;/a&gt;token防爆破？&lt;/h2&gt;&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9min0&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9min0.png&#34; alt=&#34;R9min0.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;抓包，发现有一个token&lt;/p&gt;
+&lt;p&gt;点击右键发送至intruder。&lt;/p&gt;
+&lt;p&gt;点击intruder模块中positions选择攻击类型为Pitchfork，设置password与token为变量。&lt;/p&gt;
+&lt;p&gt;选择options，Grep-Extract 打勾点击add。&lt;/p&gt;
+&lt;p&gt;点击refetch response 找到响应包中的token的值选择点击确定。然后在&lt;/p&gt;
+&lt;p&gt;Redirections中选择always。&lt;/p&gt;
+&lt;p&gt;点击payloads set 1 type类型选择runtime file加载密码字典，set 2 type选择&lt;/p&gt;
+&lt;p&gt;recursive grep 复制刚才的token值粘贴至first request：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9nOJg&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9nOJg.png&#34; alt=&#34;R9nOJg.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;点击start attack进行破解。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意，这里需要把线程数设置为1，否则爆破不了&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9ntaT&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9ntaT.png&#34; alt=&#34;R9ntaT.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;Cross-Site-Scripting&#34;&gt;&lt;a href=&#34;#Cross-Site-Scripting&#34; class=&#34;headerlink&#34; title=&#34;Cross-Site Scripting&#34;&gt;&lt;/a&gt;Cross-Site Scripting&lt;/h1&gt;&lt;h2 id=&#34;反射型XSS（get）&#34;&gt;&lt;a href=&#34;#反射型XSS（get）&#34; class=&#34;headerlink&#34; title=&#34;反射型XSS（get）&#34;&gt;&lt;/a&gt;反射型XSS（get）&lt;/h2&gt;&lt;h2 id=&#34;反射型XSS（post）&#34;&gt;&lt;a href=&#34;#反射型XSS（post）&#34; class=&#34;headerlink&#34; title=&#34;反射型XSS（post）&#34;&gt;&lt;/a&gt;反射型XSS（post）&lt;/h2&gt;&lt;h2 id=&#34;存储型XSS&#34;&gt;&lt;a href=&#34;#存储型XSS&#34; class=&#34;headerlink&#34; title=&#34;存储型XSS&#34;&gt;&lt;/a&gt;存储型XSS&lt;/h2&gt;&lt;h2 id=&#34;DOM型XSS&#34;&gt;&lt;a href=&#34;#DOM型XSS&#34; class=&#34;headerlink&#34; title=&#34;DOM型XSS&#34;&gt;&lt;/a&gt;DOM型XSS&lt;/h2&gt;&lt;h2 id=&#34;DOM型XSS-x&#34;&gt;&lt;a href=&#34;#DOM型XSS-x&#34; class=&#34;headerlink&#34; title=&#34;DOM型XSS-x&#34;&gt;&lt;/a&gt;DOM型XSS-x&lt;/h2&gt;&lt;h2 id=&#34;xss之盲打&#34;&gt;&lt;a href=&#34;#xss之盲打&#34; class=&#34;headerlink&#34; title=&#34;xss之盲打&#34;&gt;&lt;/a&gt;xss之盲打&lt;/h2&gt;&lt;h2 id=&#34;xss之过滤&#34;&gt;&lt;a href=&#34;#xss之过滤&#34; class=&#34;headerlink&#34; title=&#34;xss之过滤&#34;&gt;&lt;/a&gt;xss之过滤&lt;/h2&gt;&lt;h2 id=&#34;xss之htmlspecialchars&#34;&gt;&lt;a href=&#34;#xss之htmlspecialchars&#34; class=&#34;headerlink&#34; title=&#34;xss之htmlspecialchars&#34;&gt;&lt;/a&gt;xss之htmlspecialchars&lt;/h2&gt;&lt;h2 id=&#34;xss之href输出&#34;&gt;&lt;a href=&#34;#xss之href输出&#34; class=&#34;headerlink&#34; title=&#34;xss之href输出&#34;&gt;&lt;/a&gt;xss之href输出&lt;/h2&gt;&lt;h2 id=&#34;xss之js输出&#34;&gt;&lt;a href=&#34;#xss之js输出&#34; class=&#34;headerlink&#34; title=&#34;xss之js输出&#34;&gt;&lt;/a&gt;xss之js输出&lt;/h2&gt;&lt;h1 id=&#34;CSRF&#34;&gt;&lt;a href=&#34;#CSRF&#34; class=&#34;headerlink&#34; title=&#34;CSRF&#34;&gt;&lt;/a&gt;CSRF&lt;/h1&gt;&lt;h2 id=&#34;CSRF（get）&#34;&gt;&lt;a href=&#34;#CSRF（get）&#34; class=&#34;headerlink&#34; title=&#34;CSRF（get）&#34;&gt;&lt;/a&gt;CSRF（get）&lt;/h2&gt;&lt;p&gt;首先点击右边的提示，使用他提供的账号登陆&lt;/p&gt;
+&lt;p&gt;然后开启代理，burp抓包，抓取提交修改信息的包&lt;/p&gt;
+&lt;p&gt;把报文中GET请求的东西复制下来，输入url+复制的东西&lt;/p&gt;
+&lt;p&gt;如果被攻击者此时登录状态或cookie/session没有过期，则她的信息被修改，步骤如下图&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://imgtu.com/i/R9llDA&#34;&gt;&lt;img src=&#34;https://z3.ax1x.com/2021/06/18/R9llDA.png&#34; alt=&#34;R9llDA.png&#34;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;CSRF（post）&#34;&gt;&lt;a href=&#34;#CSRF（post）&#34; class=&#34;headerlink&#34; title=&#34;CSRF（post）&#34;&gt;&lt;/a&gt;CSRF（post）&lt;/h2&gt;&lt;h2 id=&#34;CSRF-Token&#34;&gt;&lt;a href=&#34;#CSRF-Token&#34; class=&#34;headerlink&#34; title=&#34;CSRF Token&#34;&gt;&lt;/a&gt;CSRF Token&lt;/h2&gt;&lt;h1 id=&#34;SQL-Inject&#34;&gt;&lt;a href=&#34;#SQL-Inject&#34; class=&#34;headerlink&#34; title=&#34;SQL-Inject&#34;&gt;&lt;/a&gt;SQL-Inject&lt;/h1&gt;&lt;h1 id=&#34;RCE&#34;&gt;&lt;a href=&#34;#RCE&#34; class=&#34;headerlink&#34; title=&#34;RCE&#34;&gt;&lt;/a&gt;RCE&lt;/h1&gt;&lt;h1 id=&#34;File-Inlusion&#34;&gt;&lt;a href=&#34;#File-Inlusion&#34; class=&#34;headerlink&#34; title=&#34;File Inlusion&#34;&gt;&lt;/a&gt;File Inlusion&lt;/h1&gt;&lt;h1 id=&#34;Unsafe-Filedownload&#34;&gt;&lt;a href=&#34;#Unsafe-Filedownload&#34; class=&#34;headerlink&#34; title=&#34;Unsafe Filedownload&#34;&gt;&lt;/a&gt;Unsafe Filedownload&lt;/h1&gt;&lt;h1 id=&#34;Unsafe-Fileupload&#34;&gt;&lt;a href=&#34;#Unsafe-Fileupload&#34; class=&#34;headerlink&#34; title=&#34;Unsafe Fileupload&#34;&gt;&lt;/a&gt;Unsafe Fileupload&lt;/h1&gt;&lt;h1 id=&#34;Over-Permisson&#34;&gt;&lt;a href=&#34;#Over-Permisson&#34; class=&#34;headerlink&#34; title=&#34;Over Permisson&#34;&gt;&lt;/a&gt;Over Permisson&lt;/h1&gt;&lt;h1 id=&#34;目录遍历&#34;&gt;&lt;a href=&#34;#目录遍历&#34; class=&#34;headerlink&#34; title=&#34;目录遍历&#34;&gt;&lt;/a&gt;目录遍历&lt;/h1&gt;&lt;h1 id=&#34;敏感信息泄露&#34;&gt;&lt;a href=&#34;#敏感信息泄露&#34; class=&#34;headerlink&#34; title=&#34;敏感信息泄露&#34;&gt;&lt;/a&gt;敏感信息泄露&lt;/h1&gt;&lt;h1 id=&#34;PHP反序列化&#34;&gt;&lt;a href=&#34;#PHP反序列化&#34; class=&#34;headerlink&#34; title=&#34;PHP反序列化&#34;&gt;&lt;/a&gt;PHP反序列化&lt;/h1&gt;&lt;h1 id=&#34;XXE&#34;&gt;&lt;a href=&#34;#XXE&#34; class=&#34;headerlink&#34; title=&#34;XXE&#34;&gt;&lt;/a&gt;XXE&lt;/h1&gt;&lt;h1 id=&#34;URL重定向&#34;&gt;&lt;a href=&#34;#URL重定向&#34; class=&#34;headerlink&#34; title=&#34;URL重定向&#34;&gt;&lt;/a&gt;URL重定向&lt;/h1&gt;&lt;h1 id=&#34;SSRF&#34;&gt;&lt;a href=&#34;#SSRF&#34; class=&#34;headerlink&#34; title=&#34;SSRF&#34;&gt;&lt;/a&gt;SSRF&lt;/h1&gt; ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://ch1e.gitee.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/</guid>
             <title>SQL注入笔记</title>
             <link>https://ch1e.gitee.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/</link>
-            <category>数据库</category>
             <category>web安全</category>
+            <category>数据库</category>
             <pubDate>Mon, 07 Jun 2021 18:24:59 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;简介&#34;&gt;&lt;a href=&#34;#简介&#34; class=&#34;headerlink&#34; title=&#34;简介:&#34;&gt;&lt;/a&gt;简介:&lt;/h1&gt;&lt;h2 id=&#34;SQL注入漏洞产生的原因&#34;&gt;&lt;a href=&#34;#SQL注入漏洞产生的原因&#34; class=&#34;headerlink&#34; title=&#34;SQL注入漏洞产生的原因&#34;&gt;&lt;/a&gt;SQL注入漏洞产生的原因&lt;/h2&gt;&lt;p&gt;SQL Injection&lt;br&gt;程序员在编写代码的时候，没有对用户输入数据的合法性进行判断，使应用程序存在安全隐患&lt;br&gt;用户可以提交一段 数据库查询代码，根据程序返回的结果，获得某些他想得知的 数据或 进行数据库操作&lt;br&gt;##SQL语句&lt;/p&gt;
 &lt;figure class=&#34;highlight sql&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;查询： &lt;span class=&#34;keyword&#34;&gt;SELECT&lt;/span&gt; statement &lt;span class=&#34;keyword&#34;&gt;FROM&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;WHERE&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;condition&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;删除记录： &lt;span class=&#34;keyword&#34;&gt;DELETE&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;FROM&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;WHERE&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;condition&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;更新记录： UPDATE &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;SET&lt;/span&gt; field&lt;span class=&#34;operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;keyword&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;WHERE&lt;/span&gt; condtion&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;添加记录： &lt;span class=&#34;keyword&#34;&gt;INSERT&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;INTO&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; field &lt;span class=&#34;keyword&#34;&gt;VALUES&lt;/span&gt;(&lt;span class=&#34;keyword&#34;&gt;values&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
