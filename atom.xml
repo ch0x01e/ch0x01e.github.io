@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://ch1e.gitee.io</id>
-    <title>ch1e&#39;s Blog</title>
+    <title>ch1e的随笔</title>
     <link href="https://ch1e.gitee.io" />
     <updated>2021-06-18T12:52:44.113Z</updated>
     <category term="web开发" />
