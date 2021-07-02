@@ -107,19 +107,19 @@
             ]
         },
         {
-            "id": "https://ch1e.gitee.io/2021/05/31/introduce/",
-            "url": "https://ch1e.gitee.io/2021/05/31/introduce/",
-            "title": "ch1e的自述",
-            "date_published": "2021-05-31T11:54:11.377Z",
-            "content_html": "<h1 id=\"自我介绍\"><a href=\"#自我介绍\" class=\"headerlink\" title=\"自我介绍\"></a>自我介绍</h1><p>我是一个普通本科院校的大一学生，计算机科学与技术专业，对信息安全接触时间不到一年，从小就想当一名{牛逼哄哄^shayebuhui}的白帽黑客，这个愿望也在大一得到了实现，我加入了学校的信息安全协会，成为了一名啥也不是的小弟，在这看到了各种大佬。我目前正在学习信息安全中的Web方向，对网站二次开发，PHP，Html，Css，C++以及C都有所涉猎，未来会继续朝着这个方向努力，并且扩大我的学习领域，目标是成为俺SSN大哥那样的全栈爷。</p>\n",
-            "tags": []
-        },
-        {
             "id": "https://ch1e.gitee.io/2021/05/31/jihua/",
             "url": "https://ch1e.gitee.io/2021/05/31/jihua/",
             "title": "ch1e的个人学习计划",
             "date_published": "2021-05-31T11:54:11.377Z",
             "content_html": "<p>这里是ch1e在2021年的个人学习计划表</p>\n<ul>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> 自学html+js</li>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> 自学PHP</li>\n<li><input disabled=\"\" type=\"checkbox\"> 自学计算机网络</li>\n<li><input disabled=\"\" type=\"checkbox\"> 看完《逆向工程权威指南》</li>\n<li><input disabled=\"\" type=\"checkbox\"> 看完《汇编语言》</li>\n<li><input disabled=\"\" type=\"checkbox\"> 学习Python</li>\n<li><input disabled=\"\" type=\"checkbox\"> 挖掘Edusrc</li>\n<li><input disabled=\"\" type=\"checkbox\"> 学习自己编写Poc以及Exp</li>\n<li><input disabled=\"\" type=\"checkbox\"> 二次开发一套CMS的模板</li>\n<li><input disabled=\"\" type=\"checkbox\"> 学习Mysql数据库</li>\n<li><input disabled=\"\" type=\"checkbox\"> 学习内网渗透</li>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> 每日坚持锻炼</li>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> 每日坚持护肤</li>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> 每日坚持早睡</li>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> 每日坚持吃饭</li>\n<li><input disabled=\"\" type=\"checkbox\"> 每日坚持吃水果</li>\n</ul>\n",
+            "tags": []
+        },
+        {
+            "id": "https://ch1e.gitee.io/2021/05/31/introduce/",
+            "url": "https://ch1e.gitee.io/2021/05/31/introduce/",
+            "title": "ch1e的自述",
+            "date_published": "2021-05-31T11:54:11.377Z",
+            "content_html": "<h1 id=\"自我介绍\"><a href=\"#自我介绍\" class=\"headerlink\" title=\"自我介绍\"></a>自我介绍</h1><p>我是一个普通本科院校的大一学生，计算机科学与技术专业，对信息安全接触时间不到一年，从小就想当一名{牛逼哄哄^shayebuhui}的白帽黑客，这个愿望也在大一得到了实现，我加入了学校的信息安全协会，成为了一名啥也不是的小弟，在这看到了各种大佬。我目前正在学习信息安全中的Web方向，对网站二次开发，PHP，Html，Css，C++以及C都有所涉猎，未来会继续朝着这个方向努力，并且扩大我的学习领域，目标是成为俺SSN大哥那样的全栈爷。</p>\n",
             "tags": []
         }
     ]
