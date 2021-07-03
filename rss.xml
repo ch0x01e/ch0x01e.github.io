@@ -7,10 +7,10 @@
         <language>zh-CN</language>
         <pubDate>Thu, 01 Jul 2021 21:17:48 +0800</pubDate>
         <lastBuildDate>Thu, 01 Jul 2021 21:17:48 +0800</lastBuildDate>
-        <category>C++</category>
-        <category>数据库</category>
         <category>靶场练习</category>
         <category>web安全</category>
+        <category>数据库</category>
+        <category>C++</category>
         <category>网络协议</category>
         <item>
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/01/aysql/</guid>
@@ -422,8 +422,8 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/</guid>
             <title>SQL注入笔记</title>
             <link>https://ch1e.gitee.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/</link>
-            <category>数据库</category>
             <category>web安全</category>
+            <category>数据库</category>
             <pubDate>Mon, 07 Jun 2021 18:24:59 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;简介&#34;&gt;&lt;a href=&#34;#简介&#34; class=&#34;headerlink&#34; title=&#34;简介:&#34;&gt;&lt;/a&gt;简介:&lt;/h1&gt;&lt;h2 id=&#34;SQL注入漏洞产生的原因&#34;&gt;&lt;a href=&#34;#SQL注入漏洞产生的原因&#34; class=&#34;headerlink&#34; title=&#34;SQL注入漏洞产生的原因&#34;&gt;&lt;/a&gt;SQL注入漏洞产生的原因&lt;/h2&gt;&lt;p&gt;SQL Injection&lt;br&gt;程序员在编写代码的时候，没有对用户输入数据的合法性进行判断，使应用程序存在安全隐患&lt;br&gt;用户可以提交一段 数据库查询代码，根据程序返回的结果，获得某些他想得知的 数据或 进行数据库操作&lt;br&gt;##SQL语句&lt;/p&gt;
 &lt;figure class=&#34;highlight sql&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;查询： &lt;span class=&#34;keyword&#34;&gt;SELECT&lt;/span&gt; statement &lt;span class=&#34;keyword&#34;&gt;FROM&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;WHERE&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;condition&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;删除记录： &lt;span class=&#34;keyword&#34;&gt;DELETE&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;FROM&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;WHERE&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;condition&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;更新记录： UPDATE &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;SET&lt;/span&gt; field&lt;span class=&#34;operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;keyword&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;WHERE&lt;/span&gt; condtion&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;添加记录： &lt;span class=&#34;keyword&#34;&gt;INSERT&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;INTO&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; field &lt;span class=&#34;keyword&#34;&gt;VALUES&lt;/span&gt;(&lt;span class=&#34;keyword&#34;&gt;values&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -538,14 +538,6 @@
  ]]></description>
         </item>
         <item>
-            <guid isPermalink="true">https://ch1e.gitee.io/2021/05/31/introduce/</guid>
-            <title>ch1e的自述</title>
-            <link>https://ch1e.gitee.io/2021/05/31/introduce/</link>
-            <pubDate>Mon, 31 May 2021 19:54:11 +0800</pubDate>
-            <description><![CDATA[ &lt;h1 id=&#34;自我介绍&#34;&gt;&lt;a href=&#34;#自我介绍&#34; class=&#34;headerlink&#34; title=&#34;自我介绍&#34;&gt;&lt;/a&gt;自我介绍&lt;/h1&gt;&lt;p&gt;我是一个普通本科院校的大一学生，计算机科学与技术专业，对信息安全接触时间不到一年，从小就想当一名{牛逼哄哄^shayebuhui}的白帽黑客，这个愿望也在大一得到了实现，我加入了学校的信息安全协会，成为了一名啥也不是的小弟，在这看到了各种大佬。我目前正在学习信息安全中的Web方向，对网站二次开发，PHP，Html，Css，C++以及C都有所涉猎，未来会继续朝着这个方向努力，并且扩大我的学习领域，目标是成为俺SSN大哥那样的全栈爷。&lt;/p&gt;
- ]]></description>
-        </item>
-        <item>
             <guid isPermalink="true">https://ch1e.gitee.io/2021/05/31/jihua/</guid>
             <title>ch1e的个人学习计划</title>
             <link>https://ch1e.gitee.io/2021/05/31/jihua/</link>
@@ -569,6 +561,14 @@
 &lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; 每日坚持吃饭&lt;/li&gt;
 &lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; 每日坚持吃水果&lt;/li&gt;
 &lt;/ul&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://ch1e.gitee.io/2021/05/31/introduce/</guid>
+            <title>ch1e的自述</title>
+            <link>https://ch1e.gitee.io/2021/05/31/introduce/</link>
+            <pubDate>Mon, 31 May 2021 19:54:11 +0800</pubDate>
+            <description><![CDATA[ &lt;h1 id=&#34;自我介绍&#34;&gt;&lt;a href=&#34;#自我介绍&#34; class=&#34;headerlink&#34; title=&#34;自我介绍&#34;&gt;&lt;/a&gt;自我介绍&lt;/h1&gt;&lt;p&gt;我是一个普通本科院校的大一学生，计算机科学与技术专业，对信息安全接触时间不到一年，从小就想当一名{牛逼哄哄^shayebuhui}的白帽黑客，这个愿望也在大一得到了实现，我加入了学校的信息安全协会，成为了一名啥也不是的小弟，在这看到了各种大佬。我目前正在学习信息安全中的Web方向，对网站二次开发，PHP，Html，Css，C++以及C都有所涉猎，未来会继续朝着这个方向努力，并且扩大我的学习领域，目标是成为俺SSN大哥那样的全栈爷。&lt;/p&gt;
  ]]></description>
         </item>
     </channel>
