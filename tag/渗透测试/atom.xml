@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://ch1e.gitee.io</id>
+    <title>ch1e的随笔 • Posts by &#34;渗透测试&#34; tag</title>
+    <link href="https://ch1e.gitee.io" />
+    <updated>2021-07-03T15:12:06.941Z</updated>
+    <category term="免杀" />
+    <category term="渗透测试" />
+    <category term="web安全" />
+    <category term="数据库" />
+    <category term="C++" />
+    <category term="靶场练习" />
+    <category term="网络协议" />
+    <entry>
+        <id>https://ch1e.gitee.io/2021/07/03/aynbms/</id>
+        <title>CS免杀姿势分享(等待更新)</title>
+        <link rel="alternate" href="https://ch1e.gitee.io/2021/07/03/aynbms/"/>
+        <content type="html">&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/16558686.png&#34; alt=&#34;16558686&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;Cobaltstrike简介&#34;&gt;&lt;a href=&#34;#Cobaltstrike简介&#34; class=&#34;headerlink&#34; title=&#34;Cobaltstrike简介&#34;&gt;&lt;/a&gt;Cobaltstrike简介&lt;/h1&gt;&lt;p&gt;CobatStrike是一款基于java编写的全平台多方协同后渗透攻击框架。CobaltStrike集成了端口转发、端口扫描、socket代理、提权、钓鱼、远控木马等功能。该工具几乎覆盖了APT攻击链中所需要用到的各个技术环节。&lt;/p&gt;
+&lt;h1 id=&#34;Cobaltstrike各种免杀姿势&#34;&gt;&lt;a href=&#34;#Cobaltstrike各种免杀姿势&#34; class=&#34;headerlink&#34; title=&#34;Cobaltstrike各种免杀姿势&#34;&gt;&lt;/a&gt;Cobaltstrike各种免杀姿势&lt;/h1&gt;&lt;h2 id=&#34;0x01-暗月内部系统的bypassAv&#34;&gt;&lt;a href=&#34;#0x01-暗月内部系统的bypassAv&#34; class=&#34;headerlink&#34; title=&#34;0x01 暗月内部系统的bypassAv&#34;&gt;&lt;/a&gt;0x01 暗月内部系统的bypassAv&lt;/h2&gt;&lt;p&gt;最近入了暗月的全栈渗透测试培训，里面有个内部系统，其中就有个bypassAv&lt;/p&gt;
+&lt;p&gt;今天心血来潮尝试了一下，发现是真的香，话不多说，直接开始。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210703232700160.png&#34; alt=&#34;image-20210703232700160&#34;&gt;&lt;/p&gt;
+&lt;p&gt;首先使用 cobal strike payload 生成 64位 c#&lt;/p&gt;
+&lt;p&gt;直接编辑生成出来的payload.cs&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210703232934530.png&#34; alt=&#34;image-20210703232934530&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们只取{}中的十六进制代码，把shellcode复制到我们的bypassAv后可以自动生成一个exe&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210703233120080.png&#34; alt=&#34;image-20210703233120080&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里拿我自己本机来测试，主机成功上线&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210703233156599.png&#34; alt=&#34;image-20210703233156599&#34;&gt;&lt;/p&gt;
+</content>
+        <category term="免杀" />
+        <category term="渗透测试" />
+        <category term="web安全" />
+        <updated>2021-07-03T15:12:06.941Z</updated>
+    </entry>
+</feed>
