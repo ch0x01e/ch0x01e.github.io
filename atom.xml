@@ -4,12 +4,12 @@
     <title>ch1e的随笔</title>
     <link href="https://ch1e.gitee.io" />
     <updated>2021-07-03T15:12:06.941Z</updated>
+    <category term="数据库" />
     <category term="免杀" />
     <category term="渗透测试" />
     <category term="web安全" />
-    <category term="数据库" />
-    <category term="C++" />
     <category term="靶场练习" />
+    <category term="C++" />
     <category term="网络协议" />
     <entry>
         <id>https://ch1e.gitee.io/2021/07/03/aynbms/</id>
@@ -36,7 +36,7 @@
     </entry>
     <entry>
         <id>https://ch1e.gitee.io/2021/07/01/aysql/</id>
-        <title>暗月渗透测试培训之数据库学习</title>
+        <title>数据库基础学习</title>
         <link rel="alternate" href="https://ch1e.gitee.io/2021/07/01/aysql/"/>
         <content type="html">&lt;h1 id=&#34;数据库学习01-Mysql数据库的基本操作&#34;&gt;&lt;a href=&#34;#数据库学习01-Mysql数据库的基本操作&#34; class=&#34;headerlink&#34; title=&#34;数据库学习01 Mysql数据库的基本操作&#34;&gt;&lt;/a&gt;数据库学习01 Mysql数据库的基本操作&lt;/h1&gt;&lt;h2 id=&#34;数据库的基本操作&#34;&gt;&lt;a href=&#34;#数据库的基本操作&#34; class=&#34;headerlink&#34; title=&#34;数据库的基本操作&#34;&gt;&lt;/a&gt;数据库的基本操作&lt;/h2&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;输入 mysql -uroot -p -P3306 -h127.0.0.1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;退出的三种方法&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    mysql &amp;gt; exit;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    mysql &amp;gt; quit;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    mysql &amp;gt; \q;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	增：create database db1;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	删：drop database db1;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	改：alter database db1 charset utf8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	查：show databases;#查看所有的数据库&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show create database db1;查看指定的数据库&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show status; -- 显示一些系统特定资源的信息，例如，正在运行的线程数量。 &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	desc tabl_name; 显示表结构，字段类型，主键，是否为空等属性，但不显示外键。&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show databases 查看这个mysql里面有多少个库&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show tables 查看当前库里面所有的表&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;     mysql&amp;gt; select password from user where user=&amp;#x27;root&amp;#x27;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;     查看当前数据库 里面的表user 用户为root的密码&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
@@ -122,6 +122,87 @@
 &lt;p&gt;union的用法及注意事项: 两次查询的列数必须一致&lt;/p&gt;
 &lt;figure class=&#34;highlight sql&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;operator&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;from&lt;/span&gt; users &lt;span class=&#34;keyword&#34;&gt;union&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;operator&#34;&gt;*&lt;/span&gt;,&lt;span class=&#34;number&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;from&lt;/span&gt; news;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
+&lt;h1 id=&#34;详解http协议&#34;&gt;&lt;a href=&#34;#详解http协议&#34; class=&#34;headerlink&#34; title=&#34;详解http协议&#34;&gt;&lt;/a&gt;详解http协议&lt;/h1&gt;&lt;p&gt;http（超文本传输协议）是一个基于请求与响应模式的、无状态的、应用层的协议，常基于TCP的连接方式，HTTP1.1版本中给出一种持续连接的机制，绝大多数的Web开发，都是构建在HTTP协议之上的Web应用。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210705130403629.png&#34; alt=&#34;image-20210705130403629&#34;&gt;&lt;/p&gt;
+&lt;p&gt;1、 支持客户/服务器模式  基于请求与响应的&lt;/p&gt;
+&lt;p&gt;2、 无连接:限制每次连接只处理一一个请求。服务器处理完客户的请求，并收到客户的应答后，即断开连接。采用这种方式可以节省传输时间&lt;/p&gt;
+&lt;p&gt;3、 无状态：指协议对事务处理没有记忆能力，缺少状态一位着如果后续处理需要前面的信息，则它必须重传，这样可能导致每次连接传送的数据量增大。另一个方面 ，在服务器不需要先前的信息时它的应答就比较快。&lt;/p&gt;
+&lt;h2 id=&#34;http请求&#34;&gt;&lt;a href=&#34;#http请求&#34; class=&#34;headerlink&#34; title=&#34;http请求&#34;&gt;&lt;/a&gt;http请求&lt;/h2&gt;&lt;p&gt;三个部分组成，分别是：请求行 、消息报头、请求正文&lt;/p&gt;
+&lt;p&gt;GET / HTTP/1.1  请求行&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210705132922184.png&#34; alt=&#34;image-20210705132922184&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Upgrade-Insecure-Requests: 1&lt;/p&gt;
+&lt;p&gt;客户端向服务器端发送信号表示它支持 upgrade-insecure-requests 的升级机制&lt;/p&gt;
+&lt;p&gt;max-age=0表示不管response怎么设置，在重新获取资源之前，先检验ETag/Last-Modified&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210705133007497.png&#34; alt=&#34;image-20210705133007497&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;*GET   请求获取Request-URI所标识的资源*&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;*POST   在Request-URI所标识的资源后附加新的数据*&lt;/strong&gt;&lt;/em&gt;    比GET方法多一个请求正文&lt;/p&gt;
+&lt;p&gt;HEAD   请求获取由Request-URI所标识的资源的响应消息报头&lt;/p&gt;
+&lt;p&gt;PUT   请求服务器存储一个资源，并用Request-URI作为其标识&lt;/p&gt;
+&lt;p&gt;DELETE  请求服务器删除Request-URI所标识的资源&lt;/p&gt;
+&lt;p&gt;TRACE  请求服务器回送收到的请求信息，主要用于测试或诊断&lt;/p&gt;
+&lt;p&gt;CONNECT 保留将来使用&lt;/p&gt;
+&lt;p&gt;OPTIONS 请求查询服务器的性能，或者查询与资源相关的选项和需求&lt;/p&gt;
+&lt;h2 id=&#34;http响应&#34;&gt;&lt;a href=&#34;#http响应&#34; class=&#34;headerlink&#34; title=&#34;http响应&#34;&gt;&lt;/a&gt;http响应&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210705133140880.png&#34; alt=&#34;image-20210705133140880&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210705133148408.png&#34; alt=&#34;image-20210705133148408&#34;&gt;&lt;/p&gt;
+&lt;p&gt;常见的状态代码 状态描述 说明&lt;/p&gt;
+&lt;p&gt;200 OK // 客户端请求成功&lt;/p&gt;
+&lt;p&gt;302 Redirection //请求重定向 （A 找 B 借钱，B 通知 A 找C 借钱 ， A找C 借钱） A 客户端 B、C服务器&lt;/p&gt;
+&lt;p&gt;304 //服务器端资源没有改动，通知客户端查找本地缓存&lt;/p&gt;
+&lt;p&gt;400 Bad Request //客户端请求有语法错误，不能被服务器所理解&lt;/p&gt;
+&lt;p&gt;401 Unauthorized //请求未经授权，这个状态代码必须和WWW-Authenticate报头域一起使用&lt;/p&gt;
+&lt;p&gt;403 Forbidden //服务器收到请求，但是拒接提供服务&lt;/p&gt;
+&lt;p&gt;404 Not Found //客户端访问资源不存在&lt;/p&gt;
+&lt;p&gt;500 Internal Server Error //服务器发生不可预期的错误&lt;/p&gt;
+&lt;p&gt;503 Server Unavailable //服务器当前不能处理客户端的请求，一段时间后可能恢复正常&lt;/p&gt;
+&lt;h1 id=&#34;端口协议&#34;&gt;&lt;a href=&#34;#端口协议&#34; class=&#34;headerlink&#34; title=&#34;端口协议&#34;&gt;&lt;/a&gt;端口协议&lt;/h1&gt;&lt;h2 id=&#34;端口的类型&#34;&gt;&lt;a href=&#34;#端口的类型&#34; class=&#34;headerlink&#34; title=&#34;端口的类型&#34;&gt;&lt;/a&gt;端口的类型&lt;/h2&gt;&lt;p&gt;TCP端口和UDP端口。由于TCP和UDP两个协议是独立的，因此各自的端口号也相互独立，比如TCP有235端口，UDP也 可以有235端口，两者并不冲突。&lt;/p&gt;
+&lt;h3 id=&#34;（1）TCP端口&#34;&gt;&lt;a href=&#34;#（1）TCP端口&#34; class=&#34;headerlink&#34; title=&#34;（1）TCP端口&#34;&gt;&lt;/a&gt;（1）TCP端口&lt;/h3&gt;&lt;p&gt;　　TCP端口，即&lt;strong&gt;传输控制协议端口&lt;/strong&gt;，需要在客户端和服务器之间建立连接，这样可以提供****可靠的数据传输****。常见的包括FTP服务的21端口，Telnet服务的23端口，SMTP服务的25端口，以及HTTP服务的80端口等等。&lt;/p&gt;
+&lt;h3 id=&#34;（2）UDP端口&#34;&gt;&lt;a href=&#34;#（2）UDP端口&#34; class=&#34;headerlink&#34; title=&#34;（2）UDP端口&#34;&gt;&lt;/a&gt;（2）UDP端口&lt;/h3&gt;&lt;p&gt;　　UDP端口，即&lt;strong&gt;用户数据包协议端口&lt;/strong&gt;，无需在客户端和服务器之间建立连接，安全性得不到保障。常见的有DNS服务的53端口，SNMP（简单网络管理协议）服务的161端口，QQ使用的8000和400&lt;/p&gt;
+&lt;h2 id=&#34;常见的端口&#34;&gt;&lt;a href=&#34;#常见的端口&#34; class=&#34;headerlink&#34; title=&#34;常见的端口&#34;&gt;&lt;/a&gt;常见的端口&lt;/h2&gt;&lt;p&gt;a.服务端用的端口号&lt;/p&gt;
+&lt;p&gt;a.服务端使用的端口号&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;预留端口号&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;取值范围0-1023,这些端口我们编程的时候不能使用，是那些vip应用程序使用的，只有超级用户特权的应用才允许被分配一个预留端口号&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;登记端口号&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;取值范围1024-49151，就是我们平时编写服务器使用的端口号范围&lt;/p&gt;
+&lt;p&gt;b.客户端使用的端口号&lt;/p&gt;
+&lt;p&gt;取值范围49152-65535，这部分是客户端进程运行时动态选择的范围，又叫临时端口号&lt;/p&gt;
+&lt;h2 id=&#34;TCP协议三次握手&#34;&gt;&lt;a href=&#34;#TCP协议三次握手&#34; class=&#34;headerlink&#34; title=&#34;TCP协议三次握手&#34;&gt;&lt;/a&gt;TCP协议三次握手&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/1255ad5asd.jpg&#34; alt=&#34;1255ad5asd&#34;&gt;&lt;/p&gt;
+&lt;h5 id=&#34;&#34;&gt;&lt;a href=&#34;#&#34; class=&#34;headerlink&#34; title=&#34;&#34;&gt;&lt;/a&gt;&lt;/h5&gt;&lt;h2 id=&#34;如何查看端口被占用？&#34;&gt;&lt;a href=&#34;#如何查看端口被占用？&#34; class=&#34;headerlink&#34; title=&#34;如何查看端口被占用？&#34;&gt;&lt;/a&gt;如何查看端口被占用？&lt;/h2&gt;&lt;p&gt;NETSTAT [-a] [-b] [-e] [-f] [-n] [-o] [-p proto] [-r] [-s] [-t] [interval]&lt;/p&gt;
+&lt;p&gt; -a       显示所有连接和侦听端口。&lt;/p&gt;
+&lt;p&gt; -b       显示在创建每个连接或侦听端口时涉及的可执行程序。&lt;/p&gt;
+&lt;p&gt;​        在某些情况下，已知可执行程序承载多个独立的&lt;/p&gt;
+&lt;p&gt;​        组件，这些情况下，显示创建连接或侦听端口时涉&lt;/p&gt;
+&lt;p&gt;​        及的组件序列。此情况下，可执行程序的名称&lt;/p&gt;
+&lt;p&gt;​        位于底部[]中，它调用的组件位于顶部，直至达&lt;/p&gt;
+&lt;p&gt;​        到 TCP/IP。注意，此选项可能很耗时，并且在您没有&lt;/p&gt;
+&lt;p&gt;​        足够权限时可能失败。&lt;/p&gt;
+&lt;p&gt; -e       显示以太网统计。此选项可以与 -s 选项结合使用。&lt;/p&gt;
+&lt;p&gt; -f       显示外部地址的完全限定域名(FQDN)。&lt;/p&gt;
+&lt;p&gt; -n       以数字形式显示地址和端口号。&lt;/p&gt;
+&lt;p&gt; -o       显示拥有的与每个连接关联的进程 ID。&lt;/p&gt;
+&lt;p&gt; -p proto    显示 proto 指定的协议的连接；proto 可以是下列任&lt;/p&gt;
+&lt;p&gt;​        何一个: TCP、UDP、TCPv6 或 UDPv6。如果与 -s 选&lt;/p&gt;
+&lt;p&gt;​        项一起用来显示每个协议的统计，proto 可以是下列任&lt;/p&gt;
+&lt;p&gt;​        何一个: IP、IPv6、ICMP、ICMPv6、TCP、TCPv6、UDP&lt;/p&gt;
+&lt;p&gt;​        或 UDPv6。&lt;/p&gt;
+&lt;p&gt; -r       显示路由表。&lt;/p&gt;
+&lt;p&gt; -s       显示每个协议的统计。默认情况下，显示&lt;/p&gt;
+&lt;p&gt;​        IP、IPv6、ICMP、ICMPv6、TCP、TCPv6、UDP 和 UDPv6&lt;/p&gt;
+&lt;p&gt;​        的统计；-p 选项可用于指定默认的子网。&lt;/p&gt;
+&lt;p&gt; -t       显示当前连接卸载状态。&lt;/p&gt;
+&lt;p&gt; interval    重新显示选定的统计，各个显示间暂停的间隔秒数。&lt;/p&gt;
+&lt;p&gt;​        按 CTRL+C 停止重新显示统计。如果省略，则 netstat&lt;/p&gt;
+&lt;p&gt;​        将打印当前的配置信息一次。&lt;/p&gt;
+&lt;h2 id=&#34;TCP状态转移要点&#34;&gt;&lt;a href=&#34;#TCP状态转移要点&#34; class=&#34;headerlink&#34; title=&#34;TCP状态转移要点&#34;&gt;&lt;/a&gt;TCP状态转移要点&lt;/h2&gt;&lt;p&gt;  TCP协议规定，对于已经建立的连接，网络双方要进行四次握手才能成功断开连接，如果缺少了其中某个步骤，将会使连接处于假死状态，连接本身占用的资源不会被释放。网络服务器程序要同时管理大量连接，所以很有必要保证无用连接完全断开，否则大量僵死的连接会浪费许多服务器资源。在众多TCP状态中，最值得注意的状态有两个：CLOSE_WAIT和TIME_WAIT。 &lt;/p&gt;
+&lt;p&gt;1、LISTENING状态&lt;br&gt;　　FTP服务启动后首先处于侦听（LISTENING）状态。&lt;/p&gt;
+&lt;p&gt;2、ESTABLISHED状态&lt;br&gt;　　ESTABLISHED的意思是建立连接。表示两台机器正在通信。&lt;/p&gt;
+&lt;p&gt;3、CLOSE_WAIT&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;对方主动关闭连接或者网络异常导致连接中断&lt;/strong&gt;，这时我方的状态会变成CLOSE_WAIT 此时我方要调用close()来使得连接正确关闭&lt;/p&gt;
+&lt;p&gt;4、TIME_WAIT&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;我方主动调用close()断开连接，收到对方确认后状态变为TIME_WAIT&lt;/strong&gt;。TCP协议规定TIME_WAIT状态会一直持续2MSL(即两倍的分段最大生存期)，以此来确保旧的连接状态不会对新连接产生影响。****处于TIME_WAIT状态的连接占用的资源不会被内核释放****，所以作为服务器，在可能的情况下，尽量不要主动断开连接，以减少TIME_WAIT状态造成的资源浪费。&lt;/p&gt;
 </content>
         <category term="数据库" />
         <updated>2021-07-01T13:17:48.816Z</updated>
@@ -555,8 +636,8 @@
 &lt;p&gt;第二种，只处理传参值，得到id=MQ==，搜索inurl:?id=M*=&lt;br&gt;##0x09 HTTP请求头参数注入-cookie注入攻击&lt;br&gt;该注入的产生原因是因为程序员没有将COOKIE进行合法化检测,并将其代入到了数据库中查询了且查询变量是可控的,当用户登录成功后会产生COOKIE,每次页面刷新后端都会拿着这个COOKIE带入数据库查找,这是非常危险的.&lt;br&gt;具体实例如下图，不多做介绍&lt;br&gt;&lt;img src=&#34;https://www.qqblog.top/image/cookieinjection.png&#34; alt=&#34;请输入图片描述&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;0x10-HTTP请求头参数注入-XFF注入攻击&#34;&gt;&lt;a href=&#34;#0x10-HTTP请求头参数注入-XFF注入攻击&#34; class=&#34;headerlink&#34; title=&#34;0x10 HTTP请求头参数注入-XFF注入攻击&#34;&gt;&lt;/a&gt;0x10 HTTP请求头参数注入-XFF注入攻击&lt;/h2&gt;&lt;p&gt;实际情况下，有部份站点接受数据是以 http 数据包中的 http头部去数据接收，所以，测试注入点的时候，需要将注入语句写入到http头部中。&lt;br&gt;具体实例如下图，不多做介绍&lt;br&gt;&lt;img src=&#34;https://www.qqblog.top/image/xffinjection.png&#34; alt=&#34;请输入图片描述&#34;&gt;&lt;/p&gt;
 </content>
-        <category term="web安全" />
         <category term="数据库" />
+        <category term="web安全" />
         <updated>2021-06-07T10:24:59.678Z</updated>
     </entry>
     <entry>
