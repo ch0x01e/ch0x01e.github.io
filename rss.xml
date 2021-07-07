@@ -5,15 +5,43 @@
         <link>https://ch1e.gitee.io</link>
         <description></description>
         <language>zh-CN</language>
-        <pubDate>Sat, 03 Jul 2021 23:12:06 +0800</pubDate>
-        <lastBuildDate>Sat, 03 Jul 2021 23:12:06 +0800</lastBuildDate>
-        <category>数据库</category>
+        <pubDate>Wed, 07 Jul 2021 16:38:24 +0800</pubDate>
+        <lastBuildDate>Wed, 07 Jul 2021 16:38:24 +0800</lastBuildDate>
         <category>免杀</category>
         <category>渗透测试</category>
         <category>web安全</category>
+        <category>数据库</category>
         <category>C++</category>
         <category>靶场练习</category>
+        <category>代码审计</category>
         <category>网络协议</category>
+        <item>
+            <guid isPermalink="true">https://ch1e.gitee.io/2021/07/07/xhcms/</guid>
+            <title>熊海CMS1.0代码审计之文件包含getshell</title>
+            <link>https://ch1e.gitee.io/2021/07/07/xhcms/</link>
+            <category>渗透测试</category>
+            <category>web安全</category>
+            <category>代码审计</category>
+            <pubDate>Wed, 07 Jul 2021 16:38:24 +0800</pubDate>
+            <description><![CDATA[ &lt;h1 id=&#34;熊海CMS1-0代码审计之文件包含&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之文件包含&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之文件包含&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之文件包含&lt;/h1&gt;&lt;h2 id=&#34;利用文件包含获取webshell&#34;&gt;&lt;a href=&#34;#利用文件包含获取webshell&#34; class=&#34;headerlink&#34; title=&#34;利用文件包含获取webshell&#34;&gt;&lt;/a&gt;利用文件包含获取webshell&lt;/h2&gt;&lt;p&gt;我们通过前面的文件包含学习知道了可以通过首页的include函数直接包含一个XXX.XXX.php的文件，其中XXX.XXX是我们传的参数，index.php会自动拼接一个.php后缀，这时我们如果需要getshell就需要把其中的.php给截断，这里用到的是用windows文件名的最大长度是260字节来进行截断，除此之外，include在变量action前还拼接了一个”files/“，所以这里我们在文件包含的时候特别要注意一下被包含的文件和index.php之间的位置关系&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/QQ%E5%9B%BE%E7%89%8720210707164116.png&#34; alt=&#34;QQ图片20210707164116&#34;&gt;&lt;/p&gt;
+&lt;p&gt;既然知道了具体的原理，那我们这时候就需要来getshell。文件包含可以把包含的文件用来作为php来执行，既然要用到包含，那他网站所处的目录或者下级目录下面必须要有我们需要包含的文件，此时我们又不知道他文件目录下有什么文件可以利用，因此我们首先需要想要上传一个文件。&lt;/p&gt;
+&lt;p&gt;看完熊海cms的前台，找不到可以上传文件的地方，这时候我们去后台寻找。经过寻找我们可以发现在后台-发布内容-发表文章下面可以进行图片的上传，这时候我们只需要新建一个txt文档，然后输入我们的php一句话木马:&lt;?php @eval($_POST[shell]) ?&gt; ，把这个txt文档改为jpg后缀，通过后台-发布内容-发表文章这个上传点来把我们的图片上传&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/1.png&#34; alt=&#34;1&#34;&gt;&lt;/p&gt;
+&lt;p&gt;上传好了webshell，我们如果需要使用菜刀等工具必须得先知道他上传后文件的路径(这里我们无法使用菜刀，可能只能使用蚁剑)，只需要用浏览器的审查元素功能(F12)就可以找到我们上传图片的地址。(可以手动访问一下看看文件是不是存在)&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/QQ%E5%9B%BE%E7%89%8720210707165215.png&#34; alt=&#34;QQ图片20210707165215&#34;&gt;&lt;/p&gt;
+&lt;p&gt;知道文件上传地址之后，我们先使用我们的工具hackbar来测试我们上传的webshell是不是可以执行，这时候我们只需要在hackbar里面先使用load加载url地址(这里的url地址需要我们构造好文件包含后的地址)，在POST data里面填写shell=phpinfo();，然后点execute如果网页显示出了phpinfo()页面，就表示我们的webshell可以执行，判断完webshell是否可以执行之后，我们用webshell管理工具-蚁剑来进行连接，url地址填文件包含以后的地址，连接密码填我们一句话木马里用post方法传的变量（这里我们可以使用谷歌浏览器里的一个插件叫hackbar）&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/QQ%E5%9B%BE%E7%89%8720210707165313.png&#34; alt=&#34;QQ图片20210707165313&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/QQ%E5%9B%BE%E7%89%8720210707165341.png&#34; alt=&#34;QQ图片20210707165341&#34;&gt;&lt;/p&gt;
+&lt;p&gt;连接成功&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/QQ%E5%9B%BE%E7%89%8720210707165415.png&#34; alt=&#34;QQ图片20210707165415&#34;&gt;&lt;/p&gt;
+&lt;p&gt;坑1:我们使用蚁剑连接时，需要选择base64编码，如果选默认的会无法连接&lt;br&gt;是因为default(默认)通信过程不采编码与加密操作，明文传输（不推荐，特殊字符会被转义导致出错）&lt;br&gt;这是乱码的图&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/QQ%E5%9B%BE%E7%89%8720210707165500.png&#34; alt=&#34;QQ图片20210707165500&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里再介绍一下windows下的另外一种包含的方法，这里举两个例子&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/QQ%E5%9B%BE%E7%89%8720210707165606.png&#34; alt=&#34;QQ图片20210707165606&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/QQ%E5%9B%BE%E7%89%8720210707165558.png&#34; alt=&#34;QQ图片20210707165558&#34;&gt;&lt;/p&gt;
+&lt;p&gt;直接从例子里面可以看出来，传入file=5&amp;lt;参数就可以包含到了我们的596a62sd.php(这是随便取的)，大概原理根据windows的一些特性，我们输入的&amp;lt;会转换成&lt;em&gt;，而被转换的&lt;/em&gt;类似于linux中的通配符,所以这里就可以利用这个特性来用&amp;lt;进行文件包含。&lt;br&gt;具体解析可以看 &lt;a href=&#34;http://www.jinglingshu.org/?p=8790&#34;&gt;http://www.jinglingshu.org/?p=8790&lt;/a&gt; 这篇文章介绍的&lt;/p&gt;
+ ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/03/aynbms/</guid>
             <title>CS免杀姿势分享(等待更新)</title>
@@ -528,8 +556,8 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/</guid>
             <title>SQL注入笔记</title>
             <link>https://ch1e.gitee.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/</link>
-            <category>数据库</category>
             <category>web安全</category>
+            <category>数据库</category>
             <pubDate>Mon, 07 Jun 2021 18:24:59 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;简介&#34;&gt;&lt;a href=&#34;#简介&#34; class=&#34;headerlink&#34; title=&#34;简介:&#34;&gt;&lt;/a&gt;简介:&lt;/h1&gt;&lt;h2 id=&#34;SQL注入漏洞产生的原因&#34;&gt;&lt;a href=&#34;#SQL注入漏洞产生的原因&#34; class=&#34;headerlink&#34; title=&#34;SQL注入漏洞产生的原因&#34;&gt;&lt;/a&gt;SQL注入漏洞产生的原因&lt;/h2&gt;&lt;p&gt;SQL Injection&lt;br&gt;程序员在编写代码的时候，没有对用户输入数据的合法性进行判断，使应用程序存在安全隐患&lt;br&gt;用户可以提交一段 数据库查询代码，根据程序返回的结果，获得某些他想得知的 数据或 进行数据库操作&lt;br&gt;##SQL语句&lt;/p&gt;
 &lt;figure class=&#34;highlight sql&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;查询： &lt;span class=&#34;keyword&#34;&gt;SELECT&lt;/span&gt; statement &lt;span class=&#34;keyword&#34;&gt;FROM&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;WHERE&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;condition&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;删除记录： &lt;span class=&#34;keyword&#34;&gt;DELETE&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;FROM&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;WHERE&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;condition&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;更新记录： UPDATE &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;SET&lt;/span&gt; field&lt;span class=&#34;operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;keyword&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;WHERE&lt;/span&gt; condtion&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;添加记录： &lt;span class=&#34;keyword&#34;&gt;INSERT&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;INTO&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; field &lt;span class=&#34;keyword&#34;&gt;VALUES&lt;/span&gt;(&lt;span class=&#34;keyword&#34;&gt;values&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;

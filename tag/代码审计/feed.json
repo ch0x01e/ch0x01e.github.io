@@ -1,6 +1,6 @@
 {
     "version": "https://jsonfeed.org/version/1",
-    "title": "ch1e的随笔 • All posts by \"渗透测试\" tag",
+    "title": "ch1e的随笔 • All posts by \"代码审计\" tag",
     "description": "",
     "home_page_url": "https://ch1e.gitee.io",
     "items": [
@@ -14,18 +14,6 @@
                 "渗透测试",
                 "web安全",
                 "代码审计"
-            ]
-        },
-        {
-            "id": "https://ch1e.gitee.io/2021/07/03/aynbms/",
-            "url": "https://ch1e.gitee.io/2021/07/03/aynbms/",
-            "title": "CS免杀姿势分享(等待更新)",
-            "date_published": "2021-07-03T15:12:06.941Z",
-            "content_html": "<p><img src=\"https://cdn.jsdelivr.net/gh/ZwqGG/image@main//img/16558686.png\" alt=\"16558686\"></p>\n<h1 id=\"Cobaltstrike简介\"><a href=\"#Cobaltstrike简介\" class=\"headerlink\" title=\"Cobaltstrike简介\"></a>Cobaltstrike简介</h1><p>CobatStrike是一款基于java编写的全平台多方协同后渗透攻击框架。CobaltStrike集成了端口转发、端口扫描、socket代理、提权、钓鱼、远控木马等功能。该工具几乎覆盖了APT攻击链中所需要用到的各个技术环节。</p>\n<h1 id=\"Cobaltstrike各种免杀姿势\"><a href=\"#Cobaltstrike各种免杀姿势\" class=\"headerlink\" title=\"Cobaltstrike各种免杀姿势\"></a>Cobaltstrike各种免杀姿势</h1><h2 id=\"0x01-暗月内部系统的bypassAv\"><a href=\"#0x01-暗月内部系统的bypassAv\" class=\"headerlink\" title=\"0x01 暗月内部系统的bypassAv\"></a>0x01 暗月内部系统的bypassAv</h2><p>最近入了暗月的全栈渗透测试培训，里面有个内部系统，其中就有个bypassAv</p>\n<p>今天心血来潮尝试了一下，发现是真的香，话不多说，直接开始。</p>\n<p><img src=\"https://cdn.jsdelivr.net/gh/ZwqGG/image@main//img/image-20210703232700160.png\" alt=\"image-20210703232700160\"></p>\n<p>首先使用 cobal strike payload 生成 64位 c#</p>\n<p>直接编辑生成出来的payload.cs</p>\n<p><img src=\"https://cdn.jsdelivr.net/gh/ZwqGG/image@main//img/image-20210703232934530.png\" alt=\"image-20210703232934530\"></p>\n<p>我们只取{}中的十六进制代码，把shellcode复制到我们的bypassAv后可以自动生成一个exe</p>\n<p><img src=\"https://cdn.jsdelivr.net/gh/ZwqGG/image@main//img/image-20210703233120080.png\" alt=\"image-20210703233120080\"></p>\n<p>这里拿我自己本机来测试，主机成功上线</p>\n<p><img src=\"https://cdn.jsdelivr.net/gh/ZwqGG/image@main//img/image-20210703233156599.png\" alt=\"image-20210703233156599\"></p>\n<p><img src=\"https://cdn.jsdelivr.net/gh/ZwqGG/image@main//img/image-20210703233648332.png\" alt=\"image-20210703233648332\"></p>\n",
-            "tags": [
-                "免杀",
-                "渗透测试",
-                "web安全"
             ]
         }
     ]
