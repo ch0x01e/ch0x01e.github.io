@@ -698,7 +698,7 @@ input::placeholder {
   z-index: -999;
   width: 100%;
   height: 100%;
-  background: url(https://res.cloudinary.com/bravey/image/upload/v1582873485/wallroom-2880x1620-bg-3cad5d2.jpg);
+  background: url(https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallroom-2880x1620-bg-3cad5d2.jpg);
   background-attachment: local;
   background-position: center;
   background-size: cover;

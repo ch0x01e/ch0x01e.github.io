@@ -4,11 +4,11 @@
     <title>ch1e的随笔</title>
     <link href="https://ch1e.gitee.io" />
     <updated>2021-07-03T15:12:06.941Z</updated>
-    <category term="C++" />
+    <category term="数据库" />
     <category term="免杀" />
     <category term="渗透测试" />
     <category term="web安全" />
-    <category term="数据库" />
+    <category term="C++" />
     <category term="靶场练习" />
     <category term="网络协议" />
     <entry>
@@ -636,17 +636,9 @@
 &lt;p&gt;第二种，只处理传参值，得到id=MQ==，搜索inurl:?id=M*=&lt;br&gt;##0x09 HTTP请求头参数注入-cookie注入攻击&lt;br&gt;该注入的产生原因是因为程序员没有将COOKIE进行合法化检测,并将其代入到了数据库中查询了且查询变量是可控的,当用户登录成功后会产生COOKIE,每次页面刷新后端都会拿着这个COOKIE带入数据库查找,这是非常危险的.&lt;br&gt;具体实例如下图，不多做介绍&lt;br&gt;&lt;img src=&#34;https://www.qqblog.top/image/cookieinjection.png&#34; alt=&#34;请输入图片描述&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;0x10-HTTP请求头参数注入-XFF注入攻击&#34;&gt;&lt;a href=&#34;#0x10-HTTP请求头参数注入-XFF注入攻击&#34; class=&#34;headerlink&#34; title=&#34;0x10 HTTP请求头参数注入-XFF注入攻击&#34;&gt;&lt;/a&gt;0x10 HTTP请求头参数注入-XFF注入攻击&lt;/h2&gt;&lt;p&gt;实际情况下，有部份站点接受数据是以 http 数据包中的 http头部去数据接收，所以，测试注入点的时候，需要将注入语句写入到http头部中。&lt;br&gt;具体实例如下图，不多做介绍&lt;br&gt;&lt;img src=&#34;https://www.qqblog.top/image/xffinjection.png&#34; alt=&#34;请输入图片描述&#34;&gt;&lt;/p&gt;
 </content>
-        <category term="web安全" />
         <category term="数据库" />
+        <category term="web安全" />
         <updated>2021-06-07T10:24:59.678Z</updated>
-    </entry>
-    <entry>
-        <id>https://ch1e.gitee.io/2021/05/31/introduce/</id>
-        <title>ch1e的自述</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/05/31/introduce/"/>
-        <content type="html">&lt;h1 id=&#34;自我介绍&#34;&gt;&lt;a href=&#34;#自我介绍&#34; class=&#34;headerlink&#34; title=&#34;自我介绍&#34;&gt;&lt;/a&gt;自我介绍&lt;/h1&gt;&lt;p&gt;我是一个普通本科院校的大一学生，计算机科学与技术专业，对信息安全接触时间不到一年，从小就想当一名{牛逼哄哄^shayebuhui}的白帽黑客，这个愿望也在大一得到了实现，我加入了学校的信息安全协会，成为了一名啥也不是的小弟，在这看到了各种大佬。我目前正在学习信息安全中的Web方向，对网站二次开发，PHP，Html，Css，C++以及C都有所涉猎，未来会继续朝着这个方向努力，并且扩大我的学习领域，目标是成为俺SSN大哥那样的全栈爷。&lt;/p&gt;
-</content>
-        <updated>2021-05-31T11:54:11.377Z</updated>
     </entry>
     <entry>
         <id>https://ch1e.gitee.io/2021/05/31/jihua/</id>
@@ -671,6 +663,14 @@
 &lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; 每日坚持吃饭&lt;/li&gt;
 &lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; 每日坚持吃水果&lt;/li&gt;
 &lt;/ul&gt;
+</content>
+        <updated>2021-05-31T11:54:11.377Z</updated>
+    </entry>
+    <entry>
+        <id>https://ch1e.gitee.io/2021/05/31/introduce/</id>
+        <title>ch1e的自述</title>
+        <link rel="alternate" href="https://ch1e.gitee.io/2021/05/31/introduce/"/>
+        <content type="html">&lt;h1 id=&#34;自我介绍&#34;&gt;&lt;a href=&#34;#自我介绍&#34; class=&#34;headerlink&#34; title=&#34;自我介绍&#34;&gt;&lt;/a&gt;自我介绍&lt;/h1&gt;&lt;p&gt;我是一个普通本科院校的大一学生，计算机科学与技术专业，对信息安全接触时间不到一年，从小就想当一名{牛逼哄哄^shayebuhui}的白帽黑客，这个愿望也在大一得到了实现，我加入了学校的信息安全协会，成为了一名啥也不是的小弟，在这看到了各种大佬。我目前正在学习信息安全中的Web方向，对网站二次开发，PHP，Html，Css，C++以及C都有所涉猎，未来会继续朝着这个方向努力，并且扩大我的学习领域，目标是成为俺SSN大哥那样的全栈爷。&lt;/p&gt;
 </content>
         <updated>2021-05-31T11:54:11.377Z</updated>
     </entry>
