@@ -4,13 +4,13 @@
     <title>ch1e的随笔 • Posts by &#34;网络协议&#34; tag</title>
     <link href="https://ch1e.gitee.io" />
     <updated>2021-06-08T09:58:48.000Z</updated>
-    <category term="CTF" />
-    <category term="靶场练习" />
-    <category term="web安全" />
     <category term="数据库" />
     <category term="免杀" />
     <category term="渗透测试" />
+    <category term="web安全" />
     <category term="C++" />
+    <category term="CTF" />
+    <category term="靶场练习" />
     <category term="代码审计" />
     <category term="网络协议" />
     <entry>
@@ -210,6 +210,60 @@
 &lt;p&gt;动态转换：定义外部地址池，动态随机转换，一对一转换&lt;/p&gt;
 &lt;h3 id=&#34;PAT-Port-Address-Translation&#34;&gt;&lt;a href=&#34;#PAT-Port-Address-Translation&#34; class=&#34;headerlink&#34; title=&#34;PAT(Port Address Translation)&#34;&gt;&lt;/a&gt;PAT(Port Address Translation)&lt;/h3&gt;&lt;p&gt;多对一转换，最大程度节约公网IP资源&lt;/p&gt;
 &lt;p&gt;采用端口多路复用，通过端口号表示不同的数据流&lt;/p&gt;
+&lt;h1 id=&#34;网络分层&#34;&gt;&lt;a href=&#34;#网络分层&#34; class=&#34;headerlink&#34; title=&#34;网络分层&#34;&gt;&lt;/a&gt;网络分层&lt;/h1&gt;&lt;p&gt;TCP/IP协议模型&lt;/p&gt;
+&lt;p&gt;分为应用层，运输层，网际层，网络接口层&lt;/p&gt;
+&lt;p&gt;学习上把网络接口层分出物理层和数据链路层&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210719080025060.png&#34; alt=&#34;image-20210719080025060&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;物理层&#34;&gt;&lt;a href=&#34;#物理层&#34; class=&#34;headerlink&#34; title=&#34;物理层&#34;&gt;&lt;/a&gt;物理层&lt;/h2&gt;&lt;p&gt;物理层定义了接口标准，线缆标准，传输速率，传输方式等&lt;/p&gt;
+&lt;h3 id=&#34;模拟信号&#34;&gt;&lt;a href=&#34;#模拟信号&#34; class=&#34;headerlink&#34; title=&#34;模拟信号&#34;&gt;&lt;/a&gt;模拟信号&lt;/h3&gt;&lt;p&gt;连续的信号，适合长距离传输&lt;/p&gt;
+&lt;p&gt;抗干扰能力差，收到干扰时波形变形很难纠正&lt;/p&gt;
+&lt;h3 id=&#34;数字信号&#34;&gt;&lt;a href=&#34;#数字信号&#34; class=&#34;headerlink&#34; title=&#34;数字信号&#34;&gt;&lt;/a&gt;数字信号&lt;/h3&gt;&lt;p&gt;离散的信号，不适合长距离传输&lt;/p&gt;
+&lt;p&gt;抗干扰能力强，收到干扰波形失真可以修复&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210719082844800.png&#34; alt=&#34;image-20210719082844800&#34;&gt;&lt;/p&gt;
+&lt;p&gt;网线不能超过一百米，所以广域网使用电话线/光纤来进行远距离传输&lt;/p&gt;
+&lt;h3 id=&#34;信道&#34;&gt;&lt;a href=&#34;#信道&#34; class=&#34;headerlink&#34; title=&#34;信道&#34;&gt;&lt;/a&gt;信道&lt;/h3&gt;&lt;p&gt;信道—信息传输的通道，一条传输介质（比如网线）上可以有很多信道&lt;/p&gt;
+&lt;p&gt;从右往左和从左往右是两条不同的信道&lt;/p&gt;
+&lt;p&gt;单工通信：信号只能往一个方向传输，任何时候都不能改变信号的传输方向&lt;/p&gt;
+&lt;p&gt;比如：无线电广播，有线电视广播&lt;/p&gt;
+&lt;p&gt;半双工通信：信号可以双向传输，必须交替进行，同一时间只能一个方向&lt;/p&gt;
+&lt;p&gt;比如对讲机&lt;/p&gt;
+&lt;p&gt;全双工通信：信号可以同时双向传输&lt;/p&gt;
+&lt;p&gt;比如手机(打电话，听说同时进行)&lt;/p&gt;
+&lt;h2 id=&#34;数据链路层&#34;&gt;&lt;a href=&#34;#数据链路层&#34; class=&#34;headerlink&#34; title=&#34;数据链路层&#34;&gt;&lt;/a&gt;数据链路层&lt;/h2&gt;&lt;p&gt;链路：从一个节点到相邻节点的一段物理线路，中间没有其他交换节点（比如交换机）&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210719083517909.png&#34; alt=&#34;image-20210719083517909&#34;&gt;&lt;/p&gt;
+&lt;p&gt;路由器0和路由器1之间是一个链路  路由器1和路由器2之间也是个链路&lt;/p&gt;
+&lt;p&gt;交换机0和计算机1之间也是一个链路  路由器2和交换机0也是个链路&lt;/p&gt;
+&lt;p&gt;计算机0和路由器0之间是一个链路，集线器相当于网线&lt;/p&gt;
+&lt;p&gt;数据链路：在一条链路上传输数据时，需要有对应的通信协议来控制数据的传输&lt;/p&gt;
+&lt;p&gt;不同类型的数据链路，所用的通信协议可能是不同的&lt;/p&gt;
+&lt;p&gt;广播信道：CSMA/CD协议（比如同轴电缆，集线器等组成的网络）&lt;/p&gt;
+&lt;p&gt;点对点信道：PPP协议（比如两个路由器之间的信道）&lt;/p&gt;
+&lt;p&gt;数据链路层的三个基本问题：封装成帧，透明传输，差错校验&lt;/p&gt;
+&lt;h3 id=&#34;封装成帧&#34;&gt;&lt;a href=&#34;#封装成帧&#34; class=&#34;headerlink&#34; title=&#34;封装成帧&#34;&gt;&lt;/a&gt;封装成帧&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210719084048916.png&#34; alt=&#34;image-20210719084048916&#34;&gt;&lt;/p&gt;
+&lt;p&gt;把网络层的数据表进行封装，数据包变成帧的数据部分&lt;/p&gt;
+&lt;p&gt;最大传输单元MTU&lt;/p&gt;
+&lt;p&gt;每一种数据链路层协议都规定了所能传送帧的数据长度上线&lt;/p&gt;
+&lt;p&gt;以太网的MTU为1500个字节&lt;/p&gt;
+&lt;h3 id=&#34;透明传输&#34;&gt;&lt;a href=&#34;#透明传输&#34; class=&#34;headerlink&#34; title=&#34;透明传输&#34;&gt;&lt;/a&gt;透明传输&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210719084516727.png&#34; alt=&#34;image-20210719084516727&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210719084537868.png&#34; alt=&#34;image-20210719084537868&#34;&gt;&lt;/p&gt;
+&lt;p&gt;如果原始数据中包含帧开始符合帧结束符，要先进行转义&lt;/p&gt;
+&lt;h3 id=&#34;差错检验&#34;&gt;&lt;a href=&#34;#差错检验&#34; class=&#34;headerlink&#34; title=&#34;差错检验&#34;&gt;&lt;/a&gt;差错检验&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210719085039223.png&#34; alt=&#34;image-20210719085039223&#34;&gt;&lt;/p&gt;
+&lt;p&gt;FCS根据数据部分和链路层首部计算出一个值，会和FCS进行比较&lt;/p&gt;
+&lt;p&gt;如果计算出的数值和FCS不一样，数据会被丢弃&lt;/p&gt;
+&lt;h3 id=&#34;CSMA-CD协议&#34;&gt;&lt;a href=&#34;#CSMA-CD协议&#34; class=&#34;headerlink&#34; title=&#34;CSMA/CD协议&#34;&gt;&lt;/a&gt;CSMA/CD协议&lt;/h3&gt;&lt;p&gt;载波侦听多路访问/冲突检测&lt;/p&gt;
+&lt;p&gt;使用了CSMA/CD协议的网络可以称为以太网，传输的是以太网帧&lt;/p&gt;
+&lt;p&gt;以太网帧有Ethernet V2标准，IEEE的802.3标准，主要是Ethernet V2标准&lt;/p&gt;
+&lt;p&gt;为了能够检测正在发送的帧是否产生了冲突，以太网的帧至少要64字节&lt;/p&gt;
+&lt;p&gt;用交换机组件的网络，已经支持全双工通信，不需要使用CSMA/CD，传输的帧依然是以太网帧&lt;/p&gt;
+&lt;h3 id=&#34;Ethernet-V2帧的格式&#34;&gt;&lt;a href=&#34;#Ethernet-V2帧的格式&#34; class=&#34;headerlink&#34; title=&#34;Ethernet V2帧的格式&#34;&gt;&lt;/a&gt;Ethernet V2帧的格式&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210719091821164.png&#34; alt=&#34;image-20210719091821164&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210719093358123.png&#34; alt=&#34;image-20210719093358123&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;PPP协议&#34;&gt;&lt;a href=&#34;#PPP协议&#34; class=&#34;headerlink&#34; title=&#34;PPP协议&#34;&gt;&lt;/a&gt;PPP协议&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210719095209850.png&#34; alt=&#34;image-20210719095209850&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;网卡&#34;&gt;&lt;a href=&#34;#网卡&#34; class=&#34;headerlink&#34; title=&#34;网卡&#34;&gt;&lt;/a&gt;网卡&lt;/h3&gt;&lt;p&gt;工作在数据链路层和物理层&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210719095418076.png&#34; alt=&#34;image-20210719095418076&#34;&gt;&lt;/p&gt;
+&lt;p&gt;网卡接受到一个帧，首先进行差错校验，如果校验通过则接收，否则丢弃&lt;/p&gt;
+&lt;p&gt;wireshark抓到的帧没有FCS，因为他抓到的是差错校验的帧/FCS会直接丢弃&lt;/p&gt;
+&lt;h2 id=&#34;网络层&#34;&gt;&lt;a href=&#34;#网络层&#34; class=&#34;headerlink&#34; title=&#34;网络层&#34;&gt;&lt;/a&gt;网络层&lt;/h2&gt;&lt;p&gt;网络层数据包(IP数据包，Packet)由首部，数据2部分组成&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210719102930642.png&#34; alt=&#34;image-20210719102930642&#34;&gt;&lt;/p&gt;
 </content>
         <category term="网络协议" />
         <updated>2021-06-08T09:58:48.000Z</updated>

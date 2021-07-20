@@ -4,13 +4,13 @@
     <title>ch1e的随笔 • Posts by &#34;数据库&#34; tag</title>
     <link href="https://ch1e.gitee.io" />
     <updated>2021-07-01T13:17:48.816Z</updated>
-    <category term="CTF" />
-    <category term="靶场练习" />
-    <category term="web安全" />
     <category term="数据库" />
     <category term="免杀" />
     <category term="渗透测试" />
+    <category term="web安全" />
     <category term="C++" />
+    <category term="CTF" />
+    <category term="靶场练习" />
     <category term="代码审计" />
     <category term="网络协议" />
     <entry>
@@ -301,8 +301,8 @@
 &lt;p&gt;第二种，只处理传参值，得到id=MQ==，搜索inurl:?id=M*=&lt;br&gt;##0x09 HTTP请求头参数注入-cookie注入攻击&lt;br&gt;该注入的产生原因是因为程序员没有将COOKIE进行合法化检测,并将其代入到了数据库中查询了且查询变量是可控的,当用户登录成功后会产生COOKIE,每次页面刷新后端都会拿着这个COOKIE带入数据库查找,这是非常危险的.&lt;br&gt;具体实例如下图，不多做介绍&lt;br&gt;&lt;img src=&#34;https://www.qqblog.top/image/cookieinjection.png&#34; alt=&#34;请输入图片描述&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;0x10-HTTP请求头参数注入-XFF注入攻击&#34;&gt;&lt;a href=&#34;#0x10-HTTP请求头参数注入-XFF注入攻击&#34; class=&#34;headerlink&#34; title=&#34;0x10 HTTP请求头参数注入-XFF注入攻击&#34;&gt;&lt;/a&gt;0x10 HTTP请求头参数注入-XFF注入攻击&lt;/h2&gt;&lt;p&gt;实际情况下，有部份站点接受数据是以 http 数据包中的 http头部去数据接收，所以，测试注入点的时候，需要将注入语句写入到http头部中。&lt;br&gt;具体实例如下图，不多做介绍&lt;br&gt;&lt;img src=&#34;https://www.qqblog.top/image/xffinjection.png&#34; alt=&#34;请输入图片描述&#34;&gt;&lt;/p&gt;
 </content>
-        <category term="web安全" />
         <category term="数据库" />
+        <category term="web安全" />
         <updated>2021-06-07T10:24:59.678Z</updated>
     </entry>
 </feed>

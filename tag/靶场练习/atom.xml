@@ -4,13 +4,13 @@
     <title>ch1e的随笔 • Posts by &#34;靶场练习&#34; tag</title>
     <link href="https://ch1e.gitee.io" />
     <updated>2021-07-14T10:05:03.593Z</updated>
-    <category term="CTF" />
-    <category term="靶场练习" />
-    <category term="web安全" />
     <category term="数据库" />
     <category term="免杀" />
     <category term="渗透测试" />
+    <category term="web安全" />
     <category term="C++" />
+    <category term="CTF" />
+    <category term="靶场练习" />
     <category term="代码审计" />
     <category term="网络协议" />
     <entry>
@@ -56,9 +56,9 @@
 
 &lt;p&gt;&lt;a href=&#34;https://www.freebuf.com/articles/web/192052.html&#34;&gt;无需sendmail：巧用LD_PRELOAD突破disable_functions&lt;/a&gt;&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="CTF" />
         <category term="靶场练习" />
-        <category term="web安全" />
         <updated>2021-07-14T10:05:03.593Z</updated>
     </entry>
     <entry>
@@ -214,8 +214,8 @@
 
 
 &lt;h1 id=&#34;XXE&#34;&gt;&lt;a href=&#34;#XXE&#34; class=&#34;headerlink&#34; title=&#34;XXE&#34;&gt;&lt;/a&gt;XXE&lt;/h1&gt;&lt;h1 id=&#34;URL重定向&#34;&gt;&lt;a href=&#34;#URL重定向&#34; class=&#34;headerlink&#34; title=&#34;URL重定向&#34;&gt;&lt;/a&gt;URL重定向&lt;/h1&gt;&lt;h1 id=&#34;SSRF&#34;&gt;&lt;a href=&#34;#SSRF&#34; class=&#34;headerlink&#34; title=&#34;SSRF&#34;&gt;&lt;/a&gt;SSRF&lt;/h1&gt;</content>
-        <category term="靶场练习" />
         <category term="web安全" />
+        <category term="靶场练习" />
         <updated>2021-06-18T12:52:44.113Z</updated>
     </entry>
 </feed>
