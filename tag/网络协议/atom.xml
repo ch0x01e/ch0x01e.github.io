@@ -4,11 +4,11 @@
     <title>ch1e的随笔 • Posts by &#34;网络协议&#34; tag</title>
     <link href="https://ch1e.gitee.io" />
     <updated>2021-06-08T09:58:48.000Z</updated>
-    <category term="CTF" />
-    <category term="靶场练习" />
-    <category term="web安全" />
     <category term="免杀" />
     <category term="渗透测试" />
+    <category term="web安全" />
+    <category term="CTF" />
+    <category term="靶场练习" />
     <category term="数据库" />
     <category term="C++" />
     <category term="内网渗透" />
@@ -220,7 +220,7 @@
 &lt;p&gt;抗干扰能力差，收到干扰时波形变形很难纠正&lt;/p&gt;
 &lt;h3 id=&#34;数字信号&#34;&gt;&lt;a href=&#34;#数字信号&#34; class=&#34;headerlink&#34; title=&#34;数字信号&#34;&gt;&lt;/a&gt;数字信号&lt;/h3&gt;&lt;p&gt;离散的信号，不适合长距离传输&lt;/p&gt;
 &lt;p&gt;抗干扰能力强，收到干扰波形失真可以修复&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210719082844800.png&#34; alt=&#34;image-20210719082844800&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image/img/image-20210719082844800.png&#34; alt=&#34;image-20210719082844800&#34;&gt;&lt;/p&gt;
 &lt;p&gt;网线不能超过一百米，所以广域网使用电话线/光纤来进行远距离传输&lt;/p&gt;
 &lt;h3 id=&#34;信道&#34;&gt;&lt;a href=&#34;#信道&#34; class=&#34;headerlink&#34; title=&#34;信道&#34;&gt;&lt;/a&gt;信道&lt;/h3&gt;&lt;p&gt;信道—信息传输的通道，一条传输介质（比如网线）上可以有很多信道&lt;/p&gt;
 &lt;p&gt;从右往左和从左往右是两条不同的信道&lt;/p&gt;

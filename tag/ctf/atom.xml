@@ -4,11 +4,11 @@
     <title>ch1e的随笔 • Posts by &#34;ctf&#34; tag</title>
     <link href="https://ch1e.gitee.io" />
     <updated>2021-07-14T10:05:03.593Z</updated>
-    <category term="CTF" />
-    <category term="靶场练习" />
-    <category term="web安全" />
     <category term="免杀" />
     <category term="渗透测试" />
+    <category term="web安全" />
+    <category term="CTF" />
+    <category term="靶场练习" />
     <category term="数据库" />
     <category term="C++" />
     <category term="内网渗透" />
@@ -57,9 +57,9 @@
 
 &lt;p&gt;&lt;a href=&#34;https://www.freebuf.com/articles/web/192052.html&#34;&gt;无需sendmail：巧用LD_PRELOAD突破disable_functions&lt;/a&gt;&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="CTF" />
         <category term="靶场练习" />
-        <category term="web安全" />
         <updated>2021-07-14T10:05:03.593Z</updated>
     </entry>
 </feed>
