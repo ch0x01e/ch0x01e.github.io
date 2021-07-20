@@ -4,18 +4,19 @@
     <title>ch1e的随笔</title>
     <link href="https://ch1e.gitee.io" />
     <updated>2021-07-20T13:40:34.695Z</updated>
-    <category term="数据库" />
-    <category term="免杀" />
-    <category term="渗透测试" />
-    <category term="web安全" />
-    <category term="C++" />
     <category term="CTF" />
     <category term="靶场练习" />
+    <category term="web安全" />
+    <category term="免杀" />
+    <category term="渗透测试" />
+    <category term="数据库" />
+    <category term="C++" />
+    <category term="内网渗透" />
     <category term="代码审计" />
     <category term="网络协议" />
     <entry>
         <id>https://ch1e.gitee.io/2021/07/20/neiwang/</id>
-        <title></title>
+        <title>内网渗透学习笔记</title>
         <link rel="alternate" href="https://ch1e.gitee.io/2021/07/20/neiwang/"/>
         <content type="html">&lt;h2 id=&#34;隧道技术SSH隧道&#34;&gt;&lt;a href=&#34;#隧道技术SSH隧道&#34; class=&#34;headerlink&#34; title=&#34;隧道技术SSH隧道&#34;&gt;&lt;/a&gt;隧道技术SSH隧道&lt;/h2&gt;&lt;p&gt;ssh 用于登录远程主机, 并且在远程主机上执行命令. 它的目的是替换 rlogin 和 rsh, 同时在不安全的网络之上, 两个互不 信任的主机之间, 提供加密的, 安全的通信连接. X11 连接和任意 TCP/IP 端口均可以通过此安全通道转发(forward).当用户通过 连接并登录主机 hostname 后, 根据所用的协议版本, 用户必须通过下述方法之一向远程主机证明他/她的身份:&lt;/p&gt;
 &lt;p&gt;参数&lt;/p&gt;
@@ -78,6 +79,9 @@
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ssh –p 2222 web@127.0.0.1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 </content>
+        <category term="web安全" />
+        <category term="渗透测试" />
+        <category term="内网渗透" />
         <updated>2021-07-20T13:40:34.695Z</updated>
     </entry>
     <entry>
@@ -123,9 +127,9 @@
 
 &lt;p&gt;&lt;a href=&#34;https://www.freebuf.com/articles/web/192052.html&#34;&gt;无需sendmail：巧用LD_PRELOAD突破disable_functions&lt;/a&gt;&lt;/p&gt;
 </content>
-        <category term="web安全" />
         <category term="CTF" />
         <category term="靶场练习" />
+        <category term="web安全" />
         <updated>2021-07-14T10:05:03.593Z</updated>
     </entry>
     <entry>
@@ -150,8 +154,8 @@
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/QQ%E5%9B%BE%E7%89%8720210707165558.png&#34; alt=&#34;QQ图片20210707165558&#34;&gt;&lt;/p&gt;
 &lt;p&gt;直接从例子里面可以看出来，传入file=5&amp;lt;参数就可以包含到了我们的596a62sd.php(这是随便取的)，大概原理根据windows的一些特性，我们输入的&amp;lt;会转换成&lt;em&gt;，而被转换的&lt;/em&gt;类似于linux中的通配符,所以这里就可以利用这个特性来用&amp;lt;进行文件包含。&lt;br&gt;具体解析可以看 &lt;a href=&#34;http://www.jinglingshu.org/?p=8790&#34;&gt;http://www.jinglingshu.org/?p=8790&lt;/a&gt; 这篇文章介绍的&lt;/p&gt;
 </content>
-        <category term="渗透测试" />
         <category term="web安全" />
+        <category term="渗透测试" />
         <category term="代码审计" />
         <updated>2021-07-07T08:38:24.358Z</updated>
     </entry>
@@ -173,9 +177,9 @@
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main//img/image-20210703233156599.png&#34; alt=&#34;image-20210703233156599&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main//img/image-20210703233648332.png&#34; alt=&#34;image-20210703233648332&#34;&gt;&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="免杀" />
         <category term="渗透测试" />
-        <category term="web安全" />
         <updated>2021-07-03T15:12:06.941Z</updated>
     </entry>
     <entry>
@@ -504,8 +508,8 @@
 
 
 &lt;h1 id=&#34;XXE&#34;&gt;&lt;a href=&#34;#XXE&#34; class=&#34;headerlink&#34; title=&#34;XXE&#34;&gt;&lt;/a&gt;XXE&lt;/h1&gt;&lt;h1 id=&#34;URL重定向&#34;&gt;&lt;a href=&#34;#URL重定向&#34; class=&#34;headerlink&#34; title=&#34;URL重定向&#34;&gt;&lt;/a&gt;URL重定向&lt;/h1&gt;&lt;h1 id=&#34;SSRF&#34;&gt;&lt;a href=&#34;#SSRF&#34; class=&#34;headerlink&#34; title=&#34;SSRF&#34;&gt;&lt;/a&gt;SSRF&lt;/h1&gt;</content>
-        <category term="web安全" />
         <category term="靶场练习" />
+        <category term="web安全" />
         <updated>2021-06-18T12:52:44.113Z</updated>
     </entry>
     <entry>
@@ -901,8 +905,8 @@
 &lt;p&gt;第二种，只处理传参值，得到id=MQ==，搜索inurl:?id=M*=&lt;br&gt;##0x09 HTTP请求头参数注入-cookie注入攻击&lt;br&gt;该注入的产生原因是因为程序员没有将COOKIE进行合法化检测,并将其代入到了数据库中查询了且查询变量是可控的,当用户登录成功后会产生COOKIE,每次页面刷新后端都会拿着这个COOKIE带入数据库查找,这是非常危险的.&lt;br&gt;具体实例如下图，不多做介绍&lt;br&gt;&lt;img src=&#34;https://www.qqblog.top/image/cookieinjection.png&#34; alt=&#34;请输入图片描述&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;0x10-HTTP请求头参数注入-XFF注入攻击&#34;&gt;&lt;a href=&#34;#0x10-HTTP请求头参数注入-XFF注入攻击&#34; class=&#34;headerlink&#34; title=&#34;0x10 HTTP请求头参数注入-XFF注入攻击&#34;&gt;&lt;/a&gt;0x10 HTTP请求头参数注入-XFF注入攻击&lt;/h2&gt;&lt;p&gt;实际情况下，有部份站点接受数据是以 http 数据包中的 http头部去数据接收，所以，测试注入点的时候，需要将注入语句写入到http头部中。&lt;br&gt;具体实例如下图，不多做介绍&lt;br&gt;&lt;img src=&#34;https://www.qqblog.top/image/xffinjection.png&#34; alt=&#34;请输入图片描述&#34;&gt;&lt;/p&gt;
 </content>
-        <category term="数据库" />
         <category term="web安全" />
+        <category term="数据库" />
         <updated>2021-06-07T10:24:59.678Z</updated>
     </entry>
     <entry>

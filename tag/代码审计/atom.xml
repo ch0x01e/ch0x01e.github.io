@@ -4,13 +4,14 @@
     <title>ch1e的随笔 • Posts by &#34;代码审计&#34; tag</title>
     <link href="https://ch1e.gitee.io" />
     <updated>2021-07-07T08:38:24.358Z</updated>
-    <category term="数据库" />
-    <category term="免杀" />
-    <category term="渗透测试" />
-    <category term="web安全" />
-    <category term="C++" />
     <category term="CTF" />
     <category term="靶场练习" />
+    <category term="web安全" />
+    <category term="免杀" />
+    <category term="渗透测试" />
+    <category term="数据库" />
+    <category term="C++" />
+    <category term="内网渗透" />
     <category term="代码审计" />
     <category term="网络协议" />
     <entry>
@@ -35,8 +36,8 @@
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/QQ%E5%9B%BE%E7%89%8720210707165558.png&#34; alt=&#34;QQ图片20210707165558&#34;&gt;&lt;/p&gt;
 &lt;p&gt;直接从例子里面可以看出来，传入file=5&amp;lt;参数就可以包含到了我们的596a62sd.php(这是随便取的)，大概原理根据windows的一些特性，我们输入的&amp;lt;会转换成&lt;em&gt;，而被转换的&lt;/em&gt;类似于linux中的通配符,所以这里就可以利用这个特性来用&amp;lt;进行文件包含。&lt;br&gt;具体解析可以看 &lt;a href=&#34;http://www.jinglingshu.org/?p=8790&#34;&gt;http://www.jinglingshu.org/?p=8790&lt;/a&gt; 这篇文章介绍的&lt;/p&gt;
 </content>
-        <category term="渗透测试" />
         <category term="web安全" />
+        <category term="渗透测试" />
         <category term="代码审计" />
         <updated>2021-07-07T08:38:24.358Z</updated>
     </entry>
