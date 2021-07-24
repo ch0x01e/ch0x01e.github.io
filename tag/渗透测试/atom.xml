@@ -4,13 +4,13 @@
     <title>ch1e的随笔 • Posts by &#34;渗透测试&#34; tag</title>
     <link href="https://ch1e.gitee.io" />
     <updated>2021-07-20T13:40:34.695Z</updated>
-    <category term="免杀" />
-    <category term="渗透测试" />
-    <category term="web安全" />
     <category term="CTF" />
     <category term="靶场练习" />
-    <category term="数据库" />
+    <category term="web安全" />
     <category term="C++" />
+    <category term="数据库" />
+    <category term="免杀" />
+    <category term="渗透测试" />
     <category term="内网渗透" />
     <category term="代码审计" />
     <category term="网络协议" />
@@ -79,8 +79,8 @@
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ssh –p 2222 web@127.0.0.1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 </content>
-        <category term="渗透测试" />
         <category term="web安全" />
+        <category term="渗透测试" />
         <category term="内网渗透" />
         <updated>2021-07-20T13:40:34.695Z</updated>
     </entry>
@@ -106,8 +106,8 @@
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/QQ%E5%9B%BE%E7%89%8720210707165558.png&#34; alt=&#34;QQ图片20210707165558&#34;&gt;&lt;/p&gt;
 &lt;p&gt;直接从例子里面可以看出来，传入file=5&amp;lt;参数就可以包含到了我们的596a62sd.php(这是随便取的)，大概原理根据windows的一些特性，我们输入的&amp;lt;会转换成&lt;em&gt;，而被转换的&lt;/em&gt;类似于linux中的通配符,所以这里就可以利用这个特性来用&amp;lt;进行文件包含。&lt;br&gt;具体解析可以看 &lt;a href=&#34;http://www.jinglingshu.org/?p=8790&#34;&gt;http://www.jinglingshu.org/?p=8790&lt;/a&gt; 这篇文章介绍的&lt;/p&gt;
 </content>
-        <category term="渗透测试" />
         <category term="web安全" />
+        <category term="渗透测试" />
         <category term="代码审计" />
         <updated>2021-07-07T08:38:24.358Z</updated>
     </entry>
@@ -117,7 +117,7 @@
         <link rel="alternate" href="https://ch1e.gitee.io/2021/07/03/aynbms/"/>
         <content type="html">&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main//img/16558686.png&#34; alt=&#34;16558686&#34;&gt;&lt;/p&gt;
 &lt;h1 id=&#34;Cobaltstrike简介&#34;&gt;&lt;a href=&#34;#Cobaltstrike简介&#34; class=&#34;headerlink&#34; title=&#34;Cobaltstrike简介&#34;&gt;&lt;/a&gt;Cobaltstrike简介&lt;/h1&gt;&lt;p&gt;CobatStrike是一款基于java编写的全平台多方协同后渗透攻击框架。CobaltStrike集成了端口转发、端口扫描、socket代理、提权、钓鱼、远控木马等功能。该工具几乎覆盖了APT攻击链中所需要用到的各个技术环节。&lt;/p&gt;
-&lt;h1 id=&#34;Cobaltstrike各种免杀姿势&#34;&gt;&lt;a href=&#34;#Cobaltstrike各种免杀姿势&#34; class=&#34;headerlink&#34; title=&#34;Cobaltstrike各种免杀姿势&#34;&gt;&lt;/a&gt;Cobaltstrike各种免杀姿势&lt;/h1&gt;&lt;h2 id=&#34;0x01-暗月内部系统的bypassAv&#34;&gt;&lt;a href=&#34;#0x01-暗月内部系统的bypassAv&#34; class=&#34;headerlink&#34; title=&#34;0x01 暗月内部系统的bypassAv&#34;&gt;&lt;/a&gt;0x01 暗月内部系统的bypassAv&lt;/h2&gt;&lt;p&gt;最近入了暗月的全栈渗透测试培训，里面有个内部系统，其中就有个bypassAv&lt;/p&gt;
+&lt;h1 id=&#34;Cobaltstrike各种免杀姿势&#34;&gt;&lt;a href=&#34;#Cobaltstrike各种免杀姿势&#34; class=&#34;headerlink&#34; title=&#34;Cobaltstrike各种免杀姿势&#34;&gt;&lt;/a&gt;Cobaltstrike各种免杀姿势&lt;/h1&gt;&lt;h2 id=&#34;暗月内部系统的bypassAv&#34;&gt;&lt;a href=&#34;#暗月内部系统的bypassAv&#34; class=&#34;headerlink&#34; title=&#34;暗月内部系统的bypassAv&#34;&gt;&lt;/a&gt;暗月内部系统的bypassAv&lt;/h2&gt;&lt;p&gt;最近入了暗月的全栈渗透测试培训，里面有个内部系统，其中就有个bypassAv&lt;/p&gt;
 &lt;p&gt;今天心血来潮尝试了一下，发现是真的香，话不多说，直接开始。&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main//img/image-20210703232700160.png&#34; alt=&#34;image-20210703232700160&#34;&gt;&lt;/p&gt;
 &lt;p&gt;首先使用 cobal strike payload 生成 64位 c#&lt;/p&gt;
@@ -128,10 +128,45 @@
 &lt;p&gt;这里拿我自己本机来测试，主机成功上线&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main//img/image-20210703233156599.png&#34; alt=&#34;image-20210703233156599&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main//img/image-20210703233648332.png&#34; alt=&#34;image-20210703233648332&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;Nim语言免杀&#34;&gt;&lt;a href=&#34;#Nim语言免杀&#34; class=&#34;headerlink&#34; title=&#34;Nim语言免杀&#34;&gt;&lt;/a&gt;Nim语言免杀&lt;/h2&gt;&lt;h3 id=&#34;部署Nim环境&#34;&gt;&lt;a href=&#34;#部署Nim环境&#34; class=&#34;headerlink&#34; title=&#34;部署Nim环境&#34;&gt;&lt;/a&gt;部署Nim环境&lt;/h3&gt;&lt;div class=&#34;note info modern&#34;&gt;&lt;p&gt;官网/下载地址：&lt;a href=&#34;https://nim-lang.org/install.html&#34;&gt;https://nim-lang.org/install.html&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;选择对应的版本，下载以后解压，复制bin目录地址，把bin目录地址添加到环境变量，打开cmd，输入nim,如下图则成功&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724174457937.png&#34; alt=&#34;image-20210724174457937&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;安装C、C-编译器&#34;&gt;&lt;a href=&#34;#安装C、C-编译器&#34; class=&#34;headerlink&#34; title=&#34;安装C、C++编译器&#34;&gt;&lt;/a&gt;安装C、C++编译器&lt;/h3&gt;&lt;p&gt;Nim编译器需要C编译器才能编译软件。文件夹包含一个简单应用程序finish.exe，可以点击finish.exe用来安装MingW。但是国内速度太慢，直接去github上下载吧&lt;/p&gt;
+&lt;div class=&#34;note info modern&#34;&gt;&lt;p&gt;下载地址：&lt;a href=&#34;https://github.com/GorvGoyl/MinGW64&#34;&gt;https://github.com/GorvGoyl/MinGW64&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;下载以后把压缩文件里的文件解压到nim的dist目录下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724174736113.png&#34; alt=&#34;image-20210724174736113&#34;&gt;&lt;/p&gt;
+&lt;p&gt;进入该目录：xxxx\dist\mingw64-master\bin，复制目录再添加一个环境变量。&lt;/p&gt;
+&lt;h3 id=&#34;下载NimShellCodeLoader&#34;&gt;&lt;a href=&#34;#下载NimShellCodeLoader&#34; class=&#34;headerlink&#34; title=&#34;下载NimShellCodeLoader&#34;&gt;&lt;/a&gt;下载NimShellCodeLoader&lt;/h3&gt;&lt;div class=&#34;note info modern&#34;&gt;&lt;p&gt;下载地址：&lt;a href=&#34;https://github.com/aeverj/NimShellCodeLoader/releases/tag/0.2&#34;&gt;https://github.com/aeverj/NimShellCodeLoader/releases/tag/0.2&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;p&gt;下载NimShellCodeLoader_Winx64.zip  解压以后来到encryption进行编译&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;nim c -d:release --opt:size Tdea.nim&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;nim c -d:release --opt:size Caesar.nim&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;编译完成后来到主目录双击codeLoader.exe打开图形化界面。&lt;/p&gt;
+&lt;h3 id=&#34;Nim免杀详细测试&#34;&gt;&lt;a href=&#34;#Nim免杀详细测试&#34; class=&#34;headerlink&#34; title=&#34;Nim免杀详细测试&#34;&gt;&lt;/a&gt;Nim免杀详细测试&lt;/h3&gt;&lt;p&gt;这里主要讲一两种方式，其他的还请各位师傅自行测试&lt;/p&gt;
+&lt;h4 id=&#34;CS生成payload&#34;&gt;&lt;a href=&#34;#CS生成payload&#34; class=&#34;headerlink&#34; title=&#34;CS生成payload&#34;&gt;&lt;/a&gt;CS生成payload&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724175407570.png&#34; alt=&#34;image-20210724175407570&#34;&gt;&lt;/p&gt;
+&lt;p&gt;打开codeLoader.exe图形化界面，把cs导出的payload.bin拖进来&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724175701311.png&#34; alt=&#34;image-20210724175701311&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;shellcode加载方式的介绍&#34;&gt;&lt;a href=&#34;#shellcode加载方式的介绍&#34; class=&#34;headerlink&#34; title=&#34;shellcode加载方式的介绍&#34;&gt;&lt;/a&gt;shellcode加载方式的介绍&lt;/h4&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;OEP Hiijack-Inject Load # 入口点劫持注入加载&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Thread Hiijack-Inject Load # 线层劫持注入加载&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;APC-Ijnect Load # APC 注入加载（APC应该是异步）&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Early Bird APC-Injetc Load # Early Bird APC注入加载&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Direct Load # 直接加载&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;GreateThreatPoolWait load # （线程池、信号量等）加载&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Fiber Load # （用户级线程）加载&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;这里我们就不一个一个介绍了，可以自行探索&lt;/p&gt;
+&lt;p&gt;我们这里举一个例子吧，使用直接加载- TDEA&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724175852605.png&#34; alt=&#34;image-20210724175852605&#34;&gt;&lt;/p&gt;
+&lt;p&gt;选好加载方式和加密方式，点击generate&lt;/p&gt;
+&lt;p&gt;output里输出他的生成的可执行文件的目录。&lt;/p&gt;
+&lt;p&gt;C:\Users\86155\Desktop\NimShellCodeLoader_Winx64\NimShellCodeLoader\bin\Direct_Load.exe&lt;/p&gt;
+&lt;p&gt;这里直接拿火绒来扫吧，因为我没有360，可以自行测试360能否过&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724180207404.png&#34; alt=&#34;image-20210724180207404&#34;&gt;&lt;/p&gt;
+&lt;p&gt;本地测试可以成功上线&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724180335375.png&#34; alt=&#34;image-20210724180335375&#34;&gt;&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="免杀" />
         <category term="渗透测试" />
-        <category term="web安全" />
         <updated>2021-07-03T15:12:06.941Z</updated>
     </entry>
 </feed>

