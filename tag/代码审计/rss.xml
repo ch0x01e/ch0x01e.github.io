@@ -7,11 +7,11 @@
         <language>zh-CN</language>
         <pubDate>Wed, 07 Jul 2021 16:38:24 +0800</pubDate>
         <lastBuildDate>Wed, 07 Jul 2021 16:38:24 +0800</lastBuildDate>
-        <category>CTF</category>
-        <category>靶场练习</category>
-        <category>web安全</category>
         <category>免杀</category>
         <category>渗透测试</category>
+        <category>web安全</category>
+        <category>CTF</category>
+        <category>靶场练习</category>
         <category>数据库</category>
         <category>C++</category>
         <category>内网渗透</category>
@@ -21,8 +21,8 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/07/xhcms/</guid>
             <title>熊海CMS1.0代码审计之文件包含getshell</title>
             <link>https://ch1e.gitee.io/2021/07/07/xhcms/</link>
-            <category>web安全</category>
             <category>渗透测试</category>
+            <category>web安全</category>
             <category>代码审计</category>
             <pubDate>Wed, 07 Jul 2021 16:38:24 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;熊海CMS1-0代码审计之文件包含&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之文件包含&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之文件包含&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之文件包含&lt;/h1&gt;&lt;h2 id=&#34;利用文件包含获取webshell&#34;&gt;&lt;a href=&#34;#利用文件包含获取webshell&#34; class=&#34;headerlink&#34; title=&#34;利用文件包含获取webshell&#34;&gt;&lt;/a&gt;利用文件包含获取webshell&lt;/h2&gt;&lt;p&gt;我们通过前面的文件包含学习知道了可以通过首页的include函数直接包含一个XXX.XXX.php的文件，其中XXX.XXX是我们传的参数，index.php会自动拼接一个.php后缀，这时我们如果需要getshell就需要把其中的.php给截断，这里用到的是用windows文件名的最大长度是260字节来进行截断，除此之外，include在变量action前还拼接了一个”files/“，所以这里我们在文件包含的时候特别要注意一下被包含的文件和index.php之间的位置关系&lt;/p&gt;
