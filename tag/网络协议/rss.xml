@@ -7,11 +7,11 @@
         <language>zh-CN</language>
         <pubDate>Tue, 08 Jun 2021 17:58:48 +0800</pubDate>
         <lastBuildDate>Tue, 08 Jun 2021 17:58:48 +0800</lastBuildDate>
-        <category>免杀</category>
-        <category>渗透测试</category>
-        <category>web安全</category>
         <category>CTF</category>
         <category>靶场练习</category>
+        <category>web安全</category>
+        <category>免杀</category>
+        <category>渗透测试</category>
         <category>数据库</category>
         <category>C++</category>
         <category>代码审计</category>
@@ -282,6 +282,11 @@
 &lt;h3 id=&#34;UDP-数据格式U&#34;&gt;&lt;a href=&#34;#UDP-数据格式U&#34; class=&#34;headerlink&#34; title=&#34;UDP-数据格式U&#34;&gt;&lt;/a&gt;UDP-数据格式U&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210721150910873.png&#34; alt=&#34;image-20210721150910873&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210721151025439.png&#34; alt=&#34;image-20210721151025439&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210721152244539.png&#34; alt=&#34;image-20210721152244539&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;TCP请求&#34;&gt;&lt;a href=&#34;#TCP请求&#34; class=&#34;headerlink&#34; title=&#34;TCP请求&#34;&gt;&lt;/a&gt;TCP请求&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210802183353122.png&#34; alt=&#34;image-20210802183353122&#34;&gt;&lt;/p&gt;
+&lt;p&gt;首部长度20-60&lt;/p&gt;
+&lt;p&gt;可靠传输&lt;/p&gt;
+&lt;p&gt;流量控制&lt;/p&gt;
+&lt;p&gt;拥塞控制&lt;/p&gt;
  ]]></description>
         </item>
     </channel>
