@@ -7,13 +7,13 @@
         <language>zh-CN</language>
         <pubDate>Fri, 30 Jul 2021 18:01:25 +0800</pubDate>
         <lastBuildDate>Fri, 30 Jul 2021 18:01:25 +0800</lastBuildDate>
-        <category>CTF</category>
-        <category>靶场练习</category>
-        <category>web安全</category>
         <category>免杀</category>
         <category>渗透测试</category>
-        <category>数据库</category>
+        <category>web安全</category>
         <category>C++</category>
+        <category>CTF</category>
+        <category>靶场练习</category>
+        <category>数据库</category>
         <category>代码审计</category>
         <category>内网渗透</category>
         <category>网络协议</category>
@@ -21,8 +21,8 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/30/exp/</guid>
             <title>个人exp编写练习</title>
             <link>https://ch1e.gitee.io/2021/07/30/exp/</link>
-            <category>靶场练习</category>
             <category>web安全</category>
+            <category>靶场练习</category>
             <pubDate>Fri, 30 Jul 2021 18:01:25 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;Exp编写&#34;&gt;&lt;a href=&#34;#Exp编写&#34; class=&#34;headerlink&#34; title=&#34;Exp编写&#34;&gt;&lt;/a&gt;Exp编写&lt;/h1&gt;&lt;h2 id=&#34;GET类型的SQL注入exp编写&#34;&gt;&lt;a href=&#34;#GET类型的SQL注入exp编写&#34; class=&#34;headerlink&#34; title=&#34;GET类型的SQL注入exp编写&#34;&gt;&lt;/a&gt;GET类型的SQL注入exp编写&lt;/h2&gt;&lt;p&gt;最近学了点Python基础，准备拿Python来作为以后编写exp&amp;amp;poc的语言&lt;/p&gt;
 &lt;p&gt;今天就拿了Sqli-labs第一关入手，这里是get类型的sql注入exp编写&lt;/p&gt;
@@ -60,9 +60,9 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/23/ctfshowweb/</guid>
             <title>CTFSHOW之WEB入门1000题</title>
             <link>https://ch1e.gitee.io/2021/07/23/ctfshowweb/</link>
+            <category>web安全</category>
             <category>CTF</category>
             <category>靶场练习</category>
-            <category>web安全</category>
             <pubDate>Fri, 23 Jul 2021 17:39:00 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;web1&#34;&gt;&lt;a href=&#34;#web1&#34; class=&#34;headerlink&#34; title=&#34;web1&#34;&gt;&lt;/a&gt;web1&lt;/h1&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210723101944875.png&#34; alt=&#34;image-20210723101944875&#34;&gt;&lt;/p&gt;
 &lt;p&gt;右键查看源代码就出来了&lt;/p&gt;
@@ -130,7 +130,7 @@
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;42986bfd-0cba-43c6-9be4-1a319be86d20&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;web15&#34;&gt;&lt;a href=&#34;#web15&#34; class=&#34;headerlink&#34; title=&#34;web15&#34;&gt;&lt;/a&gt;web15&lt;/h1&gt;&lt;p&gt;公开的信息比如邮箱，可能造成信息泄露，产生严重后果&lt;/p&gt;
-&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#49;&amp;#49;&amp;#53;&amp;#x36;&amp;#x36;&amp;#51;&amp;#x31;&amp;#57;&amp;#x36;&amp;#49;&amp;#64;&amp;#x71;&amp;#x71;&amp;#x2e;&amp;#99;&amp;#x6f;&amp;#109;&#34;&gt;&amp;#49;&amp;#49;&amp;#53;&amp;#x36;&amp;#x36;&amp;#51;&amp;#x31;&amp;#57;&amp;#x36;&amp;#49;&amp;#64;&amp;#x71;&amp;#x71;&amp;#x2e;&amp;#99;&amp;#x6f;&amp;#109;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#x31;&amp;#x31;&amp;#53;&amp;#x36;&amp;#54;&amp;#51;&amp;#x31;&amp;#57;&amp;#x36;&amp;#49;&amp;#64;&amp;#113;&amp;#113;&amp;#46;&amp;#99;&amp;#x6f;&amp;#x6d;&#34;&gt;&amp;#x31;&amp;#x31;&amp;#53;&amp;#x36;&amp;#54;&amp;#51;&amp;#x31;&amp;#57;&amp;#x36;&amp;#49;&amp;#64;&amp;#113;&amp;#113;&amp;#46;&amp;#99;&amp;#x6f;&amp;#x6d;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;访问admin页面，admin作为账号 ，邮箱作为密码，发现不对&lt;/p&gt;
 &lt;p&gt;点忘记密码让我们填密保问题所在地  我们查一下这个qq，发现qq的资料显示在西安   之后密码被重置为admin7789，登陆即可&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;dd71f776-6d6a-4cde-9106-f8db89f56b8d&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -505,9 +505,9 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/22/ctfshow/</guid>
             <title>CTFSHOW题目练习</title>
             <link>https://ch1e.gitee.io/2021/07/22/ctfshow/</link>
+            <category>web安全</category>
             <category>CTF</category>
             <category>靶场练习</category>
-            <category>web安全</category>
             <pubDate>Thu, 22 Jul 2021 12:01:41 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;ctfshow刷题记录&#34;&gt;&lt;a href=&#34;#ctfshow刷题记录&#34; class=&#34;headerlink&#34; title=&#34;ctfshow刷题记录&#34;&gt;&lt;/a&gt;ctfshow刷题记录&lt;/h1&gt;&lt;h2 id=&#34;WEB&#34;&gt;&lt;a href=&#34;#WEB&#34; class=&#34;headerlink&#34; title=&#34;WEB&#34;&gt;&lt;/a&gt;WEB&lt;/h2&gt;&lt;h3 id=&#34;web签到题&#34;&gt;&lt;a href=&#34;#web签到题&#34; class=&#34;headerlink&#34; title=&#34;web签到题&#34;&gt;&lt;/a&gt;web签到题&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210722120341702.png&#34; alt=&#34;image-20210722120341702&#34;&gt;&lt;/p&gt;
 &lt;p&gt;右键查看源代码&lt;/p&gt;
@@ -652,8 +652,8 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/20/neiwang/</guid>
             <title>内网渗透学习笔记</title>
             <link>https://ch1e.gitee.io/2021/07/20/neiwang/</link>
-            <category>web安全</category>
             <category>渗透测试</category>
+            <category>web安全</category>
             <category>内网渗透</category>
             <pubDate>Tue, 20 Jul 2021 21:40:34 +0800</pubDate>
             <description><![CDATA[ &lt;h2 id=&#34;隧道技术SSH隧道&#34;&gt;&lt;a href=&#34;#隧道技术SSH隧道&#34; class=&#34;headerlink&#34; title=&#34;隧道技术SSH隧道&#34;&gt;&lt;/a&gt;隧道技术SSH隧道&lt;/h2&gt;&lt;p&gt;ssh 用于登录远程主机, 并且在远程主机上执行命令. 它的目的是替换 rlogin 和 rsh, 同时在不安全的网络之上, 两个互不 信任的主机之间, 提供加密的, 安全的通信连接. X11 连接和任意 TCP/IP 端口均可以通过此安全通道转发(forward).当用户通过 连接并登录主机 hostname 后, 根据所用的协议版本, 用户必须通过下述方法之一向远程主机证明他/她的身份:&lt;/p&gt;
@@ -797,9 +797,9 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/14/BUUCTF/</guid>
             <title>BUU题目练习</title>
             <link>https://ch1e.gitee.io/2021/07/14/BUUCTF/</link>
+            <category>web安全</category>
             <category>CTF</category>
             <category>靶场练习</category>
-            <category>web安全</category>
             <pubDate>Wed, 14 Jul 2021 18:05:03 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;极客大挑战-2019-RCE-ME&#34;&gt;&lt;a href=&#34;#极客大挑战-2019-RCE-ME&#34; class=&#34;headerlink&#34; title=&#34;[极客大挑战 2019]RCE ME&#34;&gt;&lt;/a&gt;[极客大挑战 2019]RCE ME&lt;/h1&gt;&lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;error_reporting(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(&lt;span class=&#34;keyword&#34;&gt;isset&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;code&amp;#x27;&lt;/span&gt;]))&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;         &lt;span class=&#34;variable&#34;&gt;$code&lt;/span&gt;=&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;code&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(strlen(&lt;span class=&#34;variable&#34;&gt;$code&lt;/span&gt;)&amp;gt;&lt;span class=&#34;number&#34;&gt;40&lt;/span&gt;)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                     &lt;span class=&#34;keyword&#34;&gt;die&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;This is too Long.&amp;quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                                    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(preg_match(&lt;span class=&#34;string&#34;&gt;&amp;quot;/[A-Za-z0-9]+/&amp;quot;&lt;/span&gt;,&lt;span class=&#34;variable&#34;&gt;$code&lt;/span&gt;))&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                                        &lt;span class=&#34;keyword&#34;&gt;die&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;NO.&amp;quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                                    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                    @&lt;span class=&#34;keyword&#34;&gt;eval&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$code&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            highlight_file(&lt;span class=&#34;keyword&#34;&gt;__FILE__&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
@@ -845,8 +845,8 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/07/xhcms/</guid>
             <title>熊海CMS1.0代码审计</title>
             <link>https://ch1e.gitee.io/2021/07/07/xhcms/</link>
-            <category>web安全</category>
             <category>渗透测试</category>
+            <category>web安全</category>
             <category>代码审计</category>
             <pubDate>Wed, 07 Jul 2021 16:38:24 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;熊海CMS1-0代码审计&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计&lt;/h1&gt;&lt;h2 id=&#34;熊海CMS1-0代码审计之反射型XSS&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之反射型XSS&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之反射型XSS&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之反射型XSS&lt;/h2&gt;&lt;p&gt;首先打开Seay审计系统，把我们的xhcms丢进去审计一下，我们这里是要找XSS，我们直接搜索关键字echo，看看有没有可以利用的地方&lt;/p&gt;
@@ -882,6 +882,33 @@
 &lt;p&gt;&lt;strong&gt;这里有个坑&lt;/strong&gt;：这里如果要用最大字符绕过的话，好像需要满足特定条件&lt;/p&gt;
 &lt;p&gt;Virtual Directory Support =  enabled &lt;/p&gt;
 &lt;p&gt;并且目前测试的版本是php5.2.17，其他貌似不行&lt;/p&gt;
+&lt;h2 id=&#34;熊海CMS1-0代码审计之越权访问&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之越权访问&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之越权访问&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之越权访问&lt;/h2&gt;&lt;p&gt;我们这里先登录到后台，抓一个后台的包&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805140147926.png&#34; alt=&#34;image-20210805140147926&#34;&gt;&lt;/p&gt;
+&lt;p&gt;包里的cookie有个user=admin  这就比较可疑，猜测有没有越权访问漏洞，先把cookie清了，重新抓个包验证一下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805140509947.png&#34; alt=&#34;image-20210805140509947&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们可以看到，这里的user随便输了一个，都是可以进去的，所以他存在越权访问漏洞&lt;/p&gt;
+&lt;p&gt;但是这里为什么会出现越权访问呢，我们来看看他的源代码&lt;/p&gt;
+&lt;p&gt;这个cms的配置文件都是inc目录下，我们在inc目录下，应该是checklogin.php这个文件&lt;/p&gt;
+&lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$user&lt;/span&gt;=&lt;span class=&#34;variable&#34;&gt;$_COOKIE&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;user&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; (&lt;span class=&#34;variable&#34;&gt;$user&lt;/span&gt;==&lt;span class=&#34;string&#34;&gt;&amp;quot;&amp;quot;&lt;/span&gt;)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;header(&lt;span class=&#34;string&#34;&gt;&amp;quot;Location: ?r=login&amp;quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;exit&lt;/span&gt;;	&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;我们可以看到，他这里只是判断user有没有接收到值，没有判断user具体是什么&lt;/p&gt;
+&lt;p&gt;如果user没有值，就返回登陆界面，这还不出大问题，账号密码形同虚设啊。&lt;/p&gt;
+&lt;h2 id=&#34;熊海CMS1-0代码审计之存储型XSS&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之存储型XSS&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之存储型XSS&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之存储型XSS&lt;/h2&gt;&lt;p&gt;熊海cms前台有个留言板，考虑能不能有XSS可以利用&lt;/p&gt;
+&lt;p&gt;我这里前台的留言貌似有点问题，验证码一直提示错误，那我可以在后台里给他添加一条xss的评论&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805141045953.png&#34; alt=&#34;image-20210805141045953&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然后访问前台的留言界面，触发了xss&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805141106154.png&#34; alt=&#34;image-20210805141106154&#34;&gt;&lt;/p&gt;
+&lt;p&gt;直接找出后台更新留言的源代码&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20210805145406701.png&#34; alt=&#34;image-20210805145406701&#34;&gt;&lt;/p&gt;
+&lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$query&lt;/span&gt; = &lt;span class=&#34;string&#34;&gt;&amp;quot;UPDATE interaction SET &lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;string&#34;&gt;xs=&amp;#x27;&lt;span class=&#34;subst&#34;&gt;$xs&lt;/span&gt;&amp;#x27;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;string&#34;&gt;name=&amp;#x27;&lt;span class=&#34;subst&#34;&gt;$name&lt;/span&gt;&amp;#x27;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;string&#34;&gt;mail=&amp;#x27;&lt;span class=&#34;subst&#34;&gt;$mail&lt;/span&gt;&amp;#x27;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;string&#34;&gt;url=&amp;#x27;&lt;span class=&#34;subst&#34;&gt;$url&lt;/span&gt;&amp;#x27;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;string&#34;&gt;touxiang=&amp;#x27;&lt;span class=&#34;subst&#34;&gt;$touxiang&lt;/span&gt;&amp;#x27;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;string&#34;&gt;content=&amp;#x27;&lt;span class=&#34;subst&#34;&gt;$content&lt;/span&gt;&amp;#x27;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;string&#34;&gt;tz=&amp;#x27;&lt;span class=&#34;subst&#34;&gt;$tz&lt;/span&gt;&amp;#x27;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;string&#34;&gt;rip=&amp;#x27;&lt;span class=&#34;subst&#34;&gt;$rip&lt;/span&gt;&amp;#x27;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;string&#34;&gt;rshebei=&amp;#x27;&lt;span class=&#34;subst&#34;&gt;$rshebei&lt;/span&gt;&amp;#x27;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;string&#34;&gt;rcontent=&amp;#x27;&lt;span class=&#34;subst&#34;&gt;$rcontent&lt;/span&gt;&amp;#x27;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;string&#34;&gt;rdate=now() WHERE id=&amp;#x27;&lt;span class=&#34;subst&#34;&gt;$id&lt;/span&gt;&amp;#x27;&amp;quot;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;@mysql_query(&lt;span class=&#34;variable&#34;&gt;$query&lt;/span&gt;) &lt;span class=&#34;keyword&#34;&gt;or&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;die&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;#x27;修改错误：&amp;#x27;&lt;/span&gt;.mysql_error());&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;这里也没有进行任何过滤，直接就丢到数据库里了，导致XSS漏洞&lt;/p&gt;
+&lt;h2 id=&#34;熊海CMS1-0代码审计之CSRF漏洞&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之CSRF漏洞&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之CSRF漏洞&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之CSRF漏洞&lt;/h2&gt;&lt;p&gt;我们在后台的文章管理这里，发现可以删除文章，那这里有没有CSRF漏洞可以利用呢&lt;/p&gt;
+&lt;p&gt;我们尝试劫持管理员的权限去删除文章，然后抓一个删除文章的包，这里也没有token验证啊，很可能存在CSRF&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805141639063.png&#34; alt=&#34;image-20210805141639063&#34;&gt;&lt;/p&gt;
+&lt;p&gt;使用burp自带的CSRF的POC生成功能，把html代码复制到本地&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805142113407.png&#34; alt=&#34;image-20210805142113407&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805141842830.png&#34; alt=&#34;image-20210805141842830&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;熊海CMS1-0代码审计之SQL注入&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之SQL注入&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之SQL注入&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之SQL注入&lt;/h2&gt;&lt;p&gt;搭建起来的演示站有点小问题，后续更新&lt;/p&gt;
 &lt;h2 id=&#34;利用文件包含获取webshell&#34;&gt;&lt;a href=&#34;#利用文件包含获取webshell&#34; class=&#34;headerlink&#34; title=&#34;利用文件包含获取webshell&#34;&gt;&lt;/a&gt;利用文件包含获取webshell&lt;/h2&gt;&lt;p&gt;我们通过前面的文件包含学习知道了可以通过首页的include函数直接包含一个XXX.XXX.php的文件，其中XXX.XXX是我们传的参数，index.php会自动拼接一个.php后缀，这时我们如果需要getshell就需要把其中的.php给截断，这里用到的是用windows文件名的最大长度是260字节来进行截断，除此之外，include在变量action前还拼接了一个”files/“，所以这里我们在文件包含的时候特别要注意一下被包含的文件和index.php之间的位置关系&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/QQ%E5%9B%BE%E7%89%8720210707164116.png&#34; alt=&#34;QQ图片20210707164116&#34;&gt;&lt;/p&gt;
@@ -906,9 +933,9 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/03/aynbms/</guid>
             <title>CS免杀姿势分享(等待更新)</title>
             <link>https://ch1e.gitee.io/2021/07/03/aynbms/</link>
-            <category>web安全</category>
             <category>免杀</category>
             <category>渗透测试</category>
+            <category>web安全</category>
             <pubDate>Sat, 03 Jul 2021 23:12:06 +0800</pubDate>
             <description><![CDATA[ &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main//img/16558686.png&#34; alt=&#34;16558686&#34;&gt;&lt;/p&gt;
 &lt;h1 id=&#34;Cobaltstrike简介&#34;&gt;&lt;a href=&#34;#Cobaltstrike简介&#34; class=&#34;headerlink&#34; title=&#34;Cobaltstrike简介&#34;&gt;&lt;/a&gt;Cobaltstrike简介&lt;/h1&gt;&lt;p&gt;CobatStrike是一款基于java编写的全平台多方协同后渗透攻击框架。CobaltStrike集成了端口转发、端口扫描、socket代理、提权、钓鱼、远控木马等功能。该工具几乎覆盖了APT攻击链中所需要用到的各个技术环节。&lt;/p&gt;
@@ -1137,8 +1164,8 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/06/18/pikachu/</guid>
             <title>pikachu靶场部分通关手册(持续更新中)</title>
             <link>https://ch1e.gitee.io/2021/06/18/pikachu/</link>
-            <category>靶场练习</category>
             <category>web安全</category>
+            <category>靶场练习</category>
             <pubDate>Fri, 18 Jun 2021 20:52:44 +0800</pubDate>
             <description><![CDATA[ &lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;最近发现，之前学的各种东西已经比较生疏了，所以重新来通关一个靶场来回忆一下&lt;/p&gt;
 &lt;/div&gt;
@@ -1705,14 +1732,6 @@
  ]]></description>
         </item>
         <item>
-            <guid isPermalink="true">https://ch1e.gitee.io/2021/05/31/introduce/</guid>
-            <title>ch1e的自述</title>
-            <link>https://ch1e.gitee.io/2021/05/31/introduce/</link>
-            <pubDate>Mon, 31 May 2021 19:54:11 +0800</pubDate>
-            <description><![CDATA[ &lt;h1 id=&#34;自我介绍&#34;&gt;&lt;a href=&#34;#自我介绍&#34; class=&#34;headerlink&#34; title=&#34;自我介绍&#34;&gt;&lt;/a&gt;自我介绍&lt;/h1&gt;&lt;p&gt;我是一个普通本科院校的大一学生，计算机科学与技术专业，对信息安全接触时间不到一年，从小就想当一名{牛逼哄哄^shayebuhui}的白帽黑客，这个愿望也在大一得到了实现，我加入了学校的信息安全协会，成为了一名啥也不是的小弟，在这看到了各种大佬。我目前正在学习信息安全中的Web方向，对网站二次开发，PHP，Html，Css，C++以及C都有所涉猎，未来会继续朝着这个方向努力，并且扩大我的学习领域，目标是成为俺SSN大哥那样的全栈爷。&lt;/p&gt;
- ]]></description>
-        </item>
-        <item>
             <guid isPermalink="true">https://ch1e.gitee.io/2021/05/31/jihua/</guid>
             <title>ch1e的个人学习计划</title>
             <link>https://ch1e.gitee.io/2021/05/31/jihua/</link>
@@ -1736,6 +1755,14 @@
 &lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; 每日坚持吃饭&lt;/li&gt;
 &lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt; 每日坚持吃水果&lt;/li&gt;
 &lt;/ul&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://ch1e.gitee.io/2021/05/31/introduce/</guid>
+            <title>ch1e的自述</title>
+            <link>https://ch1e.gitee.io/2021/05/31/introduce/</link>
+            <pubDate>Mon, 31 May 2021 19:54:11 +0800</pubDate>
+            <description><![CDATA[ &lt;h1 id=&#34;自我介绍&#34;&gt;&lt;a href=&#34;#自我介绍&#34; class=&#34;headerlink&#34; title=&#34;自我介绍&#34;&gt;&lt;/a&gt;自我介绍&lt;/h1&gt;&lt;p&gt;我是一个普通本科院校的大一学生，计算机科学与技术专业，对信息安全接触时间不到一年，从小就想当一名{牛逼哄哄^shayebuhui}的白帽黑客，这个愿望也在大一得到了实现，我加入了学校的信息安全协会，成为了一名啥也不是的小弟，在这看到了各种大佬。我目前正在学习信息安全中的Web方向，对网站二次开发，PHP，Html，Css，C++以及C都有所涉猎，未来会继续朝着这个方向努力，并且扩大我的学习领域，目标是成为俺SSN大哥那样的全栈爷。&lt;/p&gt;
  ]]></description>
         </item>
     </channel>

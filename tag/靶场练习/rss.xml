@@ -7,13 +7,13 @@
         <language>zh-CN</language>
         <pubDate>Fri, 30 Jul 2021 18:01:25 +0800</pubDate>
         <lastBuildDate>Fri, 30 Jul 2021 18:01:25 +0800</lastBuildDate>
-        <category>CTF</category>
-        <category>靶场练习</category>
-        <category>web安全</category>
         <category>免杀</category>
         <category>渗透测试</category>
-        <category>数据库</category>
+        <category>web安全</category>
         <category>C++</category>
+        <category>CTF</category>
+        <category>靶场练习</category>
+        <category>数据库</category>
         <category>代码审计</category>
         <category>内网渗透</category>
         <category>网络协议</category>
@@ -21,8 +21,8 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/30/exp/</guid>
             <title>个人exp编写练习</title>
             <link>https://ch1e.gitee.io/2021/07/30/exp/</link>
-            <category>靶场练习</category>
             <category>web安全</category>
+            <category>靶场练习</category>
             <pubDate>Fri, 30 Jul 2021 18:01:25 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;Exp编写&#34;&gt;&lt;a href=&#34;#Exp编写&#34; class=&#34;headerlink&#34; title=&#34;Exp编写&#34;&gt;&lt;/a&gt;Exp编写&lt;/h1&gt;&lt;h2 id=&#34;GET类型的SQL注入exp编写&#34;&gt;&lt;a href=&#34;#GET类型的SQL注入exp编写&#34; class=&#34;headerlink&#34; title=&#34;GET类型的SQL注入exp编写&#34;&gt;&lt;/a&gt;GET类型的SQL注入exp编写&lt;/h2&gt;&lt;p&gt;最近学了点Python基础，准备拿Python来作为以后编写exp&amp;amp;poc的语言&lt;/p&gt;
 &lt;p&gt;今天就拿了Sqli-labs第一关入手，这里是get类型的sql注入exp编写&lt;/p&gt;
@@ -60,9 +60,9 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/23/ctfshowweb/</guid>
             <title>CTFSHOW之WEB入门1000题</title>
             <link>https://ch1e.gitee.io/2021/07/23/ctfshowweb/</link>
+            <category>web安全</category>
             <category>CTF</category>
             <category>靶场练习</category>
-            <category>web安全</category>
             <pubDate>Fri, 23 Jul 2021 17:39:00 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;web1&#34;&gt;&lt;a href=&#34;#web1&#34; class=&#34;headerlink&#34; title=&#34;web1&#34;&gt;&lt;/a&gt;web1&lt;/h1&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210723101944875.png&#34; alt=&#34;image-20210723101944875&#34;&gt;&lt;/p&gt;
 &lt;p&gt;右键查看源代码就出来了&lt;/p&gt;
@@ -130,7 +130,7 @@
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;42986bfd-0cba-43c6-9be4-1a319be86d20&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;web15&#34;&gt;&lt;a href=&#34;#web15&#34; class=&#34;headerlink&#34; title=&#34;web15&#34;&gt;&lt;/a&gt;web15&lt;/h1&gt;&lt;p&gt;公开的信息比如邮箱，可能造成信息泄露，产生严重后果&lt;/p&gt;
-&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#49;&amp;#49;&amp;#53;&amp;#x36;&amp;#x36;&amp;#51;&amp;#x31;&amp;#57;&amp;#x36;&amp;#49;&amp;#64;&amp;#x71;&amp;#x71;&amp;#x2e;&amp;#99;&amp;#x6f;&amp;#109;&#34;&gt;&amp;#49;&amp;#49;&amp;#53;&amp;#x36;&amp;#x36;&amp;#51;&amp;#x31;&amp;#57;&amp;#x36;&amp;#49;&amp;#64;&amp;#x71;&amp;#x71;&amp;#x2e;&amp;#99;&amp;#x6f;&amp;#109;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#x31;&amp;#x31;&amp;#53;&amp;#x36;&amp;#54;&amp;#51;&amp;#x31;&amp;#57;&amp;#x36;&amp;#49;&amp;#64;&amp;#113;&amp;#113;&amp;#46;&amp;#99;&amp;#x6f;&amp;#x6d;&#34;&gt;&amp;#x31;&amp;#x31;&amp;#53;&amp;#x36;&amp;#54;&amp;#51;&amp;#x31;&amp;#57;&amp;#x36;&amp;#49;&amp;#64;&amp;#113;&amp;#113;&amp;#46;&amp;#99;&amp;#x6f;&amp;#x6d;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;访问admin页面，admin作为账号 ，邮箱作为密码，发现不对&lt;/p&gt;
 &lt;p&gt;点忘记密码让我们填密保问题所在地  我们查一下这个qq，发现qq的资料显示在西安   之后密码被重置为admin7789，登陆即可&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;dd71f776-6d6a-4cde-9106-f8db89f56b8d&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -505,9 +505,9 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/22/ctfshow/</guid>
             <title>CTFSHOW题目练习</title>
             <link>https://ch1e.gitee.io/2021/07/22/ctfshow/</link>
+            <category>web安全</category>
             <category>CTF</category>
             <category>靶场练习</category>
-            <category>web安全</category>
             <pubDate>Thu, 22 Jul 2021 12:01:41 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;ctfshow刷题记录&#34;&gt;&lt;a href=&#34;#ctfshow刷题记录&#34; class=&#34;headerlink&#34; title=&#34;ctfshow刷题记录&#34;&gt;&lt;/a&gt;ctfshow刷题记录&lt;/h1&gt;&lt;h2 id=&#34;WEB&#34;&gt;&lt;a href=&#34;#WEB&#34; class=&#34;headerlink&#34; title=&#34;WEB&#34;&gt;&lt;/a&gt;WEB&lt;/h2&gt;&lt;h3 id=&#34;web签到题&#34;&gt;&lt;a href=&#34;#web签到题&#34; class=&#34;headerlink&#34; title=&#34;web签到题&#34;&gt;&lt;/a&gt;web签到题&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210722120341702.png&#34; alt=&#34;image-20210722120341702&#34;&gt;&lt;/p&gt;
 &lt;p&gt;右键查看源代码&lt;/p&gt;
@@ -652,9 +652,9 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/14/BUUCTF/</guid>
             <title>BUU题目练习</title>
             <link>https://ch1e.gitee.io/2021/07/14/BUUCTF/</link>
+            <category>web安全</category>
             <category>CTF</category>
             <category>靶场练习</category>
-            <category>web安全</category>
             <pubDate>Wed, 14 Jul 2021 18:05:03 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;极客大挑战-2019-RCE-ME&#34;&gt;&lt;a href=&#34;#极客大挑战-2019-RCE-ME&#34; class=&#34;headerlink&#34; title=&#34;[极客大挑战 2019]RCE ME&#34;&gt;&lt;/a&gt;[极客大挑战 2019]RCE ME&lt;/h1&gt;&lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;error_reporting(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(&lt;span class=&#34;keyword&#34;&gt;isset&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;code&amp;#x27;&lt;/span&gt;]))&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;         &lt;span class=&#34;variable&#34;&gt;$code&lt;/span&gt;=&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;code&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(strlen(&lt;span class=&#34;variable&#34;&gt;$code&lt;/span&gt;)&amp;gt;&lt;span class=&#34;number&#34;&gt;40&lt;/span&gt;)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                     &lt;span class=&#34;keyword&#34;&gt;die&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;This is too Long.&amp;quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                                    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt;(preg_match(&lt;span class=&#34;string&#34;&gt;&amp;quot;/[A-Za-z0-9]+/&amp;quot;&lt;/span&gt;,&lt;span class=&#34;variable&#34;&gt;$code&lt;/span&gt;))&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                                        &lt;span class=&#34;keyword&#34;&gt;die&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;NO.&amp;quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                                    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                    @&lt;span class=&#34;keyword&#34;&gt;eval&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$code&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;else&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            highlight_file(&lt;span class=&#34;keyword&#34;&gt;__FILE__&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;?&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
@@ -700,8 +700,8 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/06/18/pikachu/</guid>
             <title>pikachu靶场部分通关手册(持续更新中)</title>
             <link>https://ch1e.gitee.io/2021/06/18/pikachu/</link>
-            <category>靶场练习</category>
             <category>web安全</category>
+            <category>靶场练习</category>
             <pubDate>Fri, 18 Jun 2021 20:52:44 +0800</pubDate>
             <description><![CDATA[ &lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;最近发现，之前学的各种东西已经比较生疏了，所以重新来通关一个靶场来回忆一下&lt;/p&gt;
 &lt;/div&gt;
