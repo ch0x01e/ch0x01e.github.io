@@ -7,11 +7,12 @@
     <category term="靶场练习" />
     <category term="web安全" />
     <category term="CTF" />
-    <category term="免杀" />
-    <category term="渗透测试" />
-    <category term="数据库" />
     <category term="代码审计" />
+    <category term="渗透测试" />
+    <category term="免杀" />
+    <category term="数据库" />
     <category term="C++" />
+    <category term="红队钓鱼" />
     <category term="内网渗透" />
     <category term="网络协议" />
     <entry>
@@ -68,8 +69,8 @@
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724180335375.png&#34; alt=&#34;image-20210724180335375&#34;&gt;&lt;/p&gt;
 </content>
         <category term="web安全" />
-        <category term="免杀" />
         <category term="渗透测试" />
+        <category term="免杀" />
         <updated>2021-07-03T15:12:06.941Z</updated>
     </entry>
 </feed>
