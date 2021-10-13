@@ -7,13 +7,13 @@
         <language>zh-CN</language>
         <pubDate>Wed, 13 Oct 2021 15:58:57 +0800</pubDate>
         <lastBuildDate>Wed, 13 Oct 2021 15:58:57 +0800</lastBuildDate>
+        <category>CTF</category>
         <category>靶场练习</category>
         <category>web安全</category>
-        <category>CTF</category>
-        <category>代码审计</category>
-        <category>渗透测试</category>
         <category>免杀</category>
+        <category>渗透测试</category>
         <category>数据库</category>
+        <category>代码审计</category>
         <category>C++</category>
         <category>红队钓鱼</category>
         <category>内网渗透</category>
@@ -25,8 +25,7 @@
             <category>web安全</category>
             <category>红队钓鱼</category>
             <pubDate>Wed, 13 Oct 2021 15:58:57 +0800</pubDate>
-            <description><![CDATA[ &lt;p&gt;#红队钓鱼方式收集&lt;/p&gt;
-&lt;h2 id=&#34;Office钓鱼攻击&#34;&gt;&lt;a href=&#34;#Office钓鱼攻击&#34; class=&#34;headerlink&#34; title=&#34;Office钓鱼攻击&#34;&gt;&lt;/a&gt;Office钓鱼攻击&lt;/h2&gt;&lt;p&gt;CS生成Payload&lt;/p&gt;
+            <description><![CDATA[ &lt;h1 id=&#34;红队钓鱼方式收集&#34;&gt;&lt;a href=&#34;#红队钓鱼方式收集&#34; class=&#34;headerlink&#34; title=&#34;红队钓鱼方式收集&#34;&gt;&lt;/a&gt;红队钓鱼方式收集&lt;/h1&gt;&lt;h2 id=&#34;Office钓鱼攻击&#34;&gt;&lt;a href=&#34;#Office钓鱼攻击&#34; class=&#34;headerlink&#34; title=&#34;Office钓鱼攻击&#34;&gt;&lt;/a&gt;Office钓鱼攻击&lt;/h2&gt;&lt;p&gt;CS生成Payload&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211013152256354.png&#34; alt=&#34;image-20211013152256354&#34;&gt;&lt;/p&gt;
 &lt;p&gt;复制好我们的宏代码以后，我们去word里新建一个文件，创建我们需要的宏，宏的位置需要改成当前文件&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211013152350668.png&#34; alt=&#34;image-20211013152350668&#34;&gt;&lt;/p&gt;

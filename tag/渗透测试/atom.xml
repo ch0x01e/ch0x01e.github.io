@@ -4,13 +4,13 @@
     <title>ch1e的随笔 • Posts by &#34;渗透测试&#34; tag</title>
     <link href="https://ch1e.gitee.io" />
     <updated>2021-08-15T11:17:52.993Z</updated>
+    <category term="CTF" />
     <category term="靶场练习" />
     <category term="web安全" />
-    <category term="CTF" />
-    <category term="代码审计" />
-    <category term="渗透测试" />
     <category term="免杀" />
+    <category term="渗透测试" />
     <category term="数据库" />
+    <category term="代码审计" />
     <category term="C++" />
     <category term="红队钓鱼" />
     <category term="内网渗透" />
@@ -126,8 +126,8 @@
 &lt;p&gt;yanmie师傅的文章地址：&lt;a href=&#34;https://www.freebuf.com/articles/web/265763.html&#34;&gt;https://www.freebuf.com/articles/web/265763.html&lt;/a&gt;&lt;/p&gt;
 </content>
         <category term="web安全" />
-        <category term="代码审计" />
         <category term="渗透测试" />
+        <category term="代码审计" />
         <updated>2021-08-15T11:17:52.993Z</updated>
     </entry>
     <entry>
@@ -166,8 +166,8 @@
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210809141222361.png&#34; alt=&#34;image-20210809141222361&#34;&gt;&lt;/p&gt;
 </content>
         <category term="web安全" />
-        <category term="代码审计" />
         <category term="渗透测试" />
+        <category term="代码审计" />
         <updated>2021-08-09T03:14:55.564Z</updated>
     </entry>
     <entry>
@@ -248,8 +248,8 @@
 &lt;p&gt;这里有post的参数，菜刀肯定是连不上了，我蚁剑貌似也出了点问题&lt;/p&gt;
 </content>
         <category term="web安全" />
-        <category term="代码审计" />
         <category term="渗透测试" />
+        <category term="代码审计" />
         <updated>2021-08-07T02:13:38.114Z</updated>
     </entry>
     <entry>
@@ -481,8 +481,8 @@
 &lt;p&gt;直接从例子里面可以看出来，传入file=5&amp;lt;参数就可以包含到了我们的596a62sd.php(这是随便取的)，大概原理根据windows的一些特性，我们输入的&amp;lt;会转换成&lt;em&gt;，而被转换的&lt;/em&gt;类似于linux中的通配符,所以这里就可以利用这个特性来用&amp;lt;进行文件包含。&lt;br&gt;具体解析可以看 &lt;a href=&#34;http://www.jinglingshu.org/?p=8790&#34;&gt;http://www.jinglingshu.org/?p=8790&lt;/a&gt; 这篇文章介绍的&lt;/p&gt;
 </content>
         <category term="web安全" />
-        <category term="代码审计" />
         <category term="渗透测试" />
+        <category term="代码审计" />
         <updated>2021-07-07T08:38:24.358Z</updated>
     </entry>
     <entry>
@@ -539,8 +539,8 @@
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210724180335375.png&#34; alt=&#34;image-20210724180335375&#34;&gt;&lt;/p&gt;
 </content>
         <category term="web安全" />
-        <category term="渗透测试" />
         <category term="免杀" />
+        <category term="渗透测试" />
         <updated>2021-07-03T15:12:06.941Z</updated>
     </entry>
 </feed>
