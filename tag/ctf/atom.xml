@@ -4,13 +4,13 @@
     <title>ch1e的随笔 • Posts by &#34;ctf&#34; tag</title>
     <link href="https://ch1e.gitee.io" />
     <updated>2021-07-23T09:39:00.596Z</updated>
-    <category term="CTF" />
     <category term="靶场练习" />
     <category term="web安全" />
+    <category term="CTF" />
     <category term="免杀" />
     <category term="渗透测试" />
-    <category term="代码审计" />
     <category term="数据库" />
+    <category term="代码审计" />
     <category term="C++" />
     <category term="红队钓鱼" />
     <category term="内网渗透" />
@@ -85,7 +85,7 @@
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;42986bfd-0cba-43c6-9be4-1a319be86d20&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;web15&#34;&gt;&lt;a href=&#34;#web15&#34; class=&#34;headerlink&#34; title=&#34;web15&#34;&gt;&lt;/a&gt;web15&lt;/h1&gt;&lt;p&gt;公开的信息比如邮箱，可能造成信息泄露，产生严重后果&lt;/p&gt;
-&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#x31;&amp;#x31;&amp;#x35;&amp;#x36;&amp;#54;&amp;#x33;&amp;#x31;&amp;#x39;&amp;#x36;&amp;#x31;&amp;#x40;&amp;#x71;&amp;#x71;&amp;#x2e;&amp;#x63;&amp;#111;&amp;#109;&#34;&gt;&amp;#x31;&amp;#x31;&amp;#x35;&amp;#x36;&amp;#54;&amp;#x33;&amp;#x31;&amp;#x39;&amp;#x36;&amp;#x31;&amp;#x40;&amp;#x71;&amp;#x71;&amp;#x2e;&amp;#x63;&amp;#111;&amp;#109;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#x31;&amp;#49;&amp;#53;&amp;#x36;&amp;#54;&amp;#x33;&amp;#x31;&amp;#x39;&amp;#x36;&amp;#x31;&amp;#x40;&amp;#x71;&amp;#113;&amp;#x2e;&amp;#99;&amp;#x6f;&amp;#109;&#34;&gt;&amp;#x31;&amp;#49;&amp;#53;&amp;#x36;&amp;#54;&amp;#x33;&amp;#x31;&amp;#x39;&amp;#x36;&amp;#x31;&amp;#x40;&amp;#x71;&amp;#113;&amp;#x2e;&amp;#99;&amp;#x6f;&amp;#109;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;访问admin页面，admin作为账号 ，邮箱作为密码，发现不对&lt;/p&gt;
 &lt;p&gt;点忘记密码让我们填密保问题所在地  我们查一下这个qq，发现qq的资料显示在西安   之后密码被重置为admin7789，登陆即可&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;dd71f776-6d6a-4cde-9106-f8db89f56b8d&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -462,9 +462,9 @@
 &lt;p&gt;post：v1=hex2bin&lt;/p&gt;
 &lt;p&gt;然后访问1.php去触发就可以了&lt;/p&gt;
 </content>
-        <category term="CTF" />
         <category term="靶场练习" />
         <category term="web安全" />
+        <category term="CTF" />
         <updated>2021-07-23T09:39:00.596Z</updated>
     </entry>
     <entry>
@@ -609,9 +609,9 @@
 &lt;p&gt;压缩源文件目录区：&lt;br&gt;50 4B 01 02：目录中文件文件头标记(0x02014b50)&lt;br&gt;3F 00：压缩使用的 pkware 版本&lt;br&gt;14 00：解压文件所需 pkware 版本&lt;br&gt;00 00：全局方式位标记（有无加密的重要标志，这个更改这里进行伪加密，改为09 00打开就会提示有密码了）&lt;br&gt;08 00：压缩方式&lt;br&gt;5A 7E：最后修改文件时间&lt;br&gt;F7 46：最后修改文件日期&lt;br&gt;16 B5 80 14：CRC-32校验（1480B516）&lt;br&gt;19 00 00 00：压缩后尺寸（25）&lt;br&gt;17 00 00 00：未压缩尺寸（23）&lt;br&gt;07 00：文件名长度&lt;br&gt;24 00：扩展字段长度&lt;br&gt;00 00：文件注释长度&lt;br&gt;00 00：磁盘开始号&lt;br&gt;00 00：内部文件属性&lt;br&gt;20 00 00 00：外部文件属性&lt;br&gt;00 00 00 00：局部头部偏移量&lt;br&gt;6B65792E7478740A00200000000000010018006558F04A1CC5D001BDEBDD3B1CC5D001BDEBDD3B1CC5D001&lt;/p&gt;
 &lt;p&gt;压缩源文件目录结束标志：&lt;br&gt;50 4B 05 06：目录结束标记&lt;br&gt;00 00：当前磁盘编号&lt;br&gt;00 00：目录区开始磁盘编号&lt;br&gt;01 00：本磁盘上纪录总数&lt;br&gt;01 00：目录区中纪录总数&lt;br&gt;59 00 00 00：目录区尺寸大小&lt;br&gt;3E 00 00 00：目录区对第一张磁盘的偏移量&lt;br&gt;00 00：ZIP 文件注释长度&lt;br&gt;————————————————&lt;br&gt;以上内容转自CSDN，原文链接：&lt;a href=&#34;https://blog.csdn.net/weixin_41687289/article/details/82695801&#34;&gt;https://blog.csdn.net/weixin_41687289/article/details/82695801&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;REVERSE&#34;&gt;&lt;a href=&#34;#REVERSE&#34; class=&#34;headerlink&#34; title=&#34;REVERSE&#34;&gt;&lt;/a&gt;REVERSE&lt;/h2&gt;&lt;h2 id=&#34;CRYPTO&#34;&gt;&lt;a href=&#34;#CRYPTO&#34; class=&#34;headerlink&#34; title=&#34;CRYPTO&#34;&gt;&lt;/a&gt;CRYPTO&lt;/h2&gt;&lt;h2 id=&#34;PWN&#34;&gt;&lt;a href=&#34;#PWN&#34; class=&#34;headerlink&#34; title=&#34;PWN&#34;&gt;&lt;/a&gt;PWN&lt;/h2&gt;</content>
-        <category term="CTF" />
         <category term="靶场练习" />
         <category term="web安全" />
+        <category term="CTF" />
         <updated>2021-07-22T04:01:41.978Z</updated>
     </entry>
     <entry>
@@ -657,9 +657,9 @@
 
 &lt;p&gt;&lt;a href=&#34;https://www.freebuf.com/articles/web/192052.html&#34;&gt;无需sendmail：巧用LD_PRELOAD突破disable_functions&lt;/a&gt;&lt;/p&gt;
 </content>
-        <category term="CTF" />
         <category term="靶场练习" />
         <category term="web安全" />
+        <category term="CTF" />
         <updated>2021-07-14T10:05:03.593Z</updated>
     </entry>
 </feed>
