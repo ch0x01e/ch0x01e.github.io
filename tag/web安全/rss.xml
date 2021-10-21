@@ -12,9 +12,9 @@
         <category>CTF</category>
         <category>免杀</category>
         <category>渗透测试</category>
+        <category>C++</category>
         <category>数据库</category>
         <category>代码审计</category>
-        <category>C++</category>
         <category>红队钓鱼</category>
         <category>内网渗透</category>
         <category>网络协议</category>
@@ -158,7 +158,7 @@
 &lt;p&gt;额，我这里数据库连接不上，这第一个flag暂时找不出来，因为爆破账号密码的话，正确密码在数据库里&lt;/p&gt;
 &lt;h2 id=&#34;后渗透提权&#34;&gt;&lt;a href=&#34;#后渗透提权&#34; class=&#34;headerlink&#34; title=&#34;后渗透提权&#34;&gt;&lt;/a&gt;后渗透提权&lt;/h2&gt;&lt;p&gt;虽然第一个flag做不出来，第二个还是可以的，我们可以发现在/drupal/misc有个tyrell.pass，里面有tyrell的账号密码&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210824113603240.png&#34; alt=&#34;image-20210824113603240&#34;&gt;&lt;/p&gt;
-&lt;p&gt;使用ssh登陆  ssh &lt;a href=&#34;mailto:&amp;#x74;&amp;#121;&amp;#114;&amp;#101;&amp;#108;&amp;#108;&amp;#x40;&amp;#x31;&amp;#x39;&amp;#x32;&amp;#46;&amp;#x31;&amp;#54;&amp;#56;&amp;#x2e;&amp;#x31;&amp;#x36;&amp;#x39;&amp;#46;&amp;#x31;&amp;#52;&amp;#51;&#34;&gt;&amp;#x74;&amp;#121;&amp;#114;&amp;#101;&amp;#108;&amp;#108;&amp;#x40;&amp;#x31;&amp;#x39;&amp;#x32;&amp;#46;&amp;#x31;&amp;#54;&amp;#56;&amp;#x2e;&amp;#x31;&amp;#x36;&amp;#x39;&amp;#46;&amp;#x31;&amp;#52;&amp;#51;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;使用ssh登陆  ssh &lt;a href=&#34;mailto:&amp;#116;&amp;#121;&amp;#x72;&amp;#x65;&amp;#108;&amp;#108;&amp;#64;&amp;#x31;&amp;#x39;&amp;#x32;&amp;#46;&amp;#49;&amp;#54;&amp;#x38;&amp;#46;&amp;#49;&amp;#x36;&amp;#57;&amp;#x2e;&amp;#49;&amp;#x34;&amp;#x33;&#34;&gt;&amp;#116;&amp;#121;&amp;#x72;&amp;#x65;&amp;#108;&amp;#108;&amp;#64;&amp;#x31;&amp;#x39;&amp;#x32;&amp;#46;&amp;#49;&amp;#54;&amp;#x38;&amp;#46;&amp;#49;&amp;#x36;&amp;#57;&amp;#x2e;&amp;#49;&amp;#x34;&amp;#x33;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;登录成功之后使用sudo -l命令发现/bin/journalctl可以进行利用；&lt;br&gt;附上漏洞查询连接&lt;code&gt;https://gtfobins.github.io/&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210824113659688.png&#34; alt=&#34;image-20210824113659688&#34;&gt;&lt;/p&gt;
 &lt;p&gt;输入完命令即可获取root权限&lt;/p&gt;
@@ -190,7 +190,7 @@
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210823111649441.png&#34; alt=&#34;image-20210823111649441&#34;&gt;&lt;/p&gt;
 &lt;p&gt;user.cap里是一些包信息 ，使用aircrack-ng爆破，爆破得到 ESSID 的名字 blackjax KEY snowflake&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210823112110327.png&#34; alt=&#34;image-20210823112110327&#34;&gt;&lt;/p&gt;
-&lt;p&gt;然后登陆ssh  ssh -p 2525 &lt;a href=&#34;mailto:&amp;#x62;&amp;#108;&amp;#97;&amp;#x63;&amp;#x6b;&amp;#106;&amp;#97;&amp;#x78;&amp;#64;&amp;#49;&amp;#x39;&amp;#50;&amp;#46;&amp;#x31;&amp;#x36;&amp;#x38;&amp;#46;&amp;#x31;&amp;#x36;&amp;#x39;&amp;#x2e;&amp;#49;&amp;#x34;&amp;#x32;&#34;&gt;&amp;#x62;&amp;#108;&amp;#97;&amp;#x63;&amp;#x6b;&amp;#106;&amp;#97;&amp;#x78;&amp;#64;&amp;#49;&amp;#x39;&amp;#50;&amp;#46;&amp;#x31;&amp;#x36;&amp;#x38;&amp;#46;&amp;#x31;&amp;#x36;&amp;#x39;&amp;#x2e;&amp;#49;&amp;#x34;&amp;#x32;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;然后登陆ssh  ssh -p 2525 &lt;a href=&#34;mailto:&amp;#98;&amp;#x6c;&amp;#97;&amp;#x63;&amp;#x6b;&amp;#x6a;&amp;#x61;&amp;#x78;&amp;#x40;&amp;#49;&amp;#57;&amp;#50;&amp;#x2e;&amp;#49;&amp;#54;&amp;#56;&amp;#46;&amp;#x31;&amp;#54;&amp;#57;&amp;#x2e;&amp;#x31;&amp;#52;&amp;#x32;&#34;&gt;&amp;#98;&amp;#x6c;&amp;#97;&amp;#x63;&amp;#x6b;&amp;#x6a;&amp;#x61;&amp;#x78;&amp;#x40;&amp;#49;&amp;#57;&amp;#50;&amp;#x2e;&amp;#49;&amp;#54;&amp;#56;&amp;#46;&amp;#x31;&amp;#54;&amp;#57;&amp;#x2e;&amp;#x31;&amp;#52;&amp;#x32;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210823112153470.png&#34; alt=&#34;image-20210823112153470&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;后渗透提权&#34;&gt;&lt;a href=&#34;#后渗透提权&#34; class=&#34;headerlink&#34; title=&#34;后渗透提权&#34;&gt;&lt;/a&gt;后渗透提权&lt;/h2&gt;&lt;p&gt;我们这里使用suid提权，首先查找具有suid的文件&lt;/p&gt;
 &lt;p&gt;find / -perm -u=s -type f 2&amp;gt;/dev/null&lt;/p&gt;
@@ -245,7 +245,7 @@
 &lt;p&gt;我们来解密试试，这里把我们要解密的东西丢到一个文件里，然后使用john解密，字典在/var/share/wordlists/下，rockyou.txt，首次使用需要进行解压，解压命令 gzip -d rockyou.txt.gz&lt;/p&gt;
 &lt;p&gt;破解命令  john –format=md5crypt –wordlist=/usr/share/wordlists/rockyou.txt 666  这里666是自己创建的文件的名字&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210822124451419.png&#34; alt=&#34;image-20210822124451419&#34;&gt;&lt;/p&gt;
-&lt;p&gt;我们这里就直接知道了flag的账号密码，可以ssh登陆,ssh &lt;a href=&#34;mailto:&amp;#102;&amp;#x6c;&amp;#x61;&amp;#103;&amp;#64;&amp;#49;&amp;#x39;&amp;#x32;&amp;#46;&amp;#49;&amp;#x36;&amp;#56;&amp;#46;&amp;#x31;&amp;#54;&amp;#57;&amp;#46;&amp;#49;&amp;#52;&amp;#49;&#34;&gt;&amp;#102;&amp;#x6c;&amp;#x61;&amp;#103;&amp;#64;&amp;#49;&amp;#x39;&amp;#x32;&amp;#46;&amp;#49;&amp;#x36;&amp;#56;&amp;#46;&amp;#x31;&amp;#54;&amp;#57;&amp;#46;&amp;#49;&amp;#52;&amp;#49;&lt;/a&gt;,登陆成功&lt;/p&gt;
+&lt;p&gt;我们这里就直接知道了flag的账号密码，可以ssh登陆,ssh &lt;a href=&#34;mailto:&amp;#102;&amp;#x6c;&amp;#97;&amp;#103;&amp;#64;&amp;#49;&amp;#57;&amp;#50;&amp;#x2e;&amp;#x31;&amp;#54;&amp;#x38;&amp;#x2e;&amp;#x31;&amp;#x36;&amp;#57;&amp;#46;&amp;#x31;&amp;#52;&amp;#49;&#34;&gt;&amp;#102;&amp;#x6c;&amp;#97;&amp;#103;&amp;#64;&amp;#49;&amp;#57;&amp;#50;&amp;#x2e;&amp;#x31;&amp;#54;&amp;#x38;&amp;#x2e;&amp;#x31;&amp;#x36;&amp;#57;&amp;#46;&amp;#x31;&amp;#52;&amp;#49;&lt;/a&gt;,登陆成功&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210822124654454.png&#34; alt=&#34;image-20210822124654454&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;后渗透提权&#34;&gt;&lt;a href=&#34;#后渗透提权&#34; class=&#34;headerlink&#34; title=&#34;后渗透提权&#34;&gt;&lt;/a&gt;后渗透提权&lt;/h2&gt;&lt;p&gt;我们可以查看一下存在的用户,cat /etc/passwd|grep bash,顺便切换成bash&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210822124951829.png&#34; alt=&#34;image-20210822124951829&#34;&gt;&lt;/p&gt;
@@ -801,7 +801,7 @@
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;42986bfd-0cba-43c6-9be4-1a319be86d20&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;web15&#34;&gt;&lt;a href=&#34;#web15&#34; class=&#34;headerlink&#34; title=&#34;web15&#34;&gt;&lt;/a&gt;web15&lt;/h1&gt;&lt;p&gt;公开的信息比如邮箱，可能造成信息泄露，产生严重后果&lt;/p&gt;
-&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#x31;&amp;#49;&amp;#x35;&amp;#54;&amp;#54;&amp;#x33;&amp;#x31;&amp;#57;&amp;#x36;&amp;#x31;&amp;#64;&amp;#113;&amp;#x71;&amp;#x2e;&amp;#99;&amp;#111;&amp;#109;&#34;&gt;&amp;#x31;&amp;#49;&amp;#x35;&amp;#54;&amp;#54;&amp;#x33;&amp;#x31;&amp;#57;&amp;#x36;&amp;#x31;&amp;#64;&amp;#113;&amp;#x71;&amp;#x2e;&amp;#99;&amp;#111;&amp;#109;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#x31;&amp;#49;&amp;#x35;&amp;#x36;&amp;#x36;&amp;#51;&amp;#49;&amp;#57;&amp;#x36;&amp;#x31;&amp;#64;&amp;#x71;&amp;#113;&amp;#46;&amp;#99;&amp;#111;&amp;#x6d;&#34;&gt;&amp;#x31;&amp;#49;&amp;#x35;&amp;#x36;&amp;#x36;&amp;#51;&amp;#49;&amp;#57;&amp;#x36;&amp;#x31;&amp;#64;&amp;#x71;&amp;#113;&amp;#46;&amp;#99;&amp;#111;&amp;#x6d;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;访问admin页面，admin作为账号 ，邮箱作为密码，发现不对&lt;/p&gt;
 &lt;p&gt;点忘记密码让我们填密保问题所在地  我们查一下这个qq，发现qq的资料显示在西安   之后密码被重置为admin7789，登陆即可&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;dd71f776-6d6a-4cde-9106-f8db89f56b8d&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;

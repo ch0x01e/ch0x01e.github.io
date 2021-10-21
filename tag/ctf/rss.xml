@@ -12,9 +12,9 @@
         <category>CTF</category>
         <category>免杀</category>
         <category>渗透测试</category>
+        <category>C++</category>
         <category>数据库</category>
         <category>代码审计</category>
-        <category>C++</category>
         <category>红队钓鱼</category>
         <category>内网渗透</category>
         <category>网络协议</category>
@@ -92,7 +92,7 @@
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;42986bfd-0cba-43c6-9be4-1a319be86d20&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;web15&#34;&gt;&lt;a href=&#34;#web15&#34; class=&#34;headerlink&#34; title=&#34;web15&#34;&gt;&lt;/a&gt;web15&lt;/h1&gt;&lt;p&gt;公开的信息比如邮箱，可能造成信息泄露，产生严重后果&lt;/p&gt;
-&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#x31;&amp;#49;&amp;#x35;&amp;#54;&amp;#54;&amp;#x33;&amp;#x31;&amp;#57;&amp;#x36;&amp;#x31;&amp;#64;&amp;#113;&amp;#x71;&amp;#x2e;&amp;#99;&amp;#111;&amp;#109;&#34;&gt;&amp;#x31;&amp;#49;&amp;#x35;&amp;#54;&amp;#54;&amp;#x33;&amp;#x31;&amp;#57;&amp;#x36;&amp;#x31;&amp;#64;&amp;#113;&amp;#x71;&amp;#x2e;&amp;#99;&amp;#111;&amp;#109;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#x31;&amp;#49;&amp;#x35;&amp;#x36;&amp;#x36;&amp;#51;&amp;#49;&amp;#57;&amp;#x36;&amp;#x31;&amp;#64;&amp;#x71;&amp;#113;&amp;#46;&amp;#99;&amp;#111;&amp;#x6d;&#34;&gt;&amp;#x31;&amp;#49;&amp;#x35;&amp;#x36;&amp;#x36;&amp;#51;&amp;#49;&amp;#57;&amp;#x36;&amp;#x31;&amp;#64;&amp;#x71;&amp;#113;&amp;#46;&amp;#99;&amp;#111;&amp;#x6d;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;访问admin页面，admin作为账号 ，邮箱作为密码，发现不对&lt;/p&gt;
 &lt;p&gt;点忘记密码让我们填密保问题所在地  我们查一下这个qq，发现qq的资料显示在西安   之后密码被重置为admin7789，登陆即可&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;dd71f776-6d6a-4cde-9106-f8db89f56b8d&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
