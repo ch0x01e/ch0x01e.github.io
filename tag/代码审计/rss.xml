@@ -9,11 +9,11 @@
         <lastBuildDate>Sun, 15 Aug 2021 19:17:52 +0800</lastBuildDate>
         <category>靶场练习</category>
         <category>web安全</category>
-        <category>免杀</category>
-        <category>渗透测试</category>
         <category>数据库</category>
-        <category>C++</category>
         <category>代码审计</category>
+        <category>渗透测试</category>
+        <category>免杀</category>
+        <category>C++</category>
         <category>CTF</category>
         <category>漏洞复现</category>
         <category>SQL注入</category>
@@ -26,8 +26,8 @@
             <title>PHP代码审计之Pbootcms代码审计</title>
             <link>https://ch1e.gitee.io/2021/08/15/pboot/</link>
             <category>web安全</category>
-            <category>渗透测试</category>
             <category>代码审计</category>
+            <category>渗透测试</category>
             <pubDate>Sun, 15 Aug 2021 19:17:52 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;PHP代码审计之PbootCMS漏洞审计&#34;&gt;&lt;a href=&#34;#PHP代码审计之PbootCMS漏洞审计&#34; class=&#34;headerlink&#34; title=&#34;PHP代码审计之PbootCMS漏洞审计&#34;&gt;&lt;/a&gt;PHP代码审计之PbootCMS漏洞审计&lt;/h1&gt;&lt;h2 id=&#34;MVC的探索&#34;&gt;&lt;a href=&#34;#MVC的探索&#34; class=&#34;headerlink&#34; title=&#34;MVC的探索&#34;&gt;&lt;/a&gt;MVC的探索&lt;/h2&gt;&lt;p&gt;目录结构&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;PbootCMS-V1.2.1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ apps         应用程序&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ admin     后台模块&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ api       api模块&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ common    公共模块&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ home      前台模块&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ config       配置文件&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ config.php    配置文件&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ database.php  数据库配置文件&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ route.php     用户自定义路由规则&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ core         框架核心&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ function  框架公共函数库&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  │  ├─ handle.php 助手函数库1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  │  ├─ helper.php 助手函数库2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ template     html模板&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ admin.php    管理端入口文件&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ api.php      api入口文件&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ index.php    前端入口文件&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -141,8 +141,8 @@
             <title>某代刷网代码审计</title>
             <link>https://ch1e.gitee.io/2021/08/09/dswdmsj/</link>
             <category>web安全</category>
-            <category>渗透测试</category>
             <category>代码审计</category>
+            <category>渗透测试</category>
             <pubDate>Mon, 09 Aug 2021 11:14:55 +0800</pubDate>
             <description><![CDATA[ &lt;p&gt;最近在学代码审计，逛了逛一些安全社区，发现了YanXia师傅写的一篇关于代刷网的代码审计，舔了个B脸问了YanXia师傅要了源码，因为网络上大部分代刷网源码都是有加密过的，我太菜了不会解密&lt;/p&gt;
 &lt;p&gt;今天使用的环境是Apache+PHP7.0n&lt;/p&gt;
@@ -181,8 +181,8 @@
             <title>BlueCMS代码审计</title>
             <link>https://ch1e.gitee.io/2021/08/07/bluecms/</link>
             <category>web安全</category>
-            <category>渗透测试</category>
             <category>代码审计</category>
+            <category>渗透测试</category>
             <pubDate>Sat, 07 Aug 2021 10:13:38 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;Bluecms代码审计&#34;&gt;&lt;a href=&#34;#Bluecms代码审计&#34; class=&#34;headerlink&#34; title=&#34;Bluecms代码审计&#34;&gt;&lt;/a&gt;Bluecms代码审计&lt;/h1&gt;&lt;h2 id=&#34;Bluecms代码审计之union联合查询注入&#34;&gt;&lt;a href=&#34;#Bluecms代码审计之union联合查询注入&#34; class=&#34;headerlink&#34; title=&#34;Bluecms代码审计之union联合查询注入&#34;&gt;&lt;/a&gt;Bluecms代码审计之union联合查询注入&lt;/h2&gt;&lt;p&gt;先把我们的源码下载好，并且搭建好&lt;/p&gt;
 &lt;p&gt;打开我们的Seay源代码审计系统，把源码丢进去自动审计一下&lt;/p&gt;
@@ -263,8 +263,8 @@
             <title>熊海CMS1.0代码审计</title>
             <link>https://ch1e.gitee.io/2021/07/07/xhcms/</link>
             <category>web安全</category>
-            <category>渗透测试</category>
             <category>代码审计</category>
+            <category>渗透测试</category>
             <pubDate>Wed, 07 Jul 2021 16:38:24 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;熊海CMS1-0代码审计&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计&lt;/h1&gt;&lt;h2 id=&#34;熊海CMS1-0代码审计之反射型XSS&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之反射型XSS&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之反射型XSS&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之反射型XSS&lt;/h2&gt;&lt;p&gt;首先打开Seay审计系统，把我们的xhcms丢进去审计一下，我们这里是要找XSS，我们直接搜索关键字echo，看看有没有可以利用的地方&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805103255703.png&#34; alt=&#34;image-20210805103255703&#34;&gt;&lt;/p&gt;
