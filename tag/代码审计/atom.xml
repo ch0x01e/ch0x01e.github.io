@@ -8,13 +8,13 @@
     <category term="web安全" />
     <category term="免杀" />
     <category term="渗透测试" />
-    <category term="代码审计" />
     <category term="数据库" />
+    <category term="代码审计" />
     <category term="C++" />
     <category term="CTF" />
+    <category term="反序列化" />
     <category term="漏洞复现" />
     <category term="SQL注入" />
-    <category term="反序列化" />
     <category term="红队钓鱼" />
     <category term="远程代码执行" />
     <category term="内网渗透" />
@@ -25,7 +25,6 @@
         <link rel="alternate" href="https://ch1e.gitee.io/2021/12/11/zbzcms/"/>
         <content type="html">&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;这套系统洞太多了，本文可能暂时讲不完，有兴趣的师傅可以自行再进行挖掘&lt;/p&gt;
 &lt;p&gt;我这里主要采取白盒加黑盒的一个方式来进行代码审计，并非通读代码&lt;/p&gt;
-&lt;p&gt;源码下载:链接：&lt;a href=&#34;https://pan.baidu.com/s/104e0h31l0RYrCg-KgNKr7w&#34;&gt;https://pan.baidu.com/s/104e0h31l0RYrCg-KgNKr7w&lt;/a&gt;  提取码：6666 &lt;/p&gt;
 &lt;p&gt;涉及工具：Seay源代码审计系统，phpstudy&lt;/p&gt;
 &lt;h1 id=&#34;文件上传GETSHELL&#34;&gt;&lt;a href=&#34;#文件上传GETSHELL&#34; class=&#34;headerlink&#34; title=&#34;文件上传GETSHELL&#34;&gt;&lt;/a&gt;文件上传GETSHELL&lt;/h1&gt;&lt;h2 id=&#34;上传点一&#34;&gt;&lt;a href=&#34;#上传点一&#34; class=&#34;headerlink&#34; title=&#34;上传点一&#34;&gt;&lt;/a&gt;上传点一&lt;/h2&gt;&lt;p&gt;漏洞位于/cms/cms/admin/run_ajax.php  我们直接在下面对他的关键代码进行分析&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211211144515257.png&#34; alt=&#34;image-20211211144515257&#34;&gt;&lt;/p&gt;
