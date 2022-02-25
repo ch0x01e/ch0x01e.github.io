@@ -15,8 +15,8 @@
     <category term="漏洞复现" />
     <category term="SQL注入" />
     <category term="反序列化" />
-    <category term="远程代码执行" />
     <category term="红队钓鱼" />
+    <category term="远程代码执行" />
     <category term="Java安全" />
     <category term="内网渗透" />
     <category term="网络协议" />
