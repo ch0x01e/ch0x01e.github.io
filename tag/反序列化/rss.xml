@@ -12,11 +12,11 @@
         <category>免杀</category>
         <category>渗透测试</category>
         <category>数据库</category>
-        <category>代码审计</category>
         <category>C++</category>
+        <category>代码审计</category>
+        <category>CTF</category>
         <category>Java安全</category>
         <category>反序列化</category>
-        <category>CTF</category>
         <category>漏洞复现</category>
         <category>SQL注入</category>
         <category>红队钓鱼</category>
@@ -389,8 +389,8 @@
             <title>PHP原生类在CTF当中的应用🛴</title>
             <link>https://ch1e.gitee.io/2021/11/12/yuanshenglei/</link>
             <category>web安全</category>
-            <category>反序列化</category>
             <category>CTF</category>
+            <category>反序列化</category>
             <pubDate>Fri, 12 Nov 2021 12:25:11 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;PHP原生类的应用&#34;&gt;&lt;a href=&#34;#PHP原生类的应用&#34; class=&#34;headerlink&#34; title=&#34;PHP原生类的应用&#34;&gt;&lt;/a&gt;PHP原生类的应用&lt;/h1&gt;&lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;前几天打了浙江省赛，拿了个省二，明年努努力冲个省一。发现浙江省赛出了两题POP链，这就是为啥博客持续在更新反序列化的内容的原因哈哈哈(因为我两题都没解出来)，之前练了一下pop链的构造，现在来研究一下PHP原生类的利用&lt;/p&gt;
 &lt;p&gt;本篇文章总结于&lt;a href=&#34;https://blog.csdn.net/qq_38154820/article/details/121112935&#34;&gt;https://blog.csdn.net/qq_38154820/article/details/121112935&lt;/a&gt;&lt;/p&gt;
@@ -471,8 +471,8 @@
             <title>PHP反序列化之POP链构造🛴</title>
             <link>https://ch1e.gitee.io/2021/11/11/pop/</link>
             <category>web安全</category>
-            <category>反序列化</category>
             <category>CTF</category>
+            <category>反序列化</category>
             <pubDate>Thu, 11 Nov 2021 13:43:54 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;PHP反序列化之pop链&#34;&gt;&lt;a href=&#34;#PHP反序列化之pop链&#34; class=&#34;headerlink&#34; title=&#34;PHP反序列化之pop链&#34;&gt;&lt;/a&gt;PHP反序列化之pop链&lt;/h1&gt;&lt;h2 id=&#34;POP链介绍&#34;&gt;&lt;a href=&#34;#POP链介绍&#34; class=&#34;headerlink&#34; title=&#34;POP链介绍&#34;&gt;&lt;/a&gt;POP链介绍&lt;/h2&gt;&lt;p&gt;POP 面向属性编程(Property-Oriented Programing) 常用于上层语言构造特定调用链的方法，与二进制利用中的面向返回编程（Return-Oriented Programing）的原理相似，都是从现有运行环境中寻找一系列的代码或者指令调用，然后根据需求构成一组连续的调用链,最终达到攻击者邪恶的目的&lt;/p&gt;
 &lt;p&gt;说的再具体一点就是 ROP 是通过栈溢出实现控制指令的执行流程，而我们的反序列化是通过控制对象的属性从而实现控制程序的执行流程，进而达成利用本身无害的代码进行有害操作的目的。&lt;/p&gt;
