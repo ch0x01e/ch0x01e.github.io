@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://ch1e.gitee.io</id>
+    <id>https://ch0x01e.github.io</id>
     <title>ch1e的随笔 • Posts by &#34;c++&#34; tag</title>
-    <link href="https://ch1e.gitee.io" />
+    <link href="https://ch0x01e.github.io" />
     <updated>2021-06-16T13:15:23.277Z</updated>
     <category term="靶场练习" />
     <category term="web安全" />
     <category term="免杀" />
     <category term="渗透测试" />
     <category term="数据库" />
-    <category term="C++" />
     <category term="代码审计" />
-    <category term="CTF" />
+    <category term="C++" />
     <category term="Java安全" />
     <category term="反序列化" />
+    <category term="CTF" />
     <category term="漏洞复现" />
     <category term="SQL注入" />
     <category term="红队钓鱼" />
@@ -21,9 +21,9 @@
     <category term="内网渗透" />
     <category term="网络协议" />
     <entry>
-        <id>https://ch1e.gitee.io/2021/06/16/c++txlks/</id>
+        <id>https://ch0x01e.github.io/2021/06/16/c++txlks/</id>
         <title>C++通讯录课设寻求帮助中</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/06/16/c++txlks/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/06/16/c++txlks/"/>
         <content type="html">&lt;p&gt;最近在忙着数据结构的课设，我的课设是通讯录的制作，就差最后一个load()函数从外部导入数据到程序，遇到问题了，有没有大佬能帮俺看看&lt;/p&gt;
 &lt;p&gt;设计目的：用〈〈数据结构〉〉中的双向链表作数据结构，结合C语言基本知识。编写一个通讯录管理系统。以把所学数据结构知识应用到实际软件开发中去。&lt;/p&gt;
 &lt;p&gt;设计内容：本系统应完成一下几方面的功能：&lt;/p&gt;

@@ -2,7 +2,7 @@
 <rss version="2.0">
     <channel>
         <title>ch1e的随笔 • Posts by &#34;数据库&#34; tag</title>
-        <link>https://ch1e.gitee.io</link>
+        <link>https://ch0x01e.github.io</link>
         <description></description>
         <language>zh-CN</language>
         <pubDate>Thu, 01 Jul 2021 21:17:48 +0800</pubDate>
@@ -12,11 +12,11 @@
         <category>免杀</category>
         <category>渗透测试</category>
         <category>数据库</category>
-        <category>C++</category>
         <category>代码审计</category>
-        <category>CTF</category>
+        <category>C++</category>
         <category>Java安全</category>
         <category>反序列化</category>
+        <category>CTF</category>
         <category>漏洞复现</category>
         <category>SQL注入</category>
         <category>红队钓鱼</category>
@@ -24,9 +24,9 @@
         <category>内网渗透</category>
         <category>网络协议</category>
         <item>
-            <guid isPermalink="true">https://ch1e.gitee.io/2021/07/01/aysql/</guid>
+            <guid isPermalink="true">https://ch0x01e.github.io/2021/07/01/aysql/</guid>
             <title>数据库基础学习</title>
-            <link>https://ch1e.gitee.io/2021/07/01/aysql/</link>
+            <link>https://ch0x01e.github.io/2021/07/01/aysql/</link>
             <category>数据库</category>
             <pubDate>Thu, 01 Jul 2021 21:17:48 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;数据库学习01-Mysql数据库的基本操作&#34;&gt;&lt;a href=&#34;#数据库学习01-Mysql数据库的基本操作&#34; class=&#34;headerlink&#34; title=&#34;数据库学习01 Mysql数据库的基本操作&#34;&gt;&lt;/a&gt;数据库学习01 Mysql数据库的基本操作&lt;/h1&gt;&lt;h2 id=&#34;数据库的基本操作&#34;&gt;&lt;a href=&#34;#数据库的基本操作&#34; class=&#34;headerlink&#34; title=&#34;数据库的基本操作&#34;&gt;&lt;/a&gt;数据库的基本操作&lt;/h2&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;输入 mysql -uroot -p -P3306 -h127.0.0.1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;退出的三种方法&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    mysql &amp;gt; exit;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    mysql &amp;gt; quit;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    mysql &amp;gt; \q;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	增：create database db1;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	删：drop database db1;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	改：alter database db1 charset utf8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	查：show databases;#查看所有的数据库&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show create database db1;查看指定的数据库&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show status; -- 显示一些系统特定资源的信息，例如，正在运行的线程数量。 &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	desc tabl_name; 显示表结构，字段类型，主键，是否为空等属性，但不显示外键。&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show databases 查看这个mysql里面有多少个库&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show tables 查看当前库里面所有的表&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;     mysql&amp;gt; select password from user where user=&amp;#x27;root&amp;#x27;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;     查看当前数据库 里面的表user 用户为root的密码&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -197,9 +197,9 @@
  ]]></description>
         </item>
         <item>
-            <guid isPermalink="true">https://ch1e.gitee.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/</guid>
+            <guid isPermalink="true">https://ch0x01e.github.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/</guid>
             <title>SQL注入笔记</title>
-            <link>https://ch1e.gitee.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/</link>
+            <link>https://ch0x01e.github.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/</link>
             <category>web安全</category>
             <category>数据库</category>
             <pubDate>Mon, 07 Jun 2021 18:24:59 +0800</pubDate>

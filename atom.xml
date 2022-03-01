@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://ch1e.gitee.io</id>
+    <id>https://ch0x01e.github.io</id>
     <title>ch1e的随笔</title>
-    <link href="https://ch1e.gitee.io" />
+    <link href="https://ch0x01e.github.io" />
     <updated>2022-02-28T11:51:29.847Z</updated>
     <category term="靶场练习" />
     <category term="web安全" />
     <category term="免杀" />
     <category term="渗透测试" />
     <category term="数据库" />
-    <category term="C++" />
     <category term="代码审计" />
-    <category term="CTF" />
+    <category term="C++" />
     <category term="Java安全" />
     <category term="反序列化" />
+    <category term="CTF" />
     <category term="漏洞复现" />
     <category term="SQL注入" />
     <category term="红队钓鱼" />
@@ -21,9 +21,9 @@
     <category term="内网渗透" />
     <category term="网络协议" />
     <entry>
-        <id>https://ch1e.gitee.io/2022/02/28/cc6/</id>
+        <id>https://ch0x01e.github.io/2022/02/28/cc6/</id>
         <title>commons-collections6反序列化链分析</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2022/02/28/cc6/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2022/02/28/cc6/"/>
         <content type="html">&lt;h1 id=&#34;commons-collections6反序列化链分析&#34;&gt;&lt;a href=&#34;#commons-collections6反序列化链分析&#34; class=&#34;headerlink&#34; title=&#34;commons-collections6反序列化链分析&#34;&gt;&lt;/a&gt;commons-collections6反序列化链分析&lt;/h1&gt;&lt;h2 id=&#34;整体分析&#34;&gt;&lt;a href=&#34;#整体分析&#34; class=&#34;headerlink&#34; title=&#34;整体分析&#34;&gt;&lt;/a&gt;整体分析&lt;/h2&gt;&lt;p&gt;cc6这条链我们先来ysoserial看看他的源码，源码如下&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20220228195705688.png&#34; alt=&#34;image-20220228195705688&#34;&gt;&lt;/p&gt;
 &lt;p&gt;我们可以看到，他也是使用了LazyMap，但是不同的是，他是通过其他方式调用到了LazyMap的get方法，我们可以深入来看看，这里由于前面学过cc1的LazyMap的那条链了，关注LazyMap前面的部分就不再赘述，如果有师傅不懂的可以看看前面的文章&lt;/p&gt;
 &lt;h2 id=&#34;细节分析&#34;&gt;&lt;a href=&#34;#细节分析&#34; class=&#34;headerlink&#34; title=&#34;细节分析&#34;&gt;&lt;/a&gt;细节分析&lt;/h2&gt;&lt;p&gt;咱就从 LazyMap的get方法开始吧，因为前面的和之前的链子是一样的。先找到谁调用了get方法，这里直接锁定TiedMapEntry的getValue方法，他这里返回了map.get(key),并且构造函数是publice，可以直接new TiedMapEntry这里的map对应的应该是之前的lazymap&lt;/p&gt;
@@ -56,6 +56,9 @@
 
 
 &lt;h2 id=&#34;疑惑点&#34;&gt;&lt;a href=&#34;#疑惑点&#34; class=&#34;headerlink&#34; title=&#34;疑惑点&#34;&gt;&lt;/a&gt;疑惑点&lt;/h2&gt;&lt;p&gt;这里的话，上面的poc里为了成功执行，使用了lazyMap.remove(“aaa”);但是其实我在想，我们的目的是调用LazyMap的get方法，里面进入if的条件是当前lazyMap对象的map属性中不能有key，那我们为什么要去使用lazyMap的remove，而不是使用map.remove呢，这里我尝试了一下，使用map.remove貌似也能执行？这先丢着，希望有会的师傅可以指导我一下&lt;/p&gt;
+&lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;这里解决了，还得是Y4哥哥猛啊&lt;/p&gt;
+&lt;p&gt;大概意思就是，LazyMap是继承了AbstractMapDecorator类，在AbstractMapDecorator类中有写remove方法，但是在LazyMap中没有写，他是使用的父类的remove，父类的remove其实是返回map.remove，所以上面我说的为什么不去找map属性的而是找本身的remove，一切都可以解释了&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ch0x01e/image@main/img/image-20220301204819166.png&#34; alt=&#34;image-20220301204819166&#34;&gt;&lt;/p&gt;
+&lt;/div&gt;
 </content>
         <category term="web安全" />
         <category term="Java安全" />
@@ -63,9 +66,9 @@
         <updated>2022-02-28T11:51:29.847Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2022/02/26/cc3/</id>
+        <id>https://ch0x01e.github.io/2022/02/26/cc3/</id>
         <title>commons-collections3反序列化链分析</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2022/02/26/cc3/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2022/02/26/cc3/"/>
         <content type="html">&lt;h1 id=&#34;commons-collections3反序列化链分析&#34;&gt;&lt;a href=&#34;#commons-collections3反序列化链分析&#34; class=&#34;headerlink&#34; title=&#34;commons-collections3反序列化链分析&#34;&gt;&lt;/a&gt;commons-collections3反序列化链分析&lt;/h1&gt;&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;这是我的第二篇CC链分析的文章，希望师傅们能喜欢，如果我有说错的或者不足的地方，希望师傅们多多指点&lt;/p&gt;
 &lt;h2 id=&#34;类加载器&#34;&gt;&lt;a href=&#34;#类加载器&#34; class=&#34;headerlink&#34; title=&#34;类加载器&#34;&gt;&lt;/a&gt;类加载器&lt;/h2&gt;&lt;p&gt;CC3这条链的话得引入类加载器的相关内容，这里也就稍微说一下吧，因为我也是先自己分析一两遍，再写一下文章当作笔记来加深一下印象。&lt;/p&gt;
 &lt;p&gt;类加载器是Java Runtime Environment 的一部分，负责动态加载Java类到Java虚拟机的内存空间中，用于加载系统，网络或者其他来源的类文件&lt;/p&gt;
@@ -169,9 +172,9 @@
         <updated>2022-02-26T11:07:59.272Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2022/02/21/cc1/</id>
+        <id>https://ch0x01e.github.io/2022/02/21/cc1/</id>
         <title>commons-collections1反序列化链分析</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2022/02/21/cc1/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2022/02/21/cc1/"/>
         <content type="html">&lt;h1 id=&#34;commons-collections1反序列化链分析&#34;&gt;&lt;a href=&#34;#commons-collections1反序列化链分析&#34; class=&#34;headerlink&#34; title=&#34;commons-collections1反序列化链分析&#34;&gt;&lt;/a&gt;commons-collections1反序列化链分析&lt;/h1&gt;&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近入了P牛的知识星球，打算搞Java安全这一块了，所以有了这一篇CC链的分析结果，从0到1学习java安全，在学习的路上碰到了不少坑，这里一起记录一下这几天的学习成果，用到的环境是jdk1.7以及&lt;a href=&#34;https://mvnrepository.com/artifact/commons-collections/commons-collections/3.1&#34;&gt;commons-collections3.1&lt;/a&gt;，这是我第一篇关于java安全的文章，我才疏学浅，希望师傅们多多指点&lt;/p&gt;
 &lt;h2 id=&#34;有关的类介绍&#34;&gt;&lt;a href=&#34;#有关的类介绍&#34; class=&#34;headerlink&#34; title=&#34;有关的类介绍&#34;&gt;&lt;/a&gt;有关的类介绍&lt;/h2&gt;&lt;h4 id=&#34;ConstantTransformer&#34;&gt;&lt;a href=&#34;#ConstantTransformer&#34; class=&#34;headerlink&#34; title=&#34;ConstantTransformer&#34;&gt;&lt;/a&gt;ConstantTransformer&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20220225142134781.png&#34; alt=&#34;image-20220225142134781&#34;&gt;&lt;/p&gt;
 &lt;p&gt;ConstantTransformer类实现了Transformer接口，其transform方法作用是获取一个对象类型&lt;/p&gt;
@@ -382,9 +385,9 @@
         <updated>2022-02-21T14:45:28.498Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2022/02/13/easyj4va/</id>
+        <id>https://ch0x01e.github.io/2022/02/13/easyj4va/</id>
         <title>从CTF题了解Servlet的线程安全问题</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2022/02/13/easyj4va/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2022/02/13/easyj4va/"/>
         <content type="html">&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;VNCTF2022_easyJ4va  源于前几天打的VNCTF，这题自己尝试做了一下午，感觉确实可以，就拿来复盘一下，比赛做一下午没做出来，这里直接拿他读出来的源码进行复现吧，如果有想学习的师傅可以加我公告里的qq来拿源码试着做一下&lt;/p&gt;
 &lt;h1 id=&#34;正文&#34;&gt;&lt;a href=&#34;#正文&#34; class=&#34;headerlink&#34; title=&#34;正文&#34;&gt;&lt;/a&gt;正文&lt;/h1&gt;&lt;h2 id=&#34;涉及知识点&#34;&gt;&lt;a href=&#34;#涉及知识点&#34; class=&#34;headerlink&#34; title=&#34;涉及知识点&#34;&gt;&lt;/a&gt;涉及知识点&lt;/h2&gt;&lt;p&gt;个人感觉其中获取key的过程涉及到Servlet的线程安全问题，这里具体可以看一下Y4师傅的文章，给出文章地址 &lt;a href=&#34;https://y4tacker.github.io/2022/02/03/year/2022/2/Servlet%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98/&#34;&gt;Servlet的线程安全问题&lt;/a&gt;，获取flag的过程涉及到java-Transient关键字的问题，这里给出文章地址  &lt;a href=&#34;https://blog.csdn.net/u010156024/article/details/48345257?utm_medium=distribute.wap_aggpage_search_result.none-task-blog-2~aggregatepage~first_rank_ecpm_v1~rank_v31_ecpm-1-48345257.wap_agg_so&amp;utm_term=volatile%E5%BA%8F%E5%88%97%E5%8C%96&#34;&gt;java-Transient关键字、Volatile关键字介绍和序列化、反序列化机制、单例类序列化&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;然后接下来具体看题吧&lt;/p&gt;
@@ -432,9 +435,9 @@
         <updated>2022-02-13T14:17:36.146Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2022/01/22/2022/</id>
+        <id>https://ch0x01e.github.io/2022/01/22/2022/</id>
         <title>2022年的个人计划&amp;小目标</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2022/01/22/2022/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2022/01/22/2022/"/>
         <content type="html">&lt;h1 id=&#34;2022个人计划-amp-目标🤞&#34;&gt;&lt;a href=&#34;#2022个人计划-amp-目标🤞&#34; class=&#34;headerlink&#34; title=&#34;2022个人计划&amp;amp;目标🤞&#34;&gt;&lt;/a&gt;2022个人计划&amp;amp;目标🤞&lt;/h1&gt;&lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;现在已经是上一年了，去年的目标貌似是在去年定的，哈哈哈，不知不觉已经入行一年多了，还是个脚本小子。&lt;/p&gt;
 &lt;p&gt;2021过去了 在这制定一下2022的小目标  以及对2021进行一个总结吧&lt;/p&gt;
 &lt;/div&gt;
@@ -456,9 +459,9 @@
         <updated>2022-01-22T13:41:18.174Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/11/12/yuanshenglei/</id>
+        <id>https://ch0x01e.github.io/2021/11/12/yuanshenglei/</id>
         <title>PHP原生类在CTF当中的应用🛴</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/11/12/yuanshenglei/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/11/12/yuanshenglei/"/>
         <content type="html">&lt;h1 id=&#34;PHP原生类的应用&#34;&gt;&lt;a href=&#34;#PHP原生类的应用&#34; class=&#34;headerlink&#34; title=&#34;PHP原生类的应用&#34;&gt;&lt;/a&gt;PHP原生类的应用&lt;/h1&gt;&lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;前几天打了浙江省赛，拿了个省二，明年努努力冲个省一。发现浙江省赛出了两题POP链，这就是为啥博客持续在更新反序列化的内容的原因哈哈哈(因为我两题都没解出来)，之前练了一下pop链的构造，现在来研究一下PHP原生类的利用&lt;/p&gt;
 &lt;p&gt;本篇文章总结于&lt;a href=&#34;https://blog.csdn.net/qq_38154820/article/details/121112935&#34;&gt;https://blog.csdn.net/qq_38154820/article/details/121112935&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
@@ -533,14 +536,14 @@
 &lt;p&gt;&lt;code&gt;Typecho_Db_Exception&lt;/code&gt;类在/var/Typecho/Db/Query.php中，这里有一个&lt;code&gt;//__toString()&lt;/code&gt;的注释，直接看__toString函数里的内容&lt;/p&gt;
 </content>
         <category term="web安全" />
-        <category term="CTF" />
         <category term="反序列化" />
+        <category term="CTF" />
         <updated>2021-11-12T04:25:11.814Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/11/11/pop/</id>
+        <id>https://ch0x01e.github.io/2021/11/11/pop/</id>
         <title>PHP反序列化之POP链构造🛴</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/11/11/pop/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/11/11/pop/"/>
         <content type="html">&lt;h1 id=&#34;PHP反序列化之pop链&#34;&gt;&lt;a href=&#34;#PHP反序列化之pop链&#34; class=&#34;headerlink&#34; title=&#34;PHP反序列化之pop链&#34;&gt;&lt;/a&gt;PHP反序列化之pop链&lt;/h1&gt;&lt;h2 id=&#34;POP链介绍&#34;&gt;&lt;a href=&#34;#POP链介绍&#34; class=&#34;headerlink&#34; title=&#34;POP链介绍&#34;&gt;&lt;/a&gt;POP链介绍&lt;/h2&gt;&lt;p&gt;POP 面向属性编程(Property-Oriented Programing) 常用于上层语言构造特定调用链的方法，与二进制利用中的面向返回编程（Return-Oriented Programing）的原理相似，都是从现有运行环境中寻找一系列的代码或者指令调用，然后根据需求构成一组连续的调用链,最终达到攻击者邪恶的目的&lt;/p&gt;
 &lt;p&gt;说的再具体一点就是 ROP 是通过栈溢出实现控制指令的执行流程，而我们的反序列化是通过控制对象的属性从而实现控制程序的执行流程，进而达成利用本身无害的代码进行有害操作的目的。&lt;/p&gt;
 &lt;h2 id=&#34;魔术方法介绍&#34;&gt;&lt;a href=&#34;#魔术方法介绍&#34; class=&#34;headerlink&#34; title=&#34;魔术方法介绍&#34;&gt;&lt;/a&gt;魔术方法介绍&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211110162148224.png&#34; alt=&#34;image-20211110162148224&#34;&gt;&lt;/p&gt;
@@ -602,14 +605,14 @@
 
 </content>
         <category term="web安全" />
-        <category term="CTF" />
         <category term="反序列化" />
+        <category term="CTF" />
         <updated>2021-11-11T05:43:54.944Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/10/25/BUUCTF/</id>
+        <id>https://ch0x01e.github.io/2021/10/25/BUUCTF/</id>
         <title>BUU题目练习</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/10/25/BUUCTF/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/10/25/BUUCTF/"/>
         <content type="html">&lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;2021.10.23打了浙江省省赛预赛，web全程坐牢&lt;/p&gt;
 &lt;p&gt;结果fmyyy师傅说都是基础题我绷不住了，决定继续刷题之路&lt;/p&gt;
 &lt;/div&gt;
@@ -1244,7 +1247,7 @@
 &lt;li&gt;修改nickname为nickname[]，数组绕过长度检测&lt;/li&gt;
 &lt;li&gt;修改nickname中的内容&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;我们可以可以不用反序列话，就能知道它反序列化后是什么，因为它是有规律的。&lt;br&gt;a:4:{s:5:“phone”;s:11:“11111111111”;s:5:“email”;s:11:“&lt;a href=&#34;mailto:&amp;#x31;&amp;#97;&amp;#50;&amp;#x73;&amp;#x40;&amp;#x71;&amp;#113;&amp;#x2e;&amp;#x63;&amp;#x6f;&amp;#109;&#34;&gt;&amp;#x31;&amp;#97;&amp;#50;&amp;#x73;&amp;#x40;&amp;#x71;&amp;#113;&amp;#x2e;&amp;#x63;&amp;#x6f;&amp;#109;&lt;/a&gt;”;s:8:“nickname”;s:3:“123”;s:5:“photo”;s:39:“upload/f3b94e88bd1bd325af6f62828c8785dd”;}&lt;br&gt;a:4指的是由一个数组序列化而来，并且有4个值。如果是对象的话，好像是把a改成了O。然后就是一个键值名，一个变量值：&lt;br&gt;s:5:”phone”;第一个键值名，是string类型的，长度为五，s:11:”11111111111”;第一个变量值，string类型，长度为11.这就是它的规律。如果我们在这个序列化字符串的后面，再加上一些字符，后面的字符是不会被反序列化的&lt;/p&gt;
+&lt;p&gt;我们可以可以不用反序列话，就能知道它反序列化后是什么，因为它是有规律的。&lt;br&gt;a:4:{s:5:“phone”;s:11:“11111111111”;s:5:“email”;s:11:“&lt;a href=&#34;mailto:&amp;#49;&amp;#x61;&amp;#50;&amp;#115;&amp;#64;&amp;#113;&amp;#x71;&amp;#x2e;&amp;#99;&amp;#111;&amp;#109;&#34;&gt;&amp;#49;&amp;#x61;&amp;#50;&amp;#115;&amp;#64;&amp;#113;&amp;#x71;&amp;#x2e;&amp;#99;&amp;#111;&amp;#109;&lt;/a&gt;”;s:8:“nickname”;s:3:“123”;s:5:“photo”;s:39:“upload/f3b94e88bd1bd325af6f62828c8785dd”;}&lt;br&gt;a:4指的是由一个数组序列化而来，并且有4个值。如果是对象的话，好像是把a改成了O。然后就是一个键值名，一个变量值：&lt;br&gt;s:5:”phone”;第一个键值名，是string类型的，长度为五，s:11:”11111111111”;第一个变量值，string类型，长度为11.这就是它的规律。如果我们在这个序列化字符串的后面，再加上一些字符，后面的字符是不会被反序列化的&lt;/p&gt;
 &lt;p&gt;我们的目的是将”;}s:5:”photo”;s:10:”config.php”;}插入序列化的字符串里面去，这个的长度为34，所以我们要挤出来34位，不然就成了nickname的值了。where会替换成hacker，长度加1，所以我们要构造34个where。然后去profile.php查看读取的内容。&lt;/p&gt;
 &lt;p&gt;重新解释一下:&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;原本应为&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;a:4:&amp;#123;s:5:&amp;quot;phone&amp;quot;;s:11:&amp;quot;11111111111&amp;quot;;s:5:&amp;quot;email&amp;quot;;s:11:&amp;quot;1a2s@qq.com&amp;quot;;s:8:&amp;quot;nickname&amp;quot;;s:3:&amp;quot;123&amp;quot;;s:5:&amp;quot;photo&amp;quot;;s:39:&amp;quot;upload/d41d8cd98f00b204e9800998ecf8427e&amp;quot;;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;我们想要插入&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;quot;;&amp;#125;s:5:&amp;quot;photo&amp;quot;;s:10:&amp;quot;config.php&amp;quot;;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;通过nickname插入&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#123;s:5:&amp;quot;phone&amp;quot;;s:11:&amp;quot;11111111111&amp;quot;;s:5:&amp;quot;email&amp;quot;;s:11:&amp;quot;1a2s@qq.com&amp;quot;;s:8:&amp;quot;nickname&amp;quot;;s:3:&amp;quot;&amp;quot;;&amp;#125;s:5:&amp;quot;photo&amp;quot;;s:10:&amp;quot;config.php&amp;quot;;&amp;#125;&amp;quot;;s:5:&amp;quot;photo&amp;quot;;s:39:&amp;quot;upload/d41d8cd98f00b204e9800998ecf8427e&amp;quot;;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;nickname多加了34个字符，需要通过where替换成hacker34次增加34个字符&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -1305,9 +1308,9 @@
         <updated>2021-10-25T13:05:21.279Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/10/21/st-013/</id>
+        <id>https://ch0x01e.github.io/2021/10/21/st-013/</id>
         <title>Struts2-013RCE漏洞复现(CVE-2013-1966)</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/10/21/st-013/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/10/21/st-013/"/>
         <content type="html">&lt;h1 id=&#34;Struts2-013RCE漏洞复现-CVE-2013-1966&#34;&gt;&lt;a href=&#34;#Struts2-013RCE漏洞复现-CVE-2013-1966&#34; class=&#34;headerlink&#34; title=&#34;Struts2-013RCE漏洞复现(CVE-2013-1966)&#34;&gt;&lt;/a&gt;Struts2-013RCE漏洞复现(CVE-2013-1966)&lt;/h1&gt;&lt;h1 id=&#34;影响版本&#34;&gt;&lt;a href=&#34;#影响版本&#34; class=&#34;headerlink&#34; title=&#34;影响版本&#34;&gt;&lt;/a&gt;&lt;strong&gt;影响版本&lt;/strong&gt;&lt;/h1&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;Apache Group Struts 2.0.0 - 2.3.14&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;漏洞描述&#34;&gt;&lt;a href=&#34;#漏洞描述&#34; class=&#34;headerlink&#34; title=&#34;漏洞描述&#34;&gt;&lt;/a&gt;漏洞描述&lt;/h1&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;CVE(CAN) ID: CVE-2013-1966&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Struts2 是第二代基于Model-View-Controller (MVC)模型的java企业级web应用框架。它是WebWork和Struts社区合并后的产物。&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Apache Struts2的s:a和s:url标签都提供了一个includeParams属性。此属性允许使用的值包括none、get、all。当该属性被设置为get或all时，Apache Struts2会将用户提交的参数值作为Ognl表达式执行。攻击者可以提交带有恶意的Ongl表达式，达到执行任意Java代码的目的。只要基于Apache Struts2开发的JSP代码中使用了url/a标签并且设置了includeParams属性为all或get，远程攻击者即可利用此漏执行任意命令。&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -1325,9 +1328,9 @@
         <updated>2021-10-21T06:42:56.655Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/10/21/phpmyadmin1/</id>
+        <id>https://ch0x01e.github.io/2021/10/21/phpmyadmin1/</id>
         <title>phpmyadmin 后台sql注入漏洞复现（CVE-2020-5504）</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/10/21/phpmyadmin1/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/10/21/phpmyadmin1/"/>
         <content type="html">&lt;h1 id=&#34;phpmyadmin-后台sql注入漏洞复现（CVE-2020-5504）&#34;&gt;&lt;a href=&#34;#phpmyadmin-后台sql注入漏洞复现（CVE-2020-5504）&#34; class=&#34;headerlink&#34; title=&#34;phpmyadmin 后台sql注入漏洞复现（CVE-2020-5504）&#34;&gt;&lt;/a&gt;phpmyadmin 后台sql注入漏洞复现（CVE-2020-5504）&lt;/h1&gt;&lt;h1 id=&#34;影响版本&#34;&gt;&lt;a href=&#34;#影响版本&#34; class=&#34;headerlink&#34; title=&#34;影响版本&#34;&gt;&lt;/a&gt;&lt;strong&gt;影响版本&lt;/strong&gt;&lt;/h1&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;Phpmyadmin &amp;lt;= 5.00&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Phpmyadmin &amp;lt;= 4.94&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;漏洞复现&#34;&gt;&lt;a href=&#34;#漏洞复现&#34; class=&#34;headerlink&#34; title=&#34;漏洞复现&#34;&gt;&lt;/a&gt;&lt;strong&gt;漏洞复现&lt;/strong&gt;&lt;/h1&gt;&lt;p&gt;复现地址:&lt;a href=&#34;http://vulfocus.fofa.so/&#34;&gt;http://vulfocus.fofa.so/&lt;/a&gt;&lt;/p&gt;
@@ -1346,9 +1349,9 @@
         <updated>2021-10-21T06:10:08.079Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/10/13/ATT&amp;CK1/</id>
+        <id>https://ch0x01e.github.io/2021/10/13/ATT&amp;CK1/</id>
         <title>ATT&amp;CK实战系列—红队实战（一）</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/10/13/ATT&amp;CK1/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/10/13/ATT&amp;CK1/"/>
         <content type="html">&lt;h1 id=&#34;信息搜集&#34;&gt;&lt;a href=&#34;#信息搜集&#34; class=&#34;headerlink&#34; title=&#34;信息搜集&#34;&gt;&lt;/a&gt;信息搜集&lt;/h1&gt;&lt;p&gt;namp扫描，发现存在80,3306端口&lt;/p&gt;
 &lt;p&gt;gobuster扫描，发现存在phpmyadmin和一个phpinfo.php&lt;/p&gt;
 &lt;p&gt;这里就一步带过了，实战的话没有这么简单&lt;/p&gt;
@@ -1417,9 +1420,9 @@
         <updated>2021-10-13T12:51:37.820Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/10/13/redTeam%E9%92%93%E9%B1%BC/</id>
+        <id>https://ch0x01e.github.io/2021/10/13/redTeam%E9%92%93%E9%B1%BC/</id>
         <title>红队钓鱼方式收集</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/10/13/redTeam%E9%92%93%E9%B1%BC/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/10/13/redTeam%E9%92%93%E9%B1%BC/"/>
         <content type="html">&lt;h1 id=&#34;红队钓鱼方式收集&#34;&gt;&lt;a href=&#34;#红队钓鱼方式收集&#34; class=&#34;headerlink&#34; title=&#34;红队钓鱼方式收集&#34;&gt;&lt;/a&gt;红队钓鱼方式收集&lt;/h1&gt;&lt;h2 id=&#34;Office钓鱼攻击&#34;&gt;&lt;a href=&#34;#Office钓鱼攻击&#34; class=&#34;headerlink&#34; title=&#34;Office钓鱼攻击&#34;&gt;&lt;/a&gt;Office钓鱼攻击&lt;/h2&gt;&lt;p&gt;CS生成Payload&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211013152256354.png&#34; alt=&#34;image-20211013152256354&#34;&gt;&lt;/p&gt;
 &lt;p&gt;复制好我们的宏代码以后，我们去word里新建一个文件，创建我们需要的宏，宏的位置需要改成当前文件&lt;/p&gt;
@@ -1453,9 +1456,9 @@
         <updated>2021-10-13T07:58:57.210Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/08/24/vulcms/</id>
+        <id>https://ch0x01e.github.io/2021/08/24/vulcms/</id>
         <title>vulnhub靶机练习-VULNCMS</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/08/24/vulcms/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/08/24/vulcms/"/>
         <content type="html">&lt;h1 id=&#34;vulnhub靶机练习-VULNCMS&#34;&gt;&lt;a href=&#34;#vulnhub靶机练习-VULNCMS&#34; class=&#34;headerlink&#34; title=&#34;vulnhub靶机练习-VULNCMS&#34;&gt;&lt;/a&gt;vulnhub靶机练习-VULNCMS&lt;/h1&gt;&lt;p&gt;靶机下载地址：&lt;a href=&#34;https://www.vulnhub.com/entry/vulncms-1,710/&#34;&gt;https://www.vulnhub.com/entry/vulncms-1,710/&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;Description&#34;&gt;&lt;a href=&#34;#Description&#34; class=&#34;headerlink&#34; title=&#34;Description&#34;&gt;&lt;/a&gt;Description&lt;/h2&gt;&lt;p&gt;This box is all about CMS as its name suggests. You need to enumerate the box, find the CMS, and exploit in order to gain access to other and finally get the user and root flag.&lt;/p&gt;
 &lt;p&gt;Hint: Proceed in the given order :P&lt;/p&gt;
@@ -1482,7 +1485,7 @@
 &lt;p&gt;额，我这里数据库连接不上，这第一个flag暂时找不出来，因为爆破账号密码的话，正确密码在数据库里&lt;/p&gt;
 &lt;h2 id=&#34;后渗透提权&#34;&gt;&lt;a href=&#34;#后渗透提权&#34; class=&#34;headerlink&#34; title=&#34;后渗透提权&#34;&gt;&lt;/a&gt;后渗透提权&lt;/h2&gt;&lt;p&gt;虽然第一个flag做不出来，第二个还是可以的，我们可以发现在/drupal/misc有个tyrell.pass，里面有tyrell的账号密码&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210824113603240.png&#34; alt=&#34;image-20210824113603240&#34;&gt;&lt;/p&gt;
-&lt;p&gt;使用ssh登陆  ssh &lt;a href=&#34;mailto:&amp;#116;&amp;#x79;&amp;#114;&amp;#x65;&amp;#x6c;&amp;#108;&amp;#64;&amp;#49;&amp;#57;&amp;#50;&amp;#46;&amp;#x31;&amp;#x36;&amp;#56;&amp;#46;&amp;#x31;&amp;#54;&amp;#x39;&amp;#46;&amp;#49;&amp;#52;&amp;#x33;&#34;&gt;&amp;#116;&amp;#x79;&amp;#114;&amp;#x65;&amp;#x6c;&amp;#108;&amp;#64;&amp;#49;&amp;#57;&amp;#50;&amp;#46;&amp;#x31;&amp;#x36;&amp;#56;&amp;#46;&amp;#x31;&amp;#54;&amp;#x39;&amp;#46;&amp;#49;&amp;#52;&amp;#x33;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;使用ssh登陆  ssh &lt;a href=&#34;mailto:&amp;#116;&amp;#x79;&amp;#114;&amp;#101;&amp;#108;&amp;#108;&amp;#64;&amp;#49;&amp;#x39;&amp;#50;&amp;#x2e;&amp;#x31;&amp;#54;&amp;#x38;&amp;#46;&amp;#x31;&amp;#x36;&amp;#x39;&amp;#x2e;&amp;#49;&amp;#x34;&amp;#x33;&#34;&gt;&amp;#116;&amp;#x79;&amp;#114;&amp;#101;&amp;#108;&amp;#108;&amp;#64;&amp;#49;&amp;#x39;&amp;#50;&amp;#x2e;&amp;#x31;&amp;#54;&amp;#x38;&amp;#46;&amp;#x31;&amp;#x36;&amp;#x39;&amp;#x2e;&amp;#49;&amp;#x34;&amp;#x33;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;登录成功之后使用sudo -l命令发现/bin/journalctl可以进行利用；&lt;br&gt;附上漏洞查询连接&lt;code&gt;https://gtfobins.github.io/&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210824113659688.png&#34; alt=&#34;image-20210824113659688&#34;&gt;&lt;/p&gt;
 &lt;p&gt;输入完命令即可获取root权限&lt;/p&gt;
@@ -1495,9 +1498,9 @@
         <updated>2021-08-24T02:27:42.775Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/08/23/Os-ByteSec/</id>
+        <id>https://ch0x01e.github.io/2021/08/23/Os-ByteSec/</id>
         <title>vulnhub靶机练习-OS-ByteSec</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/08/23/Os-ByteSec/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/08/23/Os-ByteSec/"/>
         <content type="html">&lt;h1 id=&#34;OS-ByteSec&#34;&gt;&lt;a href=&#34;#OS-ByteSec&#34; class=&#34;headerlink&#34; title=&#34;OS-ByteSec&#34;&gt;&lt;/a&gt;OS-ByteSec&lt;/h1&gt;&lt;h2 id=&#34;信息搜集&#34;&gt;&lt;a href=&#34;#信息搜集&#34; class=&#34;headerlink&#34; title=&#34;信息搜集&#34;&gt;&lt;/a&gt;信息搜集&lt;/h2&gt;&lt;p&gt;nmap -sV -sC -A 192.168.169.142   先探测一下靶机的端口开放的情况&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210823105431048.png&#34; alt=&#34;image-20210823105431048&#34;&gt;&lt;/p&gt;
 &lt;p&gt;发现开启了80 139 445 2525端口，其中80是http服务，2525是ssh，139和445是smb，访问网站首页，提示我们smb&lt;/p&gt;
@@ -1514,7 +1517,7 @@
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210823111649441.png&#34; alt=&#34;image-20210823111649441&#34;&gt;&lt;/p&gt;
 &lt;p&gt;user.cap里是一些包信息 ，使用aircrack-ng爆破，爆破得到 ESSID 的名字 blackjax KEY snowflake&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210823112110327.png&#34; alt=&#34;image-20210823112110327&#34;&gt;&lt;/p&gt;
-&lt;p&gt;然后登陆ssh  ssh -p 2525 &lt;a href=&#34;mailto:&amp;#x62;&amp;#x6c;&amp;#x61;&amp;#x63;&amp;#107;&amp;#x6a;&amp;#x61;&amp;#120;&amp;#x40;&amp;#x31;&amp;#x39;&amp;#x32;&amp;#46;&amp;#x31;&amp;#x36;&amp;#x38;&amp;#x2e;&amp;#x31;&amp;#54;&amp;#57;&amp;#46;&amp;#x31;&amp;#x34;&amp;#50;&#34;&gt;&amp;#x62;&amp;#x6c;&amp;#x61;&amp;#x63;&amp;#107;&amp;#x6a;&amp;#x61;&amp;#120;&amp;#x40;&amp;#x31;&amp;#x39;&amp;#x32;&amp;#46;&amp;#x31;&amp;#x36;&amp;#x38;&amp;#x2e;&amp;#x31;&amp;#54;&amp;#57;&amp;#46;&amp;#x31;&amp;#x34;&amp;#50;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;然后登陆ssh  ssh -p 2525 &lt;a href=&#34;mailto:&amp;#x62;&amp;#108;&amp;#x61;&amp;#99;&amp;#107;&amp;#106;&amp;#x61;&amp;#x78;&amp;#x40;&amp;#49;&amp;#57;&amp;#50;&amp;#x2e;&amp;#49;&amp;#x36;&amp;#56;&amp;#46;&amp;#x31;&amp;#x36;&amp;#57;&amp;#46;&amp;#49;&amp;#x34;&amp;#50;&#34;&gt;&amp;#x62;&amp;#108;&amp;#x61;&amp;#99;&amp;#107;&amp;#106;&amp;#x61;&amp;#x78;&amp;#x40;&amp;#49;&amp;#57;&amp;#50;&amp;#x2e;&amp;#49;&amp;#x36;&amp;#56;&amp;#46;&amp;#x31;&amp;#x36;&amp;#57;&amp;#46;&amp;#49;&amp;#x34;&amp;#50;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210823112153470.png&#34; alt=&#34;image-20210823112153470&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;后渗透提权&#34;&gt;&lt;a href=&#34;#后渗透提权&#34; class=&#34;headerlink&#34; title=&#34;后渗透提权&#34;&gt;&lt;/a&gt;后渗透提权&lt;/h2&gt;&lt;p&gt;我们这里使用suid提权，首先查找具有suid的文件&lt;/p&gt;
 &lt;p&gt;find / -perm -u=s -type f 2&amp;gt;/dev/null&lt;/p&gt;
@@ -1539,9 +1542,9 @@
         <updated>2021-08-23T02:50:05.859Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/08/22/OS-HACKNOS-2.1/</id>
+        <id>https://ch0x01e.github.io/2021/08/22/OS-HACKNOS-2.1/</id>
         <title>vulnhub靶机练习-HACKNOS-2.1</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/08/22/OS-HACKNOS-2.1/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/08/22/OS-HACKNOS-2.1/"/>
         <content type="html">&lt;h1 id=&#34;OS-HACKNOS-2-1&#34;&gt;&lt;a href=&#34;#OS-HACKNOS-2-1&#34; class=&#34;headerlink&#34; title=&#34;OS-HACKNOS-2.1&#34;&gt;&lt;/a&gt;OS-HACKNOS-2.1&lt;/h1&gt;&lt;h2 id=&#34;靶机安装&#34;&gt;&lt;a href=&#34;#靶机安装&#34; class=&#34;headerlink&#34; title=&#34;靶机安装&#34;&gt;&lt;/a&gt;靶机安装&lt;/h2&gt;&lt;p&gt;先把靶机设为NAT模式，开机时一直按shift，然后按e&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210822153841098.png&#34; alt=&#34;image-20210822153841098&#34;&gt;&lt;/p&gt;
 &lt;p&gt;把框内的东西改成rw singke init=/bin/bash，然后ctrl+x进入界面，ip a看一下当前网卡是ens33&lt;/p&gt;
@@ -1569,7 +1572,7 @@
 &lt;p&gt;我们来解密试试，这里把我们要解密的东西丢到一个文件里，然后使用john解密，字典在/var/share/wordlists/下，rockyou.txt，首次使用需要进行解压，解压命令 gzip -d rockyou.txt.gz&lt;/p&gt;
 &lt;p&gt;破解命令  john –format=md5crypt –wordlist=/usr/share/wordlists/rockyou.txt 666  这里666是自己创建的文件的名字&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210822124451419.png&#34; alt=&#34;image-20210822124451419&#34;&gt;&lt;/p&gt;
-&lt;p&gt;我们这里就直接知道了flag的账号密码，可以ssh登陆,ssh &lt;a href=&#34;mailto:&amp;#102;&amp;#x6c;&amp;#97;&amp;#x67;&amp;#x40;&amp;#x31;&amp;#x39;&amp;#x32;&amp;#46;&amp;#x31;&amp;#54;&amp;#x38;&amp;#x2e;&amp;#49;&amp;#54;&amp;#x39;&amp;#46;&amp;#49;&amp;#52;&amp;#x31;&#34;&gt;&amp;#102;&amp;#x6c;&amp;#97;&amp;#x67;&amp;#x40;&amp;#x31;&amp;#x39;&amp;#x32;&amp;#46;&amp;#x31;&amp;#54;&amp;#x38;&amp;#x2e;&amp;#49;&amp;#54;&amp;#x39;&amp;#46;&amp;#49;&amp;#52;&amp;#x31;&lt;/a&gt;,登陆成功&lt;/p&gt;
+&lt;p&gt;我们这里就直接知道了flag的账号密码，可以ssh登陆,ssh &lt;a href=&#34;mailto:&amp;#x66;&amp;#108;&amp;#97;&amp;#103;&amp;#x40;&amp;#49;&amp;#57;&amp;#x32;&amp;#46;&amp;#x31;&amp;#54;&amp;#x38;&amp;#x2e;&amp;#49;&amp;#54;&amp;#x39;&amp;#46;&amp;#x31;&amp;#52;&amp;#49;&#34;&gt;&amp;#x66;&amp;#108;&amp;#97;&amp;#103;&amp;#x40;&amp;#49;&amp;#57;&amp;#x32;&amp;#46;&amp;#x31;&amp;#54;&amp;#x38;&amp;#x2e;&amp;#49;&amp;#54;&amp;#x39;&amp;#46;&amp;#x31;&amp;#52;&amp;#49;&lt;/a&gt;,登陆成功&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210822124654454.png&#34; alt=&#34;image-20210822124654454&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;后渗透提权&#34;&gt;&lt;a href=&#34;#后渗透提权&#34; class=&#34;headerlink&#34; title=&#34;后渗透提权&#34;&gt;&lt;/a&gt;后渗透提权&lt;/h2&gt;&lt;p&gt;我们可以查看一下存在的用户,cat /etc/passwd|grep bash,顺便切换成bash&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210822124951829.png&#34; alt=&#34;image-20210822124951829&#34;&gt;&lt;/p&gt;
@@ -1600,9 +1603,9 @@
         <updated>2021-08-22T02:10:39.936Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/08/21/domdom/</id>
+        <id>https://ch0x01e.github.io/2021/08/21/domdom/</id>
         <title>vulnhub靶机练习-DomDom</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/08/21/domdom/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/08/21/domdom/"/>
         <content type="html">&lt;h1 id=&#34;vulnhub靶机练习-DomDom&#34;&gt;&lt;a href=&#34;#vulnhub靶机练习-DomDom&#34; class=&#34;headerlink&#34; title=&#34;vulnhub靶机练习-DomDom&#34;&gt;&lt;/a&gt;vulnhub靶机练习-DomDom&lt;/h1&gt;&lt;h2 id=&#34;信息搜集&#34;&gt;&lt;a href=&#34;#信息搜集&#34; class=&#34;headerlink&#34; title=&#34;信息搜集&#34;&gt;&lt;/a&gt;信息搜集&lt;/h2&gt;&lt;p&gt;nmap -sn  192.168.169.0/24  扫描当前网段，发现靶机ip是192.168.169.140&lt;/p&gt;
 &lt;p&gt;nmap -sV -A 192.168.169.140&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210821094254585.png&#34; alt=&#34;image-20210821094254585&#34;&gt;&lt;/p&gt;
@@ -1655,9 +1658,9 @@
         <updated>2021-08-21T01:38:19.517Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/08/20/trollcave-v1-2/</id>
+        <id>https://ch0x01e.github.io/2021/08/20/trollcave-v1-2/</id>
         <title>vulnhub靶机练习-trollcave-v1-2</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/08/20/trollcave-v1-2/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/08/20/trollcave-v1-2/"/>
         <content type="html">&lt;h1 id=&#34;vulhub靶场练习-trollcave-v1-2&#34;&gt;&lt;a href=&#34;#vulhub靶场练习-trollcave-v1-2&#34; class=&#34;headerlink&#34; title=&#34;vulhub靶场练习-trollcave-v1-2&#34;&gt;&lt;/a&gt;vulhub靶场练习-trollcave-v1-2&lt;/h1&gt;&lt;h2 id=&#34;信息搜集&#34;&gt;&lt;a href=&#34;#信息搜集&#34; class=&#34;headerlink&#34; title=&#34;信息搜集&#34;&gt;&lt;/a&gt;信息搜集&lt;/h2&gt;&lt;p&gt;首先对靶机进行信息搜集&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;nmap -sV -sC -A 192.168.169.139&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
@@ -1703,9 +1706,9 @@
         <updated>2021-08-20T11:10:56.417Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/08/20/Os-hackNos-1/</id>
+        <id>https://ch0x01e.github.io/2021/08/20/Os-hackNos-1/</id>
         <title>vulnhub靶机练习-Os-hackNos-1</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/08/20/Os-hackNos-1/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/08/20/Os-hackNos-1/"/>
         <content type="html">&lt;h1 id=&#34;vulnhub靶机练习-Os-hackNos-1&#34;&gt;&lt;a href=&#34;#vulnhub靶机练习-Os-hackNos-1&#34; class=&#34;headerlink&#34; title=&#34;vulnhub靶机练习-Os-hackNos-1&#34;&gt;&lt;/a&gt;vulnhub靶机练习-Os-hackNos-1&lt;/h1&gt;&lt;p&gt;靶机下载地址：&lt;a href=&#34;https://www.vulnhub.com/entry/hacknos-os-hacknos,401/&#34;&gt;https://www.vulnhub.com/entry/hacknos-os-hacknos,401/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;难度：容易-中级&lt;/p&gt;
 &lt;p&gt;Flag : 2个flag第一个用户和第二个 root&lt;/p&gt;
@@ -1779,9 +1782,9 @@
         <updated>2021-08-20T02:29:20.685Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/08/15/pboot/</id>
+        <id>https://ch0x01e.github.io/2021/08/15/pboot/</id>
         <title>PHP代码审计之Pbootcms代码审计</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/08/15/pboot/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/08/15/pboot/"/>
         <content type="html">&lt;h1 id=&#34;PHP代码审计之PbootCMS漏洞审计&#34;&gt;&lt;a href=&#34;#PHP代码审计之PbootCMS漏洞审计&#34; class=&#34;headerlink&#34; title=&#34;PHP代码审计之PbootCMS漏洞审计&#34;&gt;&lt;/a&gt;PHP代码审计之PbootCMS漏洞审计&lt;/h1&gt;&lt;h2 id=&#34;MVC的探索&#34;&gt;&lt;a href=&#34;#MVC的探索&#34; class=&#34;headerlink&#34; title=&#34;MVC的探索&#34;&gt;&lt;/a&gt;MVC的探索&lt;/h2&gt;&lt;p&gt;目录结构&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;PbootCMS-V1.2.1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ apps         应用程序&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ admin     后台模块&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ api       api模块&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ common    公共模块&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ home      前台模块&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ config       配置文件&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ config.php    配置文件&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ database.php  数据库配置文件&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ route.php     用户自定义路由规则&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ core         框架核心&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ function  框架公共函数库&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  │  ├─ handle.php 助手函数库1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  │  ├─ helper.php 助手函数库2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ template     html模板&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ admin.php    管理端入口文件&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ api.php      api入口文件&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ index.php    前端入口文件&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
@@ -1894,9 +1897,9 @@
         <updated>2021-08-15T11:17:52.993Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/08/09/dswdmsj/</id>
+        <id>https://ch0x01e.github.io/2021/08/09/dswdmsj/</id>
         <title>某代刷网代码审计</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/08/09/dswdmsj/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/08/09/dswdmsj/"/>
         <content type="html">&lt;p&gt;最近在学代码审计，逛了逛一些安全社区，发现了YanXia师傅写的一篇关于代刷网的代码审计，舔了个B脸问了YanXia师傅要了源码，因为网络上大部分代刷网源码都是有加密过的，我太菜了不会解密&lt;/p&gt;
 &lt;p&gt;今天使用的环境是Apache+PHP7.0n&lt;/p&gt;
 &lt;p&gt;首先使用Seay源代码审计系统，自动审计一下，发现大部分都是可能存在注入的，我们仔细看几个&lt;/p&gt;
@@ -1934,9 +1937,9 @@
         <updated>2021-08-09T03:14:55.564Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/08/07/bluecms/</id>
+        <id>https://ch0x01e.github.io/2021/08/07/bluecms/</id>
         <title>BlueCMS代码审计</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/08/07/bluecms/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/08/07/bluecms/"/>
         <content type="html">&lt;h1 id=&#34;Bluecms代码审计&#34;&gt;&lt;a href=&#34;#Bluecms代码审计&#34; class=&#34;headerlink&#34; title=&#34;Bluecms代码审计&#34;&gt;&lt;/a&gt;Bluecms代码审计&lt;/h1&gt;&lt;h2 id=&#34;Bluecms代码审计之union联合查询注入&#34;&gt;&lt;a href=&#34;#Bluecms代码审计之union联合查询注入&#34; class=&#34;headerlink&#34; title=&#34;Bluecms代码审计之union联合查询注入&#34;&gt;&lt;/a&gt;Bluecms代码审计之union联合查询注入&lt;/h2&gt;&lt;p&gt;先把我们的源码下载好，并且搭建好&lt;/p&gt;
 &lt;p&gt;打开我们的Seay源代码审计系统，把源码丢进去自动审计一下&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807101543726.png&#34; alt=&#34;image-20210807101543726&#34;&gt;&lt;/p&gt;
@@ -2016,9 +2019,9 @@
         <updated>2021-08-07T02:13:38.114Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/07/30/exp/</id>
+        <id>https://ch0x01e.github.io/2021/07/30/exp/</id>
         <title>个人exp编写练习</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/07/30/exp/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/07/30/exp/"/>
         <content type="html">&lt;h1 id=&#34;Exp编写&#34;&gt;&lt;a href=&#34;#Exp编写&#34; class=&#34;headerlink&#34; title=&#34;Exp编写&#34;&gt;&lt;/a&gt;Exp编写&lt;/h1&gt;&lt;h2 id=&#34;GET类型的SQL注入exp编写&#34;&gt;&lt;a href=&#34;#GET类型的SQL注入exp编写&#34; class=&#34;headerlink&#34; title=&#34;GET类型的SQL注入exp编写&#34;&gt;&lt;/a&gt;GET类型的SQL注入exp编写&lt;/h2&gt;&lt;p&gt;最近学了点Python基础，准备拿Python来作为以后编写exp&amp;amp;poc的语言&lt;/p&gt;
 &lt;p&gt;今天就拿了Sqli-labs第一关入手，这里是get类型的sql注入exp编写&lt;/p&gt;
 &lt;p&gt;具体的exp如下&lt;/p&gt;
@@ -2055,9 +2058,9 @@
         <updated>2021-07-30T10:01:25.403Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/07/23/ctfshowweb/</id>
+        <id>https://ch0x01e.github.io/2021/07/23/ctfshowweb/</id>
         <title>CTFSHOW之WEB入门1000题</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/07/23/ctfshowweb/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/07/23/ctfshowweb/"/>
         <content type="html">&lt;h1 id=&#34;web1&#34;&gt;&lt;a href=&#34;#web1&#34; class=&#34;headerlink&#34; title=&#34;web1&#34;&gt;&lt;/a&gt;web1&lt;/h1&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210723101944875.png&#34; alt=&#34;image-20210723101944875&#34;&gt;&lt;/p&gt;
 &lt;p&gt;右键查看源代码就出来了&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;e79b78ff-0134-4bd5-8427-5df9b427ba51&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -2124,7 +2127,7 @@
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;42986bfd-0cba-43c6-9be4-1a319be86d20&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;web15&#34;&gt;&lt;a href=&#34;#web15&#34; class=&#34;headerlink&#34; title=&#34;web15&#34;&gt;&lt;/a&gt;web15&lt;/h1&gt;&lt;p&gt;公开的信息比如邮箱，可能造成信息泄露，产生严重后果&lt;/p&gt;
-&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#x31;&amp;#49;&amp;#53;&amp;#x36;&amp;#54;&amp;#51;&amp;#x31;&amp;#57;&amp;#54;&amp;#x31;&amp;#64;&amp;#113;&amp;#x71;&amp;#46;&amp;#x63;&amp;#x6f;&amp;#x6d;&#34;&gt;&amp;#x31;&amp;#49;&amp;#53;&amp;#x36;&amp;#54;&amp;#51;&amp;#x31;&amp;#57;&amp;#54;&amp;#x31;&amp;#64;&amp;#113;&amp;#x71;&amp;#46;&amp;#x63;&amp;#x6f;&amp;#x6d;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;可以看到有一个邮箱&lt;a href=&#34;mailto:&amp;#x31;&amp;#49;&amp;#x35;&amp;#x36;&amp;#54;&amp;#51;&amp;#49;&amp;#57;&amp;#54;&amp;#49;&amp;#x40;&amp;#113;&amp;#113;&amp;#46;&amp;#99;&amp;#111;&amp;#109;&#34;&gt;&amp;#x31;&amp;#49;&amp;#x35;&amp;#x36;&amp;#54;&amp;#51;&amp;#49;&amp;#57;&amp;#54;&amp;#49;&amp;#x40;&amp;#113;&amp;#113;&amp;#46;&amp;#99;&amp;#111;&amp;#109;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;访问admin页面，admin作为账号 ，邮箱作为密码，发现不对&lt;/p&gt;
 &lt;p&gt;点忘记密码让我们填密保问题所在地  我们查一下这个qq，发现qq的资料显示在西安   之后密码被重置为admin7789，登陆即可&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;ctfshow&amp;#123;dd71f776-6d6a-4cde-9106-f8db89f56b8d&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -2507,9 +2510,9 @@
         <updated>2021-07-23T09:39:00.596Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/07/22/ctfshow/</id>
+        <id>https://ch0x01e.github.io/2021/07/22/ctfshow/</id>
         <title>CTFSHOW题目练习</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/07/22/ctfshow/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/07/22/ctfshow/"/>
         <content type="html">&lt;h1 id=&#34;ctfshow刷题记录&#34;&gt;&lt;a href=&#34;#ctfshow刷题记录&#34; class=&#34;headerlink&#34; title=&#34;ctfshow刷题记录&#34;&gt;&lt;/a&gt;ctfshow刷题记录&lt;/h1&gt;&lt;h2 id=&#34;WEB&#34;&gt;&lt;a href=&#34;#WEB&#34; class=&#34;headerlink&#34; title=&#34;WEB&#34;&gt;&lt;/a&gt;WEB&lt;/h2&gt;&lt;h3 id=&#34;web签到题&#34;&gt;&lt;a href=&#34;#web签到题&#34; class=&#34;headerlink&#34; title=&#34;web签到题&#34;&gt;&lt;/a&gt;web签到题&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210722120341702.png&#34; alt=&#34;image-20210722120341702&#34;&gt;&lt;/p&gt;
 &lt;p&gt;右键查看源代码&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210722120356029.png&#34; alt=&#34;image-20210722120356029&#34;&gt;&lt;/p&gt;
@@ -2654,9 +2657,9 @@
         <updated>2021-07-22T04:01:41.978Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/07/20/neiwang/</id>
+        <id>https://ch0x01e.github.io/2021/07/20/neiwang/</id>
         <title>内网渗透学习笔记</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/07/20/neiwang/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/07/20/neiwang/"/>
         <content type="html">&lt;h2 id=&#34;隧道技术SSH隧道&#34;&gt;&lt;a href=&#34;#隧道技术SSH隧道&#34; class=&#34;headerlink&#34; title=&#34;隧道技术SSH隧道&#34;&gt;&lt;/a&gt;隧道技术SSH隧道&lt;/h2&gt;&lt;p&gt;ssh 用于登录远程主机, 并且在远程主机上执行命令. 它的目的是替换 rlogin 和 rsh, 同时在不安全的网络之上, 两个互不 信任的主机之间, 提供加密的, 安全的通信连接. X11 连接和任意 TCP/IP 端口均可以通过此安全通道转发(forward).当用户通过 连接并登录主机 hostname 后, 根据所用的协议版本, 用户必须通过下述方法之一向远程主机证明他/她的身份:&lt;/p&gt;
 &lt;p&gt;参数&lt;/p&gt;
 &lt;p&gt;-a&lt;br&gt;   禁止转发认证代理的连接.&lt;/p&gt;
@@ -2799,9 +2802,9 @@
         <updated>2021-07-20T13:40:34.695Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/07/07/xhcms/</id>
+        <id>https://ch0x01e.github.io/2021/07/07/xhcms/</id>
         <title>熊海CMS1.0代码审计</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/07/07/xhcms/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/07/07/xhcms/"/>
         <content type="html">&lt;h1 id=&#34;熊海CMS1-0代码审计&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计&lt;/h1&gt;&lt;h2 id=&#34;熊海CMS1-0代码审计之反射型XSS&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之反射型XSS&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之反射型XSS&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之反射型XSS&lt;/h2&gt;&lt;p&gt;首先打开Seay审计系统，把我们的xhcms丢进去审计一下，我们这里是要找XSS，我们直接搜索关键字echo，看看有没有可以利用的地方&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805103255703.png&#34; alt=&#34;image-20210805103255703&#34;&gt;&lt;/p&gt;
 &lt;p&gt;我们这里审计漏洞必须同时满足参数可控和危险函数两个条件，echo就是一个，我们这里需要找可控变量，如果变量不可控我们没法对他进行利用，因为我们这里先看了一下index.php，发现他是通过传一个参数进去，自动拼接.php来访问files目录下的文件，所以这里可能会有文件包含漏洞，我们在下面会讲，这里只是先说明他前台的功能点应该都在files文件夹下，我们直接审计files目录下的文件即可&lt;/p&gt;
@@ -2887,9 +2890,9 @@
         <updated>2021-07-07T08:38:24.358Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/07/03/aynbms/</id>
+        <id>https://ch0x01e.github.io/2021/07/03/aynbms/</id>
         <title>CS免杀姿势分享(等待更新)</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/07/03/aynbms/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/07/03/aynbms/"/>
         <content type="html">&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main//img/16558686.png&#34; alt=&#34;16558686&#34;&gt;&lt;/p&gt;
 &lt;h1 id=&#34;Cobaltstrike简介&#34;&gt;&lt;a href=&#34;#Cobaltstrike简介&#34; class=&#34;headerlink&#34; title=&#34;Cobaltstrike简介&#34;&gt;&lt;/a&gt;Cobaltstrike简介&lt;/h1&gt;&lt;p&gt;CobatStrike是一款基于java编写的全平台多方协同后渗透攻击框架。CobaltStrike集成了端口转发、端口扫描、socket代理、提权、钓鱼、远控木马等功能。该工具几乎覆盖了APT攻击链中所需要用到的各个技术环节。&lt;/p&gt;
 &lt;h1 id=&#34;Cobaltstrike各种免杀姿势&#34;&gt;&lt;a href=&#34;#Cobaltstrike各种免杀姿势&#34; class=&#34;headerlink&#34; title=&#34;Cobaltstrike各种免杀姿势&#34;&gt;&lt;/a&gt;Cobaltstrike各种免杀姿势&lt;/h1&gt;&lt;h2 id=&#34;暗月内部系统的bypassAv&#34;&gt;&lt;a href=&#34;#暗月内部系统的bypassAv&#34; class=&#34;headerlink&#34; title=&#34;暗月内部系统的bypassAv&#34;&gt;&lt;/a&gt;暗月内部系统的bypassAv&lt;/h2&gt;&lt;p&gt;最近入了暗月的全栈渗透测试培训，里面有个内部系统，其中就有个bypassAv&lt;/p&gt;
@@ -2945,9 +2948,9 @@
         <updated>2021-07-03T15:12:06.941Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/07/01/aysql/</id>
+        <id>https://ch0x01e.github.io/2021/07/01/aysql/</id>
         <title>数据库基础学习</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/07/01/aysql/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/07/01/aysql/"/>
         <content type="html">&lt;h1 id=&#34;数据库学习01-Mysql数据库的基本操作&#34;&gt;&lt;a href=&#34;#数据库学习01-Mysql数据库的基本操作&#34; class=&#34;headerlink&#34; title=&#34;数据库学习01 Mysql数据库的基本操作&#34;&gt;&lt;/a&gt;数据库学习01 Mysql数据库的基本操作&lt;/h1&gt;&lt;h2 id=&#34;数据库的基本操作&#34;&gt;&lt;a href=&#34;#数据库的基本操作&#34; class=&#34;headerlink&#34; title=&#34;数据库的基本操作&#34;&gt;&lt;/a&gt;数据库的基本操作&lt;/h2&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;输入 mysql -uroot -p -P3306 -h127.0.0.1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;退出的三种方法&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    mysql &amp;gt; exit;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    mysql &amp;gt; quit;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    mysql &amp;gt; \q;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	增：create database db1;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	删：drop database db1;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	改：alter database db1 charset utf8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	查：show databases;#查看所有的数据库&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show create database db1;查看指定的数据库&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show status; -- 显示一些系统特定资源的信息，例如，正在运行的线程数量。 &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	desc tabl_name; 显示表结构，字段类型，主键，是否为空等属性，但不显示外键。&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show databases 查看这个mysql里面有多少个库&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show tables 查看当前库里面所有的表&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;     mysql&amp;gt; select password from user where user=&amp;#x27;root&amp;#x27;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;     查看当前数据库 里面的表user 用户为root的密码&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;数据库学习02-Mysql数据库数据表的操作&#34;&gt;&lt;a href=&#34;#数据库学习02-Mysql数据库数据表的操作&#34; class=&#34;headerlink&#34; title=&#34;数据库学习02 Mysql数据库数据表的操作&#34;&gt;&lt;/a&gt;数据库学习02 Mysql数据库数据表的操作&lt;/h1&gt;&lt;h2 id=&#34;1、查看表结构&#34;&gt;&lt;a href=&#34;#1、查看表结构&#34; class=&#34;headerlink&#34; title=&#34;1、查看表结构&#34;&gt;&lt;/a&gt;1、查看表结构&lt;/h2&gt;&lt;figure class=&#34;highlight sql&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;desc&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;DESCRIBE&lt;/span&gt; 表名;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -3118,9 +3121,9 @@
         <updated>2021-07-01T13:17:48.816Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/06/18/pikachu/</id>
+        <id>https://ch0x01e.github.io/2021/06/18/pikachu/</id>
         <title>pikachu靶场部分通关手册(持续更新中)</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/06/18/pikachu/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/06/18/pikachu/"/>
         <content type="html">&lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;最近发现，之前学的各种东西已经比较生疏了，所以重新来通关一个靶场来回忆一下&lt;/p&gt;
 &lt;/div&gt;
 
@@ -3275,9 +3278,9 @@
         <updated>2021-06-18T12:52:44.113Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/06/16/c++txlks/</id>
+        <id>https://ch0x01e.github.io/2021/06/16/c++txlks/</id>
         <title>C++通讯录课设寻求帮助中</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/06/16/c++txlks/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/06/16/c++txlks/"/>
         <content type="html">&lt;p&gt;最近在忙着数据结构的课设，我的课设是通讯录的制作，就差最后一个load()函数从外部导入数据到程序，遇到问题了，有没有大佬能帮俺看看&lt;/p&gt;
 &lt;p&gt;设计目的：用〈〈数据结构〉〉中的双向链表作数据结构，结合C语言基本知识。编写一个通讯录管理系统。以把所学数据结构知识应用到实际软件开发中去。&lt;/p&gt;
 &lt;p&gt;设计内容：本系统应完成一下几方面的功能：&lt;/p&gt;
@@ -3298,9 +3301,9 @@
         <updated>2021-06-16T13:15:23.277Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/06/08/wangluoxieyi/</id>
+        <id>https://ch0x01e.github.io/2021/06/08/wangluoxieyi/</id>
         <title>网络协议学习笔记</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/06/08/wangluoxieyi/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/06/08/wangluoxieyi/"/>
         <content type="html">&lt;h1 id=&#34;为什么要学习网络协议&#34;&gt;&lt;a href=&#34;#为什么要学习网络协议&#34; class=&#34;headerlink&#34; title=&#34;为什么要学习网络协议&#34;&gt;&lt;/a&gt;为什么要学习网络协议&lt;/h1&gt;&lt;p&gt;互联网、移动互联网、物联网，都离不开网络协议：&lt;/p&gt;
 &lt;p&gt;最熟悉的网络协议：HTTP&lt;/p&gt;
 &lt;p&gt;为了满足各种需求，有各式各样的网络协议（HTTPS、SMTP、MQTT、RTMP等）&lt;/p&gt;
@@ -3570,9 +3573,9 @@
         <updated>2021-06-08T09:58:48.000Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/</id>
+        <id>https://ch0x01e.github.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/</id>
         <title>SQL注入笔记</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/"/>
         <content type="html">&lt;h1 id=&#34;简介&#34;&gt;&lt;a href=&#34;#简介&#34; class=&#34;headerlink&#34; title=&#34;简介:&#34;&gt;&lt;/a&gt;简介:&lt;/h1&gt;&lt;h2 id=&#34;SQL注入漏洞产生的原因&#34;&gt;&lt;a href=&#34;#SQL注入漏洞产生的原因&#34; class=&#34;headerlink&#34; title=&#34;SQL注入漏洞产生的原因&#34;&gt;&lt;/a&gt;SQL注入漏洞产生的原因&lt;/h2&gt;&lt;p&gt;SQL Injection&lt;br&gt;程序员在编写代码的时候，没有对用户输入数据的合法性进行判断，使应用程序存在安全隐患&lt;br&gt;用户可以提交一段 数据库查询代码，根据程序返回的结果，获得某些他想得知的 数据或 进行数据库操作&lt;br&gt;##SQL语句&lt;/p&gt;
 &lt;figure class=&#34;highlight sql&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;查询： &lt;span class=&#34;keyword&#34;&gt;SELECT&lt;/span&gt; statement &lt;span class=&#34;keyword&#34;&gt;FROM&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;WHERE&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;condition&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;删除记录： &lt;span class=&#34;keyword&#34;&gt;DELETE&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;FROM&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;WHERE&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;condition&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;更新记录： UPDATE &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;SET&lt;/span&gt; field&lt;span class=&#34;operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;keyword&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;WHERE&lt;/span&gt; condtion&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;添加记录： &lt;span class=&#34;keyword&#34;&gt;INSERT&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;INTO&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; field &lt;span class=&#34;keyword&#34;&gt;VALUES&lt;/span&gt;(&lt;span class=&#34;keyword&#34;&gt;values&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
@@ -3689,17 +3692,17 @@
         <updated>2021-06-07T10:24:59.678Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/05/31/introduce/</id>
+        <id>https://ch0x01e.github.io/2021/05/31/introduce/</id>
         <title>ch1e的自述</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/05/31/introduce/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/05/31/introduce/"/>
         <content type="html">&lt;h1 id=&#34;自我介绍&#34;&gt;&lt;a href=&#34;#自我介绍&#34; class=&#34;headerlink&#34; title=&#34;自我介绍&#34;&gt;&lt;/a&gt;自我介绍&lt;/h1&gt;&lt;p&gt;我是一个普通本科院校的大一学生，计算机科学与技术专业，对信息安全接触时间不到一年，从小就想当一名{牛逼哄哄^shayebuhui}的白帽黑客，这个愿望也在大一得到了实现，我加入了学校的信息安全协会，成为了一名啥也不是的小弟，在这看到了各种大佬。我目前正在学习信息安全中的Web方向，对网站二次开发，PHP，Html，Css，C++以及C都有所涉猎，未来会继续朝着这个方向努力，并且扩大我的学习领域，目标是成为俺SSN大哥那样的全栈爷。&lt;/p&gt;
 </content>
         <updated>2021-05-31T11:54:11.377Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/05/31/jihua/</id>
+        <id>https://ch0x01e.github.io/2021/05/31/jihua/</id>
         <title>ch1e的个人学习计划&amp;&amp;对自己的评价😑</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/05/31/jihua/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/05/31/jihua/"/>
         <content type="html">&lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;这里是ch1e的个人学习计划表&lt;/p&gt;
 &lt;p&gt;置顶了一年，发现有些东西根本完不成，可能是自己太菜了&lt;/p&gt;
 &lt;/div&gt;

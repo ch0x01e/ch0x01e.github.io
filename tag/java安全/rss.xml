@@ -2,7 +2,7 @@
 <rss version="2.0">
     <channel>
         <title>ch1e的随笔 • Posts by &#34;java安全&#34; tag</title>
-        <link>https://ch1e.gitee.io</link>
+        <link>https://ch0x01e.github.io</link>
         <description></description>
         <language>zh-CN</language>
         <pubDate>Mon, 28 Feb 2022 19:51:29 +0800</pubDate>
@@ -12,11 +12,11 @@
         <category>免杀</category>
         <category>渗透测试</category>
         <category>数据库</category>
-        <category>C++</category>
         <category>代码审计</category>
-        <category>CTF</category>
+        <category>C++</category>
         <category>Java安全</category>
         <category>反序列化</category>
+        <category>CTF</category>
         <category>漏洞复现</category>
         <category>SQL注入</category>
         <category>红队钓鱼</category>
@@ -24,9 +24,9 @@
         <category>内网渗透</category>
         <category>网络协议</category>
         <item>
-            <guid isPermalink="true">https://ch1e.gitee.io/2022/02/28/cc6/</guid>
+            <guid isPermalink="true">https://ch0x01e.github.io/2022/02/28/cc6/</guid>
             <title>commons-collections6反序列化链分析</title>
-            <link>https://ch1e.gitee.io/2022/02/28/cc6/</link>
+            <link>https://ch0x01e.github.io/2022/02/28/cc6/</link>
             <category>web安全</category>
             <category>Java安全</category>
             <category>反序列化</category>
@@ -63,12 +63,15 @@
 
 
 &lt;h2 id=&#34;疑惑点&#34;&gt;&lt;a href=&#34;#疑惑点&#34; class=&#34;headerlink&#34; title=&#34;疑惑点&#34;&gt;&lt;/a&gt;疑惑点&lt;/h2&gt;&lt;p&gt;这里的话，上面的poc里为了成功执行，使用了lazyMap.remove(“aaa”);但是其实我在想，我们的目的是调用LazyMap的get方法，里面进入if的条件是当前lazyMap对象的map属性中不能有key，那我们为什么要去使用lazyMap的remove，而不是使用map.remove呢，这里我尝试了一下，使用map.remove貌似也能执行？这先丢着，希望有会的师傅可以指导我一下&lt;/p&gt;
+&lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;这里解决了，还得是Y4哥哥猛啊&lt;/p&gt;
+&lt;p&gt;大概意思就是，LazyMap是继承了AbstractMapDecorator类，在AbstractMapDecorator类中有写remove方法，但是在LazyMap中没有写，他是使用的父类的remove，父类的remove其实是返回map.remove，所以上面我说的为什么不去找map属性的而是找本身的remove，一切都可以解释了&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ch0x01e/image@main/img/image-20220301204819166.png&#34; alt=&#34;image-20220301204819166&#34;&gt;&lt;/p&gt;
+&lt;/div&gt;
  ]]></description>
         </item>
         <item>
-            <guid isPermalink="true">https://ch1e.gitee.io/2022/02/26/cc3/</guid>
+            <guid isPermalink="true">https://ch0x01e.github.io/2022/02/26/cc3/</guid>
             <title>commons-collections3反序列化链分析</title>
-            <link>https://ch1e.gitee.io/2022/02/26/cc3/</link>
+            <link>https://ch0x01e.github.io/2022/02/26/cc3/</link>
             <category>web安全</category>
             <category>Java安全</category>
             <category>反序列化</category>
@@ -172,9 +175,9 @@
  ]]></description>
         </item>
         <item>
-            <guid isPermalink="true">https://ch1e.gitee.io/2022/02/21/cc1/</guid>
+            <guid isPermalink="true">https://ch0x01e.github.io/2022/02/21/cc1/</guid>
             <title>commons-collections1反序列化链分析</title>
-            <link>https://ch1e.gitee.io/2022/02/21/cc1/</link>
+            <link>https://ch0x01e.github.io/2022/02/21/cc1/</link>
             <category>web安全</category>
             <category>Java安全</category>
             <category>反序列化</category>

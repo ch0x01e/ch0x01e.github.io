@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://ch1e.gitee.io</id>
+    <id>https://ch0x01e.github.io</id>
     <title>ch1e的随笔 • Posts by &#34;渗透测试&#34; tag</title>
-    <link href="https://ch1e.gitee.io" />
+    <link href="https://ch0x01e.github.io" />
     <updated>2021-08-15T11:17:52.993Z</updated>
     <category term="靶场练习" />
     <category term="web安全" />
     <category term="免杀" />
     <category term="渗透测试" />
     <category term="数据库" />
-    <category term="C++" />
     <category term="代码审计" />
-    <category term="CTF" />
+    <category term="C++" />
     <category term="Java安全" />
     <category term="反序列化" />
+    <category term="CTF" />
     <category term="漏洞复现" />
     <category term="SQL注入" />
     <category term="红队钓鱼" />
@@ -21,9 +21,9 @@
     <category term="内网渗透" />
     <category term="网络协议" />
     <entry>
-        <id>https://ch1e.gitee.io/2021/08/15/pboot/</id>
+        <id>https://ch0x01e.github.io/2021/08/15/pboot/</id>
         <title>PHP代码审计之Pbootcms代码审计</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/08/15/pboot/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/08/15/pboot/"/>
         <content type="html">&lt;h1 id=&#34;PHP代码审计之PbootCMS漏洞审计&#34;&gt;&lt;a href=&#34;#PHP代码审计之PbootCMS漏洞审计&#34; class=&#34;headerlink&#34; title=&#34;PHP代码审计之PbootCMS漏洞审计&#34;&gt;&lt;/a&gt;PHP代码审计之PbootCMS漏洞审计&lt;/h1&gt;&lt;h2 id=&#34;MVC的探索&#34;&gt;&lt;a href=&#34;#MVC的探索&#34; class=&#34;headerlink&#34; title=&#34;MVC的探索&#34;&gt;&lt;/a&gt;MVC的探索&lt;/h2&gt;&lt;p&gt;目录结构&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;PbootCMS-V1.2.1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ apps         应用程序&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ admin     后台模块&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ api       api模块&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ common    公共模块&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ home      前台模块&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ config       配置文件&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ config.php    配置文件&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ database.php  数据库配置文件&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ route.php     用户自定义路由规则&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ core         框架核心&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  ├─ function  框架公共函数库&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  │  ├─ handle.php 助手函数库1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;│  │  ├─ helper.php 助手函数库2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ template     html模板&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ admin.php    管理端入口文件&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ api.php      api入口文件&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;├─ index.php    前端入口文件&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
@@ -136,9 +136,9 @@
         <updated>2021-08-15T11:17:52.993Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/08/09/dswdmsj/</id>
+        <id>https://ch0x01e.github.io/2021/08/09/dswdmsj/</id>
         <title>某代刷网代码审计</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/08/09/dswdmsj/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/08/09/dswdmsj/"/>
         <content type="html">&lt;p&gt;最近在学代码审计，逛了逛一些安全社区，发现了YanXia师傅写的一篇关于代刷网的代码审计，舔了个B脸问了YanXia师傅要了源码，因为网络上大部分代刷网源码都是有加密过的，我太菜了不会解密&lt;/p&gt;
 &lt;p&gt;今天使用的环境是Apache+PHP7.0n&lt;/p&gt;
 &lt;p&gt;首先使用Seay源代码审计系统，自动审计一下，发现大部分都是可能存在注入的，我们仔细看几个&lt;/p&gt;
@@ -176,9 +176,9 @@
         <updated>2021-08-09T03:14:55.564Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/08/07/bluecms/</id>
+        <id>https://ch0x01e.github.io/2021/08/07/bluecms/</id>
         <title>BlueCMS代码审计</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/08/07/bluecms/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/08/07/bluecms/"/>
         <content type="html">&lt;h1 id=&#34;Bluecms代码审计&#34;&gt;&lt;a href=&#34;#Bluecms代码审计&#34; class=&#34;headerlink&#34; title=&#34;Bluecms代码审计&#34;&gt;&lt;/a&gt;Bluecms代码审计&lt;/h1&gt;&lt;h2 id=&#34;Bluecms代码审计之union联合查询注入&#34;&gt;&lt;a href=&#34;#Bluecms代码审计之union联合查询注入&#34; class=&#34;headerlink&#34; title=&#34;Bluecms代码审计之union联合查询注入&#34;&gt;&lt;/a&gt;Bluecms代码审计之union联合查询注入&lt;/h2&gt;&lt;p&gt;先把我们的源码下载好，并且搭建好&lt;/p&gt;
 &lt;p&gt;打开我们的Seay源代码审计系统，把源码丢进去自动审计一下&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807101543726.png&#34; alt=&#34;image-20210807101543726&#34;&gt;&lt;/p&gt;
@@ -258,9 +258,9 @@
         <updated>2021-08-07T02:13:38.114Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/07/20/neiwang/</id>
+        <id>https://ch0x01e.github.io/2021/07/20/neiwang/</id>
         <title>内网渗透学习笔记</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/07/20/neiwang/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/07/20/neiwang/"/>
         <content type="html">&lt;h2 id=&#34;隧道技术SSH隧道&#34;&gt;&lt;a href=&#34;#隧道技术SSH隧道&#34; class=&#34;headerlink&#34; title=&#34;隧道技术SSH隧道&#34;&gt;&lt;/a&gt;隧道技术SSH隧道&lt;/h2&gt;&lt;p&gt;ssh 用于登录远程主机, 并且在远程主机上执行命令. 它的目的是替换 rlogin 和 rsh, 同时在不安全的网络之上, 两个互不 信任的主机之间, 提供加密的, 安全的通信连接. X11 连接和任意 TCP/IP 端口均可以通过此安全通道转发(forward).当用户通过 连接并登录主机 hostname 后, 根据所用的协议版本, 用户必须通过下述方法之一向远程主机证明他/她的身份:&lt;/p&gt;
 &lt;p&gt;参数&lt;/p&gt;
 &lt;p&gt;-a&lt;br&gt;   禁止转发认证代理的连接.&lt;/p&gt;
@@ -403,9 +403,9 @@
         <updated>2021-07-20T13:40:34.695Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/07/07/xhcms/</id>
+        <id>https://ch0x01e.github.io/2021/07/07/xhcms/</id>
         <title>熊海CMS1.0代码审计</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/07/07/xhcms/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/07/07/xhcms/"/>
         <content type="html">&lt;h1 id=&#34;熊海CMS1-0代码审计&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计&lt;/h1&gt;&lt;h2 id=&#34;熊海CMS1-0代码审计之反射型XSS&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之反射型XSS&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之反射型XSS&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之反射型XSS&lt;/h2&gt;&lt;p&gt;首先打开Seay审计系统，把我们的xhcms丢进去审计一下，我们这里是要找XSS，我们直接搜索关键字echo，看看有没有可以利用的地方&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210805103255703.png&#34; alt=&#34;image-20210805103255703&#34;&gt;&lt;/p&gt;
 &lt;p&gt;我们这里审计漏洞必须同时满足参数可控和危险函数两个条件，echo就是一个，我们这里需要找可控变量，如果变量不可控我们没法对他进行利用，因为我们这里先看了一下index.php，发现他是通过传一个参数进去，自动拼接.php来访问files目录下的文件，所以这里可能会有文件包含漏洞，我们在下面会讲，这里只是先说明他前台的功能点应该都在files文件夹下，我们直接审计files目录下的文件即可&lt;/p&gt;
@@ -491,9 +491,9 @@
         <updated>2021-07-07T08:38:24.358Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/07/03/aynbms/</id>
+        <id>https://ch0x01e.github.io/2021/07/03/aynbms/</id>
         <title>CS免杀姿势分享(等待更新)</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/07/03/aynbms/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/07/03/aynbms/"/>
         <content type="html">&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main//img/16558686.png&#34; alt=&#34;16558686&#34;&gt;&lt;/p&gt;
 &lt;h1 id=&#34;Cobaltstrike简介&#34;&gt;&lt;a href=&#34;#Cobaltstrike简介&#34; class=&#34;headerlink&#34; title=&#34;Cobaltstrike简介&#34;&gt;&lt;/a&gt;Cobaltstrike简介&lt;/h1&gt;&lt;p&gt;CobatStrike是一款基于java编写的全平台多方协同后渗透攻击框架。CobaltStrike集成了端口转发、端口扫描、socket代理、提权、钓鱼、远控木马等功能。该工具几乎覆盖了APT攻击链中所需要用到的各个技术环节。&lt;/p&gt;
 &lt;h1 id=&#34;Cobaltstrike各种免杀姿势&#34;&gt;&lt;a href=&#34;#Cobaltstrike各种免杀姿势&#34; class=&#34;headerlink&#34; title=&#34;Cobaltstrike各种免杀姿势&#34;&gt;&lt;/a&gt;Cobaltstrike各种免杀姿势&lt;/h1&gt;&lt;h2 id=&#34;暗月内部系统的bypassAv&#34;&gt;&lt;a href=&#34;#暗月内部系统的bypassAv&#34; class=&#34;headerlink&#34; title=&#34;暗月内部系统的bypassAv&#34;&gt;&lt;/a&gt;暗月内部系统的bypassAv&lt;/h2&gt;&lt;p&gt;最近入了暗月的全栈渗透测试培训，里面有个内部系统，其中就有个bypassAv&lt;/p&gt;

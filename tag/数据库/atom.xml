@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://ch1e.gitee.io</id>
+    <id>https://ch0x01e.github.io</id>
     <title>ch1e的随笔 • Posts by &#34;数据库&#34; tag</title>
-    <link href="https://ch1e.gitee.io" />
+    <link href="https://ch0x01e.github.io" />
     <updated>2021-07-01T13:17:48.816Z</updated>
     <category term="靶场练习" />
     <category term="web安全" />
     <category term="免杀" />
     <category term="渗透测试" />
     <category term="数据库" />
-    <category term="C++" />
     <category term="代码审计" />
-    <category term="CTF" />
+    <category term="C++" />
     <category term="Java安全" />
     <category term="反序列化" />
+    <category term="CTF" />
     <category term="漏洞复现" />
     <category term="SQL注入" />
     <category term="红队钓鱼" />
@@ -21,9 +21,9 @@
     <category term="内网渗透" />
     <category term="网络协议" />
     <entry>
-        <id>https://ch1e.gitee.io/2021/07/01/aysql/</id>
+        <id>https://ch0x01e.github.io/2021/07/01/aysql/</id>
         <title>数据库基础学习</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/07/01/aysql/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/07/01/aysql/"/>
         <content type="html">&lt;h1 id=&#34;数据库学习01-Mysql数据库的基本操作&#34;&gt;&lt;a href=&#34;#数据库学习01-Mysql数据库的基本操作&#34; class=&#34;headerlink&#34; title=&#34;数据库学习01 Mysql数据库的基本操作&#34;&gt;&lt;/a&gt;数据库学习01 Mysql数据库的基本操作&lt;/h1&gt;&lt;h2 id=&#34;数据库的基本操作&#34;&gt;&lt;a href=&#34;#数据库的基本操作&#34; class=&#34;headerlink&#34; title=&#34;数据库的基本操作&#34;&gt;&lt;/a&gt;数据库的基本操作&lt;/h2&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;输入 mysql -uroot -p -P3306 -h127.0.0.1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;退出的三种方法&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    mysql &amp;gt; exit;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    mysql &amp;gt; quit;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    mysql &amp;gt; \q;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	增：create database db1;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	删：drop database db1;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	改：alter database db1 charset utf8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	查：show databases;#查看所有的数据库&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show create database db1;查看指定的数据库&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show status; -- 显示一些系统特定资源的信息，例如，正在运行的线程数量。 &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	desc tabl_name; 显示表结构，字段类型，主键，是否为空等属性，但不显示外键。&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show databases 查看这个mysql里面有多少个库&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	show tables 查看当前库里面所有的表&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;     mysql&amp;gt; select password from user where user=&amp;#x27;root&amp;#x27;;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;     查看当前数据库 里面的表user 用户为root的密码&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;h1 id=&#34;数据库学习02-Mysql数据库数据表的操作&#34;&gt;&lt;a href=&#34;#数据库学习02-Mysql数据库数据表的操作&#34; class=&#34;headerlink&#34; title=&#34;数据库学习02 Mysql数据库数据表的操作&#34;&gt;&lt;/a&gt;数据库学习02 Mysql数据库数据表的操作&lt;/h1&gt;&lt;h2 id=&#34;1、查看表结构&#34;&gt;&lt;a href=&#34;#1、查看表结构&#34; class=&#34;headerlink&#34; title=&#34;1、查看表结构&#34;&gt;&lt;/a&gt;1、查看表结构&lt;/h2&gt;&lt;figure class=&#34;highlight sql&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;desc&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;DESCRIBE&lt;/span&gt; 表名;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -194,9 +194,9 @@
         <updated>2021-07-01T13:17:48.816Z</updated>
     </entry>
     <entry>
-        <id>https://ch1e.gitee.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/</id>
+        <id>https://ch0x01e.github.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/</id>
         <title>SQL注入笔记</title>
-        <link rel="alternate" href="https://ch1e.gitee.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/"/>
+        <link rel="alternate" href="https://ch0x01e.github.io/2021/06/07/sql%E6%B3%A8%E5%85%A5/"/>
         <content type="html">&lt;h1 id=&#34;简介&#34;&gt;&lt;a href=&#34;#简介&#34; class=&#34;headerlink&#34; title=&#34;简介:&#34;&gt;&lt;/a&gt;简介:&lt;/h1&gt;&lt;h2 id=&#34;SQL注入漏洞产生的原因&#34;&gt;&lt;a href=&#34;#SQL注入漏洞产生的原因&#34; class=&#34;headerlink&#34; title=&#34;SQL注入漏洞产生的原因&#34;&gt;&lt;/a&gt;SQL注入漏洞产生的原因&lt;/h2&gt;&lt;p&gt;SQL Injection&lt;br&gt;程序员在编写代码的时候，没有对用户输入数据的合法性进行判断，使应用程序存在安全隐患&lt;br&gt;用户可以提交一段 数据库查询代码，根据程序返回的结果，获得某些他想得知的 数据或 进行数据库操作&lt;br&gt;##SQL语句&lt;/p&gt;
 &lt;figure class=&#34;highlight sql&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;查询： &lt;span class=&#34;keyword&#34;&gt;SELECT&lt;/span&gt; statement &lt;span class=&#34;keyword&#34;&gt;FROM&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;WHERE&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;condition&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;删除记录： &lt;span class=&#34;keyword&#34;&gt;DELETE&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;FROM&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;WHERE&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;condition&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;更新记录： UPDATE &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;SET&lt;/span&gt; field&lt;span class=&#34;operator&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;keyword&#34;&gt;value&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;WHERE&lt;/span&gt; condtion&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;添加记录： &lt;span class=&#34;keyword&#34;&gt;INSERT&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;INTO&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;table&lt;/span&gt; field &lt;span class=&#34;keyword&#34;&gt;VALUES&lt;/span&gt;(&lt;span class=&#34;keyword&#34;&gt;values&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
