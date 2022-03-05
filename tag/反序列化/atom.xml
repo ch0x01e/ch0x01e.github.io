@@ -11,9 +11,9 @@
     <category term="数据库" />
     <category term="代码审计" />
     <category term="C++" />
+    <category term="CTF" />
     <category term="Java安全" />
     <category term="反序列化" />
-    <category term="CTF" />
     <category term="漏洞复现" />
     <category term="SQL注入" />
     <category term="红队钓鱼" />
@@ -568,8 +568,8 @@
 &lt;p&gt;&lt;code&gt;Typecho_Db_Exception&lt;/code&gt;类在/var/Typecho/Db/Query.php中，这里有一个&lt;code&gt;//__toString()&lt;/code&gt;的注释，直接看__toString函数里的内容&lt;/p&gt;
 </content>
         <category term="web安全" />
-        <category term="反序列化" />
         <category term="CTF" />
+        <category term="反序列化" />
         <updated>2021-11-12T04:25:11.814Z</updated>
     </entry>
     <entry>
@@ -637,8 +637,8 @@
 
 </content>
         <category term="web安全" />
-        <category term="反序列化" />
         <category term="CTF" />
+        <category term="反序列化" />
         <updated>2021-11-11T05:43:54.944Z</updated>
     </entry>
 </feed>
