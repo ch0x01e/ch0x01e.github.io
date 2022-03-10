@@ -1,234 +1,795 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ch1e的随笔 - 记录学习过程</title><meta name="keywords" content="ch1e的随笔"><meta name="author" content="ch1e"><meta name="copyright" content="ch1e"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
+
+<!DOCTYPE html>
+<html>
+<head>
+     
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<title>ch1e的随笔</title>
+<meta name="author" content="ch1e">
+<meta name="copyright" content="ch1e">
+
+<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.png"> 
+
+
+    <meta name="keywords" content="ch1e的随笔">
+
+
+
+     
+    <meta property="og:type" content="website">
 <meta property="og:title" content="ch1e的随笔">
-<meta property="og:url" content="https://ch0x01e.github.io/index.html">
+<meta property="og:url" content="https://ch1e.cn/index.html">
 <meta property="og:site_name" content="ch1e的随笔">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
 <meta property="article:author" content="ch1e">
 <meta property="article:tag" content="ch1e的随笔">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://ch0x01e.github.io/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
-  root: '/',
-  algolia: undefined,
-  localSearch: undefined,
-  translate: undefined,
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
-  copy: {
-    success: '复制成功',
-    error: '复制错误',
-    noSupport: '浏览器不支持'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: '',
-  date_suffix: {
-    just: '刚刚',
-    min: '分钟前',
-    hour: '小时前',
-    day: '天前',
-    month: '个月前'
-  },
-  copyright: undefined,
-  lightbox: 'fancybox',
-  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
-  source: {
-    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
-    justifiedGallery: {
-      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
-      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
-    },
-    fancybox: {
-      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
-      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
-    }
-  },
-  isPhotoFigcaption: false,
-  islazyload: false,
-  isanchor: false
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: 'ch1e的随笔',
-  isPost: false,
-  isHome: true,
-  isHighlightShrink: false,
-  isToc: false,
-  postUpdate: '2022-03-10 22:48:35'
-}</script><noscript><style type="text/css">
-  #nav {
-    opacity: 1
-  }
-  .justified-gallery img {
-    opacity: 1
-  }
+<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+ 
 
-  #recent-posts time,
-  #post-meta time {
-    display: inline !important
-  }
-</style></noscript><script>(win=>{
-    win.saveToLocal = {
-      set: function setWithExpiry(key, value, ttl) {
-        if (ttl === 0) return
-        const now = new Date()
-        const expiryDay = ttl * 86400000
-        const item = {
-          value: value,
-          expiry: now.getTime() + expiryDay,
-        }
-        localStorage.setItem(key, JSON.stringify(item))
-      },
-
-      get: function getWithExpiry(key) {
-        const itemStr = localStorage.getItem(key)
-
-        if (!itemStr) {
-          return undefined
-        }
-        const item = JSON.parse(itemStr)
-        const now = new Date()
-
-        if (now.getTime() > item.expiry) {
-          localStorage.removeItem(key)
-          return undefined
-        }
-        return item.value
-      }
-    }
-  
-    win.getScript = url => new Promise((resolve, reject) => {
-      const script = document.createElement('script')
-      script.src = url
-      script.async = true
-      script.onerror = reject
-      script.onload = script.onreadystatechange = function() {
-        const loadState = this.readyState
-        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-        script.onload = script.onreadystatechange = null
-        resolve()
-      }
-      document.head.appendChild(script)
-    })
-  
-      win.activateDarkMode = function () {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      win.activateLightMode = function () {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-        }
-      }
-      const t = saveToLocal.get('theme')
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<link href="//cdn.jsdelivr.net" rel="preconnect">
+<link href="https://ch1e.cn" rel="prefetch">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css " rel="stylesheet">
+<link href="/css/main.css " rel="stylesheet">
+<script src="/js/utlis.js"></script>
+ 
     
-          if (t === 'dark') activateDarkMode()
-          else if (t === 'light') activateLightMode()
+ 
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+     
+    
+ 
+     
+
+<script>
+    var $config = {
+        tocStyle: "visible",
+        CDN:{
+            fancyboxJs: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js",
+            fancyboxCss: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
+        },
         
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        if (asideStatus === 'hide') {
-          document.documentElement.classList.add('hide-aside')
+        
+    }
+</script>
+    
+
+
+
+
+  
+
+
+    <div id="body-wrap">
+        <nav id="nav-wrap">
+  <div class="navbar">
+    <div class="bar">
+      <a href="/" class="title">ch1e的随笔</a>
+
+      
+      <ul class="menu">
+         
+        <li><a href="/">首页</a></li>
+          
+        <li>
+          <a class="menu-child-hover" href="javascript:void(0);">找文章</a>
+          <ul class="menu-child">
+            
+            <li><a href='/tags'>标签</a></li>
+            
+            <li><a href='/archives'>归档</a></li>
+            
+          </ul>
+        </li>
+          
+        <li><a href="/link">友情链接</a></li>
+         
+      </ul>
+      <i class="fas fa-bars open-nav"></i>
+    </div>
+  </div>
+  <div id="mobile-nav">
+    <ul>
+       
+      <li><a href="/">首页</a></li>
+         
+      <li><a href='/tags'>标签</a></li>
+      
+      <li><a href='/archives'>归档</a></li>
+         
+      <li><a href="/link">友情链接</a></li>
+       
+    </ul>
+  </div>
+</nav>
+
+
+        <main id="main">
+            <div id="post-list">
+  <header id="header">
+    <div class="header-author">
+        <a href="/" class="author">
+            <img src="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&amp;spec=100" alt="ch1e" class="author-avatar">
+            <div class="author-name">
+                ch1e
+            </div>
+        </a>
+    </div>
+    <div class="header-description">
+        <p>
+            梦想成为红队的脚本小子
+        </p>
+        <div class="header-icon">
+            
+        </div>
+    </div>
+</header>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/01/22/2022/" title="2022年的个人计划&amp;小目标 ">
+        
+        
+        <span class="stick">置顶</span>2022年的个人计划&amp;小目标
+        
+      </a>
+      <div class="post-description">
+        
+        2022个人计划&amp;amp;目标🤞现在已经是上一年了，去年的目标貌似是在去年定的，哈哈哈，不知不觉已经入行一年多了，还是个脚本小子。2021过去了在这制定一下2022的小目标以及对2021进行一个总结吧大概看一下去年的小目标，基本都完成的差不多了，除了冲知名SRC的排行榜(准备移到今年)，因为确实难，到现在也没挖到过一个专属SRC的洞，只能希望说在2022年继续努力吧，内网渗透在2021年确实是有所接触，但是只是了解了一点点，今年依旧继续努力，为了今年的国hvv做准备吧，CNVD通用证书目前以及下来两张了，估计后面还会有，这块应该算是超额完成任务，找女朋友确实是不可能了，上学期确实也没挂科，协会的话大一的不知道学的怎么样，确实是摸不清楚底，只能说在2022年多带带SRC和CTF吧，主要还是得看自己的自学能力了。2021年证书和获奖不多，一张ISCC三等奖，浙江省赛二等奖，还有十几张CNVD，其他没什么荣誉，摸鱼参加了几次市级和省级的hvv，输出也不咋多，还是太菜了，脱离了弱口令就日不了站哈哈。属实是弱口令战士了。总结完了2021的成果，暂时来制定一下2022的目标吧，制定严格一点...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-01-22
+          </span>
+        </span>
+        
+
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/03/11/OS-HACKNOS-2.1/" title="vulnhub靶机练习-HACKNOS-2.1 ">
+        
+        vulnhub靶机练习-HACKNOS-2.1
+        
+      </a>
+      <div class="post-description">
+        
+        OS-HACKNOS-2.1靶机安装先把靶机设为NAT模式，开机时一直按shift，然后按e把框内的东西改成rwsingkeinit=/bin/bash，然后ctrl+x进入界面，ipa看一下当前网卡是ens33cd/etc/netplan/lscat*.yaml这里看自己具体情况把配置的的网卡改成当前的网卡netplanapply信息搜集nmap-sn192.168.169.0/24扫描当前网段得知靶机ip是192.168.169.141nmap-sV-sC-A192.168.169.141发现目标开启了8022端口，我们访问一下80端口看看有什么内容，这里访问完以后是Apache2UbuntuDefaultPage，估计网站首页是在某个目录下，我们来扫一波目录gobusterdir-uhttp://192.168.169.141/-w/usr/share/wordlists/dirbuster/directory-list-2.3-small.txt奇怪的是使用这个字典跑不出来，换一个尝试一下gobusterdir-uhttp://192.168.169.141/-w/usr...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-03-11
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/%E9%9D%B6%E5%9C%BA%E7%BB%83%E4%B9%A0/">
+            靶场练习
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/03/11/Os-hackNos-1/" title="vulnhub靶机练习-Os-hackNos-1 ">
+        
+        vulnhub靶机练习-Os-hackNos-1
+        
+      </a>
+      <div class="post-description">
+        
+        vulnhub靶机练习-Os-hackNos-1靶机下载地址：https://www.vulnhub.com/entry/hacknos-os-hacknos,401/难度：容易-中级Flag:2个flag第一个用户和第二个root学习：利用|网络应用|枚举|权限提升靶机的安装首先下载靶机的ova文件，点击进行安装有的靶机可能打开无法获取IP，我们这里需要手动进行修改把靶机网络设置成nat模式，然后在开启靶机时一直按住shift，出现如下页面后按e将这里的ro修改为rwsingleinit=/bin/bash，然后按ctrl+x，进入页面查ip发现查不到，记住网卡的名称，准备修改配置信息vim/etc/network/interfaces看一下配置信息用的是哪一个网卡，把这两个都改成ens33然后/etc/init.d/networkingrestart重启网卡服务，然后重启虚拟机即可信息搜集此时我们的攻击机和靶机都处于同一网段，我们可以看看在什么网段下，输入ipa查看到当前攻击机ip是192.168.169.134我们此时对192.168.169.0/24这个网段进行扫描，使用...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-03-11
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/%E9%9D%B6%E5%9C%BA%E7%BB%83%E4%B9%A0/">
+            靶场练习
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/03/11/domdom/" title="vulnhub靶机练习-DomDom ">
+        
+        vulnhub靶机练习-DomDom
+        
+      </a>
+      <div class="post-description">
+        
+        vulnhub靶机练习-DomDom信息搜集nmap-sn192.168.169.0/24扫描当前网段，发现靶机ip是192.168.169.140nmap-sV-A192.168.169.140发现目标开了80端口，我们访问看看貌似是一个登陆界面，我们这里先不管，先使用gobuster扫描一下目录gobusterdir-uhttp://192.168.169.140-w/usr/share/wordlists/dirbuster/directory-list-2.3-small.txt-xphp这里扫出了一个index.php和一个admin.php我们来admin.php看看提示我们：Youneedtoknowit’syouractionsthatwillshowyouthelight.好像是说我要知道是我的行动给我带来光？？？漏洞挖掘我们先在index.php抓个包试试，post传进4个参数，其中的name参数被输出到了Logging:我们想到刚刚admin.php给我们的提示，我们把相同的参数给admin.php看看会有什么变化他这里获取了cmd，盲猜命令执行，把cmd参...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-03-11
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/%E9%9D%B6%E5%9C%BA%E7%BB%83%E4%B9%A0/">
+            靶场练习
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/03/08/7u21/" title="原生反序列化链JDK7u21 ">
+        
+        原生反序列化链JDK7u21
+        
+      </a>
+      <div class="post-description">
+        
+        前言刚刚结束了CommonsBeanutils链的分析，马上换了一下JDK的环境，来研究JDK7u21的反序列化链，这条链得在JDK版本小于等于7u21的情况下才能使用，所以我们这选择了jdk7u21反序列化链分析/*GadgetchainthatworksagainstJRE1.7u21andearlier.PayloadgenerationhasthesameJREversionrequirements.See:https://gist.github.com/frohoff/24af7913611f8406eaf3Calltree:LinkedHashSet.readObject()LinkedHashSet.add()...TemplatesImpl.hashCode()(X)LinkedHashSet.add()...Proxy(Templates).hashCode()(X)AnnotationInvocationHandler.invoke()(X)AnnotationInvocationHandler.hashCodeImpl()(X)String.hashCode...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-03-08
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/03/06/cb1/" title="CB1反序列化链以及无依赖的Shiro反序列化利用链分析 ">
+        
+        CB1反序列化链以及无依赖的Shiro反序列化利用链分析
+        
+      </a>
+      <div class="post-description">
+        
+        前言前两天结束了CC链的分析，现在准备来学习CommonsBeanutils链，今天是2022.3.6晚上九点十五分，来看看自己能花多少时间结束这条链了解ApacheCommonsBeanutilsApacheCommonsBeanutils是ApacheCommons工具集下的一个项目，提供了一些对普通Java类对象的一些操作方法，这些Java类对象也叫JavaBean这里直接来写一个demopublicclassPerson&amp;#123;privateStringname;privateintage;publicStringgetName()&amp;#123;returnthis.name;&amp;#125;publicvoidsetName(Stringname)&amp;#123;this.name=name;&amp;#125;publicintgetAge()&amp;#123;returnthis.age;&amp;#125;publicvoidsetAge(intage)&amp;#123;this.age=age;&amp;#125;&amp;#125;这样的class称为bean，读写方法以get和set开头，后面是首字母大写的...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-03-06
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/03/02/cc2/" title="CC2,4,5,7反序列化链分析 ">
+        
+        CC2,4,5,7反序列化链分析
+        
+      </a>
+      <div class="post-description">
+        
+        commons-collections2反序列化链分析整体分析前几天分析了CC1,CC3,CC6，现在来分析一下CC2，CC2个人感觉还是比较简单的，一看就懂，整条链也不怎么长，但是他是的commons-collections版本是4.0。我们首先来看一下ysoserial源码里的Gadget他这里中间的链用省略号了，那我们自己来摸索一下吧，我这里先把最终的结果的整条链子发出来细节分析这里的话后面还是不分析了，因为他这里最终也是到InvokerTransformer.transform，所以前面那部分依旧不变Transformer[]transformers=newTransformer[]&amp;#123;newConstantTransformer(Runtime.class),newInvokerTransformer(&amp;quot;getMethod&amp;quot;,newClass[]&amp;#123;String.class,Class[].class&amp;#125;,newObject[]&amp;#123;&amp;quot;getRuntime&amp;quot;,null&amp;#125;),newInvoke...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-03-02
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/02/28/cc6/" title="commons-collections6反序列化链分析 ">
+        
+        commons-collections6反序列化链分析
+        
+      </a>
+      <div class="post-description">
+        
+        commons-collections6反序列化链分析整体分析cc6这条链我们先来ysoserial看看他的源码，源码如下我们可以看到，他也是使用了LazyMap，但是不同的是，他是通过其他方式调用到了LazyMap的get方法，我们可以深入来看看，这里由于前面学过cc1的LazyMap的那条链了，关注LazyMap前面的部分就不再赘述，如果有师傅不懂的可以看看前面的文章细节分析咱就从LazyMap的get方法开始吧，因为前面的和之前的链子是一样的。先找到谁调用了get方法，这里直接锁定TiedMapEntry的getValue方法，他这里返回了map.get(key),并且构造函数是publice，可以直接newTiedMapEntry这里的map对应的应该是之前的lazymap接下来是寻找调用getValue的位置，找到同个类下的hashCode方法这里调用了getValue()方法，我们得继续往上找，最好能直接找到在readObject方法中调用getValue()，ysoserial中给的是HashMap，那我们就在HashMap中找找在HaspMap的hash方法中能够...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-02-28
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/02/26/cc3/" title="commons-collections3反序列化链分析 ">
+        
+        commons-collections3反序列化链分析
+        
+      </a>
+      <div class="post-description">
+        
+        commons-collections3反序列化链分析前言这是我的第二篇CC链分析的文章，希望师傅们能喜欢，如果我有说错的或者不足的地方，希望师傅们多多指点类加载器CC3这条链的话得引入类加载器的相关内容，这里也就稍微说一下吧，因为我也是先自己分析一两遍，再写一下文章当作笔记来加深一下印象。类加载器是JavaRuntimeEnvironment的一部分，负责动态加载Java类到Java虚拟机的内存空间中，用于加载系统，网络或者其他来源的类文件如上图，把Test.java编译成Test.class文件，但是如果Test.class文件要再java虚拟机内存中运行需要经过一系列的类操作(加载验证准备解析，初始化)加载器一共有4种加载器，分别是引导类加载器BootstrapClassLoader，扩展类加载器ExtensionsClassLoader，App类加载器/系统类加载器AppClassLoader和自定义类加载器UserDefineClassLoader需要使用类的时候，会将生成的class文件加载到内存当中生成class对象进行使用这里加载过程是使用的双亲委派模式，双亲委派...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-02-26
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/02/21/cc1/" title="commons-collections1反序列化链分析 ">
+        
+        commons-collections1反序列化链分析
+        
+      </a>
+      <div class="post-description">
+        
+        commons-collections1反序列化链分析前言最近入了P牛的知识星球，打算搞Java安全这一块了，所以有了这一篇CC链的分析结果，从0到1学习java安全，在学习的路上碰到了不少坑，这里一起记录一下这几天的学习成果，用到的环境是jdk1.7以及commons-collections3.1，这是我第一篇关于java安全的文章，我才疏学浅，希望师傅们多多指点有关的类介绍ConstantTransformerConstantTransformer类实现了Transformer接口，其transform方法作用是获取一个对象类型InvokerTransformerInvokerTransformer类实现了Transformer和Serializable接口，重写了transform方法，他的transform方法是用反射调用指定的方法并且进行返回他的结果，这里我们可以来写个小demopublicclassdemo&amp;#123;publicstaticvoidmain(String[]args)&amp;#123;Transformertransformer=newInvokerTra...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-02-21
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+   
+
+    <div class="pagination">
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class='fas fa-chevron-right fa-fw'></i></a>
+    </div>
+
+</div>
+
+
+        </main>
+        <section id="rightside">
+    
+    <div class="rightside-item">
+        
+        
+         
+        
+        
+         
+         
+        <a href="javascript:(0)" id="darkmode" title="深色/浅色 ">
+            <i class="fas fa-moon"></i>
+        </a>
+         
+        
+        <a href="#" title="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+         
+
+<footer class="footer" id="footer">
+    <div class="copyright">
+      &copy; 2020 - 2022
+        <i class="fas fa-fan"></i>
+        ch1e
+    </div>
+    <div class="framework-info">
+        <span>框架 </span>
+        <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="footer-separator">|</span>
+        <span>主题 </span>
+        <a href="https://github.com/lete114/hexo-theme-MengD" target="_blank">MengD.(萌典) </a>
+    </div>
+    
+    <div class="custom-text">我相信我可以，但我一直在路上，所以我有无限的可能！！</div>
+</footer>
+    </div>
+    <div id="mask" onclick="closeAll()"></div>
+    
+    <div class="script">
+        <script src="/js/main.js"></script>
+        
+
+ 
+<script>
+    var originTitle = document.title;
+    var titleTime;
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+            clearTimeout(titleTime);
         } else {
-          document.documentElement.classList.remove('hide-aside')
+            document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+            titleTime = setTimeout(function () {
+                document.title = originTitle;
+            }, 2000);
         }
-      }
-    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&amp;spec=100" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页😎</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档🎈</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签🏀</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 朋友圈👨‍🦳</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="http://ctf.ssleye.com/"><i class="fa-fw fas fa-heart"></i><span> CTF在线工具</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-4v7ve3.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">ch1e的随笔</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页😎</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档🎈</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签🏀</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 朋友圈👨‍🦳</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="http://ctf.ssleye.com/"><i class="fa-fw fas fa-heart"></i><span> CTF在线工具</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">ch1e的随笔</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="mailto:1444440144@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1444440144&amp;site=qq" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2022/01/22/2022/" title="2022年的个人计划&amp;小目标">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/wallhaven-57zjd3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2022年的个人计划&amp;小目标"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/01/22/2022/" title="2022年的个人计划&amp;小目标">2022年的个人计划&amp;小目标</a><div class="article-meta-wrap"><span class="article-meta"><i class="fas fa-thumbtack sticky"></i><span class="sticky">置顶</span><span class="article-meta__separator">|</span></span><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-01-22T13:41:18.174Z" title="发表于 2022-01-22 21:41:18">2022-01-22</time><span class="article-meta__separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-01-22T14:05:23.180Z" title="更新于 2022-01-22 22:05:23">2022-01-22</time></span></div><div class="content">2022个人计划&amp;目标🤞现在已经是上一年了，去年的目标貌似是在去年定的，哈哈哈，不知不觉已经入行一年多了，还是个脚本小子。
-2021过去了 在这制定一下2022的小目标  以及对2021进行一个总结吧
+    });
+</script>
 
 
-大概看一下去年的小目标，基本都完成的差不多了，除了冲知名SRC的排行榜(准备移到今年)，因为确实难，到现在也没挖到过一个专属SRC的洞，只能希望说在2022年继续努力吧，内网渗透在2021年确实是有所接触，但是只是了解了一点点，今年依旧继续努力，为了今年的国hvv做准备吧，CNVD通用证书目前以及下来两张了，估计后面还会有，这块应该算是超额完成任务，找女朋友确实是不可能了，上学期确实也没挂科， 协会的话大一的不知道学的怎么样，确实是摸不清楚底，只能说在2022年多带带SRC和CTF吧，主要还是得看自己的自学能力了。2021年证书和获奖不多，一张ISCC三等奖，浙江省赛二等奖，还有十几张CNVD，其他没什么荣誉，摸鱼参加了几次市级和省级的hvv，输出也不咋多，还是太菜了，脱离了弱口令就日不了站哈哈。属实是弱口令战士了。总结完了2021的成果，暂时来制定一下2022的目标吧，制 ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2022/03/08/7u21/" title="原生反序列化链JDK7u21">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-qd9pkq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="原生反序列化链JDK7u21"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/03/08/7u21/" title="原生反序列化链JDK7u21">原生反序列化链JDK7u21</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-08T10:28:34.876Z" title="发表于 2022-03-08 18:28:34">2022-03-08</time><span class="article-meta__separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-10T14:40:59.219Z" title="更新于 2022-03-10 22:40:59">2022-03-10</time></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/web%E5%AE%89%E5%85%A8/">web安全</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/Java%E5%AE%89%E5%85%A8/">Java安全</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">反序列化</a></span></div><div class="content">前言刚刚结束了Commons Beanutils链的分析，马上换了一下JDK的环境，来研究JDK7u21的反序列化链，这条链得在JDK版本小于等于7u21的情况下才能使用，所以我们这选择了jdk7u21
-反序列化链分析12345678910111213141516171819202122232425262728293031323334353637/*Gadget chain that works against JRE 1.7u21 and earlier. Payload generation hasthe same JRE version requirements.See: https://gist.github.com/frohoff/24af7913611f8406eaf3Call tree:LinkedHashSet.readObject()  LinkedHashSet.add()    ...      TemplatesImpl.hashCode() (X)  LinkedHashSet.add()    ...      Proxy(Templates).hashCo ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2022/03/06/cb1/" title="CB1反序列化链以及无依赖的Shiro反序列化利用链分析">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-qd9pkq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CB1反序列化链以及无依赖的Shiro反序列化利用链分析"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/03/06/cb1/" title="CB1反序列化链以及无依赖的Shiro反序列化利用链分析">CB1反序列化链以及无依赖的Shiro反序列化利用链分析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-06T13:08:46.538Z" title="发表于 2022-03-06 21:08:46">2022-03-06</time><span class="article-meta__separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-08T05:31:40.187Z" title="更新于 2022-03-08 13:31:40">2022-03-08</time></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/web%E5%AE%89%E5%85%A8/">web安全</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/Java%E5%AE%89%E5%85%A8/">Java安全</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">反序列化</a></span></div><div class="content">前言前两天结束了CC链的分析，现在准备来学习CommonsBeanutils链，今天是2022.3.6 晚上九点十五分，来看看自己能花多少时间结束这条链
-了解Apache Commons BeanutilsApache Commons Beanutils 是Apache Commons工具集下的一个项目，提供了一些对普通Java类对象的一些操作方法，这些Java类对象也叫JavaBean
-这里直接来写一个demo
-12345678910public class Person &#123;    private String name;    private int age;    public String getName() &#123; return this.name; &#125;    public void setName(String name) &#123; this.name = name; &#125;    public int getAge() &#123; return this.age; &#125;    public void setAge(int ag ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2022/03/02/cc2/" title="CC2,4,5,7反序列化链分析">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-qd9pkq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CC2,4,5,7反序列化链分析"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/03/02/cc2/" title="CC2,4,5,7反序列化链分析">CC2,4,5,7反序列化链分析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-02T05:04:22.015Z" title="发表于 2022-03-02 13:04:22">2022-03-02</time><span class="article-meta__separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-05T06:00:57.063Z" title="更新于 2022-03-05 14:00:57">2022-03-05</time></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/web%E5%AE%89%E5%85%A8/">web安全</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/Java%E5%AE%89%E5%85%A8/">Java安全</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">反序列化</a></span></div><div class="content">commons-collections2反序列化链分析整体分析前几天分析了CC1,CC3,CC6，现在来分析一下CC2，CC2个人感觉还是比较简单的，一看就懂，整条链也不怎么长，但是他是的commons-collections版本是4.0。我们首先来看一下ysoserial源码里的Gadget
-他这里中间的链用省略号了，那我们自己来摸索一下吧，我这里先把最终的结果的整条链子发出来
-
-细节分析这里的话后面还是不分析了，因为他这里最终也是到InvokerTransformer.transform，所以前面那部分依旧不变
-1234567Transformer[] transformers=new Transformer[]&#123;        new ConstantTransformer(Runtime.class),        new InvokerTransformer(&quot;getMethod&quot;,new Class[]&#123;String.class,Class[].class&#125;,new Object[]&#123;&quot;getRunti ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2022/02/28/cc6/" title="commons-collections6反序列化链分析">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-qd9pkq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="commons-collections6反序列化链分析"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/02/28/cc6/" title="commons-collections6反序列化链分析">commons-collections6反序列化链分析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-02-28T11:51:29.847Z" title="发表于 2022-02-28 19:51:29">2022-02-28</time><span class="article-meta__separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-01T12:56:45.890Z" title="更新于 2022-03-01 20:56:45">2022-03-01</time></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/web%E5%AE%89%E5%85%A8/">web安全</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/Java%E5%AE%89%E5%85%A8/">Java安全</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">反序列化</a></span></div><div class="content">commons-collections6反序列化链分析整体分析cc6这条链我们先来ysoserial看看他的源码，源码如下
-我们可以看到，他也是使用了LazyMap，但是不同的是，他是通过其他方式调用到了LazyMap的get方法，我们可以深入来看看，这里由于前面学过cc1的LazyMap的那条链了，关注LazyMap前面的部分就不再赘述，如果有师傅不懂的可以看看前面的文章
-细节分析咱就从 LazyMap的get方法开始吧，因为前面的和之前的链子是一样的。先找到谁调用了get方法，这里直接锁定TiedMapEntry的getValue方法，他这里返回了map.get(key),并且构造函数是publice，可以直接new TiedMapEntry这里的map对应的应该是之前的lazymap
-
-接下来是寻找调用getValue的位置，找到同个类下的hashCode方法
-
-这里调用了getValue()方法，我们得继续往上找，最好能直接找到在readObject方法中调用getValue()，ysoserial中给的是HashMap，那我们就在HashMap中找找
-
-在HaspMap的ha ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2022/02/26/cc3/" title="commons-collections3反序列化链分析">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-qd9pkq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="commons-collections3反序列化链分析"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/02/26/cc3/" title="commons-collections3反序列化链分析">commons-collections3反序列化链分析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-02-26T11:07:59.272Z" title="发表于 2022-02-26 19:07:59">2022-02-26</time><span class="article-meta__separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-03T03:18:15.141Z" title="更新于 2022-03-03 11:18:15">2022-03-03</time></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/web%E5%AE%89%E5%85%A8/">web安全</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/Java%E5%AE%89%E5%85%A8/">Java安全</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">反序列化</a></span></div><div class="content">commons-collections3反序列化链分析前言这是我的第二篇CC链分析的文章，希望师傅们能喜欢，如果我有说错的或者不足的地方，希望师傅们多多指点
-类加载器CC3这条链的话得引入类加载器的相关内容，这里也就稍微说一下吧，因为我也是先自己分析一两遍，再写一下文章当作笔记来加深一下印象。
-类加载器是Java Runtime Environment 的一部分，负责动态加载Java类到Java虚拟机的内存空间中，用于加载系统，网络或者其他来源的类文件
-
-如上图，把Test.java编译成Test.class文件，但是如果Test.class文件要再java虚拟机内存中运行需要经过一系列的类操作(加载 验证 准备 解析，初始化)
-加载器一共有4种加载器，分别是引导类加载器BootstrapClassLoader，扩展类加载器ExtensionsClassLoader，App类加载器/系统类加载器AppClassLoader和自定义类加载器UserDefineClassLoader
-需要使用类的时候，会将生成的class文件加载到内存当中生成class对象进行使用
-这里加载过程是使用的双 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2022/02/21/cc1/" title="commons-collections1反序列化链分析">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-qd9pkq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="commons-collections1反序列化链分析"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/02/21/cc1/" title="commons-collections1反序列化链分析">commons-collections1反序列化链分析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-02-21T14:45:28.498Z" title="发表于 2022-02-21 22:45:28">2022-02-21</time><span class="article-meta__separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-06T13:11:27.605Z" title="更新于 2022-03-06 21:11:27">2022-03-06</time></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/web%E5%AE%89%E5%85%A8/">web安全</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/Java%E5%AE%89%E5%85%A8/">Java安全</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">反序列化</a></span></div><div class="content">commons-collections1反序列化链分析前言最近入了P牛的知识星球，打算搞Java安全这一块了，所以有了这一篇CC链的分析结果，从0到1学习java安全，在学习的路上碰到了不少坑，这里一起记录一下这几天的学习成果，用到的环境是jdk1.7以及commons-collections3.1，这是我第一篇关于java安全的文章，我才疏学浅，希望师傅们多多指点
-有关的类介绍ConstantTransformer
-ConstantTransformer类实现了Transformer接口，其transform方法作用是获取一个对象类型
-InvokerTransformer
-InvokerTransformer类实现了Transformer和Serializable接口，重写了transform方法，他的transform方法是用反射调用指定的方法并且进行返回他的结果，这里我们可以来写个小demo
-123456public class demo &#123;    public static void main(String[] args) &#123;        Transfor ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2022/02/13/easyj4va/" title="从CTF题了解Servlet的线程安全问题">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-g7xpwd.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="从CTF题了解Servlet的线程安全问题"></a></div><div class="recent-post-info"><a class="article-title" href="/2022/02/13/easyj4va/" title="从CTF题了解Servlet的线程安全问题">从CTF题了解Servlet的线程安全问题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-02-13T14:17:36.146Z" title="发表于 2022-02-13 22:17:36">2022-02-13</time><span class="article-meta__separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-02-13T14:17:36.150Z" title="更新于 2022-02-13 22:17:36">2022-02-13</time></span></div><div class="content">前言VNCTF2022_easyJ4va  源于前几天打的VNCTF，这题自己尝试做了一下午，感觉确实可以，就拿来复盘一下，比赛做一下午没做出来，这里直接拿他读出来的源码进行复现吧，如果有想学习的师傅可以加我公告里的qq来拿源码试着做一下
-正文涉及知识点个人感觉其中获取key的过程涉及到Servlet的线程安全问题，这里具体可以看一下Y4师傅的文章，给出文章地址 Servlet的线程安全问题，获取flag的过程涉及到java-Transient关键字的问题，这里给出文章地址  java-Transient关键字、Volatile关键字介绍和序列化、反序列化机制、单例类序列化
-然后接下来具体看题吧
-复现过程打开环境，提示我们/file?,可以想到这里应该是让我们在/file路径下get传入一个参数，访问/file提示输入url，大概就是让我们访问/file?url=xxxx，这里有经验的师傅就大概可以猜到存在类似于SSRF或者读文件漏洞，这里直接上了file协议，读取出他的源码。这就一步带过了，因为太简单了。
-
-读出来源代码以后我们直接进行审计，这就是一个Servlet对象，具体来看一下 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2021/11/12/yuanshenglei/" title="PHP原生类在CTF当中的应用🛴">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-q6lqdd.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PHP原生类在CTF当中的应用🛴"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/11/12/yuanshenglei/" title="PHP原生类在CTF当中的应用🛴">PHP原生类在CTF当中的应用🛴</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-12T04:25:11.814Z" title="发表于 2021-11-12 12:25:11">2021-11-12</time><span class="article-meta__separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-11-12T06:04:14.715Z" title="更新于 2021-11-12 14:04:14">2021-11-12</time></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/web%E5%AE%89%E5%85%A8/">web安全</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">反序列化</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/CTF/">CTF</a></span></div><div class="content">PHP原生类的应用前几天打了浙江省赛，拿了个省二，明年努努力冲个省一。发现浙江省赛出了两题POP链，这就是为啥博客持续在更新反序列化的内容的原因哈哈哈(因为我两题都没解出来)，之前练了一下pop链的构造，现在来研究一下PHP原生类的利用
-本篇文章总结于https://blog.csdn.net/qq_38154820/article/details/121112935
+<script src="/js/lazyload.js"></script>
 
 
-报错类Error在PHP7版本中，因为Error中带有__toString方法，该方法会将传入给__toString的参数原封不动的输出到浏览器。在这么一个过程中可能会产生XSS。
-我们来随便弄一个DEMO试试
-1234&lt;?php$a=$_GET[&#x27;a&#x27;];$b=$_GET[&#x27;b&#x27;];echo new $a($b);
+    
 
-ERROR类中自动带有tostring魔术方法，我们如果这里把他当字符串输出，会自动触发tostring方法，如果这里是echo，即可造成XSS
-Payload：
-1http://127.0.0.1/?a=Error&amp;b=&lt;script&gt ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2021/11/11/pop/" title="PHP反序列化之POP链构造🛴">     <img class="post_bg" src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-q6lqdd.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PHP反序列化之POP链构造🛴"></a></div><div class="recent-post-info"><a class="article-title" href="/2021/11/11/pop/" title="PHP反序列化之POP链构造🛴">PHP反序列化之POP链构造🛴</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-11T05:43:54.944Z" title="发表于 2021-11-11 13:43:54">2021-11-11</time><span class="article-meta__separator">|</span><i class="fas fa-history"></i><span class="article-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-11-11T10:27:25.514Z" title="更新于 2021-11-11 18:27:25">2021-11-11</time></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/web%E5%AE%89%E5%85%A8/">web安全</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">反序列化</a><span class="article-meta__link">•</span><a class="article-meta__tags" href="/tags/CTF/">CTF</a></span></div><div class="content">PHP反序列化之pop链POP链介绍POP 面向属性编程(Property-Oriented Programing) 常用于上层语言构造特定调用链的方法，与二进制利用中的面向返回编程（Return-Oriented Programing）的原理相似，都是从现有运行环境中寻找一系列的代码或者指令调用，然后根据需求构成一组连续的调用链,最终达到攻击者邪恶的目的
-说的再具体一点就是 ROP 是通过栈溢出实现控制指令的执行流程，而我们的反序列化是通过控制对象的属性从而实现控制程序的执行流程，进而达成利用本身无害的代码进行有害操作的目的。
-魔术方法介绍
-反序列化的常见起点
-__wakeup 一定会调用
-__destruct 一定会调用
-__toString 当一个对象被反序列化后又被当做字符串使用
 
-反序列化的常见中间跳板
-__toString 当一个对象被当做字符串使用
-__get 读取不可访问或不存在属性时被调用
-__set 当给不可访问或不存在属性赋值时被调用
-__isset 对不可访问或不存在的属性调用isset()或empty()时被调用。形如 $this-&gt;$func();
+        
+    <script>
+        getScript('https://cdn.jsdelivr.net/npm/pjax/pjax.min.js',LoadPjax)
+        function LoadPjax() {
+            var pjax = new Pjax({
+                selectors: [
+                    'head title',
+                    'head meta[name="keywords"]',
+                    'head meta[name="description"]',
+                    'main',
+                    '#rightside'
+                ],
+                cache: true,
+                cacheBust: false
+            });
+        }
 
- ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/#content-inner">4</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&amp;spec=100" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">ch1e</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ZwqGG"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:1444440144@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="http://wpa.qq.com/msgrd?v=3&amp;uin=1444440144&amp;site=qq" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">入坑一年多，喜欢挖洞,渗透测试,代码审计,在努力成为红队以及安全研究员的路上，随笔就分享一下各种知识，有问题可以联系本人，QQ：1444440144</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/03/08/7u21/" title="原生反序列化链JDK7u21"><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-qd9pkq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="原生反序列化链JDK7u21"/></a><div class="content"><a class="title" href="/2022/03/08/7u21/" title="原生反序列化链JDK7u21">原生反序列化链JDK7u21</a><time datetime="2022-03-08T10:28:34.876Z" title="发表于 2022-03-08 18:28:34">2022-03-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/06/cb1/" title="CB1反序列化链以及无依赖的Shiro反序列化利用链分析"><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-qd9pkq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CB1反序列化链以及无依赖的Shiro反序列化利用链分析"/></a><div class="content"><a class="title" href="/2022/03/06/cb1/" title="CB1反序列化链以及无依赖的Shiro反序列化利用链分析">CB1反序列化链以及无依赖的Shiro反序列化利用链分析</a><time datetime="2022-03-06T13:08:46.538Z" title="发表于 2022-03-06 21:08:46">2022-03-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/03/02/cc2/" title="CC2,4,5,7反序列化链分析"><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-qd9pkq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CC2,4,5,7反序列化链分析"/></a><div class="content"><a class="title" href="/2022/03/02/cc2/" title="CC2,4,5,7反序列化链分析">CC2,4,5,7反序列化链分析</a><time datetime="2022-03-02T05:04:22.015Z" title="发表于 2022-03-02 13:04:22">2022-03-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/02/28/cc6/" title="commons-collections6反序列化链分析"><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-qd9pkq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="commons-collections6反序列化链分析"/></a><div class="content"><a class="title" href="/2022/02/28/cc6/" title="commons-collections6反序列化链分析">commons-collections6反序列化链分析</a><time datetime="2022-02-28T11:51:29.847Z" title="发表于 2022-02-28 19:51:29">2022-02-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/02/26/cc3/" title="commons-collections3反序列化链分析"><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-qd9pkq.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="commons-collections3反序列化链分析"/></a><div class="content"><a class="title" href="/2022/02/26/cc3/" title="commons-collections3反序列化链分析">commons-collections3反序列化链分析</a><time datetime="2022-02-26T11:07:59.272Z" title="发表于 2022-02-26 19:07:59">2022-02-26</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E9%9D%B6%E5%9C%BA%E7%BB%83%E4%B9%A0/" style="font-size: 1.41em; color: rgb(102, 5, 43)">靶场练习</a><a href="/tags/web%E5%AE%89%E5%85%A8/" style="font-size: 1.45em; color: rgb(2, 136, 100)">web安全</a><a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 1.19em; color: rgb(195, 137, 158)">数据库</a><a href="/tags/%E5%85%8D%E6%9D%80/" style="font-size: 1.15em; color: rgb(57, 182, 131)">免杀</a><a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="font-size: 1.32em; color: rgb(21, 126, 162)">渗透测试</a><a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 1.24em; color: rgb(74, 51, 175)">代码审计</a><a href="/tags/C/" style="font-size: 1.15em; color: rgb(31, 195, 105)">C++</a><a href="/tags/Java%E5%AE%89%E5%85%A8/" style="font-size: 1.32em; color: rgb(37, 142, 130)">Java安全</a><a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" style="font-size: 1.36em; color: rgb(114, 0, 108)">反序列化</a><a href="/tags/CTF/" style="font-size: 1.28em; color: rgb(166, 83, 97)">CTF</a><a href="/tags/%E7%BA%A2%E9%98%9F%E9%92%93%E9%B1%BC/" style="font-size: 1.15em; color: rgb(97, 99, 171)">红队钓鱼</a><a href="/tags/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/" style="font-size: 1.15em; color: rgb(42, 41, 176)">内网渗透</a><a href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/" style="font-size: 1.15em; color: rgb(97, 121, 193)">网络协议</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
-    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/03/"><span class="card-archive-list-date">三月 2022</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/02/"><span class="card-archive-list-date">二月 2022</span><span class="card-archive-list-count">4</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/01/"><span class="card-archive-list-date">一月 2022</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/11/"><span class="card-archive-list-date">十一月 2021</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/10/"><span class="card-archive-list-date">十月 2021</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/08/"><span class="card-archive-list-date">八月 2021</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/07/"><span class="card-archive-list-date">七月 2021</span><span class="card-archive-list-count">7</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/06/"><span class="card-archive-list-date">六月 2021</span><span class="card-archive-list-count">4</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">34</div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2022-03-10T14:48:35.027Z"></div></div></div></div></div></div></main><footer id="footer" style="background: transparent"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By ch1e</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>var preloader = {
-  endLoading: () => {
-    document.body.style.overflow = 'auto';
-    document.getElementById('loading-box').classList.add("loaded")
-  },
-  initLoading: () => {
-    document.body.style.overflow = '';
-    document.getElementById('loading-box').classList.remove("loaded")
+        // 清除时间
+        var timer = null;
+        // 执行进度条
+        function ProgressStart() {
+            // 设置初始进度
+            var progress = 10;
+            // 创建进度条 及 css样式
+            var div = document.createElement('div');
+            div.className = 'pjax-progress';
+            document.body.prepend(div);
+            // 定义随机数最大值最小值
+            var max = 10, mini = 3;
+            var result = max - mini;
+            // 清除
+            clearInterval(timer);
+            // 0.5秒内累加进度
+            timer = setInterval(function () {
+                // 随机数
+                var num = parseInt(Math.random() * result);
+                var randomResult = num + mini;
+                // 累加
+                progress += randomResult
+                document.getElementsByClassName('pjax-progress')[0].style.width = progress + '%';
+                // 当进度达到95%时停止
+                if (progress > 95) progress = 95
+            }, 500)
+        }
+        // 加载进度条加载完毕
+        function ProgressFinish() {
+            clearInterval(timer);
+            // 页面加载完毕后进度100% 并在0.7秒后删除
+            var progress = document.getElementsByClassName('pjax-progress');
+            progress[0].style.width = '100%';
+            timer = setTimeout(function () {
+                progress[0].parentNode.removeChild(progress[0])
+            }, 700);
+        }
 
-  }
-}
-window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>function subtitleType () {
-  if (true) { 
-    var typed = new Typed("#subtitle", {
-      strings: "The quieter you become, the more you are able to hear.,Never put off till tomorrow what you can do today,Manners Maketh Man".split(","),
-      startDelay: 300,
-      typeSpeed: 150,
-      loop: true,
-      backSpeed: 50
-    })
-  } else {
-    document.getElementById("subtitle").innerHTML = 'The quieter you become, the more you are able to hear.'
-  }
-}
+        // 开始 PJAX 执行的函数
+        document.addEventListener('pjax:send', function () {
+            // 执行进度条
+            ProgressStart()
+        });
+        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+        document.addEventListener('pjax:complete', function () {
 
-if (true) {
-  if (typeof Typed === 'function') {
-    subtitleType()
-  } else {
-    getScript('https://cdn.jsdelivr.net/npm/typed.js/lib/typed.min.js').then(subtitleType)
-  }
-} else {
-  subtitleType()
-}</script></div></div></body></html>
+            // 加载进度条加载完毕
+            ProgressFinish()
+            // 执行所有方法
+            exeAllFn()
+
+            
+                // 图片懒加载
+                ImgLazyLoad('body img[data-img]', 'data-img')
+            
+
+
+            document.querySelectorAll('script[data-pjax]').forEach(item => {
+                const newScript = document.createElement('script')
+                const content = item.text || item.textContent || item.innerHTML || ''
+                Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+                newScript.appendChild(document.createTextNode(content))
+                item.parentNode.replaceChild(newScript, item)
+            })
+        });
+
+        // Pjax请求错误时，跳转到404页面
+        document.addEventListener('pjax:error', (err) => {
+            if (err.request.status === 404) {
+                pjax.loadUrl('/404.html')
+            }
+        })
+    </script>
+
+    </div>
+</body>
+
+</html>

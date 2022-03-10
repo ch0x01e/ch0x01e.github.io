@@ -2,28 +2,22 @@
 <rss version="2.0">
     <channel>
         <title>ch1e的随笔 • Posts by &#34;反序列化&#34; tag</title>
-        <link>https://ch0x01e.github.io</link>
+        <link>https://ch1e.cn</link>
         <description></description>
         <language>zh-CN</language>
         <pubDate>Tue, 08 Mar 2022 18:28:34 +0800</pubDate>
         <lastBuildDate>Tue, 08 Mar 2022 18:28:34 +0800</lastBuildDate>
         <category>靶场练习</category>
         <category>web安全</category>
-        <category>数据库</category>
-        <category>免杀</category>
-        <category>渗透测试</category>
         <category>代码审计</category>
-        <category>C++</category>
+        <category>渗透测试</category>
         <category>Java安全</category>
         <category>反序列化</category>
         <category>CTF</category>
-        <category>红队钓鱼</category>
-        <category>内网渗透</category>
-        <category>网络协议</category>
         <item>
-            <guid isPermalink="true">https://ch0x01e.github.io/2022/03/08/7u21/</guid>
+            <guid isPermalink="true">https://ch1e.cn/2022/03/08/7u21/</guid>
             <title>原生反序列化链JDK7u21</title>
-            <link>https://ch0x01e.github.io/2022/03/08/7u21/</link>
+            <link>https://ch1e.cn/2022/03/08/7u21/</link>
             <category>web安全</category>
             <category>Java安全</category>
             <category>反序列化</category>
@@ -81,9 +75,9 @@
  ]]></description>
         </item>
         <item>
-            <guid isPermalink="true">https://ch0x01e.github.io/2022/03/06/cb1/</guid>
+            <guid isPermalink="true">https://ch1e.cn/2022/03/06/cb1/</guid>
             <title>CB1反序列化链以及无依赖的Shiro反序列化利用链分析</title>
-            <link>https://ch0x01e.github.io/2022/03/06/cb1/</link>
+            <link>https://ch1e.cn/2022/03/06/cb1/</link>
             <category>web安全</category>
             <category>Java安全</category>
             <category>反序列化</category>
@@ -144,9 +138,9 @@
  ]]></description>
         </item>
         <item>
-            <guid isPermalink="true">https://ch0x01e.github.io/2022/03/02/cc2/</guid>
+            <guid isPermalink="true">https://ch1e.cn/2022/03/02/cc2/</guid>
             <title>CC2,4,5,7反序列化链分析</title>
-            <link>https://ch0x01e.github.io/2022/03/02/cc2/</link>
+            <link>https://ch1e.cn/2022/03/02/cc2/</link>
             <category>web安全</category>
             <category>Java安全</category>
             <category>反序列化</category>
@@ -250,9 +244,9 @@
  ]]></description>
         </item>
         <item>
-            <guid isPermalink="true">https://ch0x01e.github.io/2022/02/28/cc6/</guid>
+            <guid isPermalink="true">https://ch1e.cn/2022/02/28/cc6/</guid>
             <title>commons-collections6反序列化链分析</title>
-            <link>https://ch0x01e.github.io/2022/02/28/cc6/</link>
+            <link>https://ch1e.cn/2022/02/28/cc6/</link>
             <category>web安全</category>
             <category>Java安全</category>
             <category>反序列化</category>
@@ -289,15 +283,14 @@
 
 
 &lt;h2 id=&#34;疑惑点&#34;&gt;&lt;a href=&#34;#疑惑点&#34; class=&#34;headerlink&#34; title=&#34;疑惑点&#34;&gt;&lt;/a&gt;疑惑点&lt;/h2&gt;&lt;p&gt;这里的话，上面的poc里为了成功执行，使用了lazyMap.remove(“aaa”);但是其实我在想，我们的目的是调用LazyMap的get方法，里面进入if的条件是当前lazyMap对象的map属性中不能有key，那我们为什么要去使用lazyMap的remove，而不是使用map.remove呢，这里我尝试了一下，使用map.remove貌似也能执行？这先丢着，希望有会的师傅可以指导我一下&lt;/p&gt;
-&lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;这里解决了，还得是Y4哥哥猛啊&lt;/p&gt;
+&lt;p&gt;这里解决了，还得是Y4哥哥猛啊&lt;/p&gt;
 &lt;p&gt;大概意思就是，LazyMap是继承了AbstractMapDecorator类，在AbstractMapDecorator类中有写remove方法，但是在LazyMap中没有写，他是使用的父类的remove，父类的remove其实是返回map.remove，所以上面我说的为什么不去找map属性的而是找本身的remove，一切都可以解释了&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ch0x01e/image@main/img/image-20220301204819166.png&#34; alt=&#34;image-20220301204819166&#34;&gt;&lt;/p&gt;
-&lt;/div&gt;
  ]]></description>
         </item>
         <item>
-            <guid isPermalink="true">https://ch0x01e.github.io/2022/02/26/cc3/</guid>
+            <guid isPermalink="true">https://ch1e.cn/2022/02/26/cc3/</guid>
             <title>commons-collections3反序列化链分析</title>
-            <link>https://ch0x01e.github.io/2022/02/26/cc3/</link>
+            <link>https://ch1e.cn/2022/02/26/cc3/</link>
             <category>web安全</category>
             <category>Java安全</category>
             <category>反序列化</category>
@@ -401,9 +394,9 @@
  ]]></description>
         </item>
         <item>
-            <guid isPermalink="true">https://ch0x01e.github.io/2022/02/21/cc1/</guid>
+            <guid isPermalink="true">https://ch1e.cn/2022/02/21/cc1/</guid>
             <title>commons-collections1反序列化链分析</title>
-            <link>https://ch0x01e.github.io/2022/02/21/cc1/</link>
+            <link>https://ch1e.cn/2022/02/21/cc1/</link>
             <category>web安全</category>
             <category>Java安全</category>
             <category>反序列化</category>
@@ -614,17 +607,15 @@
  ]]></description>
         </item>
         <item>
-            <guid isPermalink="true">https://ch0x01e.github.io/2021/11/12/yuanshenglei/</guid>
+            <guid isPermalink="true">https://ch1e.cn/2021/11/12/yuanshenglei/</guid>
             <title>PHP原生类在CTF当中的应用🛴</title>
-            <link>https://ch0x01e.github.io/2021/11/12/yuanshenglei/</link>
+            <link>https://ch1e.cn/2021/11/12/yuanshenglei/</link>
             <category>web安全</category>
             <category>反序列化</category>
             <category>CTF</category>
             <pubDate>Fri, 12 Nov 2021 12:25:11 +0800</pubDate>
-            <description><![CDATA[ &lt;h1 id=&#34;PHP原生类的应用&#34;&gt;&lt;a href=&#34;#PHP原生类的应用&#34; class=&#34;headerlink&#34; title=&#34;PHP原生类的应用&#34;&gt;&lt;/a&gt;PHP原生类的应用&lt;/h1&gt;&lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;前几天打了浙江省赛，拿了个省二，明年努努力冲个省一。发现浙江省赛出了两题POP链，这就是为啥博客持续在更新反序列化的内容的原因哈哈哈(因为我两题都没解出来)，之前练了一下pop链的构造，现在来研究一下PHP原生类的利用&lt;/p&gt;
+            <description><![CDATA[ &lt;h1 id=&#34;PHP原生类的应用&#34;&gt;&lt;a href=&#34;#PHP原生类的应用&#34; class=&#34;headerlink&#34; title=&#34;PHP原生类的应用&#34;&gt;&lt;/a&gt;PHP原生类的应用&lt;/h1&gt;&lt;p&gt;前几天打了浙江省赛，拿了个省二，明年努努力冲个省一。发现浙江省赛出了两题POP链，这就是为啥博客持续在更新反序列化的内容的原因哈哈哈(因为我两题都没解出来)，之前练了一下pop链的构造，现在来研究一下PHP原生类的利用&lt;/p&gt;
 &lt;p&gt;本篇文章总结于&lt;a href=&#34;https://blog.csdn.net/qq_38154820/article/details/121112935&#34;&gt;https://blog.csdn.net/qq_38154820/article/details/121112935&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-
 &lt;h2 id=&#34;报错类&#34;&gt;&lt;a href=&#34;#报错类&#34; class=&#34;headerlink&#34; title=&#34;报错类&#34;&gt;&lt;/a&gt;报错类&lt;/h2&gt;&lt;h3 id=&#34;Error&#34;&gt;&lt;a href=&#34;#Error&#34; class=&#34;headerlink&#34; title=&#34;Error&#34;&gt;&lt;/a&gt;Error&lt;/h3&gt;&lt;p&gt;在PHP7版本中，因为Error中带有&lt;code&gt;__toString&lt;/code&gt;方法，该方法会将传入给&lt;code&gt;__toString&lt;/code&gt;的参数原封不动的输出到浏览器。在这么一个过程中可能会产生XSS。&lt;/p&gt;
 &lt;p&gt;我们来随便弄一个DEMO试试&lt;/p&gt;
 &lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$a&lt;/span&gt;=&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;a&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$b&lt;/span&gt;=&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;b&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;variable&#34;&gt;$a&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$b&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -675,7 +666,7 @@
 &lt;p&gt;DEMO:&lt;/p&gt;
 &lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$a&lt;/span&gt; = &lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;a&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$b&lt;/span&gt; = &lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;b&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;variable&#34;&gt;$a&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$b&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-&lt;p&gt;我们传入?a=SplFileObject&amp;amp;b=flag.php，即可读取我们flag.php里面的内容，&lt;mark class=&#34;hl-label default&#34;&gt;但是他只能读一行！！！red&lt;/mark&gt; &lt;/p&gt;
+&lt;p&gt;我们传入?a=SplFileObject&amp;amp;b=flag.php，即可读取我们flag.php里面的内容&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211112133016528.png&#34; alt=&#34;image-20211112133016528&#34;&gt;&lt;/p&gt;
 &lt;p&gt;除了直接传文件名之外，我们是不是可以联系到php伪协议呢？不妨来试试，传入如下payload&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;?a=SplFileObject&amp;amp;b=php://filter/convert.base64-encode/resource=flag.php&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -696,9 +687,9 @@
  ]]></description>
         </item>
         <item>
-            <guid isPermalink="true">https://ch0x01e.github.io/2021/11/11/pop/</guid>
+            <guid isPermalink="true">https://ch1e.cn/2021/11/11/pop/</guid>
             <title>PHP反序列化之POP链构造🛴</title>
-            <link>https://ch0x01e.github.io/2021/11/11/pop/</link>
+            <link>https://ch1e.cn/2021/11/11/pop/</link>
             <category>web安全</category>
             <category>反序列化</category>
             <category>CTF</category>

@@ -1,26 +1,20 @@
 <?xml version="1.0"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://ch0x01e.github.io</id>
+    <id>https://ch1e.cn</id>
     <title>ch1e的随笔 • Posts by &#34;反序列化&#34; tag</title>
-    <link href="https://ch0x01e.github.io" />
+    <link href="https://ch1e.cn" />
     <updated>2022-03-08T10:28:34.876Z</updated>
     <category term="靶场练习" />
     <category term="web安全" />
-    <category term="数据库" />
-    <category term="免杀" />
-    <category term="渗透测试" />
     <category term="代码审计" />
-    <category term="C++" />
+    <category term="渗透测试" />
     <category term="Java安全" />
     <category term="反序列化" />
     <category term="CTF" />
-    <category term="红队钓鱼" />
-    <category term="内网渗透" />
-    <category term="网络协议" />
     <entry>
-        <id>https://ch0x01e.github.io/2022/03/08/7u21/</id>
+        <id>https://ch1e.cn/2022/03/08/7u21/</id>
         <title>原生反序列化链JDK7u21</title>
-        <link rel="alternate" href="https://ch0x01e.github.io/2022/03/08/7u21/"/>
+        <link rel="alternate" href="https://ch1e.cn/2022/03/08/7u21/"/>
         <content type="html">&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;刚刚结束了Commons Beanutils链的分析，马上换了一下JDK的环境，来研究JDK7u21的反序列化链，这条链得在JDK版本小于等于7u21的情况下才能使用，所以我们这选择了jdk7u21&lt;/p&gt;
 &lt;h1 id=&#34;反序列化链分析&#34;&gt;&lt;a href=&#34;#反序列化链分析&#34; class=&#34;headerlink&#34; title=&#34;反序列化链分析&#34;&gt;&lt;/a&gt;反序列化链分析&lt;/h1&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;37&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;/*&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Gadget chain that works against JRE 1.7u21 and earlier. Payload generation has&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;the same JRE version requirements.&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;See: https://gist.github.com/frohoff/24af7913611f8406eaf3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;Call tree:&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;LinkedHashSet.readObject()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  LinkedHashSet.add()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    ...&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      TemplatesImpl.hashCode() (X)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  LinkedHashSet.add()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    ...&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      Proxy(Templates).hashCode() (X)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        AnnotationInvocationHandler.invoke() (X)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;          AnnotationInvocationHandler.hashCodeImpl() (X)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            String.hashCode() (0)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            AnnotationInvocationHandler.memberValueHashCode() (X)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;              TemplatesImpl.hashCode() (X)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;      Proxy(Templates).equals()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        AnnotationInvocationHandler.invoke()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;          AnnotationInvocationHandler.equalsImpl()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            Method.invoke()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;              ...&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                TemplatesImpl.getOutputProperties()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                  TemplatesImpl.newTransformer()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                    TemplatesImpl.getTransletInstance()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                      TemplatesImpl.defineTransletClasses()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                        ClassLoader.defineClass()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                        Class.newInstance()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                          ...&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                            MaliciousClass.&amp;lt;clinit&amp;gt;()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                              ...&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;                                Runtime.exec()&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt; */&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
@@ -78,9 +72,9 @@
         <updated>2022-03-08T10:28:34.876Z</updated>
     </entry>
     <entry>
-        <id>https://ch0x01e.github.io/2022/03/06/cb1/</id>
+        <id>https://ch1e.cn/2022/03/06/cb1/</id>
         <title>CB1反序列化链以及无依赖的Shiro反序列化利用链分析</title>
-        <link rel="alternate" href="https://ch0x01e.github.io/2022/03/06/cb1/"/>
+        <link rel="alternate" href="https://ch1e.cn/2022/03/06/cb1/"/>
         <content type="html">&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;前两天结束了CC链的分析，现在准备来学习CommonsBeanutils链，今天是2022.3.6 晚上九点十五分，来看看自己能花多少时间结束这条链&lt;/p&gt;
 &lt;h1 id=&#34;了解Apache-Commons-Beanutils&#34;&gt;&lt;a href=&#34;#了解Apache-Commons-Beanutils&#34; class=&#34;headerlink&#34; title=&#34;了解Apache Commons Beanutils&#34;&gt;&lt;/a&gt;了解Apache Commons Beanutils&lt;/h1&gt;&lt;p&gt;Apache Commons Beanutils 是Apache Commons工具集下的一个项目，提供了一些对普通Java类对象的一些操作方法，这些Java类对象也叫JavaBean&lt;/p&gt;
 &lt;p&gt;这里直接来写一个demo&lt;/p&gt;
@@ -141,9 +135,9 @@
         <updated>2022-03-06T13:08:46.538Z</updated>
     </entry>
     <entry>
-        <id>https://ch0x01e.github.io/2022/03/02/cc2/</id>
+        <id>https://ch1e.cn/2022/03/02/cc2/</id>
         <title>CC2,4,5,7反序列化链分析</title>
-        <link rel="alternate" href="https://ch0x01e.github.io/2022/03/02/cc2/"/>
+        <link rel="alternate" href="https://ch1e.cn/2022/03/02/cc2/"/>
         <content type="html">&lt;h1 id=&#34;commons-collections2反序列化链分析&#34;&gt;&lt;a href=&#34;#commons-collections2反序列化链分析&#34; class=&#34;headerlink&#34; title=&#34;commons-collections2反序列化链分析&#34;&gt;&lt;/a&gt;commons-collections2反序列化链分析&lt;/h1&gt;&lt;h2 id=&#34;整体分析&#34;&gt;&lt;a href=&#34;#整体分析&#34; class=&#34;headerlink&#34; title=&#34;整体分析&#34;&gt;&lt;/a&gt;整体分析&lt;/h2&gt;&lt;p&gt;前几天分析了CC1,CC3,CC6，现在来分析一下CC2，CC2个人感觉还是比较简单的，一看就懂，整条链也不怎么长，但是他是的commons-collections版本是4.0。我们首先来看一下ysoserial源码里的Gadget&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ch0x01e/image@main/img/image-20220302132809891.png&#34; alt=&#34;image-20220302132809891&#34;&gt;&lt;/p&gt;
 &lt;p&gt;他这里中间的链用省略号了，那我们自己来摸索一下吧，我这里先把最终的结果的整条链子发出来&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ch0x01e/image@main/img/image-20220302132855593.png&#34; alt=&#34;image-20220302132855593&#34;&gt;&lt;/p&gt;
@@ -247,9 +241,9 @@
         <updated>2022-03-02T05:04:22.015Z</updated>
     </entry>
     <entry>
-        <id>https://ch0x01e.github.io/2022/02/28/cc6/</id>
+        <id>https://ch1e.cn/2022/02/28/cc6/</id>
         <title>commons-collections6反序列化链分析</title>
-        <link rel="alternate" href="https://ch0x01e.github.io/2022/02/28/cc6/"/>
+        <link rel="alternate" href="https://ch1e.cn/2022/02/28/cc6/"/>
         <content type="html">&lt;h1 id=&#34;commons-collections6反序列化链分析&#34;&gt;&lt;a href=&#34;#commons-collections6反序列化链分析&#34; class=&#34;headerlink&#34; title=&#34;commons-collections6反序列化链分析&#34;&gt;&lt;/a&gt;commons-collections6反序列化链分析&lt;/h1&gt;&lt;h2 id=&#34;整体分析&#34;&gt;&lt;a href=&#34;#整体分析&#34; class=&#34;headerlink&#34; title=&#34;整体分析&#34;&gt;&lt;/a&gt;整体分析&lt;/h2&gt;&lt;p&gt;cc6这条链我们先来ysoserial看看他的源码，源码如下&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20220228195705688.png&#34; alt=&#34;image-20220228195705688&#34;&gt;&lt;/p&gt;
 &lt;p&gt;我们可以看到，他也是使用了LazyMap，但是不同的是，他是通过其他方式调用到了LazyMap的get方法，我们可以深入来看看，这里由于前面学过cc1的LazyMap的那条链了，关注LazyMap前面的部分就不再赘述，如果有师傅不懂的可以看看前面的文章&lt;/p&gt;
 &lt;h2 id=&#34;细节分析&#34;&gt;&lt;a href=&#34;#细节分析&#34; class=&#34;headerlink&#34; title=&#34;细节分析&#34;&gt;&lt;/a&gt;细节分析&lt;/h2&gt;&lt;p&gt;咱就从 LazyMap的get方法开始吧，因为前面的和之前的链子是一样的。先找到谁调用了get方法，这里直接锁定TiedMapEntry的getValue方法，他这里返回了map.get(key),并且构造函数是publice，可以直接new TiedMapEntry这里的map对应的应该是之前的lazymap&lt;/p&gt;
@@ -282,9 +276,8 @@
 
 
 &lt;h2 id=&#34;疑惑点&#34;&gt;&lt;a href=&#34;#疑惑点&#34; class=&#34;headerlink&#34; title=&#34;疑惑点&#34;&gt;&lt;/a&gt;疑惑点&lt;/h2&gt;&lt;p&gt;这里的话，上面的poc里为了成功执行，使用了lazyMap.remove(“aaa”);但是其实我在想，我们的目的是调用LazyMap的get方法，里面进入if的条件是当前lazyMap对象的map属性中不能有key，那我们为什么要去使用lazyMap的remove，而不是使用map.remove呢，这里我尝试了一下，使用map.remove貌似也能执行？这先丢着，希望有会的师傅可以指导我一下&lt;/p&gt;
-&lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;这里解决了，还得是Y4哥哥猛啊&lt;/p&gt;
+&lt;p&gt;这里解决了，还得是Y4哥哥猛啊&lt;/p&gt;
 &lt;p&gt;大概意思就是，LazyMap是继承了AbstractMapDecorator类，在AbstractMapDecorator类中有写remove方法，但是在LazyMap中没有写，他是使用的父类的remove，父类的remove其实是返回map.remove，所以上面我说的为什么不去找map属性的而是找本身的remove，一切都可以解释了&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ch0x01e/image@main/img/image-20220301204819166.png&#34; alt=&#34;image-20220301204819166&#34;&gt;&lt;/p&gt;
-&lt;/div&gt;
 </content>
         <category term="web安全" />
         <category term="Java安全" />
@@ -292,9 +285,9 @@
         <updated>2022-02-28T11:51:29.847Z</updated>
     </entry>
     <entry>
-        <id>https://ch0x01e.github.io/2022/02/26/cc3/</id>
+        <id>https://ch1e.cn/2022/02/26/cc3/</id>
         <title>commons-collections3反序列化链分析</title>
-        <link rel="alternate" href="https://ch0x01e.github.io/2022/02/26/cc3/"/>
+        <link rel="alternate" href="https://ch1e.cn/2022/02/26/cc3/"/>
         <content type="html">&lt;h1 id=&#34;commons-collections3反序列化链分析&#34;&gt;&lt;a href=&#34;#commons-collections3反序列化链分析&#34; class=&#34;headerlink&#34; title=&#34;commons-collections3反序列化链分析&#34;&gt;&lt;/a&gt;commons-collections3反序列化链分析&lt;/h1&gt;&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;这是我的第二篇CC链分析的文章，希望师傅们能喜欢，如果我有说错的或者不足的地方，希望师傅们多多指点&lt;/p&gt;
 &lt;h2 id=&#34;类加载器&#34;&gt;&lt;a href=&#34;#类加载器&#34; class=&#34;headerlink&#34; title=&#34;类加载器&#34;&gt;&lt;/a&gt;类加载器&lt;/h2&gt;&lt;p&gt;CC3这条链的话得引入类加载器的相关内容，这里也就稍微说一下吧，因为我也是先自己分析一两遍，再写一下文章当作笔记来加深一下印象。&lt;/p&gt;
 &lt;p&gt;类加载器是Java Runtime Environment 的一部分，负责动态加载Java类到Java虚拟机的内存空间中，用于加载系统，网络或者其他来源的类文件&lt;/p&gt;
@@ -398,9 +391,9 @@
         <updated>2022-02-26T11:07:59.272Z</updated>
     </entry>
     <entry>
-        <id>https://ch0x01e.github.io/2022/02/21/cc1/</id>
+        <id>https://ch1e.cn/2022/02/21/cc1/</id>
         <title>commons-collections1反序列化链分析</title>
-        <link rel="alternate" href="https://ch0x01e.github.io/2022/02/21/cc1/"/>
+        <link rel="alternate" href="https://ch1e.cn/2022/02/21/cc1/"/>
         <content type="html">&lt;h1 id=&#34;commons-collections1反序列化链分析&#34;&gt;&lt;a href=&#34;#commons-collections1反序列化链分析&#34; class=&#34;headerlink&#34; title=&#34;commons-collections1反序列化链分析&#34;&gt;&lt;/a&gt;commons-collections1反序列化链分析&lt;/h1&gt;&lt;h2 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近入了P牛的知识星球，打算搞Java安全这一块了，所以有了这一篇CC链的分析结果，从0到1学习java安全，在学习的路上碰到了不少坑，这里一起记录一下这几天的学习成果，用到的环境是jdk1.7以及&lt;a href=&#34;https://mvnrepository.com/artifact/commons-collections/commons-collections/3.1&#34;&gt;commons-collections3.1&lt;/a&gt;，这是我第一篇关于java安全的文章，我才疏学浅，希望师傅们多多指点&lt;/p&gt;
 &lt;h2 id=&#34;有关的类介绍&#34;&gt;&lt;a href=&#34;#有关的类介绍&#34; class=&#34;headerlink&#34; title=&#34;有关的类介绍&#34;&gt;&lt;/a&gt;有关的类介绍&lt;/h2&gt;&lt;h4 id=&#34;ConstantTransformer&#34;&gt;&lt;a href=&#34;#ConstantTransformer&#34; class=&#34;headerlink&#34; title=&#34;ConstantTransformer&#34;&gt;&lt;/a&gt;ConstantTransformer&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20220225142134781.png&#34; alt=&#34;image-20220225142134781&#34;&gt;&lt;/p&gt;
 &lt;p&gt;ConstantTransformer类实现了Transformer接口，其transform方法作用是获取一个对象类型&lt;/p&gt;
@@ -611,13 +604,11 @@
         <updated>2022-02-21T14:45:28.498Z</updated>
     </entry>
     <entry>
-        <id>https://ch0x01e.github.io/2021/11/12/yuanshenglei/</id>
+        <id>https://ch1e.cn/2021/11/12/yuanshenglei/</id>
         <title>PHP原生类在CTF当中的应用🛴</title>
-        <link rel="alternate" href="https://ch0x01e.github.io/2021/11/12/yuanshenglei/"/>
-        <content type="html">&lt;h1 id=&#34;PHP原生类的应用&#34;&gt;&lt;a href=&#34;#PHP原生类的应用&#34; class=&#34;headerlink&#34; title=&#34;PHP原生类的应用&#34;&gt;&lt;/a&gt;PHP原生类的应用&lt;/h1&gt;&lt;div class=&#34;note info simple&#34;&gt;&lt;p&gt;前几天打了浙江省赛，拿了个省二，明年努努力冲个省一。发现浙江省赛出了两题POP链，这就是为啥博客持续在更新反序列化的内容的原因哈哈哈(因为我两题都没解出来)，之前练了一下pop链的构造，现在来研究一下PHP原生类的利用&lt;/p&gt;
+        <link rel="alternate" href="https://ch1e.cn/2021/11/12/yuanshenglei/"/>
+        <content type="html">&lt;h1 id=&#34;PHP原生类的应用&#34;&gt;&lt;a href=&#34;#PHP原生类的应用&#34; class=&#34;headerlink&#34; title=&#34;PHP原生类的应用&#34;&gt;&lt;/a&gt;PHP原生类的应用&lt;/h1&gt;&lt;p&gt;前几天打了浙江省赛，拿了个省二，明年努努力冲个省一。发现浙江省赛出了两题POP链，这就是为啥博客持续在更新反序列化的内容的原因哈哈哈(因为我两题都没解出来)，之前练了一下pop链的构造，现在来研究一下PHP原生类的利用&lt;/p&gt;
 &lt;p&gt;本篇文章总结于&lt;a href=&#34;https://blog.csdn.net/qq_38154820/article/details/121112935&#34;&gt;https://blog.csdn.net/qq_38154820/article/details/121112935&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-
 &lt;h2 id=&#34;报错类&#34;&gt;&lt;a href=&#34;#报错类&#34; class=&#34;headerlink&#34; title=&#34;报错类&#34;&gt;&lt;/a&gt;报错类&lt;/h2&gt;&lt;h3 id=&#34;Error&#34;&gt;&lt;a href=&#34;#Error&#34; class=&#34;headerlink&#34; title=&#34;Error&#34;&gt;&lt;/a&gt;Error&lt;/h3&gt;&lt;p&gt;在PHP7版本中，因为Error中带有&lt;code&gt;__toString&lt;/code&gt;方法，该方法会将传入给&lt;code&gt;__toString&lt;/code&gt;的参数原封不动的输出到浏览器。在这么一个过程中可能会产生XSS。&lt;/p&gt;
 &lt;p&gt;我们来随便弄一个DEMO试试&lt;/p&gt;
 &lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$a&lt;/span&gt;=&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;a&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$b&lt;/span&gt;=&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;b&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;variable&#34;&gt;$a&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$b&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -668,7 +659,7 @@
 &lt;p&gt;DEMO:&lt;/p&gt;
 &lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$a&lt;/span&gt; = &lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;a&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$b&lt;/span&gt; = &lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;b&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;variable&#34;&gt;$a&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$b&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-&lt;p&gt;我们传入?a=SplFileObject&amp;amp;b=flag.php，即可读取我们flag.php里面的内容，&lt;mark class=&#34;hl-label default&#34;&gt;但是他只能读一行！！！red&lt;/mark&gt; &lt;/p&gt;
+&lt;p&gt;我们传入?a=SplFileObject&amp;amp;b=flag.php，即可读取我们flag.php里面的内容&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211112133016528.png&#34; alt=&#34;image-20211112133016528&#34;&gt;&lt;/p&gt;
 &lt;p&gt;除了直接传文件名之外，我们是不是可以联系到php伪协议呢？不妨来试试，传入如下payload&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;?a=SplFileObject&amp;amp;b=php://filter/convert.base64-encode/resource=flag.php&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -693,9 +684,9 @@
         <updated>2021-11-12T04:25:11.814Z</updated>
     </entry>
     <entry>
-        <id>https://ch0x01e.github.io/2021/11/11/pop/</id>
+        <id>https://ch1e.cn/2021/11/11/pop/</id>
         <title>PHP反序列化之POP链构造🛴</title>
-        <link rel="alternate" href="https://ch0x01e.github.io/2021/11/11/pop/"/>
+        <link rel="alternate" href="https://ch1e.cn/2021/11/11/pop/"/>
         <content type="html">&lt;h1 id=&#34;PHP反序列化之pop链&#34;&gt;&lt;a href=&#34;#PHP反序列化之pop链&#34; class=&#34;headerlink&#34; title=&#34;PHP反序列化之pop链&#34;&gt;&lt;/a&gt;PHP反序列化之pop链&lt;/h1&gt;&lt;h2 id=&#34;POP链介绍&#34;&gt;&lt;a href=&#34;#POP链介绍&#34; class=&#34;headerlink&#34; title=&#34;POP链介绍&#34;&gt;&lt;/a&gt;POP链介绍&lt;/h2&gt;&lt;p&gt;POP 面向属性编程(Property-Oriented Programing) 常用于上层语言构造特定调用链的方法，与二进制利用中的面向返回编程（Return-Oriented Programing）的原理相似，都是从现有运行环境中寻找一系列的代码或者指令调用，然后根据需求构成一组连续的调用链,最终达到攻击者邪恶的目的&lt;/p&gt;
 &lt;p&gt;说的再具体一点就是 ROP 是通过栈溢出实现控制指令的执行流程，而我们的反序列化是通过控制对象的属性从而实现控制程序的执行流程，进而达成利用本身无害的代码进行有害操作的目的。&lt;/p&gt;
 &lt;h2 id=&#34;魔术方法介绍&#34;&gt;&lt;a href=&#34;#魔术方法介绍&#34; class=&#34;headerlink&#34; title=&#34;魔术方法介绍&#34;&gt;&lt;/a&gt;魔术方法介绍&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211110162148224.png&#34; alt=&#34;image-20211110162148224&#34;&gt;&lt;/p&gt;

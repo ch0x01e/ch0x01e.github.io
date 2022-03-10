@@ -1,150 +1,418 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>页面没有找到 | ch1e的随笔</title><meta name="keywords" content="ch1e的随笔"><meta name="author" content="ch1e"><meta name="copyright" content="ch1e"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
+
+<!DOCTYPE html>
+<html>
+<head>
+     
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<title>ch1e的随笔</title>
+<meta name="author" content="ch1e">
+<meta name="copyright" content="ch1e">
+
+<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.png"> 
+
+
+    <meta name="keywords" content="靶场练习,web安全,代码审计,渗透测试,Java安全,反序列化,CTF">
+
+
+
+     
+    <meta property="og:type" content="website">
 <meta property="og:title" content="ch1e的随笔">
-<meta property="og:url" content="https://ch0x01e.github.io/404.html">
+<meta property="og:url" content="https://ch1e.cn/404.html">
 <meta property="og:site_name" content="ch1e的随笔">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
 <meta property="article:author" content="ch1e">
-<meta property="article:tag" content="ch1e的随笔">
+<meta property="article:tag" content="靶场练习">
+<meta property="article:tag" content="web安全">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="Java安全">
+<meta property="article:tag" content="反序列化">
+<meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://ch0x01e.github.io/404"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
-  root: '/',
-  algolia: undefined,
-  localSearch: undefined,
-  translate: undefined,
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
-  copy: {
-    success: '复制成功',
-    error: '复制错误',
-    noSupport: '浏览器不支持'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: '',
-  date_suffix: {
-    just: '刚刚',
-    min: '分钟前',
-    hour: '小时前',
-    day: '天前',
-    month: '个月前'
-  },
-  copyright: undefined,
-  lightbox: 'fancybox',
-  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"bottom-left"},
-  source: {
-    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
-    justifiedGallery: {
-      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
-      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
-    },
-    fancybox: {
-      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
-      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
-    }
-  },
-  isPhotoFigcaption: false,
-  islazyload: false,
-  isanchor: false
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: '页面没有找到',
-  isPost: false,
-  isHome: false,
-  isHighlightShrink: false,
-  isToc: false,
-  postUpdate: '2022-03-10 22:48:35'
-}</script><noscript><style type="text/css">
-  #nav {
-    opacity: 1
-  }
-  .justified-gallery img {
-    opacity: 1
-  }
+<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+ 
 
-  #recent-posts time,
-  #post-meta time {
-    display: inline !important
-  }
-</style></noscript><script>(win=>{
-    win.saveToLocal = {
-      set: function setWithExpiry(key, value, ttl) {
-        if (ttl === 0) return
-        const now = new Date()
-        const expiryDay = ttl * 86400000
-        const item = {
-          value: value,
-          expiry: now.getTime() + expiryDay,
-        }
-        localStorage.setItem(key, JSON.stringify(item))
-      },
-
-      get: function getWithExpiry(key) {
-        const itemStr = localStorage.getItem(key)
-
-        if (!itemStr) {
-          return undefined
-        }
-        const item = JSON.parse(itemStr)
-        const now = new Date()
-
-        if (now.getTime() > item.expiry) {
-          localStorage.removeItem(key)
-          return undefined
-        }
-        return item.value
-      }
-    }
-  
-    win.getScript = url => new Promise((resolve, reject) => {
-      const script = document.createElement('script')
-      script.src = url
-      script.async = true
-      script.onerror = reject
-      script.onload = script.onreadystatechange = function() {
-        const loadState = this.readyState
-        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-        script.onload = script.onreadystatechange = null
-        resolve()
-      }
-      document.head.appendChild(script)
-    })
-  
-      win.activateDarkMode = function () {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      win.activateLightMode = function () {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-        }
-      }
-      const t = saveToLocal.get('theme')
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<link href="//cdn.jsdelivr.net" rel="preconnect">
+<link href="https://ch1e.cn" rel="prefetch">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css " rel="stylesheet">
+<link href="/css/main.css " rel="stylesheet">
+<script src="/js/utlis.js"></script>
+ 
     
-          if (t === 'dark') activateDarkMode()
-          else if (t === 'light') activateLightMode()
-        
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        if (asideStatus === 'hide') {
-          document.documentElement.classList.add('hide-aside')
-        } else {
-          document.documentElement.classList.remove('hide-aside')
-        }
-      }
-    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&amp;spec=100" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">34</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页😎</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档🎈</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签🏀</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 朋友圈👨‍🦳</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="http://ctf.ssleye.com/"><i class="fa-fw fas fa-heart"></i><span> CTF在线工具</span></a></div></div></div></div><div class="error" id="body-wrap"><div style="display: none"><header class="not-top-img" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-q6lqdd.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">ch1e的随笔</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页😎</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档🎈</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签🏀</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 朋友圈👨‍🦳</span></a></div><div class="menus_item"><a class="site-page" target="_blank" rel="noopener" href="http://ctf.ssleye.com/"><i class="fa-fw fas fa-heart"></i><span> CTF在线工具</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header></div><div id="error-wrap"><div class="error-content"><div class="error-img" style="background-image: url('https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/wallhaven-q6lqdd.jpg')"></div><div class="error-info"><h1 class="error_title">404</h1><div class="error_subtitle">Page Not Found</div><a class="button--animated" href="/"><i class="fas fa-rocket"></i>回到主页</a></div></div></div></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>var preloader = {
-  endLoading: () => {
-    document.body.style.overflow = 'auto';
-    document.getElementById('loading-box').classList.add("loaded")
-  },
-  initLoading: () => {
-    document.body.style.overflow = '';
-    document.getElementById('loading-box').classList.remove("loaded")
+ 
 
-  }
-}
-window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div></div></body></html>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+     
+    
+ 
+     
+
+<script>
+    var $config = {
+        tocStyle: "visible",
+        CDN:{
+            fancyboxJs: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js",
+            fancyboxCss: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
+        },
+        
+        
+    }
+</script>
+    
+
+
+
+
+  
+
+
+    <div id="body-wrap">
+        <nav id="nav-wrap">
+  <div class="navbar">
+    <div class="bar">
+      <a href="/" class="title">ch1e的随笔</a>
+
+      
+      <ul class="menu">
+         
+        <li><a href="/">首页</a></li>
+          
+        <li>
+          <a class="menu-child-hover" href="javascript:void(0);">找文章</a>
+          <ul class="menu-child">
+            
+            <li><a href='/tags'>标签</a></li>
+            
+            <li><a href='/archives'>归档</a></li>
+            
+          </ul>
+        </li>
+          
+        <li><a href="/link">友情链接</a></li>
+         
+      </ul>
+      <i class="fas fa-bars open-nav"></i>
+    </div>
+  </div>
+  <div id="mobile-nav">
+    <ul>
+       
+      <li><a href="/">首页</a></li>
+         
+      <li><a href='/tags'>标签</a></li>
+      
+      <li><a href='/archives'>归档</a></li>
+         
+      <li><a href="/link">友情链接</a></li>
+       
+    </ul>
+  </div>
+</nav>
+
+
+        <main id="main">
+            <style>
+    #footer {
+        display: none;
+    }
+
+    #body-wrap .main {
+        height: calc(100vh - 70px);
+        align-items: center;
+    }
+
+    #error-warp {
+        width: 400px;
+        height: 400px;
+        border-radius: 10px;
+        display: flex;
+        background: var(--main-bg);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #error {
+        color: var(--error-text-color);
+        font-size: 30px;
+        position: relative;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    #error::before,
+    #error::after {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        content: attr(content);
+    }
+
+    #error::before {
+        left: 1px;
+        text-shadow: -1px 0 red;
+        background: var(--main-bg);
+        animation: noise-before 1s ease-in infinite;
+    }
+
+    #error::after {
+        left: -2px;
+        text-shadow: -1px 0 blue;
+        background: var(--main-bg);
+        animation: noise-after 1.5s ease-out infinite;
+    }
+
+    .back-home {
+        display: inline-block;
+        border-radius: 10px;
+        margin-top: .5rem;
+        padding: .3rem 1.5rem;
+        background: var(--main);
+        color: #fff;
+    }
+
+    .back-home:hover {
+        color: #fff !important;
+    }
+
+    @media screen and (max-width: 900px) {
+        #error-warp {
+            width: 80%;
+        }
+    }
+
+    @keyframes noise-before {
+        0% {
+            clip-path: inset(11% 0 33% 0);
+        }
+
+        20% {
+            clip-path: inset(99% 0 44% 0);
+        }
+
+        40% {
+            clip-path: inset(33% 0 55% 0);
+        }
+
+        60% {
+            clip-path: inset(66% 0 11% 0);
+        }
+
+        80% {
+            clip-path: inset(22% 0 55% 0);
+        }
+
+        100% {
+            clip-path: inset(33% 0 77% 0);
+        }
+    }
+
+    @keyframes noise-after {
+        0% {
+            clip-path: inset(22% 0 44% 0);
+        }
+
+        20% {
+            clip-path: inset(77% 0 11% 0);
+        }
+
+        40% {
+            clip-path: inset(33% 0 55% 0);
+        }
+
+        60% {
+            clip-path: inset(66% 0 88% 0);
+        }
+
+        80% {
+            clip-path: inset(22% 0 66% 0);
+        }
+
+        100% {
+            clip-path: inset(33% 0 77% 0);
+        }
+    }
+</style>
+<div id="error-warp">
+    <div id="error" content="404 Not Found">
+        404 Not Found
+    </div>
+    <a href="/" class="back-home">
+        返回首页
+    </a>
+</div>
+        </main>
+        <section id="rightside">
+    
+    <div class="rightside-item">
+        
+        
+         
+        
+        
+         
+         
+        <a href="javascript:(0)" id="darkmode" title="深色/浅色 ">
+            <i class="fas fa-moon"></i>
+        </a>
+         
+        
+        <a href="#" title="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+         
+
+<footer class="footer" id="footer">
+    <div class="copyright">
+      &copy; 2020 - 2022
+        <i class="fas fa-fan"></i>
+        ch1e
+    </div>
+    <div class="framework-info">
+        <span>框架 </span>
+        <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="footer-separator">|</span>
+        <span>主题 </span>
+        <a href="https://github.com/lete114/hexo-theme-MengD" target="_blank">MengD.(萌典) </a>
+    </div>
+    
+    <div class="custom-text">我相信我可以，但我一直在路上，所以我有无限的可能！！</div>
+</footer>
+    </div>
+    <div id="mask" onclick="closeAll()"></div>
+    
+    <div class="script">
+        <script src="/js/main.js"></script>
+        
+
+ 
+<script>
+    var originTitle = document.title;
+    var titleTime;
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+            clearTimeout(titleTime);
+        } else {
+            document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+            titleTime = setTimeout(function () {
+                document.title = originTitle;
+            }, 2000);
+        }
+    });
+</script>
+
+
+<script src="/js/lazyload.js"></script>
+
+
+    
+
+
+        
+    <script>
+        getScript('https://cdn.jsdelivr.net/npm/pjax/pjax.min.js',LoadPjax)
+        function LoadPjax() {
+            var pjax = new Pjax({
+                selectors: [
+                    'head title',
+                    'head meta[name="keywords"]',
+                    'head meta[name="description"]',
+                    'main',
+                    '#rightside'
+                ],
+                cache: true,
+                cacheBust: false
+            });
+        }
+
+        // 清除时间
+        var timer = null;
+        // 执行进度条
+        function ProgressStart() {
+            // 设置初始进度
+            var progress = 10;
+            // 创建进度条 及 css样式
+            var div = document.createElement('div');
+            div.className = 'pjax-progress';
+            document.body.prepend(div);
+            // 定义随机数最大值最小值
+            var max = 10, mini = 3;
+            var result = max - mini;
+            // 清除
+            clearInterval(timer);
+            // 0.5秒内累加进度
+            timer = setInterval(function () {
+                // 随机数
+                var num = parseInt(Math.random() * result);
+                var randomResult = num + mini;
+                // 累加
+                progress += randomResult
+                document.getElementsByClassName('pjax-progress')[0].style.width = progress + '%';
+                // 当进度达到95%时停止
+                if (progress > 95) progress = 95
+            }, 500)
+        }
+        // 加载进度条加载完毕
+        function ProgressFinish() {
+            clearInterval(timer);
+            // 页面加载完毕后进度100% 并在0.7秒后删除
+            var progress = document.getElementsByClassName('pjax-progress');
+            progress[0].style.width = '100%';
+            timer = setTimeout(function () {
+                progress[0].parentNode.removeChild(progress[0])
+            }, 700);
+        }
+
+        // 开始 PJAX 执行的函数
+        document.addEventListener('pjax:send', function () {
+            // 执行进度条
+            ProgressStart()
+        });
+        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+        document.addEventListener('pjax:complete', function () {
+
+            // 加载进度条加载完毕
+            ProgressFinish()
+            // 执行所有方法
+            exeAllFn()
+
+            
+                // 图片懒加载
+                ImgLazyLoad('body img[data-img]', 'data-img')
+            
+
+
+            document.querySelectorAll('script[data-pjax]').forEach(item => {
+                const newScript = document.createElement('script')
+                const content = item.text || item.textContent || item.innerHTML || ''
+                Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+                newScript.appendChild(document.createTextNode(content))
+                item.parentNode.replaceChild(newScript, item)
+            })
+        });
+
+        // Pjax请求错误时，跳转到404页面
+        document.addEventListener('pjax:error', (err) => {
+            if (err.request.status === 404) {
+                pjax.loadUrl('/404.html')
+            }
+        })
+    </script>
+
+    </div>
+</body>
+
+</html>
