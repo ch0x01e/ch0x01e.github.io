@@ -167,6 +167,59 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/03/17/shiro550/" title="Shiro-550反序列化浅析 ">
+        
+        Shiro-550反序列化浅析
+        
+      </a>
+      <div class="post-description">
+        
+        前言最近摸鱼了比较久了，处理了一些协会内的事然后也想着稍微让自己轻松一点，就休息了几天哈哈，所以就自从上次把博客整体换了个主题以后，就比较摆烂，中途还看了一遍关于内网的书，整理了一些笔记，然后准备继续学习关于Java安全的东西，学完了CCCBjdk7u21这些链，我准备先看几个组件漏洞吧，本来是计划学习jdk8u20那条链，但是由于找不到对应的openjdk版本，就暂时没打算先看，因为对shiro比较熟悉，选择了从shiro入手开始。这里为啥标题叫浅析呢，因为我也是比较菜不是很懂开发，所以不能带师傅们进行深入的了解，所以说如果文章里有哪些地方有问题希望师傅们多多指出漏洞分析ApacheShiro是一个使用比较多的Java安全框架，他执行身份验证，授权，加密和会话管理，可以通过Shiro易于理解的Api，快速轻松地保护你的程序ApacheShiro框架功能主要由以下几个部分组成：Authentication：身份认证-登录Authorization：授权-权限验证SessionManager：会话管理Cryptography：加密WebSupport：Web支持Caching：缓存...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-03-17
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/03/11/OS-HACKNOS-2.1/" title="vulnhub靶机练习-HACKNOS-2.1 ">
         
         vulnhub靶机练习-HACKNOS-2.1
@@ -532,59 +585,6 @@
           <span>发表于 </span>
           <span>
             2022-02-26
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
-            反序列化
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/02/21/cc1/" title="commons-collections1反序列化链分析 ">
-        
-        commons-collections1反序列化链分析
-        
-      </a>
-      <div class="post-description">
-        
-        commons-collections1反序列化链分析前言最近入了P牛的知识星球，打算搞Java安全这一块了，所以有了这一篇CC链的分析结果，从0到1学习java安全，在学习的路上碰到了不少坑，这里一起记录一下这几天的学习成果，用到的环境是jdk1.7以及commons-collections3.1，这是我第一篇关于java安全的文章，我才疏学浅，希望师傅们多多指点有关的类介绍ConstantTransformerConstantTransformer类实现了Transformer接口，其transform方法作用是获取一个对象类型InvokerTransformerInvokerTransformer类实现了Transformer和Serializable接口，重写了transform方法，他的transform方法是用反射调用指定的方法并且进行返回他的结果，这里我们可以来写个小demopublicclassdemo&amp;#123;publicstaticvoidmain(String[]args)&amp;#123;Transformertransformer=newInvokerTra...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-02-21
           </span>
         </span>
         
