@@ -9,10 +9,10 @@
         <lastBuildDate>Thu, 17 Mar 2022 17:22:40 +0800</lastBuildDate>
         <category>靶场练习</category>
         <category>web安全</category>
-        <category>Java安全</category>
-        <category>反序列化</category>
         <category>代码审计</category>
         <category>渗透测试</category>
+        <category>Java安全</category>
+        <category>反序列化</category>
         <category>CTF</category>
         <item>
             <guid isPermalink="true">https://ch1e.cn/2022/03/17/shiro550/</guid>
@@ -41,7 +41,7 @@
 &lt;p&gt;&lt;code&gt;命令-&amp;gt;反序列化-&amp;gt;AES加密-&amp;gt;base64编码&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;这个漏洞主要存在的版本是Apache Shiro &amp;lt; 1.2.4因为在高版本中，shiro每次启动都会随机生成一个新的Key&lt;/p&gt;
 &lt;p&gt;额这里的话因为我也不熟悉Java开发的一些相关知识，我也就直接从网上找了一个Shiro的源码来进行分析。&lt;/p&gt;
-&lt;p&gt;由于Shiro中的Cookie是rememberMe，那么我们直接全局搜索含有rememberMe的地方&lt;img src=&#34;https://raw.githubusercontent.com/ch0x01e/image/main/img/image-20220317174246955.png&#34; alt=&#34;image-20220317174246955&#34;&gt;&lt;/p&gt;
+&lt;p&gt;由于Shiro中的Cookie是rememberMe，那么我们直接全局搜索含有rememberMe的地方&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20220317174246955.png&#34; alt=&#34;image-20220317174246955&#34;&gt;&lt;/p&gt;
 &lt;p&gt;这里的话定义了一个&lt;code&gt;DEFAULT_REMEMBER_ME_COOKIE_NAME = &amp;quot;rememberMe&amp;quot;;&lt;/code&gt;，根据英文可以看出来是默认的rememberMe的Cookie名字，大概猜测就是这里吧，这里位于CookieRememberMeManager，看类名应该也是这，RememberMe的Cookie管理，来看看他的构造函数&lt;/p&gt;
 &lt;figure class=&#34;highlight java&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;title&#34;&gt;CookieRememberMeManager&lt;/span&gt;&lt;span class=&#34;params&#34;&gt;()&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    Cookie cookie = &lt;span class=&#34;keyword&#34;&gt;new&lt;/span&gt; SimpleCookie(DEFAULT_REMEMBER_ME_COOKIE_NAME);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cookie.setHttpOnly(&lt;span class=&#34;keyword&#34;&gt;true&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;comment&#34;&gt;//One year should be long enough - most sites won&amp;#x27;t object to requiring a user to log in if they haven&amp;#x27;t visited&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;comment&#34;&gt;//in a year:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    cookie.setMaxAge(Cookie.ONE_YEAR);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;this&lt;/span&gt;.cookie = cookie;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
@@ -64,9 +64,9 @@
 &lt;figure class=&#34;highlight java&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;byte&lt;/span&gt;[] getDecryptionCipherKey() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;return&lt;/span&gt; decryptionCipherKey;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;p&gt;这里继续跟进getDecryptionCipherKey方法，他是返回自身的decryptionCipherKey属性，那么我们可以对应去找找有无set方法进行了设置&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ch0x01e/image/main/img/image-20220317190054895.png&#34; alt=&#34;image-20220317190054895&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20220317190054895.png&#34; alt=&#34;image-20220317190054895&#34;&gt;&lt;/p&gt;
 &lt;p&gt;确实有找到setDecryptionCipherKey方法对密钥进行了一个赋值，我们寻找一下是哪里调用了这个setter&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/ch0x01e/image/main/img/image-20220317190451840.png&#34; alt=&#34;image-20220317190451840&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20220317190451840.png&#34; alt=&#34;image-20220317190451840&#34;&gt;&lt;/p&gt;
 &lt;figure class=&#34;highlight java&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;title&#34;&gt;setCipherKey&lt;/span&gt;&lt;span class=&#34;params&#34;&gt;(&lt;span class=&#34;keyword&#34;&gt;byte&lt;/span&gt;[] cipherKey)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;comment&#34;&gt;//Since this method should only be used in symmetric ciphers&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;comment&#34;&gt;//(where the enc and dec keys are the same), set it on both:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    setEncryptionCipherKey(cipherKey);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    setDecryptionCipherKey(cipherKey);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;p&gt;继续寻找调用setCipherKey的方法，然后我们就找到了AbstractRememberMeManager的构造函数&lt;/p&gt;
