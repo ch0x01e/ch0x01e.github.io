@@ -6,10 +6,10 @@
     <updated>2021-08-15T11:17:52.993Z</updated>
     <category term="靶场练习" />
     <category term="web安全" />
-    <category term="Java安全" />
-    <category term="反序列化" />
     <category term="代码审计" />
     <category term="渗透测试" />
+    <category term="Java安全" />
+    <category term="反序列化" />
     <category term="CTF" />
     <entry>
         <id>https://ch1e.cn/2021/08/15/pboot/</id>
