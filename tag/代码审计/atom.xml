@@ -11,6 +11,7 @@
     <category term="Java安全" />
     <category term="反序列化" />
     <category term="CTF" />
+    <category term="内存马" />
     <entry>
         <id>https://ch1e.cn/2021/08/15/pboot/</id>
         <title>PHP代码审计之Pbootcms代码审计</title>

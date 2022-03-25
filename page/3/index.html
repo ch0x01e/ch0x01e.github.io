@@ -137,6 +137,52 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2021/08/20/trollcave-v1-2/" title="vulnhub靶机练习-trollcave-v1-2 ">
+        
+        vulnhub靶机练习-trollcave-v1-2
+        
+      </a>
+      <div class="post-description">
+        
+        vulhub靶场练习-trollcave-v1-2信息搜集首先对靶机进行信息搜集nmap-sV-sC-A192.168.169.139开放了80，22端口，Ubuntu系统，我们访问80端口看看，使用谷歌的插件进行第二波信息搜集发现他是Ruby写的网站，并且使用了RubyonRails框架，这里对后面的渗透有关键的影响再来看网站内容，貌似是个cms，里面都是一些文章，还有注册登录窗口漏洞挖掘点击注册发现不让注册，对登陆进行了注入，未授权，爆破等方式，全都失败了我们又去扫描网站的目录，也都是只有跳转到登陆窗口，这时候在网站的内容里发现了突破点我们点进来看看，他提示我们密码重置是在password_resets，我们直接访问也访问不到这时候实在没招了，直接看wp，在RubyonRails中应该访问password_resets/new让我们重置密码，我输admin也不行，然后随便找了几个用户，发现xer这个可以重置，先试试吧但是看到这里，我在想能不能来修改这个name来重置其他用户的密码呢我们继续重置完xer的密码以后，登陆上去发现了一个上传文件的点，但是我们上传的时候提示被关闭了我...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2021-08-20
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/%E9%9D%B6%E5%9C%BA%E7%BB%83%E4%B9%A0/">
+            靶场练习
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2021/08/15/pboot/" title="PHP代码审计之Pbootcms代码审计 ">
         
         PHP代码审计之Pbootcms代码审计

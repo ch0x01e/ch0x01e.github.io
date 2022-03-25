@@ -14,6 +14,7 @@
         <category>Java安全</category>
         <category>反序列化</category>
         <category>CTF</category>
+        <category>内存马</category>
         <item>
             <guid isPermalink="true">https://ch1e.cn/2021/11/12/yuanshenglei/</guid>
             <title>PHP原生类在CTF当中的应用🛴</title>
