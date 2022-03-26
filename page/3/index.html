@@ -137,6 +137,52 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2021/08/23/Os-ByteSec/" title="vulnhub靶机练习-OS-ByteSec ">
+        
+        vulnhub靶机练习-OS-ByteSec
+        
+      </a>
+      <div class="post-description">
+        
+        OS-ByteSec信息搜集nmap-sV-sC-A192.168.169.142先探测一下靶机的端口开放的情况发现开启了801394452525端口，其中80是http服务，2525是ssh，139和445是smb，访问网站首页，提示我们smb漏洞利用首先来使用smbmap，smbmap-H192.168.169.142，可以匿名访问但是均无权限我们这里使用一下enum4linux来检测一下enum4linux192.168.169.142全方位检测可以发现三个用户，sagarblackjaxsmb，继续使用smbmap来列出共享目录，加上-u参数smbmap-H192.168.169.142-usmb可以列出文件发现并不需要密码smbclient访问smb隐藏目录smbclient//192.168.169.142/smb-Usmb发现当前目录有两个文件，main.txtsafe.zip用get命令下载然后分别看看里面有什么内容。main.txt就只有helounzipsafe.zip发现需要密码，使用fcrackzip进行爆破，fcrackzip-D-p/usr/share...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2021-08-23
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/%E9%9D%B6%E5%9C%BA%E7%BB%83%E4%B9%A0/">
+            靶场练习
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2021/08/20/trollcave-v1-2/" title="vulnhub靶机练习-trollcave-v1-2 ">
         
         vulnhub靶机练习-trollcave-v1-2
