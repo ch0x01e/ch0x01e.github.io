@@ -444,7 +444,7 @@
 &lt;p&gt;这里我还遇到一点小小的坑，由于是第一次弄，我之前也看了很多网上分析的文章，看着看着看到了部分好像不需要commons collections包，所以第一次运行的时候就出错了，有个类找不到。后面才了解到有无依赖的Shiro反序列化利用链，这个后面会说。&lt;/p&gt;
 &lt;h1 id=&#34;无依赖的利用链&#34;&gt;&lt;a href=&#34;#无依赖的利用链&#34; class=&#34;headerlink&#34; title=&#34;无依赖的利用链&#34;&gt;&lt;/a&gt;无依赖的利用链&lt;/h1&gt;&lt;p&gt;上面说了，我在第一次使用的时候没有导入commons collections的包，导致我没法运行我们的poc，commons-beanutils本来依赖于commons-collections，但是在Shiro中，它的commons-beanutils虽然包含了一部分commons-collections的类，但却不全，那么真实情况下，万一我们的目标的环境没有commons collection这个包那又该如何进行反序列化呢？&lt;/p&gt;
 &lt;p&gt;首先我还是把我上面那个POC里的commons collections包去掉，然后我们运行看看在哪里会有问题，直接运行，他会报错，报错如下&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20220308123318177.png&#34; alt=&#34;image-20220308123318177&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220308123318177.png&#34; alt=&#34;image-20220308123318177&#34;&gt;&lt;/p&gt;
 &lt;p&gt;我们跟进到BeanComparator.java的81行和59行，这里其实是BeanComparator的构造方法，如果我们调用的无参构造方法，那么他会去调用自身的一个参数的构造方法，并且property默认是null，一个参数的构造方法会调用自身的两个参数的构造方法，并且默认的comparator是ComparableComparator类的对象&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20220308124009434.png&#34; alt=&#34;image-20220308124009434&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20220308123407551.png&#34; alt=&#34;image-20220308123407551&#34;&gt;&lt;/p&gt;
