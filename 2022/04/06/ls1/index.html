@@ -1,0 +1,462 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+     
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<title>Java代码审计练习(一) | ch1e的随笔</title>
+<meta name="author" content="ch1e">
+<meta name="copyright" content="ch1e">
+
+<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.png"> 
+
+
+    <meta name="keywords" content="web安全,代码审计,渗透测试">
+
+
+
+     
+    <meta name="description" content="前言摸了好几天的鱼，被早8折磨的死去活来，一但早8，整天没精神，今天还被体育课折磨到低血糖，想到自己这么菜，选择继续学习，晚上稍微看了一下SSM框架，感觉非常无聊，突然心血来潮想审几个程序练练手，就随手找了个程序，这个是炼石计划之50套JavaWeb代码审计实战漏洞挖掘的一个系统，我看到这个就选择这个了，懒得去找其他了，里面的具体内容也需要付费。。。囊中羞涩，没有选择加入99&#x2F;年的知识星球，只能自">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java代码审计练习(一)">
+<meta property="og:url" content="https://ch1e.cn/2022/04/06/ls1/">
+<meta property="og:site_name" content="ch1e的随笔">
+<meta property="og:description" content="前言摸了好几天的鱼，被早8折磨的死去活来，一但早8，整天没精神，今天还被体育课折磨到低血糖，想到自己这么菜，选择继续学习，晚上稍微看了一下SSM框架，感觉非常无聊，突然心血来潮想审几个程序练练手，就随手找了个程序，这个是炼石计划之50套JavaWeb代码审计实战漏洞挖掘的一个系统，我看到这个就选择这个了，懒得去找其他了，里面的具体内容也需要付费。。。囊中羞涩，没有选择加入99&#x2F;年的知识星球，只能自">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+<meta property="article:published_time" content="2022-04-06T12:04:34.800Z">
+<meta property="article:modified_time" content="2022-04-06T15:54:03.427Z">
+<meta property="article:author" content="ch1e">
+<meta property="article:tag" content="web安全">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+ 
+
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<link href="//cdn.jsdelivr.net" rel="preconnect">
+<link href="https://ch1e.cn" rel="prefetch">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css " rel="stylesheet">
+<link href="/css/main.css " rel="stylesheet">
+<script src="/js/utlis.js"></script>
+ 
+    
+ 
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+     
+    
+ 
+     
+
+<script>
+    var $config = {
+        tocStyle: "visible",
+        CDN:{
+            fancyboxJs: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js",
+            fancyboxCss: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
+        },
+        
+        
+    }
+</script>
+    
+
+
+
+
+  
+
+
+    <div id="body-wrap">
+        <nav id="nav-wrap">
+  <div class="navbar">
+    <div class="bar">
+      <a href="/" class="title">ch1e的随笔</a>
+
+      
+      <ul class="menu">
+         
+        <li><a href="/">首页</a></li>
+          
+        <li>
+          <a class="menu-child-hover" href="javascript:void(0);">找文章</a>
+          <ul class="menu-child">
+            
+            <li><a href='/tags'>标签</a></li>
+            
+            <li><a href='/archives'>归档</a></li>
+            
+          </ul>
+        </li>
+          
+        <li><a href="/link">友情链接</a></li>
+         
+      </ul>
+      <i class="fas fa-bars open-nav"></i>
+    </div>
+  </div>
+  <div id="mobile-nav">
+    <ul>
+       
+      <li><a href="/">首页</a></li>
+         
+      <li><a href='/tags'>标签</a></li>
+      
+      <li><a href='/archives'>归档</a></li>
+         
+      <li><a href="/link">友情链接</a></li>
+       
+    </ul>
+  </div>
+</nav>
+
+
+        <main id="main">
+            
+
+<article id="post">
+  <div class="post-info">
+    <div class="post-title">
+      <h1>Java代码审计练习(一)</h1>
+    </div>
+    <div class="post-meta">
+      <div class="post-date">
+        <i class="far fa-calendar-alt fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          发表于
+            2022-04-06 |
+        </span>
+        
+        <i class="fas fa-history fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          更新于
+            2022-04-06
+        </span>
+      </div>
+      <div class="post-meta-wordcount">
+        <i class="far fa-file-word fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">总字数:</span>
+        <span class="word-count">1.6k | </span>
+        <i class="far fa-clock fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">阅读时长:</span>
+        <span>6分钟</span>
+        
+      </div>
+    </div>
+  </div>
+  <div class="post-content">
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>摸了好几天的鱼，被早8折磨的死去活来，一但早8，整天没精神，今天还被体育课折磨到低血糖，想到自己这么菜，选择继续学习，晚上稍微看了一下SSM框架，感觉非常无聊，突然心血来潮想审几个程序练练手，就随手找了个程序，这个是炼石计划之50套JavaWeb代码审计实战漏洞挖掘的一个系统，我看到这个就选择这个了，懒得去找其他了，里面的具体内容也需要付费。。。囊中羞涩，没有选择加入99/年的知识星球，只能自己探索了</p>
+<blockquote>
+<p>百度云链接：<br>链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/11rDre4Q32wqn7gMRyEmIyw">https://pan.baidu.com/s/11rDre4Q32wqn7gMRyEmIyw</a><br>提取码：4nee</p>
+</blockquote>
+<p>我这里木有收广告费哦，只是懒得转存再分享我自己的了。这套程序用的是SpringBoot+springsecurity+mybatis</p>
+<h1 id="搭建环境"><a href="#搭建环境" class="headerlink" title="搭建环境"></a>搭建环境</h1><p>首先我们打开我们的PHP study，然后打开数据库服务，新建一个数据库为rbac，然后导入我们源码里的sql文件，并且打开文件里的src\main\resources\application.yml文件，修改我们对应的数据库配置即可</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406202113685.png" alt="image-20220406202113685"></p>
+<p>然后就是运行程序</p>
+<h1 id="审计前的信息搜集"><a href="#审计前的信息搜集" class="headerlink" title="审计前的信息搜集"></a>审计前的信息搜集</h1><p>搭建完环境之后可以大体看一下他的结构，该程序是基于MVC架构的，分别是Model(模块)，View(视图)，Controller(控制器)，关于MVC的知识也得师傅们自己去学习了。第二步，我选择看他的pom.xml文件，这里就不多介绍关于Maven等JavaWeb开发的前置知识了，因为知识记录我个人的学习历程，如果有师傅不熟悉JavaWeb开发的话可以去看一下B站的黑马程序员，木有恰饭，因为我是看的这个</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406201155266.png" alt="image-20220406201155266"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406201729293.png" alt="image-20220406201729293"></p>
+<p>其实从pom.xml文件中可以看到他导入了fastjson的1.2.56版本，其实他这里的这个fastjson版本是存在反序列化漏洞的，但是他好像并没有使用到parseObject，所以这里其实可能没办法进行利用</p>
+<h1 id="SQL注入漏洞"><a href="#SQL注入漏洞" class="headerlink" title="SQL注入漏洞"></a>SQL注入漏洞</h1><p>该项目是基于Mybatis，通过Mybatis来操作数据库，其中又有两种方法，一种是最普通的查询，另外一种是预编译查询，有经验的师傅知道预编译查询是预防SQL注入的有效方法，如果说我们在Mybatis中配置了预编译查询，那基本上是无法进行SQL注入了，但是有个例外，其实SQL注入的根本原因是使用了拼接语句，那我如果使用了预编译查询，但是依旧进行了字符串拼接，那是不是还是可以进行注入？所以我们如果需要寻找SQL注入的漏洞，就得寻找到没有使用预编译查询的地方或者是进行预编译查询以后还使用了字符串拼接的地方，这里的话我为了省时间直接找没有进行预编译查询的点了，MyBatis中两种方式的方法分别是</p>
+<ul>
+<li>#{id} —预编译查询</li>
+<li>${id} —普通查询 利用字符串拼接</li>
+</ul>
+<p>所以我们只要找使用到${}的位置即可，其中可能出现这种情况的位置有</p>
+<ul>
+<li>order by / group by</li>
+<li>like模糊查询</li>
+<li>in</li>
+<li>表名/字段名</li>
+</ul>
+<p>这里的话开始审计，登录进去是一个登录窗口，但是并没有账号密码，进到数据库查看，发现密码是被加密了，我们这里没有密码，我这里就去找他添加用户的时候是怎么样插入到数据库的</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406210910052.png" alt="image-20220406210910052"></p>
+<p>找到<code>java/com/codermy/myspringsecurityplus/admin/controller/UserController</code>发现有 个<code>myUser.setPassword(bCryptPasswordEncoder.encode(&quot;123456&quot;));</code>,这里盲猜就是设置User的密码，默认值是123456，然后通过<code>userService.save(myUser,myUser.getRoleId())</code></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406211256959.png" alt="image-20220406211256959"></p>
+<p>可以看到他是调用了userService的save方法，在UserServiceImpl类中有save方法，其中调用了userDao的save方法。</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406212545958.png" alt="image-20220406212545958"></p>
+<p>来到userDao的方法，主要代码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 插入用户</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> myUser</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Options(useGeneratedKeys = true, keyProperty = &quot;userId&quot;)</span></span><br><span class="line"><span class="meta">@Insert(&quot;insert into my_user(dept_id,user_name, password, nick_name, phone, email, status, create_time, update_time) values(#&#123;deptId&#125;,#&#123;userName&#125;, #&#123;password&#125;, #&#123;nickName&#125;, #&#123;phone&#125;, #&#123;email&#125;, #&#123;status&#125;, now(), now())&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">save</span><span class="params">(MyUser myUser)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>通过insert把我们添加的用户插入到数据库中，所以这里的密码应该是123456，尝试登录，登录成功。</p>
+<p>回到我们的SQL注入，刚刚说到只有在${}的情况下，才可能存在SQL注入，那么我们直接通过idea的查找功能来寻找可能存在sql注入的点，其中主要查找的位置是xxxMapper.xml文件，这里对应着的存在8个位置</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406213134715.png" alt="image-20220406213134715"></p>
+<p>这里先随便挑一个，就挑DictMapper.xml中的那个点吧</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getFuzzyDictByPage&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.codermy.myspringsecurityplus.admin.entity.MyDict&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">include</span> <span class="attr">refid</span>=<span class="string">&quot;selectDictVo&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">where</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;dictName != null and dictName != &#x27;&#x27;&quot;</span>&gt;</span></span><br><span class="line">            AND di.dict_name like CONCAT(&#x27;%&#x27;, $&#123;dictName&#125;, &#x27;%&#x27;)</span><br><span class="line">        <span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">where</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里的话用concat进行了拼接，大概率是存在SQL注入的，所以我们需要去找对应查询的地方，他的id是getFuzzyDictByPage，在Service层中代码如下，位于getDictPage方法中，我们再去寻找Controller中调用此方法的位置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Result&lt;MyDict&gt; <span class="title">getDictPage</span><span class="params">(Integer offectPosition, Integer limit, MyDict myDict)</span> </span>&#123;</span><br><span class="line">    Page page = PageHelper.offsetPage(offectPosition,limit);</span><br><span class="line">    List&lt;MyDict&gt; fuzzyDictByPage = dictDao.getFuzzyDictByPage(myDict);</span><br><span class="line">    <span class="keyword">return</span> Result.ok().count(page.getTotal()).data(fuzzyDictByPage).code(ResultCode.TABLE_SUCCESS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在DictController中，返回了getDictPage的结果，大概率就是这里了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span></span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="meta">@ApiOperation(value = &quot;字典列表&quot;)</span></span><br><span class="line"><span class="meta">@PreAuthorize(&quot;hasAnyAuthority(&#x27;dict:list&#x27;)&quot;)</span></span><br><span class="line"><span class="meta">@MyLog(&quot;查询字典列表&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Result <span class="title">getDictAll</span><span class="params">(PageTableRequest pageTableRequest, MyDict myDict)</span></span>&#123;</span><br><span class="line">    pageTableRequest.countOffset();</span><br><span class="line">    <span class="keyword">return</span> dictService.getDictPage(pageTableRequest.getOffset(),pageTableRequest.getLimit(),myDict);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着我们去寻找控制器绑定的路径，控制器的类绑定了/api/dict，index方法绑定了/index，getDictAll没有绑定路径，应该也是在/api/dict/index下， 看他对应是一个查询的功能，我们这里进入这个url去查询抓包跑个sqlmap试试</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406234730672.png" alt="image-20220406234730672"></p>
+<p>效果如下<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406234948048.png" alt="image-20220406234948048"></p>
+<p>同理可以对其他七个地方进行测试，不出意外应该都是存在SQL注入的，ok，今天是4.6，剩下的明天再更。</p>
+
+  </div>
+   
+   
+
+  
+  <div class="post-copyright">
+    <div class="post-copyright-icon"></div>
+      <div class="post-copyright-author">
+          <span class="post-copyright-meta">文章作者: </span>
+            <span class="post-copyright-info">
+              <a href="mailto:1444440144@qq.com" >ch1e</a>
+            </span>
+      </div>
+      <div class="post-copyright-type">
+          <span class="post-copyright-meta">文章链接: </span>
+            <span class="post-copyright-info">
+              <a href="https://ch1e.cn/2022/04/06/ls1/" >https://ch1e.cn/2022/04/06/ls1/</a>
+            </span>
+      </div><div class="post-copyright-notice">
+          <span class="post-copyright-meta">版权声明: </span>
+            <span class="post-copyright-info">本博客所有文章除特别声明外，均采用
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/ " target="_blank" >
+                  CC BY-NC-SA 4.0 </a> 许可协议。转载请注明来自
+              <a href="https://ch1e.cn/2022/04/06/ls1/" target="_blank" >ch1e</a>
+              ！</span>
+      </div>
+  </div>
+  
+
+
+ 
+
+  
+    <div class="post-tag">
+        <span>
+            <i class="fa fa-tag"></i>
+             
+            <a href="tags/web安全/"><span>web安全</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/代码审计/"><span>代码审计</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/渗透测试/"><span>渗透测试</span></a>
+                
+            
+        </span>
+    </div>
+  
+
+
+
+
+<div class="pagination-post">
+    
+    
+    <a href="/2022/03/25/Servlet/">
+      <div class="next-title">Java内存马之Servlet内存马<i class="fas fa-chevron-right"></i></div>
+      <div class="next-desc">前言前面学习完了Filter内存马，现在来学习Servlet内存马，其实两者本质上区别并不大，如果学习过之前的Filter内存马，学习这个Servlet内存马其实是类似的。
+正文这里为了方便师傅...</div>
+    </a>
+    
+</div>
+
+</article>
+ 
+
+
+  <div id="toc-wrap">
+    <div id="toc">
+      <div class="toc-title">
+        <div>
+          目录
+            <span class="num">0%</span>
+        </div>
+        <progress class="progress" value="0" max="100"></progress>
+      </div>
+      <div class="toc-list">
+         
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83"><span class="toc-text">搭建环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%A1%E8%AE%A1%E5%89%8D%E7%9A%84%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86"><span class="toc-text">审计前的信息搜集</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E"><span class="toc-text">SQL注入漏洞</span></a></li></ol>
+      </div>
+    </div>
+  </div>
+
+
+        </main>
+        <section id="rightside">
+    
+    <div class="rightside-item">
+        
+        
+         
+        
+        
+            <a id="open-toc" title="目录">
+                <i class="fas fa-list-ul"></i>
+            </a>
+        
+         
+         
+        <a href="javascript:(0)" id="darkmode" title="深色/浅色 ">
+            <i class="fas fa-moon"></i>
+        </a>
+         
+        
+        <a href="#" title="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+         
+
+<footer class="footer" id="footer">
+    <div class="copyright">
+      &copy; 2020 - 2022
+        <i class="fas fa-fan"></i>
+        ch1e
+    </div>
+    <div class="framework-info">
+        <span>框架 </span>
+        <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="footer-separator">|</span>
+        <span>主题 </span>
+        <a href="https://github.com/lete114/hexo-theme-MengD" target="_blank">MengD.(萌典) </a>
+    </div>
+    
+    <div class="custom-text">我相信我可以，但我一直在路上，所以我有无限的可能！！</div>
+</footer>
+    </div>
+    <div id="mask" onclick="closeAll()"></div>
+    
+    <div class="script">
+        <script src="/js/main.js"></script>
+        
+
+ 
+<script>
+    var originTitle = document.title;
+    var titleTime;
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+            clearTimeout(titleTime);
+        } else {
+            document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+            titleTime = setTimeout(function () {
+                document.title = originTitle;
+            }, 2000);
+        }
+    });
+</script>
+
+
+<script src="/js/lazyload.js"></script>
+
+
+    
+
+
+        
+    <script>
+        getScript('https://cdn.jsdelivr.net/npm/pjax/pjax.min.js',LoadPjax)
+        function LoadPjax() {
+            var pjax = new Pjax({
+                selectors: [
+                    'head title',
+                    'head meta[name="keywords"]',
+                    'head meta[name="description"]',
+                    'main',
+                    '#rightside'
+                ],
+                cache: true,
+                cacheBust: false
+            });
+        }
+
+        // 清除时间
+        var timer = null;
+        // 执行进度条
+        function ProgressStart() {
+            // 设置初始进度
+            var progress = 10;
+            // 创建进度条 及 css样式
+            var div = document.createElement('div');
+            div.className = 'pjax-progress';
+            document.body.prepend(div);
+            // 定义随机数最大值最小值
+            var max = 10, mini = 3;
+            var result = max - mini;
+            // 清除
+            clearInterval(timer);
+            // 0.5秒内累加进度
+            timer = setInterval(function () {
+                // 随机数
+                var num = parseInt(Math.random() * result);
+                var randomResult = num + mini;
+                // 累加
+                progress += randomResult
+                document.getElementsByClassName('pjax-progress')[0].style.width = progress + '%';
+                // 当进度达到95%时停止
+                if (progress > 95) progress = 95
+            }, 500)
+        }
+        // 加载进度条加载完毕
+        function ProgressFinish() {
+            clearInterval(timer);
+            // 页面加载完毕后进度100% 并在0.7秒后删除
+            var progress = document.getElementsByClassName('pjax-progress');
+            progress[0].style.width = '100%';
+            timer = setTimeout(function () {
+                progress[0].parentNode.removeChild(progress[0])
+            }, 700);
+        }
+
+        // 开始 PJAX 执行的函数
+        document.addEventListener('pjax:send', function () {
+            // 执行进度条
+            ProgressStart()
+        });
+        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+        document.addEventListener('pjax:complete', function () {
+
+            // 加载进度条加载完毕
+            ProgressFinish()
+            // 执行所有方法
+            exeAllFn()
+
+            
+                // 图片懒加载
+                ImgLazyLoad('body img[data-img]', 'data-img')
+            
+
+
+            document.querySelectorAll('script[data-pjax]').forEach(item => {
+                const newScript = document.createElement('script')
+                const content = item.text || item.textContent || item.innerHTML || ''
+                Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+                newScript.appendChild(document.createTextNode(content))
+                item.parentNode.replaceChild(newScript, item)
+            })
+        });
+
+        // Pjax请求错误时，跳转到404页面
+        document.addEventListener('pjax:error', (err) => {
+            if (err.request.status === 404) {
+                pjax.loadUrl('/404.html')
+            }
+        })
+    </script>
+
+    </div>
+</body>
+
+</html>

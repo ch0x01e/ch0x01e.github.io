@@ -5,8 +5,8 @@
         <link>https://ch1e.cn</link>
         <description></description>
         <language>zh-CN</language>
-        <pubDate>Fri, 25 Mar 2022 19:35:02 +0800</pubDate>
-        <lastBuildDate>Fri, 25 Mar 2022 19:35:02 +0800</lastBuildDate>
+        <pubDate>Wed, 06 Apr 2022 20:04:34 +0800</pubDate>
+        <lastBuildDate>Wed, 06 Apr 2022 20:04:34 +0800</lastBuildDate>
         <category>靶场练习</category>
         <category>web安全</category>
         <category>Java安全</category>
@@ -15,6 +15,65 @@
         <category>渗透测试</category>
         <category>反序列化</category>
         <category>CTF</category>
+        <item>
+            <guid isPermalink="true">https://ch1e.cn/2022/04/06/ls1/</guid>
+            <title>Java代码审计练习(一)</title>
+            <link>https://ch1e.cn/2022/04/06/ls1/</link>
+            <category>web安全</category>
+            <category>代码审计</category>
+            <category>渗透测试</category>
+            <pubDate>Wed, 06 Apr 2022 20:04:34 +0800</pubDate>
+            <description><![CDATA[ &lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;摸了好几天的鱼，被早8折磨的死去活来，一但早8，整天没精神，今天还被体育课折磨到低血糖，想到自己这么菜，选择继续学习，晚上稍微看了一下SSM框架，感觉非常无聊，突然心血来潮想审几个程序练练手，就随手找了个程序，这个是炼石计划之50套JavaWeb代码审计实战漏洞挖掘的一个系统，我看到这个就选择这个了，懒得去找其他了，里面的具体内容也需要付费。。。囊中羞涩，没有选择加入99/年的知识星球，只能自己探索了&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;百度云链接：&lt;br&gt;链接：&lt;a href=&#34;https://pan.baidu.com/s/11rDre4Q32wqn7gMRyEmIyw&#34;&gt;https://pan.baidu.com/s/11rDre4Q32wqn7gMRyEmIyw&lt;/a&gt;&lt;br&gt;提取码：4nee&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;我这里木有收广告费哦，只是懒得转存再分享我自己的了。这套程序用的是SpringBoot+springsecurity+mybatis&lt;/p&gt;
+&lt;h1 id=&#34;搭建环境&#34;&gt;&lt;a href=&#34;#搭建环境&#34; class=&#34;headerlink&#34; title=&#34;搭建环境&#34;&gt;&lt;/a&gt;搭建环境&lt;/h1&gt;&lt;p&gt;首先我们打开我们的PHP study，然后打开数据库服务，新建一个数据库为rbac，然后导入我们源码里的sql文件，并且打开文件里的src\main\resources\application.yml文件，修改我们对应的数据库配置即可&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406202113685.png&#34; alt=&#34;image-20220406202113685&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然后就是运行程序&lt;/p&gt;
+&lt;h1 id=&#34;审计前的信息搜集&#34;&gt;&lt;a href=&#34;#审计前的信息搜集&#34; class=&#34;headerlink&#34; title=&#34;审计前的信息搜集&#34;&gt;&lt;/a&gt;审计前的信息搜集&lt;/h1&gt;&lt;p&gt;搭建完环境之后可以大体看一下他的结构，该程序是基于MVC架构的，分别是Model(模块)，View(视图)，Controller(控制器)，关于MVC的知识也得师傅们自己去学习了。第二步，我选择看他的pom.xml文件，这里就不多介绍关于Maven等JavaWeb开发的前置知识了，因为知识记录我个人的学习历程，如果有师傅不熟悉JavaWeb开发的话可以去看一下B站的黑马程序员，木有恰饭，因为我是看的这个&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406201155266.png&#34; alt=&#34;image-20220406201155266&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406201729293.png&#34; alt=&#34;image-20220406201729293&#34;&gt;&lt;/p&gt;
+&lt;p&gt;其实从pom.xml文件中可以看到他导入了fastjson的1.2.56版本，其实他这里的这个fastjson版本是存在反序列化漏洞的，但是他好像并没有使用到parseObject，所以这里其实可能没办法进行利用&lt;/p&gt;
+&lt;h1 id=&#34;SQL注入漏洞&#34;&gt;&lt;a href=&#34;#SQL注入漏洞&#34; class=&#34;headerlink&#34; title=&#34;SQL注入漏洞&#34;&gt;&lt;/a&gt;SQL注入漏洞&lt;/h1&gt;&lt;p&gt;该项目是基于Mybatis，通过Mybatis来操作数据库，其中又有两种方法，一种是最普通的查询，另外一种是预编译查询，有经验的师傅知道预编译查询是预防SQL注入的有效方法，如果说我们在Mybatis中配置了预编译查询，那基本上是无法进行SQL注入了，但是有个例外，其实SQL注入的根本原因是使用了拼接语句，那我如果使用了预编译查询，但是依旧进行了字符串拼接，那是不是还是可以进行注入？所以我们如果需要寻找SQL注入的漏洞，就得寻找到没有使用预编译查询的地方或者是进行预编译查询以后还使用了字符串拼接的地方，这里的话我为了省时间直接找没有进行预编译查询的点了，MyBatis中两种方式的方法分别是&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;#{id} —预编译查询&lt;/li&gt;
+&lt;li&gt;${id} —普通查询 利用字符串拼接&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;所以我们只要找使用到${}的位置即可，其中可能出现这种情况的位置有&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;order by / group by&lt;/li&gt;
+&lt;li&gt;like模糊查询&lt;/li&gt;
+&lt;li&gt;in&lt;/li&gt;
+&lt;li&gt;表名/字段名&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这里的话开始审计，登录进去是一个登录窗口，但是并没有账号密码，进到数据库查看，发现密码是被加密了，我们这里没有密码，我这里就去找他添加用户的时候是怎么样插入到数据库的&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406210910052.png&#34; alt=&#34;image-20220406210910052&#34;&gt;&lt;/p&gt;
+&lt;p&gt;找到&lt;code&gt;java/com/codermy/myspringsecurityplus/admin/controller/UserController&lt;/code&gt;发现有 个&lt;code&gt;myUser.setPassword(bCryptPasswordEncoder.encode(&amp;quot;123456&amp;quot;));&lt;/code&gt;,这里盲猜就是设置User的密码，默认值是123456，然后通过&lt;code&gt;userService.save(myUser,myUser.getRoleId())&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406211256959.png&#34; alt=&#34;image-20220406211256959&#34;&gt;&lt;/p&gt;
+&lt;p&gt;可以看到他是调用了userService的save方法，在UserServiceImpl类中有save方法，其中调用了userDao的save方法。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406212545958.png&#34; alt=&#34;image-20220406212545958&#34;&gt;&lt;/p&gt;
+&lt;p&gt;来到userDao的方法，主要代码如下&lt;/p&gt;
+&lt;figure class=&#34;highlight java&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt;/**&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt; * 插入用户&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt; * &lt;span class=&#34;doctag&#34;&gt;@param&lt;/span&gt; myUser&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt; * &lt;span class=&#34;doctag&#34;&gt;@return&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;comment&#34;&gt; */&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;@Options(useGeneratedKeys = true, keyProperty = &amp;quot;userId&amp;quot;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;@Insert(&amp;quot;insert into my_user(dept_id,user_name, password, nick_name, phone, email, status, create_time, update_time) values(#&amp;#123;deptId&amp;#125;,#&amp;#123;userName&amp;#125;, #&amp;#123;password&amp;#125;, #&amp;#123;nickName&amp;#125;, #&amp;#123;phone&amp;#125;, #&amp;#123;email&amp;#125;, #&amp;#123;status&amp;#125;, now(), now())&amp;quot;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;title&#34;&gt;save&lt;/span&gt;&lt;span class=&#34;params&#34;&gt;(MyUser myUser)&lt;/span&gt;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;通过insert把我们添加的用户插入到数据库中，所以这里的密码应该是123456，尝试登录，登录成功。&lt;/p&gt;
+&lt;p&gt;回到我们的SQL注入，刚刚说到只有在${}的情况下，才可能存在SQL注入，那么我们直接通过idea的查找功能来寻找可能存在sql注入的点，其中主要查找的位置是xxxMapper.xml文件，这里对应着的存在8个位置&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406213134715.png&#34; alt=&#34;image-20220406213134715&#34;&gt;&lt;/p&gt;
+&lt;p&gt;这里先随便挑一个，就挑DictMapper.xml中的那个点吧&lt;/p&gt;
+&lt;figure class=&#34;highlight xml&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;select&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;id&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;getFuzzyDictByPage&amp;quot;&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;resultType&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;com.codermy.myspringsecurityplus.admin.entity.MyDict&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;include&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;refid&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;selectDictVo&amp;quot;&lt;/span&gt;/&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;where&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;tag&#34;&gt;&amp;lt;&lt;span class=&#34;name&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;attr&#34;&gt;test&lt;/span&gt;=&lt;span class=&#34;string&#34;&gt;&amp;quot;dictName != null and dictName != &amp;#x27;&amp;#x27;&amp;quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;            AND di.dict_name like CONCAT(&amp;#x27;%&amp;#x27;, $&amp;#123;dictName&amp;#125;, &amp;#x27;%&amp;#x27;)&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;        &lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;if&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;where&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;tag&#34;&gt;&amp;lt;/&lt;span class=&#34;name&#34;&gt;select&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;这里的话用concat进行了拼接，大概率是存在SQL注入的，所以我们需要去找对应查询的地方，他的id是getFuzzyDictByPage，在Service层中代码如下，位于getDictPage方法中，我们再去寻找Controller中调用此方法的位置&lt;/p&gt;
+&lt;figure class=&#34;highlight java&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;public&lt;/span&gt; Result&amp;lt;MyDict&amp;gt; &lt;span class=&#34;title&#34;&gt;getDictPage&lt;/span&gt;&lt;span class=&#34;params&#34;&gt;(Integer offectPosition, Integer limit, MyDict myDict)&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    Page page = PageHelper.offsetPage(offectPosition,limit);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    List&amp;lt;MyDict&amp;gt; fuzzyDictByPage = dictDao.getFuzzyDictByPage(myDict);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;return&lt;/span&gt; Result.ok().count(page.getTotal()).data(fuzzyDictByPage).code(ResultCode.TABLE_SUCCESS);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;在DictController中，返回了getDictPage的结果，大概率就是这里了&lt;/p&gt;
+&lt;figure class=&#34;highlight java&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;@GetMapping&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;@ResponseBody&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;@ApiOperation(value = &amp;quot;字典列表&amp;quot;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;@PreAuthorize(&amp;quot;hasAnyAuthority(&amp;#x27;dict:list&amp;#x27;)&amp;quot;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;@MyLog(&amp;quot;查询字典列表&amp;quot;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;function&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;public&lt;/span&gt; Result &lt;span class=&#34;title&#34;&gt;getDictAll&lt;/span&gt;&lt;span class=&#34;params&#34;&gt;(PageTableRequest pageTableRequest, MyDict myDict)&lt;/span&gt;&lt;/span&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    pageTableRequest.countOffset();&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;    &lt;span class=&#34;keyword&#34;&gt;return&lt;/span&gt; dictService.getDictPage(pageTableRequest.getOffset(),pageTableRequest.getLimit(),myDict);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
+&lt;p&gt;接着我们去寻找控制器绑定的路径，控制器的类绑定了/api/dict，index方法绑定了/index，getDictAll没有绑定路径，应该也是在/api/dict/index下， 看他对应是一个查询的功能，我们这里进入这个url去查询抓包跑个sqlmap试试&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406234730672.png&#34; alt=&#34;image-20220406234730672&#34;&gt;&lt;/p&gt;
+&lt;p&gt;效果如下&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220406234948048.png&#34; alt=&#34;image-20220406234948048&#34;&gt;&lt;/p&gt;
+&lt;p&gt;同理可以对其他七个地方进行测试，不出意外应该都是存在SQL注入的，ok，今天是4.6，剩下的明天再更。&lt;/p&gt;
+ ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://ch1e.cn/2022/03/25/Servlet/</guid>
             <title>Java内存马之Servlet内存马</title>
@@ -395,7 +454,7 @@
 &lt;p&gt;我们来解密试试，这里把我们要解密的东西丢到一个文件里，然后使用john解密，字典在/var/share/wordlists/下，rockyou.txt，首次使用需要进行解压，解压命令 gzip -d rockyou.txt.gz&lt;/p&gt;
 &lt;p&gt;破解命令  john –format=md5crypt –wordlist=/usr/share/wordlists/rockyou.txt 666  这里666是自己创建的文件的名字&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210822124451419.png&#34; alt=&#34;image-20210822124451419&#34;&gt;&lt;/p&gt;
-&lt;p&gt;我们这里就直接知道了flag的账号密码，可以ssh登陆,ssh &lt;a href=&#34;mailto:&amp;#x66;&amp;#108;&amp;#97;&amp;#x67;&amp;#x40;&amp;#49;&amp;#57;&amp;#50;&amp;#46;&amp;#x31;&amp;#54;&amp;#56;&amp;#46;&amp;#x31;&amp;#54;&amp;#x39;&amp;#46;&amp;#x31;&amp;#x34;&amp;#49;&#34;&gt;&amp;#x66;&amp;#108;&amp;#97;&amp;#x67;&amp;#x40;&amp;#49;&amp;#57;&amp;#50;&amp;#46;&amp;#x31;&amp;#54;&amp;#56;&amp;#46;&amp;#x31;&amp;#54;&amp;#x39;&amp;#46;&amp;#x31;&amp;#x34;&amp;#49;&lt;/a&gt;,登陆成功&lt;/p&gt;
+&lt;p&gt;我们这里就直接知道了flag的账号密码，可以ssh登陆,ssh &lt;a href=&#34;mailto:&amp;#102;&amp;#108;&amp;#x61;&amp;#x67;&amp;#64;&amp;#49;&amp;#57;&amp;#50;&amp;#x2e;&amp;#x31;&amp;#54;&amp;#56;&amp;#46;&amp;#x31;&amp;#54;&amp;#x39;&amp;#x2e;&amp;#49;&amp;#52;&amp;#49;&#34;&gt;&amp;#102;&amp;#108;&amp;#x61;&amp;#x67;&amp;#64;&amp;#49;&amp;#57;&amp;#50;&amp;#x2e;&amp;#x31;&amp;#54;&amp;#56;&amp;#46;&amp;#x31;&amp;#54;&amp;#x39;&amp;#x2e;&amp;#49;&amp;#52;&amp;#49;&lt;/a&gt;,登陆成功&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210822124654454.png&#34; alt=&#34;image-20210822124654454&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;后渗透提权&#34;&gt;&lt;a href=&#34;#后渗透提权&#34; class=&#34;headerlink&#34; title=&#34;后渗透提权&#34;&gt;&lt;/a&gt;后渗透提权&lt;/h2&gt;&lt;p&gt;我们可以查看一下存在的用户,cat /etc/passwd|grep bash,顺便切换成bash&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210822124951829.png&#34; alt=&#34;image-20210822124951829&#34;&gt;&lt;/p&gt;
@@ -1398,7 +1457,7 @@
 &lt;p&gt;额，我这里数据库连接不上，这第一个flag暂时找不出来，因为爆破账号密码的话，正确密码在数据库里&lt;/p&gt;
 &lt;h2 id=&#34;后渗透提权&#34;&gt;&lt;a href=&#34;#后渗透提权&#34; class=&#34;headerlink&#34; title=&#34;后渗透提权&#34;&gt;&lt;/a&gt;后渗透提权&lt;/h2&gt;&lt;p&gt;虽然第一个flag做不出来，第二个还是可以的，我们可以发现在/drupal/misc有个tyrell.pass，里面有tyrell的账号密码&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210824113603240.png&#34; alt=&#34;image-20210824113603240&#34;&gt;&lt;/p&gt;
-&lt;p&gt;使用ssh登陆  ssh &lt;a href=&#34;mailto:&amp;#116;&amp;#x79;&amp;#114;&amp;#x65;&amp;#x6c;&amp;#108;&amp;#64;&amp;#x31;&amp;#57;&amp;#x32;&amp;#x2e;&amp;#x31;&amp;#x36;&amp;#x38;&amp;#46;&amp;#49;&amp;#x36;&amp;#x39;&amp;#x2e;&amp;#49;&amp;#x34;&amp;#51;&#34;&gt;&amp;#116;&amp;#x79;&amp;#114;&amp;#x65;&amp;#x6c;&amp;#108;&amp;#64;&amp;#x31;&amp;#57;&amp;#x32;&amp;#x2e;&amp;#x31;&amp;#x36;&amp;#x38;&amp;#46;&amp;#49;&amp;#x36;&amp;#x39;&amp;#x2e;&amp;#49;&amp;#x34;&amp;#51;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;使用ssh登陆  ssh &lt;a href=&#34;mailto:&amp;#x74;&amp;#121;&amp;#114;&amp;#101;&amp;#108;&amp;#x6c;&amp;#64;&amp;#x31;&amp;#57;&amp;#x32;&amp;#x2e;&amp;#49;&amp;#x36;&amp;#x38;&amp;#46;&amp;#x31;&amp;#x36;&amp;#57;&amp;#46;&amp;#x31;&amp;#52;&amp;#51;&#34;&gt;&amp;#x74;&amp;#121;&amp;#114;&amp;#101;&amp;#108;&amp;#x6c;&amp;#64;&amp;#x31;&amp;#57;&amp;#x32;&amp;#x2e;&amp;#49;&amp;#x36;&amp;#x38;&amp;#46;&amp;#x31;&amp;#x36;&amp;#57;&amp;#46;&amp;#x31;&amp;#52;&amp;#51;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;登录成功之后使用sudo -l命令发现/bin/journalctl可以进行利用；&lt;br&gt;附上漏洞查询连接&lt;code&gt;https://gtfobins.github.io/&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210824113659688.png&#34; alt=&#34;image-20210824113659688&#34;&gt;&lt;/p&gt;
 &lt;p&gt;输入完命令即可获取root权限&lt;/p&gt;
@@ -1430,7 +1489,7 @@
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210823111649441.png&#34; alt=&#34;image-20210823111649441&#34;&gt;&lt;/p&gt;
 &lt;p&gt;user.cap里是一些包信息 ，使用aircrack-ng爆破，爆破得到 ESSID 的名字 blackjax KEY snowflake&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210823112110327.png&#34; alt=&#34;image-20210823112110327&#34;&gt;&lt;/p&gt;
-&lt;p&gt;然后登陆ssh  ssh -p 2525 &lt;a href=&#34;mailto:&amp;#x62;&amp;#108;&amp;#x61;&amp;#99;&amp;#107;&amp;#106;&amp;#97;&amp;#x78;&amp;#64;&amp;#x31;&amp;#x39;&amp;#x32;&amp;#46;&amp;#49;&amp;#x36;&amp;#x38;&amp;#46;&amp;#49;&amp;#x36;&amp;#57;&amp;#46;&amp;#x31;&amp;#x34;&amp;#x32;&#34;&gt;&amp;#x62;&amp;#108;&amp;#x61;&amp;#99;&amp;#107;&amp;#106;&amp;#97;&amp;#x78;&amp;#64;&amp;#x31;&amp;#x39;&amp;#x32;&amp;#46;&amp;#49;&amp;#x36;&amp;#x38;&amp;#46;&amp;#49;&amp;#x36;&amp;#57;&amp;#46;&amp;#x31;&amp;#x34;&amp;#x32;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;然后登陆ssh  ssh -p 2525 &lt;a href=&#34;mailto:&amp;#98;&amp;#x6c;&amp;#x61;&amp;#x63;&amp;#107;&amp;#106;&amp;#97;&amp;#x78;&amp;#64;&amp;#x31;&amp;#57;&amp;#x32;&amp;#x2e;&amp;#49;&amp;#x36;&amp;#x38;&amp;#x2e;&amp;#x31;&amp;#x36;&amp;#57;&amp;#46;&amp;#49;&amp;#x34;&amp;#x32;&#34;&gt;&amp;#98;&amp;#x6c;&amp;#x61;&amp;#x63;&amp;#107;&amp;#106;&amp;#97;&amp;#x78;&amp;#64;&amp;#x31;&amp;#57;&amp;#x32;&amp;#x2e;&amp;#49;&amp;#x36;&amp;#x38;&amp;#x2e;&amp;#x31;&amp;#x36;&amp;#57;&amp;#46;&amp;#49;&amp;#x34;&amp;#x32;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210823112153470.png&#34; alt=&#34;image-20210823112153470&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;后渗透提权&#34;&gt;&lt;a href=&#34;#后渗透提权&#34; class=&#34;headerlink&#34; title=&#34;后渗透提权&#34;&gt;&lt;/a&gt;后渗透提权&lt;/h2&gt;&lt;p&gt;我们这里使用suid提权，首先查找具有suid的文件&lt;/p&gt;
 &lt;p&gt;find / -perm -u=s -type f 2&amp;gt;/dev/null&lt;/p&gt;
