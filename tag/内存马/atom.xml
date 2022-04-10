@@ -8,9 +8,9 @@
     <category term="web安全" />
     <category term="Java安全" />
     <category term="内存马" />
-    <category term="反序列化" />
     <category term="代码审计" />
     <category term="渗透测试" />
+    <category term="反序列化" />
     <category term="CTF" />
     <entry>
         <id>https://ch1e.cn/2022/04/09/Spring_memory_shell/</id>
