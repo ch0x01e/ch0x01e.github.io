@@ -167,6 +167,59 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/04/09/Spring_memory_shell/" title="Spring内存马合集 ">
+        
+        Spring内存马合集
+        
+      </a>
+      <div class="post-description">
+        
+        前言前面学了Tomcat的Servlet和Filter内存马，然后学了几天的spring，审了一个程序，就继续顺便把内存马的东西弄完吧。前面说到Servlet和Filter内存马其实都是在配置文件中注册一个Servlet或者Filter，因为他们的生命周期是到服务器结束才结束。其实Spring的controller的内存马也是如此，也是注册一个Controller来实现。因此我们需要了解SpringMVC中Controller注册的流程。Controller注册流程SpringMVC初始化时，在bean的构造方法以及设置属性之后会使用InitializingBean#afterPropertiesSet进行Bean的初始化操作，实现类RequestMappingHandlerMapping用来处理具有@Controller注解类中的方法级别的@RequestMapping以及RequestMappingInfo实例的创建，AbstractHandlerMapping是RequestMappingHandlerMapping的父类，并且AbstractHandlerMapping实...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-04-09
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
+            内存马
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/04/06/ls1/" title="Java代码审计练习(一) ">
         
         Java代码审计练习(一)
@@ -525,52 +578,6 @@
       <div class="post-description">
         
         vulnhub靶机练习-Os-hackNos-1靶机下载地址：https://www.vulnhub.com/entry/hacknos-os-hacknos,401/难度：容易-中级Flag:2个flag第一个用户和第二个root学习：利用|网络应用|枚举|权限提升靶机的安装首先下载靶机的ova文件，点击进行安装有的靶机可能打开无法获取IP，我们这里需要手动进行修改把靶机网络设置成nat模式，然后在开启靶机时一直按住shift，出现如下页面后按e将这里的ro修改为rwsingleinit=/bin/bash，然后按ctrl+x，进入页面查ip发现查不到，记住网卡的名称，准备修改配置信息vim/etc/network/interfaces看一下配置信息用的是哪一个网卡，把这两个都改成ens33然后/etc/init.d/networkingrestart重启网卡服务，然后重启虚拟机即可信息搜集此时我们的攻击机和靶机都处于同一网段，我们可以看看在什么网段下，输入ipa查看到当前攻击机ip是192.168.169.134我们此时对192.168.169.0/24这个网段进行扫描，使用...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-03-11
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/%E9%9D%B6%E5%9C%BA%E7%BB%83%E4%B9%A0/">
-            靶场练习
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/03/11/domdom/" title="vulnhub靶机练习-DomDom ">
-        
-        vulnhub靶机练习-DomDom
-        
-      </a>
-      <div class="post-description">
-        
-        vulnhub靶机练习-DomDom信息搜集nmap-sn192.168.169.0/24扫描当前网段，发现靶机ip是192.168.169.140nmap-sV-A192.168.169.140发现目标开了80端口，我们访问看看貌似是一个登陆界面，我们这里先不管，先使用gobuster扫描一下目录gobusterdir-uhttp://192.168.169.140-w/usr/share/wordlists/dirbuster/directory-list-2.3-small.txt-xphp这里扫出了一个index.php和一个admin.php我们来admin.php看看提示我们：Youneedtoknowit’syouractionsthatwillshowyouthelight.好像是说我要知道是我的行动给我带来光？？？漏洞挖掘我们先在index.php抓个包试试，post传进4个参数，其中的name参数被输出到了Logging:我们想到刚刚admin.php给我们的提示，我们把相同的参数给admin.php看看会有什么变化他这里获取了cmd，盲猜命令执行，把cmd参...
       </div>
       <div class="post-meta-wrap">
         <span class="post-meta-date">

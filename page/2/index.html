@@ -137,6 +137,52 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/03/11/domdom/" title="vulnhub靶机练习-DomDom ">
+        
+        vulnhub靶机练习-DomDom
+        
+      </a>
+      <div class="post-description">
+        
+        vulnhub靶机练习-DomDom信息搜集nmap-sn192.168.169.0/24扫描当前网段，发现靶机ip是192.168.169.140nmap-sV-A192.168.169.140发现目标开了80端口，我们访问看看貌似是一个登陆界面，我们这里先不管，先使用gobuster扫描一下目录gobusterdir-uhttp://192.168.169.140-w/usr/share/wordlists/dirbuster/directory-list-2.3-small.txt-xphp这里扫出了一个index.php和一个admin.php我们来admin.php看看提示我们：Youneedtoknowit’syouractionsthatwillshowyouthelight.好像是说我要知道是我的行动给我带来光？？？漏洞挖掘我们先在index.php抓个包试试，post传进4个参数，其中的name参数被输出到了Logging:我们想到刚刚admin.php给我们的提示，我们把相同的参数给admin.php看看会有什么变化他这里获取了cmd，盲猜命令执行，把cmd参...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-03-11
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/%E9%9D%B6%E5%9C%BA%E7%BB%83%E4%B9%A0/">
+            靶场练习
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/03/08/7u21/" title="原生反序列化链JDK7u21 ">
         
         原生反序列化链JDK7u21
@@ -576,52 +622,6 @@
           
           <a href="/tags/CTF/">
             CTF
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2021/10/13/ATT&amp;CK1/" title="ATT&amp;CK实战系列—红队实战（一） ">
-        
-        ATT&amp;CK实战系列—红队实战（一）
-        
-      </a>
-      <div class="post-description">
-        
-        信息搜集namp扫描，发现存在80,3306端口gobuster扫描，发现存在phpmyadmin和一个phpinfo.php这里就一步带过了，实战的话没有这么简单漏洞利用非预期解首页是一个探针，我发现了一个检测mysql的地方，随便一输账号密码root|root发现检测成功，这就拿到mysql弱口令了。。root|root登陆phpmyadmin,尝试直接selectintooutfile写shell，失败了select@@global.secure_file_priv发现是null不急，就算这样也可以绕过secure_file_priv，具体可以看https://www.cnblogs.com/c1e4r/articles/8902444.html设置slow_query_log=1.即启用慢查询日志(默认禁用)。setglobalslow_query_log=1;2.伪造(修改)slow_query_log_file日志文件的绝对路径以及文件名setglobalslow_query_log_file=&amp;#x27;dir\filename&amp;#x27;3.向日志文件写入shel...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2021-10-13
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/%E9%9D%B6%E5%9C%BA%E7%BB%83%E4%B9%A0/">
-            靶场练习
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
           </a>
           
           

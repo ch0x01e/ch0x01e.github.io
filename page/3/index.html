@@ -137,6 +137,52 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2021/10/13/ATT&amp;CK1/" title="ATT&amp;CK实战系列—红队实战（一） ">
+        
+        ATT&amp;CK实战系列—红队实战（一）
+        
+      </a>
+      <div class="post-description">
+        
+        信息搜集namp扫描，发现存在80,3306端口gobuster扫描，发现存在phpmyadmin和一个phpinfo.php这里就一步带过了，实战的话没有这么简单漏洞利用非预期解首页是一个探针，我发现了一个检测mysql的地方，随便一输账号密码root|root发现检测成功，这就拿到mysql弱口令了。。root|root登陆phpmyadmin,尝试直接selectintooutfile写shell，失败了select@@global.secure_file_priv发现是null不急，就算这样也可以绕过secure_file_priv，具体可以看https://www.cnblogs.com/c1e4r/articles/8902444.html设置slow_query_log=1.即启用慢查询日志(默认禁用)。setglobalslow_query_log=1;2.伪造(修改)slow_query_log_file日志文件的绝对路径以及文件名setglobalslow_query_log_file=&amp;#x27;dir\filename&amp;#x27;3.向日志文件写入shel...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2021-10-13
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/%E9%9D%B6%E5%9C%BA%E7%BB%83%E4%B9%A0/">
+            靶场练习
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2021/08/24/vulcms/" title="vulnhub靶机练习-VULNCMS ">
         
         vulnhub靶机练习-VULNCMS
