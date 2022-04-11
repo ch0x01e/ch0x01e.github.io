@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
 <meta property="article:published_time" content="2021-11-11T05:43:54.944Z">
-<meta property="article:modified_time" content="2022-03-10T16:47:30.156Z">
+<meta property="article:modified_time" content="2022-04-11T09:42:36.440Z">
 <meta property="article:author" content="ch1e">
 <meta property="article:tag" content="web安全">
 <meta property="article:tag" content="反序列化">
@@ -137,7 +137,7 @@
         <i class="fas fa-history fa-fw post-meta-icon"></i>
         <span class="post-meta-label">
           更新于
-            2022-04-10
+            2022-04-11
         </span>
       </div>
       <div class="post-meta-wordcount">
@@ -154,7 +154,7 @@
   <div class="post-content">
     <h1 id="PHP反序列化之pop链"><a href="#PHP反序列化之pop链" class="headerlink" title="PHP反序列化之pop链"></a>PHP反序列化之pop链</h1><h2 id="POP链介绍"><a href="#POP链介绍" class="headerlink" title="POP链介绍"></a>POP链介绍</h2><p>POP 面向属性编程(Property-Oriented Programing) 常用于上层语言构造特定调用链的方法，与二进制利用中的面向返回编程（Return-Oriented Programing）的原理相似，都是从现有运行环境中寻找一系列的代码或者指令调用，然后根据需求构成一组连续的调用链,最终达到攻击者邪恶的目的</p>
 <p>说的再具体一点就是 ROP 是通过栈溢出实现控制指令的执行流程，而我们的反序列化是通过控制对象的属性从而实现控制程序的执行流程，进而达成利用本身无害的代码进行有害操作的目的。</p>
-<h2 id="魔术方法介绍"><a href="#魔术方法介绍" class="headerlink" title="魔术方法介绍"></a>魔术方法介绍</h2><p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211110162148224.png" alt="image-20211110162148224"></p>
+<h2 id="魔术方法介绍"><a href="#魔术方法介绍" class="headerlink" title="魔术方法介绍"></a>魔术方法介绍</h2><p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174228630.png" alt="image-20220411174228630"></p>
 <h3 id="反序列化的常见起点"><a href="#反序列化的常见起点" class="headerlink" title="反序列化的常见起点"></a>反序列化的常见起点</h3><ul>
 <li><code>__wakeup</code> 一定会调用</li>
 <li><code>__destruct</code> 一定会调用</li>

@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
 <meta property="article:published_time" content="2022-03-17T09:22:40.673Z">
-<meta property="article:modified_time" content="2022-03-17T11:18:55.289Z">
+<meta property="article:modified_time" content="2022-04-11T09:43:53.389Z">
 <meta property="article:author" content="ch1e">
 <meta property="article:tag" content="web安全">
 <meta property="article:tag" content="Java安全">
@@ -137,7 +137,7 @@
         <i class="fas fa-history fa-fw post-meta-icon"></i>
         <span class="post-meta-label">
           更新于
-            2022-04-10
+            2022-04-11
         </span>
       </div>
       <div class="post-meta-wordcount">
@@ -171,7 +171,7 @@
 <p><code>命令-&gt;反序列化-&gt;AES加密-&gt;base64编码</code></p>
 <p>这个漏洞主要存在的版本是Apache Shiro &lt; 1.2.4因为在高版本中，shiro每次启动都会随机生成一个新的Key</p>
 <p>额这里的话因为我也不熟悉Java开发的一些相关知识，我也就直接从网上找了一个Shiro的源码来进行分析。</p>
-<p>由于Shiro中的Cookie是rememberMe，那么我们直接全局搜索含有rememberMe的地方<img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20220317174246955.png" alt="image-20220317174246955"></p>
+<p>由于Shiro中的Cookie是rememberMe，那么我们直接全局搜索含有rememberMe的地方<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174336720.png" alt="image-20220411174336720"></p>
 <p>这里的话定义了一个<code>DEFAULT_REMEMBER_ME_COOKIE_NAME = &quot;rememberMe&quot;;</code>，根据英文可以看出来是默认的rememberMe的Cookie名字，大概猜测就是这里吧，这里位于CookieRememberMeManager，看类名应该也是这，RememberMe的Cookie管理，来看看他的构造函数</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">CookieRememberMeManager</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Cookie cookie = <span class="keyword">new</span> SimpleCookie(DEFAULT_REMEMBER_ME_COOKIE_NAME);</span><br><span class="line">    cookie.setHttpOnly(<span class="keyword">true</span>);</span><br><span class="line">    <span class="comment">//One year should be long enough - most sites won&#x27;t object to requiring a user to log in if they haven&#x27;t visited</span></span><br><span class="line">    <span class="comment">//in a year:</span></span><br><span class="line">    cookie.setMaxAge(Cookie.ONE_YEAR);</span><br><span class="line">    <span class="keyword">this</span>.cookie = cookie;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -194,9 +194,9 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">byte</span>[] getDecryptionCipherKey() &#123;</span><br><span class="line">    <span class="keyword">return</span> decryptionCipherKey;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这里继续跟进getDecryptionCipherKey方法，他是返回自身的decryptionCipherKey属性，那么我们可以对应去找找有无set方法进行了设置</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20220317190054895.png" alt="image-20220317190054895"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174344343.png" alt="image-20220411174344343"></p>
 <p>确实有找到setDecryptionCipherKey方法对密钥进行了一个赋值，我们寻找一下是哪里调用了这个setter</p>
-<p><img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20220317190451840.png" alt="image-20220317190451840"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174347219.png" alt="image-20220411174347219"></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCipherKey</span><span class="params">(<span class="keyword">byte</span>[] cipherKey)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//Since this method should only be used in symmetric ciphers</span></span><br><span class="line">    <span class="comment">//(where the enc and dec keys are the same), set it on both:</span></span><br><span class="line">    setEncryptionCipherKey(cipherKey);</span><br><span class="line">    setDecryptionCipherKey(cipherKey);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>继续寻找调用setCipherKey的方法，然后我们就找到了AbstractRememberMeManager的构造函数</p>
@@ -273,11 +273,9 @@ Fastjson是Alibaba开发的Java语言编写的高性能JSON库，用于将数据
     </a>
     
     
-    <a href="/2022/03/11/OS-HACKNOS-2.1/">
-      <div class="next-title">vulnhub靶机练习-HACKNOS-2.1<i class="fas fa-chevron-right"></i></div>
-      <div class="next-desc">OS-HACKNOS-2.1靶机安装先把靶机设为NAT模式，开机时一直按shift，然后按e
-
-把框内的东西改成rw singke init=/bin/bash，然后ctrl+x进入界面，ip ...</div>
+    <a href="/2022/03/08/7u21/">
+      <div class="next-title">原生反序列化链JDK7u21<i class="fas fa-chevron-right"></i></div>
+      <div class="next-desc">前言刚刚结束了Commons Beanutils链的分析，马上换了一下JDK的环境，来研究JDK7u21的反序列化链，这条链得在JDK版本小于等于7u21的情况下才能使用，所以我们这选择了jdk...</div>
     </a>
     
 </div>

