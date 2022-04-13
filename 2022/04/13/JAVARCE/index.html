@@ -1,0 +1,434 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+     
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<title>Java下的命令执行方式 | ch1e的随笔</title>
+<meta name="author" content="ch1e">
+<meta name="copyright" content="ch1e">
+
+<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.png"> 
+
+
+    <meta name="keywords" content="web安全,代码审计,渗透测试,Java安全">
+
+
+
+     
+    <meta name="description" content="前言水文一篇，来整理一下一些学的Java 的内容，怕以后忘 Runtime类最常见的就是使用Runtime类的exec方法来进行命令执行了，下面随便写一个Runtime类的命令执行的demo 123456789101112131415161718192021import java.io.BufferedReader;import java.io.IOException;import java.io">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java下的命令执行方式">
+<meta property="og:url" content="https://ch1e.cn/2022/04/13/JAVARCE/">
+<meta property="og:site_name" content="ch1e的随笔">
+<meta property="og:description" content="前言水文一篇，来整理一下一些学的Java 的内容，怕以后忘 Runtime类最常见的就是使用Runtime类的exec方法来进行命令执行了，下面随便写一个Runtime类的命令执行的demo 123456789101112131415161718192021import java.io.BufferedReader;import java.io.IOException;import java.io">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+<meta property="article:published_time" content="2022-04-13T09:47:22.175Z">
+<meta property="article:modified_time" content="2022-04-13T11:00:11.189Z">
+<meta property="article:author" content="ch1e">
+<meta property="article:tag" content="web安全">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="Java安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+ 
+
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<link href="//cdn.jsdelivr.net" rel="preconnect">
+<link href="https://ch1e.cn" rel="prefetch">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css " rel="stylesheet">
+<link href="/css/main.css " rel="stylesheet">
+<script src="/js/utlis.js"></script>
+ 
+    
+ 
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+     
+    
+ 
+     
+
+<script>
+    var $config = {
+        tocStyle: "visible",
+        CDN:{
+            fancyboxJs: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js",
+            fancyboxCss: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
+        },
+        
+        
+    }
+</script>
+    
+
+
+
+
+  
+
+
+    <div id="body-wrap">
+        <nav id="nav-wrap">
+  <div class="navbar">
+    <div class="bar">
+      <a href="/" class="title">ch1e的随笔</a>
+
+      
+      <ul class="menu">
+         
+        <li><a href="/">首页</a></li>
+          
+        <li>
+          <a class="menu-child-hover" href="javascript:void(0);">找文章</a>
+          <ul class="menu-child">
+            
+            <li><a href='/tags'>标签</a></li>
+            
+            <li><a href='/archives'>归档</a></li>
+            
+          </ul>
+        </li>
+          
+        <li><a href="/link">友情链接</a></li>
+         
+      </ul>
+      <i class="fas fa-bars open-nav"></i>
+    </div>
+  </div>
+  <div id="mobile-nav">
+    <ul>
+       
+      <li><a href="/">首页</a></li>
+         
+      <li><a href='/tags'>标签</a></li>
+      
+      <li><a href='/archives'>归档</a></li>
+         
+      <li><a href="/link">友情链接</a></li>
+       
+    </ul>
+  </div>
+</nav>
+
+
+        <main id="main">
+            
+
+<article id="post">
+  <div class="post-info">
+    <div class="post-title">
+      <h1>Java下的命令执行方式</h1>
+    </div>
+    <div class="post-meta">
+      <div class="post-date">
+        <i class="far fa-calendar-alt fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          发表于
+            2022-04-13 |
+        </span>
+        
+        <i class="fas fa-history fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          更新于
+            2022-04-13
+        </span>
+      </div>
+      <div class="post-meta-wordcount">
+        <i class="far fa-file-word fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">总字数:</span>
+        <span class="word-count">628 | </span>
+        <i class="far fa-clock fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">阅读时长:</span>
+        <span>3分钟</span>
+        
+      </div>
+    </div>
+  </div>
+  <div class="post-content">
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>水文一篇，来整理一下一些学的Java 的内容，怕以后忘</p>
+<h1 id="Runtime类"><a href="#Runtime类" class="headerlink" title="Runtime类"></a>Runtime类</h1><p>最常见的就是使用Runtime类的exec方法来进行命令执行了，下面随便写一个Runtime类的命令执行的demo</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        InputStream inputStream = Runtime.getRuntime().exec(<span class="string">&quot;dir&quot;</span>).getInputStream();</span><br><span class="line">        InputStreamReader isr=<span class="keyword">new</span> InputStreamReader(inputStream,<span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">        BufferedReader bufferedReader=<span class="keyword">new</span> BufferedReader(isr);</span><br><span class="line">        String str=<span class="string">&quot;&quot;</span>;</span><br><span class="line">        String line=<span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="keyword">while</span> ((line=bufferedReader.readLine())!=<span class="keyword">null</span>)&#123;</span><br><span class="line">            str=str+line;</span><br><span class="line">        &#125;</span><br><span class="line">        inputStream.close();</span><br><span class="line">        isr.close();</span><br><span class="line">        bufferedReader.close();</span><br><span class="line">        System.out.println(str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的话我用了BufferedReader，也可以换种写法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        InputStream inputStream = Runtime.getRuntime().exec(<span class="string">&quot;whoami&quot;</span>).getInputStream();</span><br><span class="line">        <span class="keyword">byte</span>[] bytes=<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">int</span> readsize=<span class="number">0</span>;</span><br><span class="line">        ByteArrayOutputStream byteArrayOutputStream=<span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        <span class="keyword">while</span> ((readsize=inputStream.read(bytes))&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            byteArrayOutputStream.write(bytes,<span class="number">0</span>,readsize);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(byteArrayOutputStream.toString());</span><br><span class="line">        byteArrayOutputStream.close();</span><br><span class="line">        inputStream.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="ProcessBuilder类"><a href="#ProcessBuilder类" class="headerlink" title="ProcessBuilder类"></a>ProcessBuilder类</h1><p>这里也可以使用ProcessBuilder来进行一个命令执行，demo如下，和上面的差不多</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProcessRce</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        InputStream inputStream=<span class="keyword">new</span> ProcessBuilder(<span class="string">&quot;whoami&quot;</span>).start().getInputStream();</span><br><span class="line">        ByteArrayOutputStream byteArrayOutputStream=<span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        <span class="keyword">byte</span>[] bytes=<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2048</span>];</span><br><span class="line">        <span class="keyword">int</span> readsize=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> ((readsize=inputStream.read(bytes))&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            byteArrayOutputStream.write(bytes,<span class="number">0</span>,readsize);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(byteArrayOutputStream.toString());</span><br><span class="line">        byteArrayOutputStream.close();</span><br><span class="line">        inputStream.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="ProcessImpl类"><a href="#ProcessImpl类" class="headerlink" title="ProcessImpl类"></a>ProcessImpl类</h1><p>这个比上面两个更底层，上面两个类实际上是调用了ProcessImpl类，但是我们不能直接调用ProcessImpl类，可以通过反射来调用，demo如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationTargetException;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProcessImplTest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException </span>&#123;</span><br><span class="line">        String[] cmds=<span class="keyword">new</span> String[]&#123;<span class="string">&quot;whoami&quot;</span>&#125;;</span><br><span class="line">        Class clazz=Class.forName(<span class="string">&quot;java.lang.ProcessImpl&quot;</span>);</span><br><span class="line">        Method method=clazz.getDeclaredMethod(<span class="string">&quot;start&quot;</span>, String[].class, Map.class, String.class, ProcessBuilder.Redirect[].class, <span class="keyword">boolean</span>.class);</span><br><span class="line">        method.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        Process e= (Process) method.invoke(<span class="keyword">null</span>,cmds,<span class="keyword">null</span>,<span class="string">&quot;.&quot;</span>,<span class="keyword">null</span>,<span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">byte</span>[] bytes=<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2048</span>];</span><br><span class="line">        <span class="keyword">int</span> readsize=<span class="number">0</span>;</span><br><span class="line">        ByteArrayOutputStream byteArrayOutputStream=<span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        <span class="keyword">while</span> ((readsize=e.getInputStream().read(bytes))&gt;<span class="number">0</span>)&#123;</span><br><span class="line">            byteArrayOutputStream.write(bytes,<span class="number">0</span>,readsize);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(byteArrayOutputStream.toString());</span><br><span class="line">        byteArrayOutputStream.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="坑点"><a href="#坑点" class="headerlink" title="坑点"></a>坑点</h1><p>其实我之前在测试这类命令执行的时候，一般使用ipconfig,whoami之类的命令不会出问题，但是在Windows下，使用dir一类的命令就会出问题，会出类似下面的错误</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220413182953334.png" alt="image-20220413182953334"></p>
+<p>我们在Runtime.exec处打上断点，额这里暂时没调试懂，还在学习，看了别的师傅的博客，说是找不到环境变量，但是我觉得加上/c以后是执行完关闭窗口，可能和其他有关？后面再来研究</p>
+
+  </div>
+   
+   
+
+  
+  <div class="post-copyright">
+    <div class="post-copyright-icon"></div>
+      <div class="post-copyright-author">
+          <span class="post-copyright-meta">文章作者: </span>
+            <span class="post-copyright-info">
+              <a href="mailto:1444440144@qq.com" >ch1e</a>
+            </span>
+      </div>
+      <div class="post-copyright-type">
+          <span class="post-copyright-meta">文章链接: </span>
+            <span class="post-copyright-info">
+              <a href="https://ch1e.cn/2022/04/13/JAVARCE/" >https://ch1e.cn/2022/04/13/JAVARCE/</a>
+            </span>
+      </div><div class="post-copyright-notice">
+          <span class="post-copyright-meta">版权声明: </span>
+            <span class="post-copyright-info">本博客所有文章除特别声明外，均采用
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/ " target="_blank" >
+                  CC BY-NC-SA 4.0 </a> 许可协议。转载请注明来自
+              <a href="https://ch1e.cn/2022/04/13/JAVARCE/" target="_blank" >ch1e</a>
+              ！</span>
+      </div>
+  </div>
+  
+
+
+ 
+
+  
+    <div class="post-tag">
+        <span>
+            <i class="fa fa-tag"></i>
+             
+            <a href="tags/web安全/"><span>web安全</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/代码审计/"><span>代码审计</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/渗透测试/"><span>渗透测试</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/Java安全/"><span>Java安全</span></a>
+                
+            
+        </span>
+    </div>
+  
+
+
+
+
+<div class="pagination-post">
+    
+    
+    <a href="/2022/04/09/Spring_memory_shell/">
+      <div class="next-title">Spring内存马合集<i class="fas fa-chevron-right"></i></div>
+      <div class="next-desc">前言前面学了Tomcat的Servlet和Filter内存马， 然后学了几天的spring，审了一个程序，就继续顺便把内存马的东西弄完吧。前面说到Servlet和Filter内存马其实都是在配置...</div>
+    </a>
+    
+</div>
+
+</article>
+ 
+
+
+  <div id="toc-wrap">
+    <div id="toc">
+      <div class="toc-title">
+        <div>
+          目录
+            <span class="num">0%</span>
+        </div>
+        <progress class="progress" value="0" max="100"></progress>
+      </div>
+      <div class="toc-list">
+         
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Runtime%E7%B1%BB"><span class="toc-text">Runtime类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ProcessBuilder%E7%B1%BB"><span class="toc-text">ProcessBuilder类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ProcessImpl%E7%B1%BB"><span class="toc-text">ProcessImpl类</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9D%91%E7%82%B9"><span class="toc-text">坑点</span></a></li></ol>
+      </div>
+    </div>
+  </div>
+
+
+        </main>
+        <section id="rightside">
+    
+    <div class="rightside-item">
+        
+        
+         
+        
+        
+            <a id="open-toc" title="目录">
+                <i class="fas fa-list-ul"></i>
+            </a>
+        
+         
+         
+        <a href="javascript:(0)" id="darkmode" title="深色/浅色 ">
+            <i class="fas fa-moon"></i>
+        </a>
+         
+        
+        <a href="#" title="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+         
+
+<footer class="footer" id="footer">
+    <div class="copyright">
+      &copy; 2020 - 2022
+        <i class="fas fa-fan"></i>
+        ch1e
+    </div>
+    <div class="framework-info">
+        <span>框架 </span>
+        <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="footer-separator">|</span>
+        <span>主题 </span>
+        <a href="https://github.com/lete114/hexo-theme-MengD" target="_blank">MengD.(萌典) </a>
+    </div>
+    
+    <div class="custom-text">我相信我可以，但我一直在路上，所以我有无限的可能！！</div>
+</footer>
+    </div>
+    <div id="mask" onclick="closeAll()"></div>
+    
+    <div class="script">
+        <script src="/js/main.js"></script>
+        
+
+ 
+<script>
+    var originTitle = document.title;
+    var titleTime;
+    document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+            document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+            clearTimeout(titleTime);
+        } else {
+            document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+            titleTime = setTimeout(function () {
+                document.title = originTitle;
+            }, 2000);
+        }
+    });
+</script>
+
+
+<script src="/js/lazyload.js"></script>
+
+
+    
+
+
+        
+    <script>
+        getScript('https://cdn.jsdelivr.net/npm/pjax/pjax.min.js',LoadPjax)
+        function LoadPjax() {
+            var pjax = new Pjax({
+                selectors: [
+                    'head title',
+                    'head meta[name="keywords"]',
+                    'head meta[name="description"]',
+                    'main',
+                    '#rightside'
+                ],
+                cache: true,
+                cacheBust: false
+            });
+        }
+
+        // 清除时间
+        var timer = null;
+        // 执行进度条
+        function ProgressStart() {
+            // 设置初始进度
+            var progress = 10;
+            // 创建进度条 及 css样式
+            var div = document.createElement('div');
+            div.className = 'pjax-progress';
+            document.body.prepend(div);
+            // 定义随机数最大值最小值
+            var max = 10, mini = 3;
+            var result = max - mini;
+            // 清除
+            clearInterval(timer);
+            // 0.5秒内累加进度
+            timer = setInterval(function () {
+                // 随机数
+                var num = parseInt(Math.random() * result);
+                var randomResult = num + mini;
+                // 累加
+                progress += randomResult
+                document.getElementsByClassName('pjax-progress')[0].style.width = progress + '%';
+                // 当进度达到95%时停止
+                if (progress > 95) progress = 95
+            }, 500)
+        }
+        // 加载进度条加载完毕
+        function ProgressFinish() {
+            clearInterval(timer);
+            // 页面加载完毕后进度100% 并在0.7秒后删除
+            var progress = document.getElementsByClassName('pjax-progress');
+            progress[0].style.width = '100%';
+            timer = setTimeout(function () {
+                progress[0].parentNode.removeChild(progress[0])
+            }, 700);
+        }
+
+        // 开始 PJAX 执行的函数
+        document.addEventListener('pjax:send', function () {
+            // 执行进度条
+            ProgressStart()
+        });
+        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+        document.addEventListener('pjax:complete', function () {
+
+            // 加载进度条加载完毕
+            ProgressFinish()
+            // 执行所有方法
+            exeAllFn()
+
+            
+                // 图片懒加载
+                ImgLazyLoad('body img[data-img]', 'data-img')
+            
+
+
+            document.querySelectorAll('script[data-pjax]').forEach(item => {
+                const newScript = document.createElement('script')
+                const content = item.text || item.textContent || item.innerHTML || ''
+                Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+                newScript.appendChild(document.createTextNode(content))
+                item.parentNode.replaceChild(newScript, item)
+            })
+        });
+
+        // Pjax请求错误时，跳转到404页面
+        document.addEventListener('pjax:error', (err) => {
+            if (err.request.status === 404) {
+                pjax.loadUrl('/404.html')
+            }
+        })
+    </script>
+
+    </div>
+</body>
+
+</html>

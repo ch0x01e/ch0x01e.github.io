@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
 <meta property="article:published_time" content="2022-04-09T10:21:48.127Z">
-<meta property="article:modified_time" content="2022-04-12T03:51:22.582Z">
+<meta property="article:modified_time" content="2022-04-12T04:29:09.134Z">
 <meta property="article:author" content="ch1e">
 <meta property="article:tag" content="web安全">
 <meta property="article:tag" content="Java安全">
@@ -137,13 +137,13 @@
         <i class="fas fa-history fa-fw post-meta-icon"></i>
         <span class="post-meta-label">
           更新于
-            2022-04-12
+            2022-04-13
         </span>
       </div>
       <div class="post-meta-wordcount">
         <i class="far fa-file-word fa-fw post-meta-icon"></i>
         <span class="post-meta-label">总字数:</span>
-        <span class="word-count">2.5k | </span>
+        <span class="word-count">2.6k | </span>
         <i class="far fa-clock fa-fw post-meta-icon"></i>
         <span class="post-meta-label">阅读时长:</span>
         <span>12分钟</span>
@@ -231,6 +231,9 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ch1e;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/Test&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">Test</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello Ch1e&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>成功<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220412115057265.png" alt="image-20220412115057265"></p>
+<h1 id="踩坑"><a href="#踩坑" class="headerlink" title="踩坑"></a>踩坑</h1><p>别的师傅的内存马是使用如下方法来获取WebApplicationContext和AbstractHandlerMapping，但是我弄了一晚上，发现在我这并不行，所以我换成了我现在的这个。会提示找不到requestMappingHandlerMapping这个bean</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">WebApplicationContext context = RequestContextUtils.findWebApplicationContext(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest());</span><br><span class="line"><span class="comment">// 从context中获得 AbstractHandlerMapping 的实例</span></span><br><span class="line">AbstractHandlerMapping abstractHandlerMapping = (AbstractHandlerMapping) context.getBean(<span class="string">&quot;requestMappingHandlerMapping&quot;</span>);</span><br></pre></td></tr></table></figure>
+
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这次Controller内存马的文章前面的分析过程参考了<a target="_blank" rel="noopener" href="https://su18.org/post/memory-shell/">su18师傅</a>，Interceptor的内存马是参照好几个师傅的马写出来的，总体来说还是有一些地方暂时没有理解，后续可能会继续往这里进行补充，会二刷内存马</p>
 
   </div>
@@ -292,6 +295,13 @@
 
 <div class="pagination-post">
     
+    <a href="/2022/04/13/JAVARCE/">
+      <div class="prev-title"><i class="fas fa-chevron-left"></i>Java下的命令执行方式</div>
+      <div class="prev-desc">前言水文一篇，来整理一下一些学的Java 的内容，怕以后忘
+Runtime类最常见的就是使用Runtime类的exec方法来进行命令执行了，下面随便写一个Runtime类的命令执行的demo
+1...</div>
+    </a>
+    
     
     <a href="/2022/04/06/ls1/">
       <div class="next-title">Java代码审计练习(一)<i class="fas fa-chevron-right"></i></div>
@@ -315,7 +325,7 @@
       </div>
       <div class="toc-list">
          
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Controller%E6%B3%A8%E5%86%8C%E6%B5%81%E7%A8%8B"><span class="toc-text">Controller注册流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Controller%E5%86%85%E5%AD%98%E9%A9%AC%E7%BC%96%E5%86%99"><span class="toc-text">Controller内存马编写</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Interceptor"><span class="toc-text">Interceptor</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Interceptor%E7%9A%84%E6%B3%A8%E5%86%8C%E6%B5%81%E7%A8%8B"><span class="toc-text">Interceptor的注册流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Interceptor%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="toc-text">Interceptor具体实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Controller%E6%B3%A8%E5%86%8C%E6%B5%81%E7%A8%8B"><span class="toc-text">Controller注册流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Controller%E5%86%85%E5%AD%98%E9%A9%AC%E7%BC%96%E5%86%99"><span class="toc-text">Controller内存马编写</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Interceptor"><span class="toc-text">Interceptor</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Interceptor%E7%9A%84%E6%B3%A8%E5%86%8C%E6%B5%81%E7%A8%8B"><span class="toc-text">Interceptor的注册流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Interceptor%E5%85%B7%E4%BD%93%E5%AE%9E%E7%8E%B0"><span class="toc-text">Interceptor具体实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B8%A9%E5%9D%91"><span class="toc-text">踩坑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol>
       </div>
     </div>
   </div>
