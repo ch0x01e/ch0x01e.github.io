@@ -9,10 +9,10 @@
         <lastBuildDate>Thu, 14 Apr 2022 18:22:01 +0800</lastBuildDate>
         <category>靶场练习</category>
         <category>web安全</category>
-        <category>代码审计</category>
-        <category>渗透测试</category>
         <category>Java安全</category>
         <category>内存马</category>
+        <category>代码审计</category>
+        <category>渗透测试</category>
         <category>反序列化</category>
         <category>CTF</category>
         <item>
@@ -20,9 +20,9 @@
             <title>Java中JNDI,RMI,LDAP那些事(二)</title>
             <link>https://ch1e.cn/2022/04/14/JavaRMI2/</link>
             <category>web安全</category>
+            <category>Java安全</category>
             <category>代码审计</category>
             <category>渗透测试</category>
-            <category>Java安全</category>
             <pubDate>Thu, 14 Apr 2022 18:22:01 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;在上一篇已经讲了关于Java RMI的调用过程与具体实现，在这篇文章来从源码进行分析&lt;/p&gt;
 &lt;h1 id=&#34;服务注册&#34;&gt;&lt;a href=&#34;#服务注册&#34; class=&#34;headerlink&#34; title=&#34;服务注册&#34;&gt;&lt;/a&gt;服务注册&lt;/h1&gt;&lt;p&gt;在上文已经说到，我们可以通过&lt;code&gt;RemoteClass remoteClass=new RemoteClass();&lt;/code&gt;来创建一个远程对象，这个远程对象是继承自&lt;code&gt;UnicastRemoteObject&lt;/code&gt;类,我们来看具体的流程&lt;/p&gt;
@@ -49,9 +49,9 @@
             <title>Java中JNDI,RMI,LDAP那些事(一)</title>
             <link>https://ch1e.cn/2022/04/13/JavaRMI1/</link>
             <category>web安全</category>
+            <category>Java安全</category>
             <category>代码审计</category>
             <category>渗透测试</category>
-            <category>Java安全</category>
             <pubDate>Wed, 13 Apr 2022 19:17:30 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;在刚开始学Java的时候，一直遇到一些例如RMI,LDAP,JNDI,JRMP这种概念，其实自己也去一个个了解过，但是感觉没有手动记录过还是没法熟练掌握，所以我还是从0开始学习一下这些相关的内容，把他记录下来整理出自己的笔记&lt;/p&gt;
 &lt;h1 id=&#34;RMI&#34;&gt;&lt;a href=&#34;#RMI&#34; class=&#34;headerlink&#34; title=&#34;RMI&#34;&gt;&lt;/a&gt;RMI&lt;/h1&gt;&lt;p&gt;RMI是远程方法调用(Remote Method Invocation)，远程方法调用是一个分布式编程的思想，比如CORBA，WebService就是实现远程方法调用的技术，Java RMI是专为Java环境设计的远程方法调用机制，客户端只要根据本地接口类的定义，提供相应的参数就可以调用远程服务器上的方法获取执行结果，他是基于JRMP协议&lt;/p&gt;
@@ -104,9 +104,9 @@
             <title>Java下的命令执行方式</title>
             <link>https://ch1e.cn/2022/04/13/JAVARCE/</link>
             <category>web安全</category>
+            <category>Java安全</category>
             <category>代码审计</category>
             <category>渗透测试</category>
-            <category>Java安全</category>
             <pubDate>Wed, 13 Apr 2022 17:47:22 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;水文一篇，来整理一下一些学的Java 的内容，怕以后忘&lt;/p&gt;
 &lt;h1 id=&#34;Runtime类&#34;&gt;&lt;a href=&#34;#Runtime类&#34; class=&#34;headerlink&#34; title=&#34;Runtime类&#34;&gt;&lt;/a&gt;Runtime类&lt;/h1&gt;&lt;p&gt;最常见的就是使用Runtime类的exec方法来进行命令执行了，下面随便写一个Runtime类的命令执行的demo&lt;/p&gt;
