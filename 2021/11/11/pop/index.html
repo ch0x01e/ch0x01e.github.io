@@ -11,7 +11,7 @@
 <meta name="author" content="ch1e">
 <meta name="copyright" content="ch1e">
 
-<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.png"> 
+<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.ico"> 
 
 
     <meta name="keywords" content="web安全,反序列化,CTF">
@@ -357,23 +357,6 @@ gobuster扫描，发现存在phpmyadmin和一个phpinfo.php
     <div class="script">
         <script src="/js/main.js"></script>
         
-
- 
-<script>
-    var originTitle = document.title;
-    var titleTime;
-    document.addEventListener("visibilitychange", function () {
-        if (document.hidden) {
-            document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
-            clearTimeout(titleTime);
-        } else {
-            document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
-            titleTime = setTimeout(function () {
-                document.title = originTitle;
-            }, 2000);
-        }
-    });
-</script>
 
 
 <script src="/js/lazyload.js"></script>

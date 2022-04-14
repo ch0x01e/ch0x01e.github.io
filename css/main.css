@@ -822,13 +822,10 @@ footer .third-party .cdn img {
   -webkit-padding-start: 24px;
           padding-inline-start: 24px;
 }
-#post {
-  order: 1;
-}
 #toc-wrap {
   width: 25%;
   max-width: 30%;
-  padding-right: 10px;
+  padding-left: 10px;
 }
 #toc-wrap #toc {
   top: 10px;
@@ -955,9 +952,6 @@ progress::-webkit-progress-value {
   color: #777;
 }
 @media screen and (max-width: 900px) {
-  #post {
-    order: 0;
-  }
   #toc-wrap.show-toc {
     opacity: 1;
     right: 30px;
