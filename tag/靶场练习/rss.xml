@@ -7,11 +7,11 @@
         <language>zh-CN</language>
         <pubDate>Wed, 13 Oct 2021 20:51:37 +0800</pubDate>
         <lastBuildDate>Wed, 13 Oct 2021 20:51:37 +0800</lastBuildDate>
-        <category>靶场练习</category>
-        <category>web安全</category>
         <category>代码审计</category>
         <category>渗透测试</category>
+        <category>web安全</category>
         <category>Java安全</category>
+        <category>靶场练习</category>
         <category>内存马</category>
         <category>反序列化</category>
         <category>CTF</category>
@@ -19,8 +19,8 @@
             <guid isPermalink="true">https://ch1e.cn/2021/10/13/ATT&amp;CK1/</guid>
             <title>ATT&amp;CK实战系列—红队实战（一）</title>
             <link>https://ch1e.cn/2021/10/13/ATT&amp;CK1/</link>
-            <category>靶场练习</category>
             <category>web安全</category>
+            <category>靶场练习</category>
             <pubDate>Wed, 13 Oct 2021 20:51:37 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;信息搜集&#34;&gt;&lt;a href=&#34;#信息搜集&#34; class=&#34;headerlink&#34; title=&#34;信息搜集&#34;&gt;&lt;/a&gt;信息搜集&lt;/h1&gt;&lt;p&gt;namp扫描，发现存在80,3306端口&lt;/p&gt;
 &lt;p&gt;gobuster扫描，发现存在phpmyadmin和一个phpinfo.php&lt;/p&gt;

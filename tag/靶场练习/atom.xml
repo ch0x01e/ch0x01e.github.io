@@ -4,11 +4,11 @@
     <title>ch1e的随笔 • Posts by &#34;靶场练习&#34; tag</title>
     <link href="https://ch1e.cn" />
     <updated>2021-10-13T12:51:37.820Z</updated>
-    <category term="靶场练习" />
-    <category term="web安全" />
     <category term="代码审计" />
     <category term="渗透测试" />
+    <category term="web安全" />
     <category term="Java安全" />
+    <category term="靶场练习" />
     <category term="内存马" />
     <category term="反序列化" />
     <category term="CTF" />
@@ -79,8 +79,8 @@
 &lt;h1 id=&#34;战果图&#34;&gt;&lt;a href=&#34;#战果图&#34; class=&#34;headerlink&#34; title=&#34;战果图&#34;&gt;&lt;/a&gt;战果图&lt;/h1&gt;&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411165300643.png&#34; alt=&#34;image-20220411165300643&#34;&gt;&lt;/p&gt;
 &lt;p&gt;😁🤞🤞🤞🤞🌹🌹🌹&lt;/p&gt;
 </content>
-        <category term="靶场练习" />
         <category term="web安全" />
+        <category term="靶场练习" />
         <updated>2021-10-13T12:51:37.820Z</updated>
     </entry>
 </feed>
