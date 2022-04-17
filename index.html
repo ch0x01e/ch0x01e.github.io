@@ -167,6 +167,59 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/04/16/oashenji/" title="Java代码审计练习(二) ">
+        
+        Java代码审计练习(二)
+        
+      </a>
+      <div class="post-description">
+        
+        前言看了好几天RMI，今天看的时候好像在分析源码的时候出问题了，好像分析错了，分析了一天心态崩了，继续来搞个审计练练手吧SQL注入老样子还是先挖SQL注入吧，因为这个现在来说比较简单，只要找到没有预编译的地方，然后拿去跑sqlmap即可注入点一还是老方法，对mapper.xml文件搜索${,找到对应的控制器，对应的baseKey可能存在注入对应的控制器如下，刚刚说到，baseKey参数可能存在注入，但是除此之外还需要看他是否可控，这里明显看出参数可控，应该是存在注入的。找到对应路径抓包，对baseKey这个参数跑sqlmap，结果如下注入点二位于address-mapper.xml的如下位置大概流程和注入点一一样，就是判断是否预编译，然后判断是否存在注入，构造请求包跑sqlmap，直接上图越权访问越权访问别人文件夹位于文件管理处，对应控制器是FileController.java来看其text方法，他是进入指定文件夹的方法，这里是根据session里的userId查询当前用户，然后通过当前用户去找到用户根目录，然后通过传进来的pathid去查找当前目录，这里他可能缺少对一个当前用...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-04-16
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/04/14/dtdl/" title="Java动态代理 ">
         
         Java动态代理
@@ -190,6 +243,13 @@
         <span class="post-tag">
           <i class="fa fa-tag"></i>
           
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
           <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
             代码审计
           </a>
@@ -199,13 +259,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
           </a>
           
           <i class="fas fa-angle-right"></i>
@@ -250,6 +303,13 @@
         <span class="post-tag">
           <i class="fa fa-tag"></i>
           
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
           <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
             代码审计
           </a>
@@ -259,13 +319,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
           </a>
           
           <i class="fas fa-angle-right"></i>
@@ -310,6 +363,13 @@
         <span class="post-tag">
           <i class="fa fa-tag"></i>
           
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
           <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
             代码审计
           </a>
@@ -319,13 +379,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
           </a>
           
           <i class="fas fa-angle-right"></i>
@@ -370,6 +423,13 @@
         <span class="post-tag">
           <i class="fa fa-tag"></i>
           
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
           <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
             代码审计
           </a>
@@ -379,13 +439,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
           </a>
           
           <i class="fas fa-angle-right"></i>
@@ -483,6 +536,13 @@
         <span class="post-tag">
           <i class="fa fa-tag"></i>
           
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
           <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
             代码审计
           </a>
@@ -492,13 +552,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
           </a>
           
           
@@ -605,45 +658,6 @@
           
           <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
             内存马
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/03/20/cnvd/" title="CNVD挖掘思路分享 ">
-        
-        CNVD挖掘思路分享
-        
-      </a>
-      <div class="post-description">
-        
-        ca9914e3b4d6a355816dd133945261c942ad4589e6be089ea09cbc7d844ee6b218e81a352dce6f9bf3a2b03200245dad8a25d63cbc48d5cd0c0b5ee79edd926abe688a55d1b0bb79aa7c9ceddac52529c8c4dfb83679d3825dfef094c81eb43b2451df78f6d8bb2f4506a38f6faa04fa20932952fd9e1d3cb4bb3cc8c9c7596a76719edd1a1aa329b0675e6db6d1416fdf88e25524450fafb0b7fbc4366518138f6ddca8dc43b12efcf6dac6ae24fc316414e5995718d64f352c9f8b9a364db52ae4c463cef51f7487ce0a351754d1850e9912cf4ca63bdd659af5a99fe3832b3d7f1e01d4e57e69f9cc28113a9e8f6a2209d45e407af9412...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-03-20
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
           </a>
           
           

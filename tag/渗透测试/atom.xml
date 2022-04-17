@@ -3,15 +3,49 @@
     <id>https://ch1e.cn</id>
     <title>ch1e的随笔 • Posts by &#34;渗透测试&#34; tag</title>
     <link href="https://ch1e.cn" />
-    <updated>2022-04-14T11:32:00.650Z</updated>
+    <updated>2022-04-16T12:06:45.539Z</updated>
+    <category term="靶场练习" />
+    <category term="web安全" />
     <category term="代码审计" />
     <category term="渗透测试" />
-    <category term="web安全" />
     <category term="Java安全" />
-    <category term="靶场练习" />
-    <category term="内存马" />
     <category term="反序列化" />
+    <category term="内存马" />
     <category term="CTF" />
+    <entry>
+        <id>https://ch1e.cn/2022/04/16/oashenji/</id>
+        <title>Java代码审计练习(二)</title>
+        <link rel="alternate" href="https://ch1e.cn/2022/04/16/oashenji/"/>
+        <content type="html">&lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;看了好几天RMI，今天看的时候好像在分析源码的时候出问题了，好像分析错了，分析了一天心态崩了，继续来搞个审计练练手吧&lt;/p&gt;
+&lt;h1 id=&#34;SQL注入&#34;&gt;&lt;a href=&#34;#SQL注入&#34; class=&#34;headerlink&#34; title=&#34;SQL注入&#34;&gt;&lt;/a&gt;SQL注入&lt;/h1&gt;&lt;p&gt;老样子还是先挖SQL注入吧，因为这个现在来说比较简单，只要找到没有预编译的地方，然后拿去跑sqlmap即可&lt;/p&gt;
+&lt;h2 id=&#34;注入点一&#34;&gt;&lt;a href=&#34;#注入点一&#34; class=&#34;headerlink&#34; title=&#34;注入点一&#34;&gt;&lt;/a&gt;注入点一&lt;/h2&gt;&lt;p&gt;还是老方法，对mapper.xml文件搜索${,找到对应的控制器，对应的baseKey可能存在注入&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220416202830488.png&#34; alt=&#34;image-20220416202830488&#34;&gt;&lt;/p&gt;
+&lt;p&gt;对应的控制器如下，刚刚说到，baseKey参数可能存在注入，但是除此之外还需要看他是否可控，这里明显看出参数可控，应该是存在注入的。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220416203032610.png&#34; alt=&#34;image-20220416203032610&#34;&gt;&lt;/p&gt;
+&lt;p&gt;找到对应路径抓包，对baseKey这个参数跑sqlmap，结果如下&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417131144360.png&#34; alt=&#34;image-20220417131144360&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;注入点二&#34;&gt;&lt;a href=&#34;#注入点二&#34; class=&#34;headerlink&#34; title=&#34;注入点二&#34;&gt;&lt;/a&gt;注入点二&lt;/h2&gt;&lt;p&gt;位于address-mapper.xml的如下位置&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417132523084.png&#34; alt=&#34;image-20220417132523084&#34;&gt;&lt;/p&gt;
+&lt;p&gt;大概流程和注入点一一样，就是判断是否预编译，然后判断是否存在注入，构造请求包跑sqlmap，直接上图&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417132612168.png&#34; alt=&#34;image-20220417132612168&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;越权访问&#34;&gt;&lt;a href=&#34;#越权访问&#34; class=&#34;headerlink&#34; title=&#34;越权访问&#34;&gt;&lt;/a&gt;越权访问&lt;/h1&gt;&lt;h2 id=&#34;越权访问别人文件夹&#34;&gt;&lt;a href=&#34;#越权访问别人文件夹&#34; class=&#34;headerlink&#34; title=&#34;越权访问别人文件夹&#34;&gt;&lt;/a&gt;越权访问别人文件夹&lt;/h2&gt;&lt;p&gt;位于文件管理处，对应控制器是FileController.java&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417134822559.png&#34; alt=&#34;image-20220417134822559&#34;&gt;&lt;/p&gt;
+&lt;p&gt;来看其text方法，他是进入指定文件夹的方法，这里是根据session里的userId查询当前用户，然后通过当前用户去找到用户根目录，然后通过传进来的pathid去查找当前目录，这里他可能缺少对一个当前用户以及pathid对应的目录的用户进行验证，所以这里可以导致当前用户可以读取别人的目录&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417144006381.png&#34; alt=&#34;image-20220417144006381&#34;&gt;&lt;/p&gt;
+&lt;p&gt;具体的pathid存在数据库当中&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417144431679.png&#34; alt=&#34;image-20220417144431679&#34;&gt;&lt;/p&gt;
+&lt;p&gt;直接修改pathid即可&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417144510353.png&#34; alt=&#34;image-20220417144510353&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;越权下载别人文件&#34;&gt;&lt;a href=&#34;#越权下载别人文件&#34; class=&#34;headerlink&#34; title=&#34;越权下载别人文件&#34;&gt;&lt;/a&gt;越权下载别人文件&lt;/h2&gt;&lt;p&gt;位于FilteController.java的downFile方法&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417145349050.png&#34; alt=&#34;image-20220417145349050&#34;&gt;&lt;/p&gt;
+&lt;p&gt;通过fileid去找对应文件的路径，然后下载，这里没有进行一个验证，导致可以越权下载别人的文件&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417145503361.png&#34; alt=&#34;image-20220417145503361&#34;&gt;&lt;/p&gt;
+&lt;p&gt;其实这个FileController大部分都没做校验，越权的地方可能比较多，就不一一审计了&lt;/p&gt;
+</content>
+        <category term="web安全" />
+        <category term="代码审计" />
+        <category term="渗透测试" />
+        <updated>2022-04-16T12:06:45.539Z</updated>
+    </entry>
     <entry>
         <id>https://ch1e.cn/2022/04/14/dtdl/</id>
         <title>Java动态代理</title>
@@ -41,9 +75,9 @@
 &lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220414200418348.png&#34; alt=&#34;image-20220414200418348&#34;&gt;&lt;/p&gt;
 &lt;p&gt;我个人理解就是通过newProxyInstance创建的动态代理对象，需要传入ClassLoader，接口的Class类数组以及InvocationHandler，获取了动态代理对象以后，调用对应动态代理对象的方法，都会去调用传入的InvocationHandler的invoke方法，如果有理解错误的地方请师傅们指点&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="代码审计" />
         <category term="渗透测试" />
-        <category term="web安全" />
         <category term="Java安全" />
         <updated>2022-04-14T11:32:00.650Z</updated>
     </entry>
@@ -142,9 +176,9 @@
 &lt;p&gt;&lt;a href=&#34;https://www.cnblogs.com/binarylei/p/12115986.html&#34;&gt;https://www.cnblogs.com/binarylei/p/12115986.html&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://paper.seebug.org/1091/&#34;&gt;https://paper.seebug.org/1091/&lt;/a&gt;&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="代码审计" />
         <category term="渗透测试" />
-        <category term="web安全" />
         <category term="Java安全" />
         <updated>2022-04-14T10:22:01.086Z</updated>
     </entry>
@@ -197,9 +231,9 @@
 &lt;h1 id=&#34;参考文章&#34;&gt;&lt;a href=&#34;#参考文章&#34; class=&#34;headerlink&#34; title=&#34;参考文章&#34;&gt;&lt;/a&gt;参考文章&lt;/h1&gt;&lt;p&gt;&lt;a href=&#34;https://javasec.org/javase/RMI/&#34;&gt;https://javasec.org/javase/RMI/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://su18.org/post/rmi-attack/&#34;&gt;https://su18.org/post/rmi-attack/&lt;/a&gt;&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="代码审计" />
         <category term="渗透测试" />
-        <category term="web安全" />
         <category term="Java安全" />
         <updated>2022-04-13T11:17:30.427Z</updated>
     </entry>
@@ -224,9 +258,9 @@
 &lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220413182953334.png&#34; alt=&#34;image-20220413182953334&#34;&gt;&lt;/p&gt;
 &lt;p&gt;我们在Runtime.exec处打上断点，额这里暂时没调试懂，还在学习，看了别的师傅的博客，说是找不到环境变量，但是我觉得加上/c以后是执行完关闭窗口，可能和其他有关？后面再来研究&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="代码审计" />
         <category term="渗透测试" />
-        <category term="web安全" />
         <category term="Java安全" />
         <updated>2022-04-13T09:47:22.175Z</updated>
     </entry>
@@ -298,9 +332,9 @@
 &lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220407200903743.png&#34; alt=&#34;image-20220407200903743&#34;&gt;&lt;/p&gt;
 &lt;h1 id=&#34;SpringSecurity未授权&#34;&gt;&lt;a href=&#34;#SpringSecurity未授权&#34; class=&#34;headerlink&#34; title=&#34;SpringSecurity未授权&#34;&gt;&lt;/a&gt;SpringSecurity未授权&lt;/h1&gt;&lt;p&gt;额，官方给的文档里是有这个洞，但是关于SpringSecurity的了解的并不是很多，其实这里我并没有审出来，先暂时留着吧，下次再看&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="代码审计" />
         <category term="渗透测试" />
-        <category term="web安全" />
         <updated>2022-04-06T12:04:34.800Z</updated>
     </entry>
     <entry>
@@ -338,9 +372,9 @@
 &lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173755800.png&#34; alt=&#34;image-20220411173755800&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173809090.png&#34; alt=&#34;image-20220411173809090&#34;&gt;&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="代码审计" />
         <category term="渗透测试" />
-        <category term="web安全" />
         <updated>2021-08-09T03:14:55.564Z</updated>
     </entry>
     <entry>
@@ -420,9 +454,9 @@
 &lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411170308015.png&#34; alt=&#34;image-20220411170308015&#34;&gt;&lt;/p&gt;
 &lt;p&gt;这里有post的参数，菜刀肯定是连不上了，我蚁剑貌似也出了点问题&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="代码审计" />
         <category term="渗透测试" />
-        <category term="web安全" />
         <updated>2021-08-07T02:13:38.114Z</updated>
     </entry>
     <entry>
@@ -508,9 +542,9 @@
 &lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174617179.png&#34; alt=&#34;image-20220411174617179&#34;&gt;&lt;/p&gt;
 &lt;p&gt;直接从例子里面可以看出来，传入file=5&amp;lt;参数就可以包含到了我们的596a62sd.php(这是随便取的)，大概原理根据windows的一些特性，我们输入的&amp;lt;会转换成&lt;em&gt;，而被转换的&lt;/em&gt;类似于linux中的通配符,所以这里就可以利用这个特性来用&amp;lt;进行文件包含。&lt;br&gt;具体解析可以看 &lt;a href=&#34;http://www.jinglingshu.org/?p=8790&#34;&gt;http://www.jinglingshu.org/?p=8790&lt;/a&gt; 这篇文章介绍的&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="代码审计" />
         <category term="渗透测试" />
-        <category term="web安全" />
         <updated>2021-07-07T08:38:24.358Z</updated>
     </entry>
 </feed>

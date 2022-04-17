@@ -4,13 +4,13 @@
     <title>ch1e的随笔 • Posts by &#34;java安全&#34; tag</title>
     <link href="https://ch1e.cn" />
     <updated>2022-04-14T11:32:00.650Z</updated>
+    <category term="靶场练习" />
+    <category term="web安全" />
     <category term="代码审计" />
     <category term="渗透测试" />
-    <category term="web安全" />
     <category term="Java安全" />
-    <category term="靶场练习" />
-    <category term="内存马" />
     <category term="反序列化" />
+    <category term="内存马" />
     <category term="CTF" />
     <entry>
         <id>https://ch1e.cn/2022/04/14/dtdl/</id>
@@ -41,9 +41,9 @@
 &lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220414200418348.png&#34; alt=&#34;image-20220414200418348&#34;&gt;&lt;/p&gt;
 &lt;p&gt;我个人理解就是通过newProxyInstance创建的动态代理对象，需要传入ClassLoader，接口的Class类数组以及InvocationHandler，获取了动态代理对象以后，调用对应动态代理对象的方法，都会去调用传入的InvocationHandler的invoke方法，如果有理解错误的地方请师傅们指点&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="代码审计" />
         <category term="渗透测试" />
-        <category term="web安全" />
         <category term="Java安全" />
         <updated>2022-04-14T11:32:00.650Z</updated>
     </entry>
@@ -142,9 +142,9 @@
 &lt;p&gt;&lt;a href=&#34;https://www.cnblogs.com/binarylei/p/12115986.html&#34;&gt;https://www.cnblogs.com/binarylei/p/12115986.html&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://paper.seebug.org/1091/&#34;&gt;https://paper.seebug.org/1091/&lt;/a&gt;&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="代码审计" />
         <category term="渗透测试" />
-        <category term="web安全" />
         <category term="Java安全" />
         <updated>2022-04-14T10:22:01.086Z</updated>
     </entry>
@@ -197,9 +197,9 @@
 &lt;h1 id=&#34;参考文章&#34;&gt;&lt;a href=&#34;#参考文章&#34; class=&#34;headerlink&#34; title=&#34;参考文章&#34;&gt;&lt;/a&gt;参考文章&lt;/h1&gt;&lt;p&gt;&lt;a href=&#34;https://javasec.org/javase/RMI/&#34;&gt;https://javasec.org/javase/RMI/&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a href=&#34;https://su18.org/post/rmi-attack/&#34;&gt;https://su18.org/post/rmi-attack/&lt;/a&gt;&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="代码审计" />
         <category term="渗透测试" />
-        <category term="web安全" />
         <category term="Java安全" />
         <updated>2022-04-13T11:17:30.427Z</updated>
     </entry>
@@ -224,9 +224,9 @@
 &lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220413182953334.png&#34; alt=&#34;image-20220413182953334&#34;&gt;&lt;/p&gt;
 &lt;p&gt;我们在Runtime.exec处打上断点，额这里暂时没调试懂，还在学习，看了别的师傅的博客，说是找不到环境变量，但是我觉得加上/c以后是执行完关闭窗口，可能和其他有关？后面再来研究&lt;/p&gt;
 </content>
+        <category term="web安全" />
         <category term="代码审计" />
         <category term="渗透测试" />
-        <category term="web安全" />
         <category term="Java安全" />
         <updated>2022-04-13T09:47:22.175Z</updated>
     </entry>
