@@ -7,21 +7,21 @@
         <language>zh-CN</language>
         <pubDate>Sat, 16 Apr 2022 20:06:45 +0800</pubDate>
         <lastBuildDate>Sat, 16 Apr 2022 20:06:45 +0800</lastBuildDate>
-        <category>靶场练习</category>
-        <category>web安全</category>
         <category>代码审计</category>
         <category>渗透测试</category>
+        <category>web安全</category>
         <category>Java安全</category>
-        <category>反序列化</category>
+        <category>靶场练习</category>
         <category>内存马</category>
+        <category>反序列化</category>
         <category>CTF</category>
         <item>
             <guid isPermalink="true">https://ch1e.cn/2022/04/16/oashenji/</guid>
             <title>Java代码审计练习(二)</title>
             <link>https://ch1e.cn/2022/04/16/oashenji/</link>
-            <category>web安全</category>
             <category>代码审计</category>
             <category>渗透测试</category>
+            <category>web安全</category>
             <pubDate>Sat, 16 Apr 2022 20:06:45 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;看了好几天RMI，今天看的时候好像在分析源码的时候出问题了，好像分析错了，分析了一天心态崩了，继续来搞个审计练练手吧&lt;/p&gt;
 &lt;h1 id=&#34;SQL注入&#34;&gt;&lt;a href=&#34;#SQL注入&#34; class=&#34;headerlink&#34; title=&#34;SQL注入&#34;&gt;&lt;/a&gt;SQL注入&lt;/h1&gt;&lt;p&gt;老样子还是先挖SQL注入吧，因为这个现在来说比较简单，只要找到没有预编译的地方，然后拿去跑sqlmap即可&lt;/p&gt;
@@ -53,9 +53,9 @@
             <guid isPermalink="true">https://ch1e.cn/2022/04/14/dtdl/</guid>
             <title>Java动态代理</title>
             <link>https://ch1e.cn/2022/04/14/dtdl/</link>
-            <category>web安全</category>
             <category>代码审计</category>
             <category>渗透测试</category>
+            <category>web安全</category>
             <category>Java安全</category>
             <pubDate>Thu, 14 Apr 2022 19:32:00 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;代理模式&#34;&gt;&lt;a href=&#34;#代理模式&#34; class=&#34;headerlink&#34; title=&#34;代理模式&#34;&gt;&lt;/a&gt;代理模式&lt;/h1&gt;&lt;p&gt;代理模式是常见的设计模式，Java我们通常通过new一个对象然后调用其对应的方法来访问我们需要的服务。代理模式则是通过创建代理类（proxy）的方式来访问服务，代理类通常会持有一个委托类对象，代理类不会自己实现真正服务，而是通过调用委托类对象的相关方法，来提供服务，所以其实我们调用的还是委托类的服务，但是中间隔了一个代理类。这么做是有好处的，我们可以在访问服务之前或者之后加一下我们需要的操作。例如Spring的面向切面编程，我们可以在切入点之前执行一些操作，切入点之后执行一些操作。这个切入点就是一个个方法。这些方法所在类肯定就是被代理了，在代理过程中切入了一些其他操作。&lt;/p&gt;
@@ -88,9 +88,9 @@
             <guid isPermalink="true">https://ch1e.cn/2022/04/14/JavaRMI2/</guid>
             <title>Java中JNDI,RMI,LDAP那些事(二)</title>
             <link>https://ch1e.cn/2022/04/14/JavaRMI2/</link>
-            <category>web安全</category>
             <category>代码审计</category>
             <category>渗透测试</category>
+            <category>web安全</category>
             <category>Java安全</category>
             <pubDate>Thu, 14 Apr 2022 18:22:01 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;在上一篇已经讲了关于Java RMI的调用过程与具体实现，在这篇文章我跟着su18师傅的文章来分析一遍源码&lt;/p&gt;
@@ -189,9 +189,9 @@
             <guid isPermalink="true">https://ch1e.cn/2022/04/13/JavaRMI1/</guid>
             <title>Java中JNDI,RMI,LDAP那些事(一)</title>
             <link>https://ch1e.cn/2022/04/13/JavaRMI1/</link>
-            <category>web安全</category>
             <category>代码审计</category>
             <category>渗透测试</category>
+            <category>web安全</category>
             <category>Java安全</category>
             <pubDate>Wed, 13 Apr 2022 19:17:30 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;在刚开始学Java的时候，一直遇到一些例如RMI,LDAP,JNDI,JRMP这种概念，其实自己也去一个个了解过，但是感觉没有手动记录过还是没法熟练掌握，所以我还是从0开始学习一下这些相关的内容，把他记录下来整理出自己的笔记&lt;/p&gt;
@@ -244,9 +244,9 @@
             <guid isPermalink="true">https://ch1e.cn/2022/04/13/JAVARCE/</guid>
             <title>Java下的命令执行方式</title>
             <link>https://ch1e.cn/2022/04/13/JAVARCE/</link>
-            <category>web安全</category>
             <category>代码审计</category>
             <category>渗透测试</category>
+            <category>web安全</category>
             <category>Java安全</category>
             <pubDate>Wed, 13 Apr 2022 17:47:22 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;水文一篇，来整理一下一些学的Java 的内容，怕以后忘&lt;/p&gt;
@@ -364,9 +364,9 @@
             <guid isPermalink="true">https://ch1e.cn/2022/04/06/ls1/</guid>
             <title>Java代码审计练习(一)</title>
             <link>https://ch1e.cn/2022/04/06/ls1/</link>
-            <category>web安全</category>
             <category>代码审计</category>
             <category>渗透测试</category>
+            <category>web安全</category>
             <pubDate>Wed, 06 Apr 2022 20:04:34 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;前言&#34;&gt;&lt;a href=&#34;#前言&#34; class=&#34;headerlink&#34; title=&#34;前言&#34;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;摸了好几天的鱼，被早8折磨的死去活来，一但早8，整天没精神，今天还被体育课折磨到低血糖，想到自己这么菜，选择继续学习，晚上稍微看了一下SSM框架，感觉非常无聊，突然心血来潮想审几个程序练练手，就随手找了个程序，这个是炼石计划之50套JavaWeb代码审计实战漏洞挖掘的一个系统，我看到这个就选择这个了，懒得去找其他了，里面的具体内容也需要付费。。。囊中羞涩，没有选择加入99/年的知识星球，只能自己探索了&lt;/p&gt;
 &lt;blockquote&gt;
@@ -1595,8 +1595,8 @@
             <guid isPermalink="true">https://ch1e.cn/2021/10/13/ATT&amp;CK1/</guid>
             <title>ATT&amp;CK实战系列—红队实战（一）</title>
             <link>https://ch1e.cn/2021/10/13/ATT&amp;CK1/</link>
-            <category>靶场练习</category>
             <category>web安全</category>
+            <category>靶场练习</category>
             <pubDate>Wed, 13 Oct 2021 20:51:37 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;信息搜集&#34;&gt;&lt;a href=&#34;#信息搜集&#34; class=&#34;headerlink&#34; title=&#34;信息搜集&#34;&gt;&lt;/a&gt;信息搜集&lt;/h1&gt;&lt;p&gt;namp扫描，发现存在80,3306端口&lt;/p&gt;
 &lt;p&gt;gobuster扫描，发现存在phpmyadmin和一个phpinfo.php&lt;/p&gt;
@@ -1666,9 +1666,9 @@
             <guid isPermalink="true">https://ch1e.cn/2021/08/09/dswdmsj/</guid>
             <title>某代刷网代码审计</title>
             <link>https://ch1e.cn/2021/08/09/dswdmsj/</link>
-            <category>web安全</category>
             <category>代码审计</category>
             <category>渗透测试</category>
+            <category>web安全</category>
             <pubDate>Mon, 09 Aug 2021 11:14:55 +0800</pubDate>
             <description><![CDATA[ &lt;p&gt;最近在学代码审计，逛了逛一些安全社区，发现了YanXia师傅写的一篇关于代刷网的代码审计，舔了个B脸问了YanXia师傅要了源码，因为网络上大部分代刷网源码都是有加密过的，我太菜了不会解密&lt;/p&gt;
 &lt;p&gt;今天使用的环境是Apache+PHP7.0n&lt;/p&gt;
@@ -1706,9 +1706,9 @@
             <guid isPermalink="true">https://ch1e.cn/2021/08/07/bluecms/</guid>
             <title>BlueCMS代码审计</title>
             <link>https://ch1e.cn/2021/08/07/bluecms/</link>
-            <category>web安全</category>
             <category>代码审计</category>
             <category>渗透测试</category>
+            <category>web安全</category>
             <pubDate>Sat, 07 Aug 2021 10:13:38 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;Bluecms代码审计&#34;&gt;&lt;a href=&#34;#Bluecms代码审计&#34; class=&#34;headerlink&#34; title=&#34;Bluecms代码审计&#34;&gt;&lt;/a&gt;Bluecms代码审计&lt;/h1&gt;&lt;h2 id=&#34;Bluecms代码审计之union联合查询注入&#34;&gt;&lt;a href=&#34;#Bluecms代码审计之union联合查询注入&#34; class=&#34;headerlink&#34; title=&#34;Bluecms代码审计之union联合查询注入&#34;&gt;&lt;/a&gt;Bluecms代码审计之union联合查询注入&lt;/h2&gt;&lt;p&gt;先把我们的源码下载好，并且搭建好&lt;/p&gt;
 &lt;p&gt;打开我们的Seay源代码审计系统，把源码丢进去自动审计一下&lt;/p&gt;
@@ -1788,9 +1788,9 @@
             <guid isPermalink="true">https://ch1e.cn/2021/07/07/xhcms/</guid>
             <title>熊海CMS1.0代码审计</title>
             <link>https://ch1e.cn/2021/07/07/xhcms/</link>
-            <category>web安全</category>
             <category>代码审计</category>
             <category>渗透测试</category>
+            <category>web安全</category>
             <pubDate>Wed, 07 Jul 2021 16:38:24 +0800</pubDate>
             <description><![CDATA[ &lt;h1 id=&#34;熊海CMS1-0代码审计&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计&lt;/h1&gt;&lt;h2 id=&#34;熊海CMS1-0代码审计之反射型XSS&#34;&gt;&lt;a href=&#34;#熊海CMS1-0代码审计之反射型XSS&#34; class=&#34;headerlink&#34; title=&#34;熊海CMS1.0代码审计之反射型XSS&#34;&gt;&lt;/a&gt;熊海CMS1.0代码审计之反射型XSS&lt;/h2&gt;&lt;p&gt;首先打开Seay审计系统，把我们的xhcms丢进去审计一下，我们这里是要找XSS，我们直接搜索关键字echo，看看有没有可以利用的地方&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174413120.png&#34; alt=&#34;image-20220411174413120&#34;&gt;&lt;/p&gt;

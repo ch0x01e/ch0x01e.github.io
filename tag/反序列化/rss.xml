@@ -7,13 +7,13 @@
         <language>zh-CN</language>
         <pubDate>Sat, 19 Mar 2022 13:27:54 +0800</pubDate>
         <lastBuildDate>Sat, 19 Mar 2022 13:27:54 +0800</lastBuildDate>
-        <category>靶场练习</category>
-        <category>web安全</category>
         <category>代码审计</category>
         <category>渗透测试</category>
+        <category>web安全</category>
         <category>Java安全</category>
-        <category>反序列化</category>
+        <category>靶场练习</category>
         <category>内存马</category>
+        <category>反序列化</category>
         <category>CTF</category>
         <item>
             <guid isPermalink="true">https://ch1e.cn/2022/03/19/fastjson/</guid>
