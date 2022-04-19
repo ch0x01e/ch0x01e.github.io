@@ -137,6 +137,112 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/03/25/Servlet/" title="Java内存马之Servlet内存马 ">
+        
+        Java内存马之Servlet内存马
+        
+      </a>
+      <div class="post-description">
+        
+        前言前面学习完了Filter内存马，现在来学习Servlet内存马，其实两者本质上区别并不大，如果学习过之前的Filter内存马，学习这个Servlet内存马其实是类似的。正文这里为了方便师傅们理解，我随便写了个demoTestServlet.javaimportjavax.servlet.*;importjavax.servlet.annotation.WebServlet;importjava.io.IOException;publicclassTestServletimplementsServlet&amp;#123;@Overridepublicvoidinit(ServletConfigservletConfig)throwsServletException&amp;#123;&amp;#125;@OverridepublicServletConfiggetServletConfig()&amp;#123;returnnull;&amp;#125;@Overridepublicvoidservice(ServletRequestservletRequest,ServletResponseservletResp...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-03-25
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
+            内存马
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/03/24/Filter/" title="Java内存马之Filter内存马 ">
+        
+        Java内存马之Filter内存马
+        
+      </a>
+      <div class="post-description">
+        
+        前言前两天去做渗透测试啦，所以关于Java的内容没有怎么学，打了两天，后续打的比较烦了，就继续学习Java，今天的内容是Java的Filter内存马前置知识Filter我们称之为过滤器，是JAVA中最常见的技术之一，一般是用来处理静态Web资源，访问权限控制，记录日志等附加功能，当Tomcat收到请求后，会依次经过Listener-&amp;gt;Filter-&amp;gt;Servlet，在学习内存马的知识前，先来简单了解一下Tomcat处理请求的逻辑。主要看的是Wrapper中那部分，请求到达Wrapper容器时，会去先调用FilterChain，FilterChain看名字也很容易理解，就是几个Filter组成的一条链，然后再把请求发送给Servlet，这里的话他既然去调用了FilterChain，那我们是否可以通过写入一个恶意的Filter，然后调用这个恶意的Filter来触发恶意方法。因此，我们后续的任务就是要搞明白如何去注册一个恶意的Filter。通常情况下，注册一个Filter有三种方法，这里只讨论下面的第一种使用ServletContext的addFilter/createFi...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-03-24
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
+            内存马
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/03/20/cnvd/" title="CNVD挖掘思路分享 ">
         
         CNVD挖掘思路分享
@@ -537,88 +643,6 @@
           
           
         </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/02/21/cc1/" title="commons-collections1反序列化链分析 ">
-        
-        commons-collections1反序列化链分析
-        
-      </a>
-      <div class="post-description">
-        
-        commons-collections1反序列化链分析前言最近入了P牛的知识星球，打算搞Java安全这一块了，所以有了这一篇CC链的分析结果，从0到1学习java安全，在学习的路上碰到了不少坑，这里一起记录一下这几天的学习成果，用到的环境是jdk1.7以及commons-collections3.1，这是我第一篇关于java安全的文章，我才疏学浅，希望师傅们多多指点有关的类介绍ConstantTransformerConstantTransformer类实现了Transformer接口，其transform方法作用是获取一个对象类型InvokerTransformerInvokerTransformer类实现了Transformer和Serializable接口，重写了transform方法，他的transform方法是用反射调用指定的方法并且进行返回他的结果，这里我们可以来写个小demopublicclassdemo&amp;#123;publicstaticvoidmain(String[]args)&amp;#123;Transformertransformer=newInvokerTra...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-02-21
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
-            反序列化
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/02/13/easyj4va/" title="从CTF题了解Servlet的线程安全问题 ">
-        
-        从CTF题了解Servlet的线程安全问题
-        
-      </a>
-      <div class="post-description">
-        
-        前言VNCTF2022_easyJ4va源于前几天打的VNCTF，这题自己尝试做了一下午，感觉确实可以，就拿来复盘一下，比赛做一下午没做出来，这里直接拿他读出来的源码进行复现吧，如果有想学习的师傅可以加我公告里的qq来拿源码试着做一下正文涉及知识点个人感觉其中获取key的过程涉及到Servlet的线程安全问题，这里具体可以看一下Y4师傅的文章，给出文章地址Servlet的线程安全问题，获取flag的过程涉及到java-Transient关键字的问题，这里给出文章地址java-Transient关键字、Volatile关键字介绍和序列化、反序列化机制、单例类序列化然后接下来具体看题吧复现过程打开环境，提示我们/file?,可以想到这里应该是让我们在/file路径下get传入一个参数，访问/file提示输入url，大概就是让我们访问/file?url=xxxx，这里有经验的师傅就大概可以猜到存在类似于SSRF或者读文件漏洞，这里直接上了file协议，读取出他的源码。这就一步带过了，因为太简单了。读出来源代码以后我们直接进行审计，这就是一个Servlet对象，具体来看一下////Sou...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-02-13
-          </span>
-        </span>
-        
-
         
       </div>
     </div>

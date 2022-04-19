@@ -167,6 +167,119 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/04/19/unser/" title="Java反序列化链二周目 ">
+        
+        Java反序列化链二周目
+        
+      </a>
+      <div class="post-description">
+        
+        前言最近缺席是学不进去，有点迷茫，不知道该怎么去学，是选择几个源码做一下代码审计还是继续深入研究java呢？也可能和我最近身体状态不好有关吧，只能选择二刷/三刷前面的反序列化链，学了反序列化链也有一段时间了，这次来好好整理一下CC1主要用到ConstantTransformer,InvokerTransformer,ChainedTransformer这几个类。ConstantTransformer类实现了Transformer接口，其transform方法作用是获取一个对象类型publicConstantTransformer(ObjectconstantToReturn)&amp;#123;this.iConstant=constantToReturn;&amp;#125;publicObjecttransform(Objectinput)&amp;#123;returnthis.iConstant;&amp;#125;InvokerTransformer类实现了Transformer和Serializable接口，重写了transform方法，他的transform方法是用反射调用指定的方法并且进行返回他...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-04-19
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/04/18/JavaRMI3/" title="Java中JNDI,RMI,LDAP那些事(三) ">
+        
+        Java中JNDI,RMI,LDAP那些事(三)
+        
+      </a>
+      <div class="post-description">
+        
+        前言这篇来说说看RMI的具体攻击方式，我这里复现一种写一种吧攻击Registry端攻击Server端恶意服务参数在客户端获取到了服务端创建的Stub后，会调用Stub去传递序列化后的参数，在Server端接受到这个参数时会进行反序列化，此时如果我们传入的参数是Object类型的情况瞎，客户端可以传给服务端任意类，造成反序列化漏洞来个Demo，RMIInterface.java如下packageRMI;importjava.rmi.Remote;importjava.rmi.RemoteException;publicinterfaceRMIInterfaceextendsRemote&amp;#123;publicStringhello()throwsRemoteException;publicStringsayGoodBye(Objecta)throwsRemoteException;&amp;#125;RemoteClass.javapackageRMI;importjava.rmi.RemoteException;importjava.rmi.server.UnicastRemoteObj...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-04-18
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/04/16/oashenji/" title="Java代码审计练习(二) ">
         
         Java代码审计练习(二)
@@ -190,6 +303,13 @@
         <span class="post-tag">
           <i class="fa fa-tag"></i>
           
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
           <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
             代码审计
           </a>
@@ -199,13 +319,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
           </a>
           
           
@@ -243,6 +356,13 @@
         <span class="post-tag">
           <i class="fa fa-tag"></i>
           
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
           <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
             代码审计
           </a>
@@ -252,13 +372,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
           </a>
           
           <i class="fas fa-angle-right"></i>
@@ -303,6 +416,13 @@
         <span class="post-tag">
           <i class="fa fa-tag"></i>
           
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
           <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
             代码审计
           </a>
@@ -312,13 +432,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
           </a>
           
           <i class="fas fa-angle-right"></i>
@@ -363,6 +476,13 @@
         <span class="post-tag">
           <i class="fa fa-tag"></i>
           
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
           <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
             代码审计
           </a>
@@ -372,13 +492,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
           </a>
           
           <i class="fas fa-angle-right"></i>
@@ -423,6 +536,13 @@
         <span class="post-tag">
           <i class="fa fa-tag"></i>
           
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
           <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
             代码审计
           </a>
@@ -432,13 +552,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
           </a>
           
           <i class="fas fa-angle-right"></i>
@@ -536,6 +649,13 @@
         <span class="post-tag">
           <i class="fa fa-tag"></i>
           
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
           <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
             代码审计
           </a>
@@ -545,119 +665,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/03/25/Servlet/" title="Java内存马之Servlet内存马 ">
-        
-        Java内存马之Servlet内存马
-        
-      </a>
-      <div class="post-description">
-        
-        前言前面学习完了Filter内存马，现在来学习Servlet内存马，其实两者本质上区别并不大，如果学习过之前的Filter内存马，学习这个Servlet内存马其实是类似的。正文这里为了方便师傅们理解，我随便写了个demoTestServlet.javaimportjavax.servlet.*;importjavax.servlet.annotation.WebServlet;importjava.io.IOException;publicclassTestServletimplementsServlet&amp;#123;@Overridepublicvoidinit(ServletConfigservletConfig)throwsServletException&amp;#123;&amp;#125;@OverridepublicServletConfiggetServletConfig()&amp;#123;returnnull;&amp;#125;@Overridepublicvoidservice(ServletRequestservletRequest,ServletResponseservletResp...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-03-25
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
-            内存马
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/03/24/Filter/" title="Java内存马之Filter内存马 ">
-        
-        Java内存马之Filter内存马
-        
-      </a>
-      <div class="post-description">
-        
-        前言前两天去做渗透测试啦，所以关于Java的内容没有怎么学，打了两天，后续打的比较烦了，就继续学习Java，今天的内容是Java的Filter内存马前置知识Filter我们称之为过滤器，是JAVA中最常见的技术之一，一般是用来处理静态Web资源，访问权限控制，记录日志等附加功能，当Tomcat收到请求后，会依次经过Listener-&amp;gt;Filter-&amp;gt;Servlet，在学习内存马的知识前，先来简单了解一下Tomcat处理请求的逻辑。主要看的是Wrapper中那部分，请求到达Wrapper容器时，会去先调用FilterChain，FilterChain看名字也很容易理解，就是几个Filter组成的一条链，然后再把请求发送给Servlet，这里的话他既然去调用了FilterChain，那我们是否可以通过写入一个恶意的Filter，然后调用这个恶意的Filter来触发恶意方法。因此，我们后续的任务就是要搞明白如何去注册一个恶意的Filter。通常情况下，注册一个Filter有三种方法，这里只讨论下面的第一种使用ServletContext的addFilter/createFi...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-03-24
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
-            内存马
           </a>
           
           

@@ -137,6 +137,88 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/02/21/cc1/" title="commons-collections1反序列化链分析 ">
+        
+        commons-collections1反序列化链分析
+        
+      </a>
+      <div class="post-description">
+        
+        commons-collections1反序列化链分析前言最近入了P牛的知识星球，打算搞Java安全这一块了，所以有了这一篇CC链的分析结果，从0到1学习java安全，在学习的路上碰到了不少坑，这里一起记录一下这几天的学习成果，用到的环境是jdk1.7以及commons-collections3.1，这是我第一篇关于java安全的文章，我才疏学浅，希望师傅们多多指点有关的类介绍ConstantTransformerConstantTransformer类实现了Transformer接口，其transform方法作用是获取一个对象类型InvokerTransformerInvokerTransformer类实现了Transformer和Serializable接口，重写了transform方法，他的transform方法是用反射调用指定的方法并且进行返回他的结果，这里我们可以来写个小demopublicclassdemo&amp;#123;publicstaticvoidmain(String[]args)&amp;#123;Transformertransformer=newInvokerTra...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-02-21
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/02/13/easyj4va/" title="从CTF题了解Servlet的线程安全问题 ">
+        
+        从CTF题了解Servlet的线程安全问题
+        
+      </a>
+      <div class="post-description">
+        
+        前言VNCTF2022_easyJ4va源于前几天打的VNCTF，这题自己尝试做了一下午，感觉确实可以，就拿来复盘一下，比赛做一下午没做出来，这里直接拿他读出来的源码进行复现吧，如果有想学习的师傅可以加我公告里的qq来拿源码试着做一下正文涉及知识点个人感觉其中获取key的过程涉及到Servlet的线程安全问题，这里具体可以看一下Y4师傅的文章，给出文章地址Servlet的线程安全问题，获取flag的过程涉及到java-Transient关键字的问题，这里给出文章地址java-Transient关键字、Volatile关键字介绍和序列化、反序列化机制、单例类序列化然后接下来具体看题吧复现过程打开环境，提示我们/file?,可以想到这里应该是让我们在/file路径下get传入一个参数，访问/file提示输入url，大概就是让我们访问/file?url=xxxx，这里有经验的师傅就大概可以猜到存在类似于SSRF或者读文件漏洞，这里直接上了file协议，读取出他的源码。这就一步带过了，因为太简单了。读出来源代码以后我们直接进行审计，这就是一个Servlet对象，具体来看一下////Sou...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-02-13
+          </span>
+        </span>
+        
+
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2021/11/12/yuanshenglei/" title="PHP原生类在CTF当中的应用🛴 ">
         
         PHP原生类在CTF当中的应用🛴
@@ -266,15 +348,15 @@
         <span class="post-tag">
           <i class="fa fa-tag"></i>
           
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
+          <a href="/tags/%E9%9D%B6%E5%9C%BA%E7%BB%83%E4%B9%A0/">
+            靶场练习
           </a>
           
           <i class="fas fa-angle-right"></i>
           
           
-          <a href="/tags/%E9%9D%B6%E5%9C%BA%E7%BB%83%E4%B9%A0/">
-            靶场练习
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
           </a>
           
           
@@ -312,6 +394,13 @@
         <span class="post-tag">
           <i class="fa fa-tag"></i>
           
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
           <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
             代码审计
           </a>
@@ -321,13 +410,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
           </a>
           
           
@@ -365,6 +447,13 @@
         <span class="post-tag">
           <i class="fa fa-tag"></i>
           
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
           <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
             代码审计
           </a>
@@ -374,13 +463,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
           </a>
           
           
@@ -418,6 +500,13 @@
         <span class="post-tag">
           <i class="fa fa-tag"></i>
           
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
           <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
             代码审计
           </a>
@@ -427,13 +516,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
           </a>
           
           
