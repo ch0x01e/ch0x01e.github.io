@@ -137,6 +137,59 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/02/28/cc6/" title="commons-collections6反序列化链分析 ">
+        
+        commons-collections6反序列化链分析
+        
+      </a>
+      <div class="post-description">
+        
+        commons-collections6反序列化链分析整体分析cc6这条链我们先来ysoserial看看他的源码，源码如下我们可以看到，他也是使用了LazyMap，但是不同的是，他是通过其他方式调用到了LazyMap的get方法，我们可以深入来看看，这里由于前面学过cc1的LazyMap的那条链了，关注LazyMap前面的部分就不再赘述，如果有师傅不懂的可以看看前面的文章细节分析咱就从LazyMap的get方法开始吧，因为前面的和之前的链子是一样的。先找到谁调用了get方法，这里直接锁定TiedMapEntry的getValue方法，他这里返回了map.get(key),并且构造函数是publice，可以直接newTiedMapEntry这里的map对应的应该是之前的lazymap接下来是寻找调用getValue的位置，找到同个类下的hashCode方法这里调用了getValue()方法，我们得继续往上找，最好能直接找到在readObject方法中调用getValue()，ysoserial中给的是HashMap，那我们就在HashMap中找找在HaspMap的hash方法中能够...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-02-28
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/02/26/cc3/" title="commons-collections3反序列化链分析 ">
         
         commons-collections3反序列化链分析

