@@ -167,6 +167,66 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/04/21/JavaRMI4/" title="Java中JNDI,RMI,LDAP那些事(四) ">
+        
+        Java中JNDI,RMI,LDAP那些事(四)
+        
+      </a>
+      <div class="post-description">
+        
+        前言说完了RMI，来说说JNDI介绍JNDI(JavaNamingandDirectoryInterface)Java命名和目录接口，通过调用JNDI的API应用程序可以定位资源和其他程序对象NamingService命名服务命名服务将名称和对象进行关联，提供通过名称找到对象的操作，例如：DNS系统将计算机名和IP地址进行关联、文件系统将文件名和文件句柄进行关联等等。DirectoryService目录服务目录服务是命名服务的扩展，除了提供名称和对象的关联，还允许对象具有属性。目录服务中的对象称之为目录对象。目录服务提供创建、添加、删除目录对象以及修改目录对象属性等操作。Reference引用在一些命名服务系统中，系统并不是直接将对象存储在系统中，而是保持对象的引用。引用包含了如何访问实际对象的信息。JNDI目录服务访问JNDI目录时候会首先通过预先设置好环境变量访问对应的服务，如果创建JDNI的Context时未指定环境变量对象，他会自动搜索系统属性(System.getProperty),applet和jndi.properties来个demo//创建环境变量对象Hashta...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-04-21
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/04/19/unser/" title="Java反序列化链二周目 ">
         
         Java反序列化链二周目
@@ -227,7 +287,7 @@
       </a>
       <div class="post-description">
         
-        前言这篇来说说看RMI的具体攻击方式，我这里复现一种写一种吧攻击Registry端攻击Server端恶意服务参数在客户端获取到了服务端创建的Stub后，会调用Stub去传递序列化后的参数，在Server端接受到这个参数时会进行反序列化，此时如果我们传入的参数是Object类型的情况瞎，客户端可以传给服务端任意类，造成反序列化漏洞来个Demo，RMIInterface.java如下packageRMI;importjava.rmi.Remote;importjava.rmi.RemoteException;publicinterfaceRMIInterfaceextendsRemote&amp;#123;publicStringhello()throwsRemoteException;publicStringsayGoodBye(Objecta)throwsRemoteException;&amp;#125;RemoteClass.javapackageRMI;importjava.rmi.RemoteException;importjava.rmi.server.UnicastRemoteObj...
+        前言这篇来说说看RMI的具体攻击方式，我这里复现一种写一种吧攻击Registry端在使用Registry端的时候，Server会向Registry绑定一个对象，这个对象是Server生成的动态代理类，Registry会进行反序列化操作，然后存在自己的RegistryImpl的bindings中，如果此时有个恶意的Server端生成了一个恶意的类给Registry，在反序列化的时候就可以造成攻击Registry.javapackageRMI;importjava.rmi.RemoteException;importjava.rmi.registry.LocateRegistry;publicclassRegistry&amp;#123;publicstaticvoidmain(String[]args)throwsRemoteException&amp;#123;java.rmi.registry.Registryregistry=LocateRegistry.createRegistry(1099);&amp;#125;&amp;#125;Server.javapackageRMI;importorg.apac...
       </div>
       <div class="post-meta-wrap">
         <span class="post-meta-date">
@@ -612,59 +672,6 @@
           
           <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
             内存马
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/04/06/ls1/" title="Java代码审计练习(一) ">
-        
-        Java代码审计练习(一)
-        
-      </a>
-      <div class="post-description">
-        
-        前言摸了好几天的鱼，被早8折磨的死去活来，一但早8，整天没精神，今天还被体育课折磨到低血糖，想到自己这么菜，选择继续学习，晚上稍微看了一下SSM框架，感觉非常无聊，突然心血来潮想审几个程序练练手，就随手找了个程序，这个是炼石计划之50套JavaWeb代码审计实战漏洞挖掘的一个系统，我看到这个就选择这个了，懒得去找其他了，里面的具体内容也需要付费。。。囊中羞涩，没有选择加入99/年的知识星球，只能自己探索了百度云链接：链接：https://pan.baidu.com/s/11rDre4Q32wqn7gMRyEmIyw提取码：4nee我这里木有收广告费哦，只是懒得转存再分享我自己的了。这套程序用的是SpringBoot+springsecurity+mybatis搭建环境首先我们打开我们的PHPstudy，然后打开数据库服务，新建一个数据库为rbac，然后导入我们源码里的sql文件，并且打开文件里的src\main\resources\application.yml文件，修改我们对应的数据库配置即可然后就是运行程序审计前的信息搜集搭建完环境之后可以大体看一下他的结构，该程序是基于MV...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-04-06
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-            代码审计
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
-            渗透测试
           </a>
           
           
