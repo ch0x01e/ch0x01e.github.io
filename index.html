@@ -167,6 +167,59 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/04/24/tmall/" title="Java代码审计练习(三) ">
+        
+        Java代码审计练习(三)
+        
+      </a>
+      <div class="post-description">
+        
+        前言继续练习代码审计，今天是Tmall，一个商城系统吧文件上传位于ProductController.java中的uploadProductImage方法@ResponseBody@RequestMapping(value=&amp;quot;admin/uploadProductImage&amp;quot;,method=RequestMethod.POST,produces=&amp;quot;application/json;charset=utf-8&amp;quot;)publicStringuploadProductImage(@RequestParamMultipartFilefile,@RequestParamStringimageType,HttpSessionsession)&amp;#123;StringoriginalFileName=file.getOriginalFilename();logger.info(&amp;quot;获取图片原始文件名：&amp;#123;&amp;#125;&amp;quot;,originalFileName);Stringextension=originalFileName.substr...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-04-24
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/04/22/bypassJsp/" title="Jsp Webshell免杀 ">
         
         Jsp Webshell免杀
@@ -636,70 +689,10 @@
 
   </div>
   
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/04/13/JAVARCE/" title="Java下的命令执行方式 ">
-        
-        Java下的命令执行方式
-        
-      </a>
-      <div class="post-description">
-        
-        前言水文一篇，来整理一下一些学的Java的内容，怕以后忘Runtime类最常见的就是使用Runtime类的exec方法来进行命令执行了，下面随便写一个Runtime类的命令执行的demoimportjava.io.BufferedReader;importjava.io.IOException;importjava.io.InputStream;importjava.io.InputStreamReader;publicclassTest&amp;#123;publicstaticvoidmain(String[]args)throwsIOException&amp;#123;InputStreaminputStream=Runtime.getRuntime().exec(&amp;quot;dir&amp;quot;).getInputStream();InputStreamReaderisr=newInputStreamReader(inputStream,&amp;quot;UTF-8&amp;quot;);BufferedReaderbufferedReader=newBufferedReader(isr);Strin...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-04-13
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-            代码审计
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
-            渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
    
 
     <div class="pagination">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class='fas fa-chevron-right fa-fw'></i></a>
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class='fas fa-chevron-right fa-fw'></i></a>
     </div>
 
 </div>

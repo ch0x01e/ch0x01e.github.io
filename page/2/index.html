@@ -137,6 +137,66 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/04/13/JAVARCE/" title="Java下的命令执行方式 ">
+        
+        Java下的命令执行方式
+        
+      </a>
+      <div class="post-description">
+        
+        前言水文一篇，来整理一下一些学的Java的内容，怕以后忘Runtime类最常见的就是使用Runtime类的exec方法来进行命令执行了，下面随便写一个Runtime类的命令执行的demoimportjava.io.BufferedReader;importjava.io.IOException;importjava.io.InputStream;importjava.io.InputStreamReader;publicclassTest&amp;#123;publicstaticvoidmain(String[]args)throwsIOException&amp;#123;InputStreaminputStream=Runtime.getRuntime().exec(&amp;quot;dir&amp;quot;).getInputStream();InputStreamReaderisr=newInputStreamReader(inputStream,&amp;quot;UTF-8&amp;quot;);BufferedReaderbufferedReader=newBufferedReader(isr);Strin...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-04-13
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/04/09/Spring_memory_shell/" title="Spring内存马合集 ">
         
         Spring内存马合集
@@ -596,63 +656,10 @@
 
   </div>
   
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/03/02/cc2/" title="CC2,4,5,7反序列化链分析 ">
-        
-        CC2,4,5,7反序列化链分析
-        
-      </a>
-      <div class="post-description">
-        
-        commons-collections2反序列化链分析整体分析前几天分析了CC1,CC3,CC6，现在来分析一下CC2，CC2个人感觉还是比较简单的，一看就懂，整条链也不怎么长，但是他是的commons-collections版本是4.0。我们首先来看一下ysoserial源码里的Gadget他这里中间的链用省略号了，那我们自己来摸索一下吧，我这里先把最终的结果的整条链子发出来细节分析这里的话后面还是不分析了，因为他这里最终也是到InvokerTransformer.transform，所以前面那部分依旧不变Transformer[]transformers=newTransformer[]&amp;#123;newConstantTransformer(Runtime.class),newInvokerTransformer(&amp;quot;getMethod&amp;quot;,newClass[]&amp;#123;String.class,Class[].class&amp;#125;,newObject[]&amp;#123;&amp;quot;getRuntime&amp;quot;,null&amp;#125;),newInvoke...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-03-02
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
-            反序列化
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
    
 
     <div class="pagination">
-        <a class="extend prev" rel="prev" href="/"><i class='fas fa-chevron-left fa-fw'></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class='fas fa-chevron-right fa-fw'></i></a>
+        <a class="extend prev" rel="prev" href="/"><i class='fas fa-chevron-left fa-fw'></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/"><i class='fas fa-chevron-right fa-fw'></i></a>
     </div>
 
 </div>

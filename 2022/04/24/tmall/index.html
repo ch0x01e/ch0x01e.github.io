@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+     
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<title>Java代码审计练习(三) | ch1e的随笔</title>
+<meta name="author" content="ch1e">
+<meta name="copyright" content="ch1e">
+
+<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.ico"> 
+
+
+    <meta name="keywords" content="web安全,代码审计,渗透测试">
+
+
+
+     
+    <meta name="description" content="前言继续练习代码审计，今天是Tmall，一个商城系统吧 文件上传位于ProductController.java中的uploadProductImage方法 123456789101112131415161718192021222324252627282930@ResponseBody@RequestMapping(value &#x3D; &quot;admin&#x2F;uploadProductImage&amp;qu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java代码审计练习(三)">
+<meta property="og:url" content="https://ch1e.cn/2022/04/24/tmall/">
+<meta property="og:site_name" content="ch1e的随笔">
+<meta property="og:description" content="前言继续练习代码审计，今天是Tmall，一个商城系统吧 文件上传位于ProductController.java中的uploadProductImage方法 123456789101112131415161718192021222324252627282930@ResponseBody@RequestMapping(value &#x3D; &quot;admin&#x2F;uploadProductImage&amp;qu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+<meta property="article:published_time" content="2022-04-24T11:52:43.231Z">
+<meta property="article:modified_time" content="2022-04-24T15:36:43.806Z">
+<meta property="article:author" content="ch1e">
+<meta property="article:tag" content="web安全">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+ 
+
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<link href="//cdn.jsdelivr.net" rel="preconnect">
+<link href="https://ch1e.cn" rel="prefetch">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css " rel="stylesheet">
+<link href="/css/main.css " rel="stylesheet">
+<script src="/js/utlis.js"></script>
+ 
+    
+ 
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+     
+    
+ 
+     
+
+<script>
+    var $config = {
+        tocStyle: "visible",
+        CDN:{
+            fancyboxJs: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js",
+            fancyboxCss: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
+        },
+        
+        
+    }
+</script>
+    
+
+
+
+
+  
+
+
+    <div id="body-wrap">
+        <nav id="nav-wrap">
+  <div class="navbar">
+    <div class="bar">
+      <a href="/" class="title">ch1e的随笔</a>
+
+      
+      <ul class="menu">
+         
+        <li><a href="/">首页</a></li>
+          
+        <li>
+          <a class="menu-child-hover" href="javascript:void(0);">找文章</a>
+          <ul class="menu-child">
+            
+            <li><a href='/tags'>标签</a></li>
+            
+            <li><a href='/archives'>归档</a></li>
+            
+          </ul>
+        </li>
+          
+        <li><a href="/link">友情链接</a></li>
+         
+      </ul>
+      <i class="fas fa-bars open-nav"></i>
+    </div>
+  </div>
+  <div id="mobile-nav">
+    <ul>
+       
+      <li><a href="/">首页</a></li>
+         
+      <li><a href='/tags'>标签</a></li>
+      
+      <li><a href='/archives'>归档</a></li>
+         
+      <li><a href="/link">友情链接</a></li>
+       
+    </ul>
+  </div>
+</nav>
+
+
+        <main id="main">
+            
+
+<article id="post">
+  <div class="post-info">
+    <div class="post-title">
+      <h1>Java代码审计练习(三)</h1>
+    </div>
+    <div class="post-meta">
+      <div class="post-date">
+        <i class="far fa-calendar-alt fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          发表于
+            2022-04-24 |
+        </span>
+        
+        <i class="fas fa-history fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          更新于
+            2022-04-24
+        </span>
+      </div>
+      <div class="post-meta-wordcount">
+        <i class="far fa-file-word fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">总字数:</span>
+        <span class="word-count">547 | </span>
+        <i class="far fa-clock fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">阅读时长:</span>
+        <span>2分钟</span>
+        
+      </div>
+    </div>
+  </div>
+  <div class="post-content">
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>继续练习代码审计，今天是Tmall，一个商城系统吧</p>
+<h1 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h1><p>位于ProductController.java中的uploadProductImage方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;admin/uploadProductImage&quot;, method = RequestMethod.POST, produces = &quot;application/json;charset=utf-8&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">uploadProductImage</span><span class="params">(<span class="meta">@RequestParam</span> MultipartFile file, <span class="meta">@RequestParam</span> String imageType, HttpSession session)</span> </span>&#123;</span><br><span class="line">    String originalFileName = file.getOriginalFilename();</span><br><span class="line">    logger.info(<span class="string">&quot;获取图片原始文件名：&#123;&#125;&quot;</span>, originalFileName);</span><br><span class="line">    String extension = originalFileName.substring(originalFileName.lastIndexOf(<span class="string">&#x27;.&#x27;</span>));</span><br><span class="line">    String filePath;</span><br><span class="line">    String fileName = UUID.randomUUID() + extension;</span><br><span class="line">    <span class="keyword">if</span> (<span class="string">&quot;single&quot;</span>.equals(imageType)) &#123;</span><br><span class="line">        filePath = session.getServletContext().getRealPath(<span class="string">&quot;/&quot;</span>) + <span class="string">&quot;res/images/item/productSinglePicture/&quot;</span> + fileName;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        filePath = session.getServletContext().getRealPath(<span class="string">&quot;/&quot;</span>) + <span class="string">&quot;res/images/item/productDetailsPicture/&quot;</span> + fileName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    logger.info(<span class="string">&quot;文件上传路径：&#123;&#125;&quot;</span>, filePath);</span><br><span class="line">    JSONObject object = <span class="keyword">new</span> JSONObject();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        logger.info(<span class="string">&quot;文件上传中...&quot;</span>);</span><br><span class="line">        file.transferTo(<span class="keyword">new</span> File(filePath));</span><br><span class="line">        logger.info(<span class="string">&quot;文件上传完成&quot;</span>);</span><br><span class="line">        object.put(<span class="string">&quot;success&quot;</span>, <span class="keyword">true</span>);</span><br><span class="line">        object.put(<span class="string">&quot;fileName&quot;</span>, fileName);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        logger.warn(<span class="string">&quot;文件上传失败！&quot;</span>);</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">        object.put(<span class="string">&quot;success&quot;</span>, <span class="keyword">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> object.toJSONString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>主要代码如下，通过截取文件名最后一个.后面的字符串，来获取文件拓展名，并且用生成了一个随机数的文件名与拓展名进行拼接，但是并没有对上传的文件类型进行校验，存在文件上传漏洞</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220424200006944.png" alt="image-20220424200006944"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220424200018895.png" alt="image-20220424200018895"></p>
+<p>同理，位于AccountController.java的uploadAdminHeadImage方法也存在相同的问题。</p>
+<p>这里其实Spring默认不支持jsp，但是因为引入了如下依赖。导致SpringBoot内嵌的Tomca对JSP可以解析</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line"> &lt;groupId&gt;org.apache.tomcat.embed&lt;/groupId&gt;</span><br><span class="line"> &lt;artifactId&gt;tomcat-embed-jasper&lt;/artifactId&gt;</span><br><span class="line"> &lt;scope&gt;provided&lt;/scope&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h1><p>老方法寻找没有预编译的地方，随便举个例子</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220424225543026.png" alt="image-20220424225543026"></p>
+<p>对应ProductMapper.java的select方法</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220424225652945.png" alt="image-20220424225652945"></p>
+<p>对应service是ProductServiceImpl.java</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220424225910729.png" alt="image-20220424225910729"></p>
+<p>寻找调用ProductServiceImpl的getList方法的地方<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220424230309292.png" alt="image-20220424230309292"></p>
+<p>我们只要传入orderBy参数和isDesc参数即可，对orderBy进行注入。其他同理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 .\sqlmap.py -u http://127.0.0.1:8088/tmall/product/1/10?isDesc=false&quot;&amp;&quot;orderBy=1 -p orderBy --batch --dbs</span><br></pre></td></tr></table></figure>
+
+<h1 id="组件漏洞"><a href="#组件漏洞" class="headerlink" title="组件漏洞"></a>组件漏洞</h1><p>pom.xml文件中有如下代码，引用了fastjson 1.2.58版本，存在反序列化漏洞</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.58<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>全局搜索JSON.parseObject</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220424232411356.png" alt="image-20220424232411356"></p>
+<p>直接攻击吧</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220424233629450.png" alt="image-20220424233629450"></p>
+
+  </div>
+   
+   
+
+  
+  <div class="post-copyright">
+    <div class="post-copyright-icon"></div>
+      <div class="post-copyright-author">
+          <span class="post-copyright-meta">文章作者: </span>
+            <span class="post-copyright-info">
+              <a href="mailto:1444440144@qq.com" >ch1e</a>
+            </span>
+      </div>
+      <div class="post-copyright-type">
+          <span class="post-copyright-meta">文章链接: </span>
+            <span class="post-copyright-info">
+              <a href="https://ch1e.cn/2022/04/24/tmall/" >https://ch1e.cn/2022/04/24/tmall/</a>
+            </span>
+      </div><div class="post-copyright-notice">
+          <span class="post-copyright-meta">版权声明: </span>
+            <span class="post-copyright-info">本博客所有文章除特别声明外，均采用
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/ " target="_blank" >
+                  CC BY-NC-SA 4.0 </a> 许可协议。转载请注明来自
+              <a href="https://ch1e.cn/2022/04/24/tmall/" target="_blank" >ch1e</a>
+              ！</span>
+      </div>
+  </div>
+  
+
+
+ 
+
+  
+    <div class="post-tag">
+        <span>
+            <i class="fa fa-tag"></i>
+             
+            <a href="tags/web安全/"><span>web安全</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/代码审计/"><span>代码审计</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/渗透测试/"><span>渗透测试</span></a>
+                
+            
+        </span>
+    </div>
+  
+
+
+
+
+<div class="pagination-post">
+    
+    
+    <a href="/2022/04/22/bypassJsp/">
+      <div class="next-title">Jsp Webshell免杀<i class="fas fa-chevron-right"></i></div>
+      <div class="next-desc">前言之前只会写最简单webshell，今天来不系统地学习一下Jsp的webshell的免杀方式
+一句话Webshell从一句话木马角度来说，最简单的应该是
+1&amp;lt;% Runtime.getR...</div>
+    </a>
+    
+</div>
+
+</article>
+ 
+
+
+  <div id="toc-wrap">
+    <div id="toc">
+      <div class="toc-title">
+        <div>
+          目录
+            <span class="num">0%</span>
+        </div>
+        <progress class="progress" value="0" max="100"></progress>
+      </div>
+      <div class="toc-list">
+         
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="toc-text">文件上传</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5"><span class="toc-text">SQL注入</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E6%BC%8F%E6%B4%9E"><span class="toc-text">组件漏洞</span></a></li></ol>
+      </div>
+    </div>
+  </div>
+
+
+        </main>
+        <section id="rightside">
+    
+    <div class="rightside-item">
+        
+        
+         
+        
+        
+            <a id="open-toc" title="目录">
+                <i class="fas fa-list-ul"></i>
+            </a>
+        
+         
+         
+        <a href="javascript:(0)" id="darkmode" title="深色/浅色 ">
+            <i class="fas fa-moon"></i>
+        </a>
+         
+        
+        <a href="#" title="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+         
+
+<footer class="footer" id="footer">
+    <div class="copyright">
+      &copy; 2020 - 2022
+        <i class="fas fa-fan"></i>
+        ch1e
+    </div>
+    <div class="framework-info">
+        <span>框架 </span>
+        <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="footer-separator">|</span>
+        <span>主题 </span>
+        <a href="https://github.com/lete114/hexo-theme-MengD" target="_blank">MengD.(萌典) </a>
+    </div>
+    
+    <div class="custom-text">我相信我可以，但我一直在路上，所以我有无限的可能！！</div>
+</footer>
+    </div>
+    <div id="mask" onclick="closeAll()"></div>
+    
+    <div class="script">
+        <script src="/js/main.js"></script>
+        
+
+
+<script src="/js/lazyload.js"></script>
+
+
+    
+
+
+        
+    <script>
+        getScript('https://cdn.jsdelivr.net/npm/pjax/pjax.min.js',LoadPjax)
+        function LoadPjax() {
+            var pjax = new Pjax({
+                selectors: [
+                    'head title',
+                    'head meta[name="keywords"]',
+                    'head meta[name="description"]',
+                    'main',
+                    '#rightside'
+                ],
+                cache: true,
+                cacheBust: false
+            });
+        }
+
+        // 清除时间
+        var timer = null;
+        // 执行进度条
+        function ProgressStart() {
+            // 设置初始进度
+            var progress = 10;
+            // 创建进度条 及 css样式
+            var div = document.createElement('div');
+            div.className = 'pjax-progress';
+            document.body.prepend(div);
+            // 定义随机数最大值最小值
+            var max = 10, mini = 3;
+            var result = max - mini;
+            // 清除
+            clearInterval(timer);
+            // 0.5秒内累加进度
+            timer = setInterval(function () {
+                // 随机数
+                var num = parseInt(Math.random() * result);
+                var randomResult = num + mini;
+                // 累加
+                progress += randomResult
+                document.getElementsByClassName('pjax-progress')[0].style.width = progress + '%';
+                // 当进度达到95%时停止
+                if (progress > 95) progress = 95
+            }, 500)
+        }
+        // 加载进度条加载完毕
+        function ProgressFinish() {
+            clearInterval(timer);
+            // 页面加载完毕后进度100% 并在0.7秒后删除
+            var progress = document.getElementsByClassName('pjax-progress');
+            progress[0].style.width = '100%';
+            timer = setTimeout(function () {
+                progress[0].parentNode.removeChild(progress[0])
+            }, 700);
+        }
+
+        // 开始 PJAX 执行的函数
+        document.addEventListener('pjax:send', function () {
+            // 执行进度条
+            ProgressStart()
+        });
+        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+        document.addEventListener('pjax:complete', function () {
+
+            // 加载进度条加载完毕
+            ProgressFinish()
+            // 执行所有方法
+            exeAllFn()
+
+            
+                // 图片懒加载
+                ImgLazyLoad('body img[data-img]', 'data-img')
+            
+
+
+            document.querySelectorAll('script[data-pjax]').forEach(item => {
+                const newScript = document.createElement('script')
+                const content = item.text || item.textContent || item.innerHTML || ''
+                Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+                newScript.appendChild(document.createTextNode(content))
+                item.parentNode.replaceChild(newScript, item)
+            })
+        });
+
+        // Pjax请求错误时，跳转到404页面
+        document.addEventListener('pjax:error', (err) => {
+            if (err.request.status === 404) {
+                pjax.loadUrl('/404.html')
+            }
+        })
+    </script>
+
+    </div>
+</body>
+
+</html>
