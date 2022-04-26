@@ -1,0 +1,486 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+     
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<title>lmxcms代码审计(PHP) | ch1e的随笔</title>
+<meta name="author" content="ch1e">
+<meta name="copyright" content="ch1e">
+
+<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.ico"> 
+
+
+    <meta name="keywords" content="web安全,代码审计,渗透测试">
+
+
+
+     
+    <meta name="description" content="前言这几天小摸鱼，今天翻了一下，看到php的代码审计，兴致来了，从新学习一遍php的mvc代码审计，审计的是lmxcms，适合新手，采用的mvc架构 前台SQL注入(留言板)位于留言板处，index.php?m&#x3D;Book&amp;a&#x3D;index，对应的是Book控制器的index方法，寻找到Book控制器的index方法 12345678910111213141516171819202122232">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lmxcms代码审计(PHP)">
+<meta property="og:url" content="https://ch1e.cn/2022/04/26/lmx/">
+<meta property="og:site_name" content="ch1e的随笔">
+<meta property="og:description" content="前言这几天小摸鱼，今天翻了一下，看到php的代码审计，兴致来了，从新学习一遍php的mvc代码审计，审计的是lmxcms，适合新手，采用的mvc架构 前台SQL注入(留言板)位于留言板处，index.php?m&#x3D;Book&amp;a&#x3D;index，对应的是Book控制器的index方法，寻找到Book控制器的index方法 12345678910111213141516171819202122232">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+<meta property="article:published_time" content="2022-04-26T12:46:11.479Z">
+<meta property="article:modified_time" content="2022-04-26T15:07:08.340Z">
+<meta property="article:author" content="ch1e">
+<meta property="article:tag" content="web安全">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+ 
+
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<link href="//cdn.jsdelivr.net" rel="preconnect">
+<link href="https://ch1e.cn" rel="prefetch">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css " rel="stylesheet">
+<link href="/css/main.css " rel="stylesheet">
+<script src="/js/utlis.js"></script>
+ 
+    
+ 
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+     
+    
+ 
+     
+
+<script>
+    var $config = {
+        tocStyle: "visible",
+        CDN:{
+            fancyboxJs: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js",
+            fancyboxCss: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
+        },
+        
+        
+    }
+</script>
+    
+
+
+
+
+  
+
+
+    <div id="body-wrap">
+        <nav id="nav-wrap">
+  <div class="navbar">
+    <div class="bar">
+      <a href="/" class="title">ch1e的随笔</a>
+
+      
+      <ul class="menu">
+         
+        <li><a href="/">首页</a></li>
+          
+        <li>
+          <a class="menu-child-hover" href="javascript:void(0);">找文章</a>
+          <ul class="menu-child">
+            
+            <li><a href='/tags'>标签</a></li>
+            
+            <li><a href='/archives'>归档</a></li>
+            
+          </ul>
+        </li>
+          
+        <li><a href="/link">友情链接</a></li>
+         
+      </ul>
+      <i class="fas fa-bars open-nav"></i>
+    </div>
+  </div>
+  <div id="mobile-nav">
+    <ul>
+       
+      <li><a href="/">首页</a></li>
+         
+      <li><a href='/tags'>标签</a></li>
+      
+      <li><a href='/archives'>归档</a></li>
+         
+      <li><a href="/link">友情链接</a></li>
+       
+    </ul>
+  </div>
+</nav>
+
+
+        <main id="main">
+            
+
+<article id="post">
+  <div class="post-info">
+    <div class="post-title">
+      <h1>lmxcms代码审计(PHP)</h1>
+    </div>
+    <div class="post-meta">
+      <div class="post-date">
+        <i class="far fa-calendar-alt fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          发表于
+            2022-04-26 |
+        </span>
+        
+        <i class="fas fa-history fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          更新于
+            2022-04-26
+        </span>
+      </div>
+      <div class="post-meta-wordcount">
+        <i class="far fa-file-word fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">总字数:</span>
+        <span class="word-count">2.6k | </span>
+        <i class="far fa-clock fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">阅读时长:</span>
+        <span>13分钟</span>
+        
+      </div>
+    </div>
+  </div>
+  <div class="post-content">
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这几天小摸鱼，今天翻了一下，看到php的代码审计，兴致来了，从新学习一遍php的mvc代码审计，审计的是lmxcms，适合新手，采用的mvc架构</p>
+<h1 id="前台SQL注入-留言板"><a href="#前台SQL注入-留言板" class="headerlink" title="前台SQL注入(留言板)"></a>前台SQL注入(留言板)</h1><p>位于留言板处，index.php?m=Book&amp;a=index，对应的是Book控制器的index方法，寻找到Book控制器的index方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;setbook&#x27;</span>]))&#123;<span class="comment">//提交留言</span></span><br><span class="line">        <span class="variable">$data</span> = <span class="keyword">$this</span>-&gt;checkData();</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;bookModel-&gt;add(<span class="variable">$data</span>))&#123;</span><br><span class="line">            <span class="keyword">$this</span>-&gt;setBookTime(); <span class="comment">//存储提交时间</span></span><br><span class="line">            rewrite::succ(<span class="keyword">$this</span>-&gt;l[<span class="string">&#x27;book_ok&#x27;</span>]);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            rewrite::error(<span class="keyword">$this</span>-&gt;l[<span class="string">&#x27;book_error&#x27;</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//判断是否调用留言数据</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$GLOBALS</span>[<span class="string">&#x27;public&#x27;</span>][<span class="string">&#x27;isbookdata&#x27;</span>])&#123;</span><br><span class="line">            <span class="comment">//判断是否只调用审核</span></span><br><span class="line">            <span class="variable">$where</span> = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">            <span class="keyword">if</span>(<span class="variable">$GLOBALS</span>[<span class="string">&#x27;public&#x27;</span>][<span class="string">&#x27;bookDisplay&#x27;</span>]) <span class="variable">$where</span> = <span class="string">&#x27;ischeck=1&#x27;</span>;</span><br><span class="line">            <span class="variable">$count</span> = <span class="keyword">$this</span>-&gt;bookModel-&gt;count(<span class="variable">$where</span>);</span><br><span class="line">            <span class="variable">$page</span> = <span class="keyword">new</span> page(<span class="variable">$count</span>,<span class="variable">$GLOBALS</span>[<span class="string">&#x27;public&#x27;</span>][<span class="string">&#x27;booknum&#x27;</span>]);</span><br><span class="line">            <span class="variable">$data</span> = <span class="keyword">$this</span>-&gt;bookModel-&gt;getData(<span class="variable">$page</span>-&gt;returnLimit(),<span class="variable">$where</span>);</span><br><span class="line">            <span class="keyword">$this</span>-&gt;smarty-&gt;assign(<span class="string">&#x27;list&#x27;</span>,<span class="variable">$data</span>);</span><br><span class="line">            <span class="keyword">$this</span>-&gt;smarty-&gt;assign(<span class="string">&#x27;num&#x27;</span>,<span class="variable">$count</span>);</span><br><span class="line">            <span class="keyword">$this</span>-&gt;smarty-&gt;assign(<span class="string">&#x27;page&#x27;</span>,<span class="variable">$page</span>-&gt;html());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;smarty-&gt;display(<span class="string">&#x27;book/index.html&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先需要传入setbook参数，主要是看<code>$data = $this-&gt;checkData();</code>这个函数</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">checkData</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$arr</span>[<span class="string">&#x27;name&#x27;</span>] = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="variable">$arr</span>[<span class="string">&#x27;content&#x27;</span>] = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="variable">$arr</span>[<span class="string">&#x27;mail&#x27;</span>] = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="variable">$arr</span>[<span class="string">&#x27;tel&#x27;</span>] = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="variable">$arr</span>[<span class="string">&#x27;ip&#x27;</span>] = getip();</span><br><span class="line">    <span class="comment">//验证短时间内过多留言</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;bookModel-&gt;is_ip(<span class="variable">$arr</span>[<span class="string">&#x27;ip&#x27;</span>],<span class="keyword">$this</span>-&gt;config[<span class="string">&#x27;book_out_time&#x27;</span>]) &gt;= <span class="keyword">$this</span>-&gt;config[<span class="string">&#x27;book_out_time_num&#x27;</span>])&#123;</span><br><span class="line">        rewrite::error(<span class="keyword">$this</span>-&gt;l[<span class="string">&#x27;book_outtime&#x27;</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;bookTime(); <span class="comment">//验证提交间隔时间</span></span><br><span class="line">    <span class="variable">$_POST</span> = filter_strs(<span class="variable">$_POST</span>);</span><br><span class="line">    <span class="variable">$data</span> = p(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>); <span class="comment">//验证前台数据  转义并且过滤非法字符</span></span><br><span class="line">    <span class="variable">$data</span> = array_merge(<span class="variable">$arr</span>,<span class="variable">$data</span>);   <span class="comment">//合并arr和data数组</span></span><br><span class="line">    <span class="keyword">if</span>(!<span class="variable">$data</span>[<span class="string">&#x27;name&#x27;</span>]) rewrite::js_back(<span class="keyword">$this</span>-&gt;l[<span class="string">&#x27;book_name_must&#x27;</span>]);</span><br><span class="line">    <span class="keyword">if</span>(!<span class="variable">$data</span>[<span class="string">&#x27;content&#x27;</span>]) rewrite::js_back(<span class="keyword">$this</span>-&gt;l[<span class="string">&#x27;book_content_must&#x27;</span>]);</span><br><span class="line">    <span class="comment">//过滤html代码  预防XSS</span></span><br><span class="line">    <span class="keyword">foreach</span>(<span class="variable">$data</span> <span class="keyword">as</span> <span class="variable">$k</span> =&gt; <span class="variable">$v</span>)&#123;</span><br><span class="line">        <span class="variable">$data</span>[<span class="variable">$k</span>] = <span class="keyword">string</span>::delHtml(<span class="variable">$v</span>); </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">unset</span>(<span class="variable">$data</span>[<span class="string">&#x27;setbook&#x27;</span>]);</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$data</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中把$_POST用filter_strs方法进行处理，然后把p方法的值赋给$data，并且合并arr和data数组。先来看filter_strs方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filter_strs</span>(<span class="params"><span class="variable">$data</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="variable">$data</span>) <span class="keyword">return</span> <span class="variable">$data</span>;</span><br><span class="line">    <span class="keyword">if</span>(is_array(<span class="variable">$data</span>))&#123;</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="variable">$data</span> <span class="keyword">as</span> &amp;<span class="variable">$v</span>)&#123;</span><br><span class="line">            <span class="variable">$v</span> = filter_strs(<span class="variable">$v</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="variable">$data</span> = urldecode(<span class="variable">$data</span>);   <span class="comment">//url解码</span></span><br><span class="line">        <span class="variable">$data</span> = strip_tags(<span class="variable">$data</span>);  <span class="comment">//去除html标签和php标记</span></span><br><span class="line">        <span class="variable">$data</span> = str_replace(<span class="string">&#x27;%&#x27;</span>,<span class="string">&#x27;&#x27;</span>,<span class="variable">$data</span>);   <span class="comment">//%替换为空</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$data</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>判断$data是否是数组，如果是则循环遍历然后调用filter_strs方法，如果不是就直接url解码，并且去除html标签和php标记，把%替换为空，这里就是把post传入的所有东西经过这些方法去处理，明显可以预防XSS漏洞，然后我们继续看那个p方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">p</span>(<span class="params"><span class="variable">$type</span>=<span class="number">1</span>,<span class="variable">$pe</span>=<span class="literal">false</span>,<span class="variable">$sql</span>=<span class="literal">false</span>,<span class="variable">$mysql</span>=<span class="literal">false</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$type</span> == <span class="number">1</span>)&#123;</span><br><span class="line">        <span class="variable">$data</span> = <span class="variable">$_POST</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(<span class="variable">$type</span> == <span class="number">2</span>)&#123;</span><br><span class="line">        <span class="variable">$data</span> = <span class="variable">$_GET</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="variable">$data</span> = <span class="variable">$type</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$sql</span>) filter_sql(<span class="variable">$data</span>);</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$mysql</span>) mysql_retain(<span class="variable">$data</span>);</span><br><span class="line">    <span class="keyword">foreach</span>(<span class="variable">$data</span> <span class="keyword">as</span> <span class="variable">$k</span> =&gt; <span class="variable">$v</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(is_array(<span class="variable">$v</span>))&#123;</span><br><span class="line">            <span class="variable">$newdata</span>[<span class="variable">$k</span>] = p(<span class="variable">$v</span>,<span class="variable">$pe</span>,<span class="variable">$sql</span>,<span class="variable">$mysql</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="variable">$pe</span>)&#123;</span><br><span class="line">                <span class="variable">$newdata</span>[<span class="variable">$k</span>] = <span class="keyword">string</span>::addslashes(<span class="variable">$v</span>);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="variable">$newdata</span>[<span class="variable">$k</span>] = trim(<span class="variable">$v</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$newdata</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们调用的时候是传入三个1，对应的是post方法，然后经过filter_sql方法处理，并且遍历了$data，对其值进行了addslashes处理，但是没有对他的键进行处理。先看filter_sql方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filter_sql</span>(<span class="params"><span class="keyword">array</span> <span class="variable">$data</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">foreach</span>(<span class="variable">$data</span> <span class="keyword">as</span> <span class="variable">$v</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(is_array(<span class="variable">$v</span>))&#123;</span><br><span class="line">            filter_sql(<span class="variable">$v</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="comment">//转换小写</span></span><br><span class="line">            <span class="variable">$v</span> = strtolower(<span class="variable">$v</span>);</span><br><span class="line">            <span class="keyword">if</span>(preg_match(<span class="string">&#x27;/count|create|delete|select|update|use|drop|insert|info|from/&#x27;</span>,<span class="variable">$v</span>))&#123;</span><br><span class="line">                rewrite::js_back(<span class="string">&#x27;【&#x27;</span>.<span class="variable">$v</span>.<span class="string">&#x27;】数据非法&#x27;</span>);</span><br><span class="line">                <span class="keyword">exit</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>过滤了一些关键字，并且结合前面说的addslashes方法，预防了我们的sql注入，但是遗漏的地方就是没有对键名进行过滤。看完了过滤，看看他具体怎么调用。<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220426211535084.png" alt="image-20220426211535084"></p>
+<p>获取到了$data以后，掉用了自身的bookModel的add方法。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params"><span class="variable">$data</span></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$data</span>[<span class="string">&#x27;time&#x27;</span>] = time();</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">parent</span>::addModel(<span class="variable">$data</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>继续往下跟进</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">addModel</span>(<span class="params"><span class="variable">$data</span></span>)</span>&#123;</span><br><span class="line">   <span class="keyword">return</span> <span class="built_in">parent</span>::addDB(<span class="keyword">$this</span>-&gt;tab[<span class="number">0</span>],<span class="variable">$data</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>继续跟进</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">addDB</span>(<span class="params"><span class="variable">$tab</span>,<span class="variable">$data</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">foreach</span>(<span class="variable">$data</span> <span class="keyword">as</span> <span class="variable">$key</span>=&gt;<span class="variable">$v</span>)&#123;</span><br><span class="line">       <span class="variable">$field</span>[]=<span class="variable">$key</span>;</span><br><span class="line">       <span class="variable">$value</span>[]=<span class="string">&quot;&#x27;<span class="subst">$v</span>&#x27;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$field</span> = implode(<span class="string">&#x27;,&#x27;</span>,<span class="variable">$field</span>);   <span class="comment">//把数组以，间隔分成字符串</span></span><br><span class="line">    <span class="variable">$value</span> = implode(<span class="string">&quot;,&quot;</span>,<span class="variable">$value</span>);</span><br><span class="line">    <span class="variable">$sql</span>=<span class="string">&quot;INSERT INTO &quot;</span>.DB_PRE.<span class="string">&quot;<span class="subst">$tab</span>(<span class="subst">$field</span>) VALUES(<span class="subst">$value</span>)&quot;</span>;</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$sql</span>;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;query(<span class="variable">$sql</span>);</span><br><span class="line">    <span class="keyword">return</span> mysql_insert_id();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里只对值进行了单引号的包裹，上面的echo $sql是我加入的，为了输出掉哟的语句方便测试</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220426212211771.png" alt="image-20220426212211771"></p>
+<p>现在看是正常的，但是记不记得之前是有把arr和data数组合并的一个操作？我们可以尝试一下传入其他参数看看</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220426214110223.png" alt="image-20220426214110223"></p>
+<p>提示报错没有a这个参数，我们可以看一下数据表里具体有什么字段</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220426214210222.png" alt="image-20220426214210222"></p>
+<p>这里的ischeck是是否显示，我们直接选1，不然前台看不到，然后直接构造payload即可</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220426215308700.png" alt="image-20220426215308700"></p>
+<h1 id="前台SQL注入-搜索框"><a href="#前台SQL注入-搜索框" class="headerlink" title="前台SQL注入(搜索框)"></a>前台SQL注入(搜索框)</h1><p>抓了一个搜索框的包，index.php?m=Search&amp;a=index&amp;classid=5&amp;tem=index&amp;field=title&amp;keywords=1 ，应该是在Search控制器下的index方法</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220426220511274.png" alt="image-20220426220511274"></p>
+<p>这里数据是在check里进行验证的，直接跟进check方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">check</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="comment">//获取get数据</span></span><br><span class="line">    <span class="variable">$_GET</span> = filter_strs(<span class="variable">$_GET</span>);</span><br><span class="line">    <span class="variable">$data</span> = p(<span class="number">2</span>,<span class="number">1</span>,<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">$this</span>-&gt;param[<span class="string">&#x27;keywords&#x27;</span>] = <span class="keyword">string</span>::delHtml(<span class="variable">$data</span>[<span class="string">&#x27;keywords&#x27;</span>]);</span><br><span class="line">    <span class="keyword">if</span>(!<span class="keyword">$this</span>-&gt;param[<span class="string">&#x27;keywords&#x27;</span>] &amp;&amp; <span class="keyword">$this</span>-&gt;config[<span class="string">&#x27;search_isnull&#x27;</span>])&#123;</span><br><span class="line">        rewrite::error(<span class="keyword">$this</span>-&gt;l[<span class="string">&#x27;search_is_keywords&#x27;</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;param[<span class="string">&#x27;classid&#x27;</span>] = (<span class="keyword">int</span>)<span class="variable">$data</span>[<span class="string">&#x27;classid&#x27;</span>];</span><br><span class="line">    <span class="keyword">$this</span>-&gt;param[<span class="string">&#x27;mid&#x27;</span>] = (<span class="keyword">int</span>)<span class="variable">$data</span>[<span class="string">&#x27;mid&#x27;</span>];</span><br><span class="line">    <span class="keyword">if</span>(!<span class="keyword">$this</span>-&gt;param[<span class="string">&#x27;classid&#x27;</span>] &amp;&amp; !<span class="keyword">$this</span>-&gt;param[<span class="string">&#x27;mid&#x27;</span>]) rewrite::error(<span class="keyword">$this</span>-&gt;l[<span class="string">&#x27;search_is_param&#x27;</span>]);</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;param[<span class="string">&#x27;classid&#x27;</span>] &amp;&amp; !<span class="keyword">isset</span>(<span class="variable">$GLOBALS</span>[<span class="string">&#x27;allclass&#x27;</span>][<span class="keyword">$this</span>-&gt;param[<span class="string">&#x27;classid&#x27;</span>]]))&#123;</span><br><span class="line">        rewrite::error(<span class="keyword">$this</span>-&gt;l[<span class="string">&#x27;search_is_classid&#x27;</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;param[<span class="string">&#x27;mid&#x27;</span>] &amp;&amp; !<span class="keyword">isset</span>(<span class="variable">$GLOBALS</span>[<span class="string">&#x27;allmodule&#x27;</span>][<span class="keyword">$this</span>-&gt;param[<span class="string">&#x27;mid&#x27;</span>]]))&#123;</span><br><span class="line">        rewrite::error(<span class="keyword">$this</span>-&gt;l[<span class="string">&#x27;search_is_mid&#x27;</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">$this</span>-&gt;param[<span class="string">&#x27;tem&#x27;</span>] = <span class="variable">$data</span>[<span class="string">&#x27;tem&#x27;</span>];</span><br><span class="line">    <span class="keyword">$this</span>-&gt;param[<span class="string">&#x27;field&#x27;</span>] = <span class="variable">$data</span>[<span class="string">&#x27;field&#x27;</span>];</span><br><span class="line">    <span class="keyword">$this</span>-&gt;param[<span class="string">&#x27;time&#x27;</span>] = <span class="variable">$data</span>[<span class="string">&#x27;time&#x27;</span>] ? <span class="variable">$data</span>[<span class="string">&#x27;time&#x27;</span>] : <span class="keyword">$this</span>-&gt;config[<span class="string">&#x27;search_time&#x27;</span>];</span><br><span class="line">    <span class="keyword">$this</span>-&gt;param[<span class="string">&#x27;tuijian&#x27;</span>] = <span class="variable">$data</span>[<span class="string">&#x27;tuijian&#x27;</span>];</span><br><span class="line">    <span class="keyword">$this</span>-&gt;param[<span class="string">&#x27;remen&#x27;</span>] = <span class="variable">$data</span>[<span class="string">&#x27;remen&#x27;</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对get获取的数据进行了一系列操作，filter_strs具体的代码前面放了，这就不放了，然后依旧是p，防止了sql注入，必须要传入keywords，除了keywords之外，其他有几个参数是可以加的。知道了获取的参数以及过滤的方法之后，来看程序调用的过程</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220426221108614.png" alt="image-20220426221108614"></p>
+<p>getSerachField方法如下，主要是初始化了一些参数的值，来看下一个方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getSerachField</span>(<span class="params"><span class="variable">$arr</span></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$arr</span>[<span class="string">&#x27;tem&#x27;</span>] = <span class="variable">$arr</span>[<span class="string">&#x27;tem&#x27;</span>] ? <span class="variable">$arr</span>[<span class="string">&#x27;tem&#x27;</span>] : <span class="string">&#x27;index&#x27;</span>;</span><br><span class="line">    <span class="variable">$arr</span>[<span class="string">&#x27;ischild&#x27;</span>] = <span class="variable">$arr</span>[<span class="string">&#x27;ischild&#x27;</span>] ? <span class="literal">true</span> : <span class="literal">false</span>;</span><br><span class="line">    <span class="variable">$arr</span>[<span class="string">&#x27;field&#x27;</span>] = <span class="variable">$arr</span>[<span class="string">&#x27;field&#x27;</span>] ? <span class="variable">$arr</span>[<span class="string">&#x27;field&#x27;</span>] : <span class="string">&#x27;title&#x27;</span>;</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$arr</span>[<span class="string">&#x27;time&#x27;</span>])<span class="variable">$arr</span>[<span class="string">&#x27;time&#x27;</span>] = time() - <span class="variable">$arr</span>[<span class="string">&#x27;time&#x27;</span>] * <span class="number">24</span> * <span class="number">3600</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$arr</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>searchCoutn方法如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">searchCoutn</span>(<span class="params"><span class="variable">$searchInfo</span></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$param</span> = <span class="keyword">$this</span>-&gt;sqlStr(<span class="variable">$searchInfo</span>);</span><br><span class="line">    <span class="variable">$param</span>[<span class="string">&#x27;force&#x27;</span>] = <span class="string">&#x27;title&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">parent</span>::countModel(<span class="variable">$param</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>跟进countModel</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">countModel</span>(<span class="params"><span class="variable">$param</span>=<span class="keyword">array</span>(<span class="params"></span>)</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">parent</span>::countDB(<span class="keyword">$this</span>-&gt;tab[<span class="string">&#x27;0&#x27;</span>],<span class="variable">$param</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>继续跟进</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">countDB</span>(<span class="params"><span class="variable">$tab</span>,<span class="variable">$param</span></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$We</span> = <span class="keyword">$this</span>-&gt;where(<span class="variable">$param</span>);</span><br><span class="line">    <span class="variable">$sql</span>=<span class="string">&quot;SELECT count(1) FROM &quot;</span>.DB_PRE.<span class="string">&quot;<span class="subst">$tab</span> <span class="subst">$We</span>&quot;</span>;</span><br><span class="line">    <span class="variable">$result</span>=<span class="keyword">$this</span>-&gt;query(<span class="variable">$sql</span>);</span><br><span class="line">    <span class="variable">$data</span> = mysql_fetch_row(<span class="variable">$result</span>);</span><br><span class="line">    <span class="keyword">$this</span>-&gt;result(<span class="variable">$result</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$data</span>[<span class="string">&#x27;0&#x27;</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里还是老方法，继续把他sql语句输出出来看看，当我们get传入如下参数时</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?m=Search&amp;a=index&amp;classid=5&amp;tem=index&amp;field=title&amp;keywords=1&amp;tuijian=2</span><br></pre></td></tr></table></figure>
+
+<p>sql语句如下</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="built_in">count</span>(<span class="number">1</span>) <span class="keyword">FROM</span> lmx_product_data  <span class="keyword">WHERE</span> <span class="type">time</span> <span class="operator">&gt;</span> <span class="number">1619446530</span> <span class="keyword">AND</span> tuijian<span class="operator">=</span><span class="number">2</span> <span class="keyword">AND</span> classid <span class="keyword">in</span>(<span class="number">11</span>,<span class="number">12</span>,<span class="number">13</span>,<span class="number">14</span>,<span class="number">5</span>)  <span class="keyword">AND</span> (title <span class="keyword">like</span> <span class="string">&#x27;%1%&#x27;</span>)  <span class="keyword">ORDER</span> <span class="keyword">BY</span> id <span class="keyword">desc</span></span><br></pre></td></tr></table></figure>
+
+<p>构造payload如下</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220426223612974.png" alt="image-20220426223612974"></p>
+<p>这里奇怪的是我sleep(1)是十秒，不应该是1秒吗,0.1的话他就变成1秒了，很奇怪</p>
+<h1 id="后台任意文件删除"><a href="#后台任意文件删除" class="headerlink" title="后台任意文件删除"></a>后台任意文件删除</h1><p>如下位置抓包</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220426223907264.png" alt="image-20220426223907264"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">POST /admin.php?m=File&amp;a=delete HTTP/1.1</span><br><span class="line">Host: lmxcms.com</span><br><span class="line">Content-Length: 149</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">Origin: http://lmxcms.com</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Referer: http://lmxcms.com/admin.php?m=File&amp;a=imageMain&amp;type=0</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Cookie: Hm_lvt_590a74fa0c262c903817f1bb7292db93=1650975259; Hm_lpvt_590a74fa0c262c903817f1bb7292db93=1650975259; PHPSESSID=jt97lo3n30a5fpehtj8upavr00; _dd_s=logs=1&amp;id=72c3c0b9-9826-4e49-8501-83a901c685f7&amp;created=1650977821212&amp;expire=1650984809538</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">type=0&amp;delImages=%E5%88%A0%E9%99%A4%E9%80%89%E4%B8%AD%E5%9B%BE%E7%89%87&amp;fid%5B%5D=2%23%23%23%23%23%2Ffile%2Fslide%2F20140827%2F201408271523025580.jpg</span><br></pre></td></tr></table></figure>
+
+<p>位于File控制器的delete方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delete</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="variable">$_POST</span>[<span class="string">&#x27;fid&#x27;</span>]) rewrite::js_back(<span class="string">&#x27;请选择要删除的文件&#x27;</span>);</span><br><span class="line">    <span class="keyword">$this</span>-&gt;fileModel-&gt;delete(<span class="variable">$_POST</span>);</span><br><span class="line">    addlog(<span class="string">&#x27;删除文件、图片&#x27;</span>);</span><br><span class="line">    rewrite::succ(<span class="string">&#x27;删除成功&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>跟进delete方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delete</span>(<span class="params"><span class="variable">$data</span></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$param</span>[<span class="string">&#x27;where&#x27;</span>][] = <span class="string">&#x27;type=&#x27;</span>.<span class="variable">$data</span>[<span class="string">&#x27;type&#x27;</span>];</span><br><span class="line">    <span class="keyword">foreach</span>(<span class="variable">$data</span>[<span class="string">&#x27;fid&#x27;</span>] <span class="keyword">as</span> <span class="variable">$k</span> =&gt; <span class="variable">$v</span>)&#123;</span><br><span class="line">        <span class="variable">$fileInfo</span> = explode(<span class="string">&#x27;#####&#x27;</span>,<span class="variable">$v</span>);</span><br><span class="line">        <span class="variable">$fid</span>[] = <span class="variable">$fileInfo</span>[<span class="number">0</span>];</span><br><span class="line">        <span class="variable">$path</span>[] = trim(<span class="variable">$fileInfo</span>[<span class="number">1</span>],<span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$fid</span> = implode(<span class="string">&#x27;,&#x27;</span>,<span class="variable">$fid</span>);</span><br><span class="line">    <span class="variable">$param</span>[<span class="string">&#x27;where&#x27;</span>][] = <span class="string">&#x27;fid in(&#x27;</span>.<span class="variable">$fid</span>.<span class="string">&#x27;)&#x27;</span>;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">parent</span>::deleteModel(<span class="variable">$param</span>))&#123;</span><br><span class="line">        <span class="comment">//删除文件</span></span><br><span class="line">        <span class="keyword">foreach</span>(<span class="variable">$path</span> <span class="keyword">as</span> <span class="variable">$v</span>)&#123;</span><br><span class="line">            file::unLink(ROOT_PATH.<span class="variable">$v</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>没有啥过滤，只要value以#####开头即可，把刚刚包里的fid参数url解码，结果如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fid[]=2#####/file/slide/20140827/201408271523025580.jpg</span><br></pre></td></tr></table></figure>
+
+<p>所以我们直接测试一下，在根目录下创建个test.txt，删除成功</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220426224547521.png" alt="image-20220426224547521"></p>
+<h1 id="后台任意文件写入-读取"><a href="#后台任意文件写入-读取" class="headerlink" title="后台任意文件写入+读取"></a>后台任意文件写入+读取</h1><p>在后台模板管理处，对文件进行编辑抓包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">GET /admin.php?m=Template&amp;a=editfile&amp;dir=default/error.html HTTP/1.1</span><br><span class="line">Host: lmxcms.com</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Referer: http://lmxcms.com/admin.php?m=Template&amp;a=opendir&amp;dir=default</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Cookie: Hm_lvt_590a74fa0c262c903817f1bb7292db93=1650975259; Hm_lpvt_590a74fa0c262c903817f1bb7292db93=1650975259; PHPSESSID=jt97lo3n30a5fpehtj8upavr00; _dd_s=logs=1&amp;id=72c3c0b9-9826-4e49-8501-83a901c685f7&amp;created=1650977821212&amp;expire=1650985309347</span><br><span class="line">Connection: close</span><br></pre></td></tr></table></figure>
+
+<p>dir参数我们手动修改成../index.php，发现可以读取文件，其实这里应该是可以编辑的。我们现来审计下源码</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220426224854820.png" alt="image-20220426224854820"></p>
+<p>editfile方法如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">editfile</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$dir</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;dir&#x27;</span>];</span><br><span class="line">    <span class="comment">//保存修改</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;settemcontent&#x27;</span>]))&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">$this</span>-&gt;config[<span class="string">&#x27;template_edit&#x27;</span>])&#123;</span><br><span class="line">            rewrite::js_back(<span class="string">&#x27;系统设置禁止修改模板文件&#x27;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        file::put(<span class="keyword">$this</span>-&gt;config[<span class="string">&#x27;template&#x27;</span>].<span class="variable">$dir</span>.<span class="string">&#x27;/&#x27;</span>.<span class="variable">$_POST</span>[<span class="string">&#x27;filename&#x27;</span>],<span class="keyword">string</span>::stripslashes(<span class="variable">$_POST</span>[<span class="string">&#x27;temcontent&#x27;</span>]));</span><br><span class="line">        addlog(<span class="string">&#x27;修改模板文件&#x27;</span>.<span class="keyword">$this</span>-&gt;config[<span class="string">&#x27;template&#x27;</span>].<span class="variable">$dir</span>);</span><br><span class="line">        rewrite::succ(<span class="string">&#x27;修改成功&#x27;</span>,<span class="string">&#x27;?m=Template&amp;a=opendir&amp;dir=&#x27;</span>.<span class="variable">$dir</span>);</span><br><span class="line">        <span class="keyword">exit</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$pathinfo</span> = pathinfo(<span class="variable">$dir</span>);</span><br><span class="line">    <span class="comment">//获取文件内容</span></span><br><span class="line">    <span class="variable">$content</span> = <span class="keyword">string</span>::html_char(file::getcon(<span class="keyword">$this</span>-&gt;config[<span class="string">&#x27;template&#x27;</span>].<span class="variable">$dir</span>));</span><br><span class="line">    <span class="keyword">$this</span>-&gt;smarty-&gt;assign(<span class="string">&#x27;filename&#x27;</span>,<span class="variable">$pathinfo</span>[<span class="string">&#x27;basename&#x27;</span>]);</span><br><span class="line">    <span class="keyword">$this</span>-&gt;smarty-&gt;assign(<span class="string">&#x27;temcontent&#x27;</span>,<span class="variable">$content</span>);</span><br><span class="line">    <span class="keyword">$this</span>-&gt;smarty-&gt;assign(<span class="string">&#x27;dir&#x27;</span>,dirname(<span class="variable">$_GET</span>[<span class="string">&#x27;dir&#x27;</span>]));</span><br><span class="line">    <span class="keyword">$this</span>-&gt;smarty-&gt;display(<span class="string">&#x27;Template/temedit.html&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>跟进put方法，直接调用file_put_contents把data写到文件里，那这里可以直接构造写入文件</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">put</span>(<span class="params"><span class="variable">$path</span>,<span class="variable">$data</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(file_put_contents(<span class="variable">$path</span>,<span class="variable">$data</span>) === <span class="literal">false</span>)</span><br><span class="line">        rewrite::js_back(<span class="string">&#x27;请检查【&#x27;</span>.<span class="variable">$path</span>.<span class="string">&#x27;】是否有读写权限&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220426230424835.png" alt="image-20220426230424835"></p>
+
+  </div>
+   
+   
+
+  
+  <div class="post-copyright">
+    <div class="post-copyright-icon"></div>
+      <div class="post-copyright-author">
+          <span class="post-copyright-meta">文章作者: </span>
+            <span class="post-copyright-info">
+              <a href="mailto:1444440144@qq.com" >ch1e</a>
+            </span>
+      </div>
+      <div class="post-copyright-type">
+          <span class="post-copyright-meta">文章链接: </span>
+            <span class="post-copyright-info">
+              <a href="https://ch1e.cn/2022/04/26/lmx/" >https://ch1e.cn/2022/04/26/lmx/</a>
+            </span>
+      </div><div class="post-copyright-notice">
+          <span class="post-copyright-meta">版权声明: </span>
+            <span class="post-copyright-info">本博客所有文章除特别声明外，均采用
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/ " target="_blank" >
+                  CC BY-NC-SA 4.0 </a> 许可协议。转载请注明来自
+              <a href="https://ch1e.cn/2022/04/26/lmx/" target="_blank" >ch1e</a>
+              ！</span>
+      </div>
+  </div>
+  
+
+
+ 
+
+  
+    <div class="post-tag">
+        <span>
+            <i class="fa fa-tag"></i>
+             
+            <a href="tags/web安全/"><span>web安全</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/代码审计/"><span>代码审计</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/渗透测试/"><span>渗透测试</span></a>
+                
+            
+        </span>
+    </div>
+  
+
+
+
+
+<div class="pagination-post">
+    
+    
+    <a href="/2022/04/24/tmall/">
+      <div class="next-title">Java代码审计练习(三)<i class="fas fa-chevron-right"></i></div>
+      <div class="next-desc">前言继续练习代码审计，今天是Tmall，一个商城系统吧
+文件上传位于ProductController.java中的uploadProductImage方法
+123456789101112131...</div>
+    </a>
+    
+</div>
+
+</article>
+ 
+
+
+  <div id="toc-wrap">
+    <div id="toc">
+      <div class="toc-title">
+        <div>
+          目录
+            <span class="num">0%</span>
+        </div>
+        <progress class="progress" value="0" max="100"></progress>
+      </div>
+      <div class="toc-list">
+         
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E5%8F%B0SQL%E6%B3%A8%E5%85%A5-%E7%95%99%E8%A8%80%E6%9D%BF"><span class="toc-text">前台SQL注入(留言板)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E5%8F%B0SQL%E6%B3%A8%E5%85%A5-%E6%90%9C%E7%B4%A2%E6%A1%86"><span class="toc-text">前台SQL注入(搜索框)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4"><span class="toc-text">后台任意文件删除</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5-%E8%AF%BB%E5%8F%96"><span class="toc-text">后台任意文件写入+读取</span></a></li></ol>
+      </div>
+    </div>
+  </div>
+
+
+        </main>
+        <section id="rightside">
+    
+    <div class="rightside-item">
+        
+        
+         
+        
+        
+            <a id="open-toc" title="目录">
+                <i class="fas fa-list-ul"></i>
+            </a>
+        
+         
+         
+        <a href="javascript:(0)" id="darkmode" title="深色/浅色 ">
+            <i class="fas fa-moon"></i>
+        </a>
+         
+        
+        <a href="#" title="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+         
+
+<footer class="footer" id="footer">
+    <div class="copyright">
+      &copy; 2020 - 2022
+        <i class="fas fa-fan"></i>
+        ch1e
+    </div>
+    <div class="framework-info">
+        <span>框架 </span>
+        <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="footer-separator">|</span>
+        <span>主题 </span>
+        <a href="https://github.com/lete114/hexo-theme-MengD" target="_blank">MengD.(萌典) </a>
+    </div>
+    
+    <div class="custom-text">我相信我可以，但我一直在路上，所以我有无限的可能！！</div>
+</footer>
+    </div>
+    <div id="mask" onclick="closeAll()"></div>
+    
+    <div class="script">
+        <script src="/js/main.js"></script>
+        
+
+
+<script src="/js/lazyload.js"></script>
+
+
+    
+
+
+        
+    <script>
+        getScript('https://cdn.jsdelivr.net/npm/pjax/pjax.min.js',LoadPjax)
+        function LoadPjax() {
+            var pjax = new Pjax({
+                selectors: [
+                    'head title',
+                    'head meta[name="keywords"]',
+                    'head meta[name="description"]',
+                    'main',
+                    '#rightside'
+                ],
+                cache: true,
+                cacheBust: false
+            });
+        }
+
+        // 清除时间
+        var timer = null;
+        // 执行进度条
+        function ProgressStart() {
+            // 设置初始进度
+            var progress = 10;
+            // 创建进度条 及 css样式
+            var div = document.createElement('div');
+            div.className = 'pjax-progress';
+            document.body.prepend(div);
+            // 定义随机数最大值最小值
+            var max = 10, mini = 3;
+            var result = max - mini;
+            // 清除
+            clearInterval(timer);
+            // 0.5秒内累加进度
+            timer = setInterval(function () {
+                // 随机数
+                var num = parseInt(Math.random() * result);
+                var randomResult = num + mini;
+                // 累加
+                progress += randomResult
+                document.getElementsByClassName('pjax-progress')[0].style.width = progress + '%';
+                // 当进度达到95%时停止
+                if (progress > 95) progress = 95
+            }, 500)
+        }
+        // 加载进度条加载完毕
+        function ProgressFinish() {
+            clearInterval(timer);
+            // 页面加载完毕后进度100% 并在0.7秒后删除
+            var progress = document.getElementsByClassName('pjax-progress');
+            progress[0].style.width = '100%';
+            timer = setTimeout(function () {
+                progress[0].parentNode.removeChild(progress[0])
+            }, 700);
+        }
+
+        // 开始 PJAX 执行的函数
+        document.addEventListener('pjax:send', function () {
+            // 执行进度条
+            ProgressStart()
+        });
+        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+        document.addEventListener('pjax:complete', function () {
+
+            // 加载进度条加载完毕
+            ProgressFinish()
+            // 执行所有方法
+            exeAllFn()
+
+            
+                // 图片懒加载
+                ImgLazyLoad('body img[data-img]', 'data-img')
+            
+
+
+            document.querySelectorAll('script[data-pjax]').forEach(item => {
+                const newScript = document.createElement('script')
+                const content = item.text || item.textContent || item.innerHTML || ''
+                Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+                newScript.appendChild(document.createTextNode(content))
+                item.parentNode.replaceChild(newScript, item)
+            })
+        });
+
+        // Pjax请求错误时，跳转到404页面
+        document.addEventListener('pjax:error', (err) => {
+            if (err.request.status === 404) {
+                pjax.loadUrl('/404.html')
+            }
+        })
+    </script>
+
+    </div>
+</body>
+
+</html>

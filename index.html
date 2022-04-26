@@ -167,6 +167,59 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/04/26/lmx/" title="lmxcms代码审计(PHP) ">
+        
+        lmxcms代码审计(PHP)
+        
+      </a>
+      <div class="post-description">
+        
+        前言这几天小摸鱼，今天翻了一下，看到php的代码审计，兴致来了，从新学习一遍php的mvc代码审计，审计的是lmxcms，适合新手，采用的mvc架构前台SQL注入(留言板)位于留言板处，index.php?m=Book&amp;amp;a=index，对应的是Book控制器的index方法，寻找到Book控制器的index方法publicfunctionindex()&amp;#123;if(isset($_POST[&amp;#x27;setbook&amp;#x27;]))&amp;#123;//提交留言$data=$this-&amp;gt;checkData();if($this-&amp;gt;bookModel-&amp;gt;add($data))&amp;#123;$this-&amp;gt;setBookTime();//存储提交时间rewrite::succ($this-&amp;gt;l[&amp;#x27;book_ok&amp;#x27;]);&amp;#125;else&amp;#123;rewrite::error($this-&amp;gt;l[&amp;#x27;book_error&amp;#x27;]);&amp;#125;&amp;#125;//判断是否调用留言数据if($GLOBALS[&amp;#x2...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-04-26
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/04/24/tmall/" title="Java代码审计练习(三) ">
         
         Java代码审计练习(三)
@@ -588,66 +641,6 @@
           <span>发表于 </span>
           <span>
             2022-04-14
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-            代码审计
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
-            渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/04/13/JavaRMI1/" title="Java中JNDI,RMI,LDAP那些事(一) ">
-        
-        Java中JNDI,RMI,LDAP那些事(一)
-        
-      </a>
-      <div class="post-description">
-        
-        前言在刚开始学Java的时候，一直遇到一些例如RMI,LDAP,JNDI,JRMP这种概念，其实自己也去一个个了解过，但是感觉没有手动记录过还是没法熟练掌握，所以我还是从0开始学习一下这些相关的内容，把他记录下来整理出自己的笔记RMIRMI是远程方法调用(RemoteMethodInvocation)，远程方法调用是一个分布式编程的思想，比如CORBA，WebService就是实现远程方法调用的技术，JavaRMI是专为Java环境设计的远程方法调用机制，客户端只要根据本地接口类的定义，提供相应的参数就可以调用远程服务器上的方法获取执行结果，他是基于JRMP协议JRMPJRMP:javaremotemethodprotocol，Java远程方法协议JRMP是的Java技术协议的具体对象为希望和远程引用。JRMP只能是一个Java特有的,基于流的协议。相对于的RMI-IIOP的，该协议JRMP只能是一个对象的Java到Java的远程调用，这使得它依赖语言，意思是客户端和服务器必须使用Java。JavaRMI远程方法调用的过程RMI基本分为三层架构来实现，分别为RMI服务端，RMI客...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-04-13
           </span>
         </span>
         
