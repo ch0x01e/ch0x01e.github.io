@@ -137,6 +137,59 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2021/08/09/dswdmsj/" title="某代刷网代码审计 ">
+        
+        某代刷网代码审计
+        
+      </a>
+      <div class="post-description">
+        
+        最近在学代码审计，逛了逛一些安全社区，发现了YanXia师傅写的一篇关于代刷网的代码审计，舔了个B脸问了YanXia师傅要了源码，因为网络上大部分代刷网源码都是有加密过的，我太菜了不会解密今天使用的环境是Apache+PHP7.0n首先使用Seay源代码审计系统，自动审计一下，发现大部分都是可能存在注入的，我们仔细看几个只有特定函数+可控变量存在的地方才可能存在漏洞我们这里随便找找，发现/admin/classlist.php这里可能有注入存在这里大概就是get请求传入一个my的参数，然后get请求传入一个cid的参数，追踪一下这个get_row方法get_row()方法的代码如下publicstaticfunctionget_row($q)&amp;#123;$result=mysqli_query(self::$link,$q);returnmysqli_fetch_assoc($result);&amp;#125;大概就是查询出来的结果拿一行作为关联数组，就是返回存在的行数，所以这里用时间盲注吧随便测试一手，毕竟跑盲注得拿sqlmap或者自己写个exp我们往上一翻，发现还有一个add_su...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2021-08-09
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2021/08/07/bluecms/" title="BlueCMS代码审计 ">
         
         BlueCMS代码审计

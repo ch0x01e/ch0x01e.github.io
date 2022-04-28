@@ -1,0 +1,426 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+     
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<title>Beescms代码审计 | ch1e的随笔</title>
+<meta name="author" content="ch1e">
+<meta name="copyright" content="ch1e">
+
+<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.ico"> 
+
+
+    <meta name="keywords" content="web安全,代码审计,渗透测试">
+
+
+
+     
+    <meta name="description" content="前言这次来一个无框架的php程序，对于这种无框架的程序我们可以使用Seay源代码审计系统大概过一遍，也就是去寻找危险函数中使用了变量的情况，再去判断变量是否可控即可，因为代码出现问题无非就是用户可以控制输入来攻击。 后台全局过滤首先拿到这套程序，我先审计的是后台的，发现每个admin下的文件都包含了admin&#x2F;init.php这个文件，随即先看admin&#x2F;init.php这个文件，因为一般这种文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Beescms代码审计">
+<meta property="og:url" content="https://ch1e.cn/2022/04/28/beescms/">
+<meta property="og:site_name" content="ch1e的随笔">
+<meta property="og:description" content="前言这次来一个无框架的php程序，对于这种无框架的程序我们可以使用Seay源代码审计系统大概过一遍，也就是去寻找危险函数中使用了变量的情况，再去判断变量是否可控即可，因为代码出现问题无非就是用户可以控制输入来攻击。 后台全局过滤首先拿到这套程序，我先审计的是后台的，发现每个admin下的文件都包含了admin&#x2F;init.php这个文件，随即先看admin&#x2F;init.php这个文件，因为一般这种文件">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+<meta property="article:published_time" content="2022-04-28T13:20:32.355Z">
+<meta property="article:modified_time" content="2022-04-28T16:01:37.885Z">
+<meta property="article:author" content="ch1e">
+<meta property="article:tag" content="web安全">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+ 
+
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<link href="//cdn.jsdelivr.net" rel="preconnect">
+<link href="https://ch1e.cn" rel="prefetch">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css " rel="stylesheet">
+<link href="/css/main.css " rel="stylesheet">
+<script src="/js/utlis.js"></script>
+ 
+    
+ 
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+     
+    
+ 
+     
+
+<script>
+    var $config = {
+        tocStyle: "visible",
+        CDN:{
+            fancyboxJs: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js",
+            fancyboxCss: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
+        },
+        
+        
+    }
+</script>
+    
+
+
+
+
+  
+
+
+    <div id="body-wrap">
+        <nav id="nav-wrap">
+  <div class="navbar">
+    <div class="bar">
+      <a href="/" class="title">ch1e的随笔</a>
+
+      
+      <ul class="menu">
+         
+        <li><a href="/">首页</a></li>
+          
+        <li>
+          <a class="menu-child-hover" href="javascript:void(0);">找文章</a>
+          <ul class="menu-child">
+            
+            <li><a href='/tags'>标签</a></li>
+            
+            <li><a href='/archives'>归档</a></li>
+            
+          </ul>
+        </li>
+          
+        <li><a href="/link">友情链接</a></li>
+         
+      </ul>
+      <i class="fas fa-bars open-nav"></i>
+    </div>
+  </div>
+  <div id="mobile-nav">
+    <ul>
+       
+      <li><a href="/">首页</a></li>
+         
+      <li><a href='/tags'>标签</a></li>
+      
+      <li><a href='/archives'>归档</a></li>
+         
+      <li><a href="/link">友情链接</a></li>
+       
+    </ul>
+  </div>
+</nav>
+
+
+        <main id="main">
+            
+
+<article id="post">
+  <div class="post-info">
+    <div class="post-title">
+      <h1>Beescms代码审计</h1>
+    </div>
+    <div class="post-meta">
+      <div class="post-date">
+        <i class="far fa-calendar-alt fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          发表于
+            2022-04-28 |
+        </span>
+        
+        <i class="fas fa-history fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          更新于
+            2022-04-29
+        </span>
+      </div>
+      <div class="post-meta-wordcount">
+        <i class="far fa-file-word fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">总字数:</span>
+        <span class="word-count">1.1k | </span>
+        <i class="far fa-clock fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">阅读时长:</span>
+        <span>4分钟</span>
+        
+      </div>
+    </div>
+  </div>
+  <div class="post-content">
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这次来一个无框架的php程序，对于这种无框架的程序我们可以使用Seay源代码审计系统大概过一遍，也就是去寻找危险函数中使用了变量的情况，再去判断变量是否可控即可，因为代码出现问题无非就是用户可以控制输入来攻击。</p>
+<h1 id="后台全局过滤"><a href="#后台全局过滤" class="headerlink" title="后台全局过滤"></a>后台全局过滤</h1><p>首先拿到这套程序，我先审计的是后台的，发现每个admin下的文件都包含了admin/init.php这个文件，随即先看admin/init.php这个文件，因为一般这种文件里的代码都是通用的，可能存在着一些全局的过滤。</p>
+<p>在该文件中，我们可以看到如下代码，大致意思就是判断是否开启GPC，如果没开启，则对REQUEST和COOKIE和POST和GET方法获取的数据使用addsl方法进行处理。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!get_magic_quotes_gpc())</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_REQUEST</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="variable">$_REQUEST</span>  = addsl(<span class="variable">$_REQUEST</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$_COOKIE</span>   = addsl(<span class="variable">$_COOKIE</span>);</span><br><span class="line">   <span class="variable">$_POST</span> = addsl(<span class="variable">$_POST</span>);</span><br><span class="line">   <span class="variable">$_GET</span> = addsl(<span class="variable">$_GET</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们来看看addsl方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">*转义函数</span></span><br><span class="line"><span class="comment">*</span></span><br><span class="line"><span class="comment">*<span class="doctag">@param</span>   $value   array || string</span></span><br><span class="line"><span class="comment">*<span class="doctag">@return</span>  array || string</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addsl</span>(<span class="params"><span class="variable">$value</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$value</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$value</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;  </span><br><span class="line">        <span class="keyword">return</span> is_array(<span class="variable">$value</span>) ? array_map(<span class="string">&#x27;addsl&#x27;</span>, <span class="variable">$value</span>) : addslashes(<span class="variable">$value</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，他判断了value是否是空，如果不为空的话，会对value进行一些处理，可以看到使用了addslashes进行处理，这里的话是反斜线引用字符串，这里的话其实就预防了我们的SQL注入(当然如果数据库编码是GBK的还可以使用宽字节注入，但是可惜这里不是)，那么我们在后面的审计过程中对于admin目录下包含了admin/init.php这个文件的文件就可以不用去观察sql注入了，除非碰到开发者忘记包含该文件的情况，才有可能出现SQL注入。</p>
+<h1 id="后台任意文件删除"><a href="#后台任意文件删除" class="headerlink" title="后台任意文件删除"></a>后台任意文件删除</h1><p>漏洞位于/admin/admin_ajax.php</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220428212145449.png" alt="image-20220428212145449"></p>
+<p>主要代码如下，action要是del_pic，然后通过拼接得到要删除的路径</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">elseif</span>(<span class="variable">$action</span>==<span class="string">&#x27;del_pic&#x27;</span>)&#123;</span><br><span class="line">   <span class="variable">$file</span>=CMS_PATH.<span class="string">&#x27;upload/&#x27;</span>.<span class="variable">$value</span>;</span><br><span class="line">   @unlink(<span class="variable">$file</span>);</span><br><span class="line">   <span class="keyword">die</span>(<span class="string">&quot;图片成功删除&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>value是通过<code>$value=$_REQUEST[&#39;value&#39;];</code>获取到的，但是前面说到他包含了init.php，里面会对传入的参数自动经过addslashes处理。但是和这里关系不大，他这里没有对传入的value值进行校验，导致我们可以达到任意文件删除的目的</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220428212901381.png" alt="image-20220428212901381"></p>
+<h1 id="后台任意目录删除"><a href="#后台任意目录删除" class="headerlink" title="后台任意目录删除"></a>后台任意目录删除</h1><p>位于/admin/admin_db.php</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220428222740249.png" alt="image-20220428222740249"></p>
+<p>主要代码如下，当action为del时，遍历f1文件夹下的目录并且删除，这里没有对f1进行校验，导致可以使用../来进行目录遍历达到删除任意目录的效果</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">elseif</span>(<span class="variable">$action</span>==<span class="string">&#x27;del&#x27;</span>)&#123;</span><br><span class="line">   <span class="keyword">if</span>(!check_purview(<span class="string">&#x27;data_import&#x27;</span>))&#123;msg(<span class="string">&#x27;&lt;span style=&quot;color:red&quot;&gt;操作失败,你的权限不足!&lt;/span&gt;&#x27;</span>);&#125;</span><br><span class="line">   <span class="variable">$fl</span> = <span class="variable">$_GET</span>[<span class="string">&#x27;fl&#x27;</span>];</span><br><span class="line">   <span class="keyword">if</span>(<span class="keyword">empty</span>(<span class="variable">$fl</span>))&#123;err(<span class="string">&#x27;&lt;span style=&quot;color:red&quot;&gt;参数传递错误,请重新操作&lt;/span&gt;&#x27;</span>);&#125;</span><br><span class="line">   <span class="variable">$db_handler</span>=@opendir(DATA_PATH.<span class="string">&#x27;backup/&#x27;</span>.<span class="variable">$fl</span>);</span><br><span class="line">   <span class="keyword">if</span>(<span class="variable">$db_handler</span>)&#123;</span><br><span class="line">      <span class="keyword">while</span>(<span class="literal">false</span>!==(<span class="variable">$d_file</span>=readdir(<span class="variable">$db_handler</span>)))&#123;</span><br><span class="line">         @unlink(DATA_PATH.<span class="string">&#x27;backup/&#x27;</span>.<span class="variable">$fl</span>.<span class="string">&#x27;/&#x27;</span>.<span class="variable">$d_file</span>);</span><br><span class="line">            <span class="keyword">echo</span> DATA_PATH.<span class="string">&#x27;backup/&#x27;</span>.<span class="variable">$fl</span>.<span class="string">&#x27;/&#x27;</span>.<span class="variable">$d_file</span>;</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   @rmdir(DATA_PATH.<span class="string">&#x27;backup/&#x27;</span>.<span class="variable">$fl</span>);</span><br><span class="line">   msg(<span class="variable">$fl</span>.<span class="string">&#x27;删除成功&#x27;</span>,<span class="string">&#x27;?action=import&amp;nav=&#x27;</span>.<span class="variable">$admin_nav</span>.<span class="string">&#x27;&amp;admin_p_nav=&#x27;</span>.<span class="variable">$admin_p_nav</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>payload:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET:admin/admin_db.php?action=del&amp;fl=../../data/</span><br></pre></td></tr></table></figure>
+
+<h1 id="后台任意文件上传"><a href="#后台任意文件上传" class="headerlink" title="后台任意文件上传"></a>后台任意文件上传</h1><p>位于/admin/admin_pic.php</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220428231605148.png" alt="image-20220428231605148"></p>
+<p>主要代码如下，在上传图片时，没有对上传的文件进行任何的验证，导致了文件上传漏洞</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(is_uploaded_file(<span class="variable">$new_pic</span>[<span class="string">&#x27;tmp_name&#x27;</span>]))&#123;</span><br><span class="line">   <span class="comment">//判断大小</span></span><br><span class="line">   <span class="keyword">if</span>(<span class="variable">$new_pic</span>[<span class="string">&#x27;size&#x27;</span>]&gt;<span class="variable">$_sys</span>[<span class="string">&#x27;upload_size&#x27;</span>])&#123;msg(<span class="string">&#x27;图片太大，请缩小&#x27;</span>);&#125;</span><br><span class="line">   <span class="comment">//判断格式</span></span><br><span class="line">   <span class="keyword">if</span>(!in_array(strtolower(<span class="variable">$new_pic</span>[<span class="string">&#x27;type&#x27;</span>]),<span class="keyword">array</span>(<span class="string">&#x27;image/gif&#x27;</span>,<span class="string">&#x27;image/jpeg&#x27;</span>,<span class="string">&#x27;image/png&#x27;</span>,<span class="string">&#x27;image/jpg&#x27;</span>,<span class="string">&#x27;image/bmp&#x27;</span>,<span class="string">&#x27;image/pjpeg&#x27;</span>)))&#123;msg(<span class="string">&#x27;上传图片格式不正确&#x27;</span>);&#125;</span><br><span class="line">   <span class="comment">//图片信息</span></span><br><span class="line">   <span class="variable">$new_pic_info</span>=pathinfo(<span class="variable">$new_pic</span>[<span class="string">&#x27;name&#x27;</span>]);</span><br><span class="line">   <span class="comment">//替换图片</span></span><br><span class="line">   <span class="variable">$new_pic_name</span>=CMS_PATH.<span class="variable">$pic_path</span>.<span class="variable">$pic_name</span>.<span class="string">&#x27;.&#x27;</span>.<span class="variable">$new_pic_info</span>[<span class="string">&#x27;extension&#x27;</span>];</span><br><span class="line">   <span class="keyword">echo</span> <span class="string">&quot;new_pic_namel:&quot;</span>.<span class="variable">$new_pic_name</span>;</span><br><span class="line">   <span class="comment">//删除原来图片</span></span><br><span class="line">   <span class="comment">//@unlink($file_name);</span></span><br><span class="line">   <span class="comment">//上传图片</span></span><br><span class="line">   @move_uploaded_file(<span class="variable">$new_pic</span>[<span class="string">&#x27;tmp_name&#x27;</span>],<span class="variable">$new_pic_name</span>);</span><br><span class="line">   <span class="comment">//对文件重新赋值，方便生成缩略图</span></span><br><span class="line">   <span class="variable">$file_name</span>=<span class="variable">$new_pic_name</span>;</span><br><span class="line">   <span class="keyword">echo</span> <span class="string">&quot;file_name:&quot;</span>.<span class="variable">$file_name</span>;</span><br><span class="line">   <span class="comment">//更新数据库</span></span><br><span class="line">   <span class="variable">$new_pic_sql</span>=<span class="string">&quot;,pic_ext=&#x27;&quot;</span>.<span class="variable">$new_pic_info</span>[<span class="string">&#x27;extension&#x27;</span>].<span class="string">&quot;&#x27;,pic_size=&#x27;&quot;</span>.<span class="variable">$new_pic</span>[<span class="string">&#x27;size&#x27;</span>].<span class="string">&quot;&#x27;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220428231829182.png" alt="image-20220428231829182"></p>
+
+  </div>
+   
+   
+
+  
+  <div class="post-copyright">
+    <div class="post-copyright-icon"></div>
+      <div class="post-copyright-author">
+          <span class="post-copyright-meta">文章作者: </span>
+            <span class="post-copyright-info">
+              <a href="mailto:1444440144@qq.com" >ch1e</a>
+            </span>
+      </div>
+      <div class="post-copyright-type">
+          <span class="post-copyright-meta">文章链接: </span>
+            <span class="post-copyright-info">
+              <a href="https://ch1e.cn/2022/04/28/beescms/" >https://ch1e.cn/2022/04/28/beescms/</a>
+            </span>
+      </div><div class="post-copyright-notice">
+          <span class="post-copyright-meta">版权声明: </span>
+            <span class="post-copyright-info">本博客所有文章除特别声明外，均采用
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/ " target="_blank" >
+                  CC BY-NC-SA 4.0 </a> 许可协议。转载请注明来自
+              <a href="https://ch1e.cn/2022/04/28/beescms/" target="_blank" >ch1e</a>
+              ！</span>
+      </div>
+  </div>
+  
+
+
+ 
+
+  
+    <div class="post-tag">
+        <span>
+            <i class="fa fa-tag"></i>
+             
+            <a href="tags/web安全/"><span>web安全</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/代码审计/"><span>代码审计</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/渗透测试/"><span>渗透测试</span></a>
+                
+            
+        </span>
+    </div>
+  
+
+
+
+
+<div class="pagination-post">
+    
+    
+    <a href="/2022/04/26/lmx/">
+      <div class="next-title">lmxcms代码审计(PHP)<i class="fas fa-chevron-right"></i></div>
+      <div class="next-desc">前言这几天小摸鱼，今天翻了一下，看到php的代码审计，兴致来了，从新学习一遍php的mvc代码审计，审计的是lmxcms，适合新手，采用的mvc架构
+前台SQL注入(留言板)位于留言板处，ind...</div>
+    </a>
+    
+</div>
+
+</article>
+ 
+
+
+  <div id="toc-wrap">
+    <div id="toc">
+      <div class="toc-title">
+        <div>
+          目录
+            <span class="num">0%</span>
+        </div>
+        <progress class="progress" value="0" max="100"></progress>
+      </div>
+      <div class="toc-list">
+         
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E5%85%A8%E5%B1%80%E8%BF%87%E6%BB%A4"><span class="toc-text">后台全局过滤</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4"><span class="toc-text">后台任意文件删除</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E7%9B%AE%E5%BD%95%E5%88%A0%E9%99%A4"><span class="toc-text">后台任意目录删除</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%8E%E5%8F%B0%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="toc-text">后台任意文件上传</span></a></li></ol>
+      </div>
+    </div>
+  </div>
+
+
+        </main>
+        <section id="rightside">
+    
+    <div class="rightside-item">
+        
+        
+         
+        
+        
+            <a id="open-toc" title="目录">
+                <i class="fas fa-list-ul"></i>
+            </a>
+        
+         
+         
+        <a href="javascript:(0)" id="darkmode" title="深色/浅色 ">
+            <i class="fas fa-moon"></i>
+        </a>
+         
+        
+        <a href="#" title="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+         
+
+<footer class="footer" id="footer">
+    <div class="copyright">
+      &copy; 2020 - 2022
+        <i class="fas fa-fan"></i>
+        ch1e
+    </div>
+    <div class="framework-info">
+        <span>框架 </span>
+        <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="footer-separator">|</span>
+        <span>主题 </span>
+        <a href="https://github.com/lete114/hexo-theme-MengD" target="_blank">MengD.(萌典) </a>
+    </div>
+    
+    <div class="custom-text">我相信我可以，但我一直在路上，所以我有无限的可能！！</div>
+</footer>
+    </div>
+    <div id="mask" onclick="closeAll()"></div>
+    
+    <div class="script">
+        <script src="/js/main.js"></script>
+        
+
+
+<script src="/js/lazyload.js"></script>
+
+
+    
+
+
+        
+    <script>
+        getScript('https://cdn.jsdelivr.net/npm/pjax/pjax.min.js',LoadPjax)
+        function LoadPjax() {
+            var pjax = new Pjax({
+                selectors: [
+                    'head title',
+                    'head meta[name="keywords"]',
+                    'head meta[name="description"]',
+                    'main',
+                    '#rightside'
+                ],
+                cache: true,
+                cacheBust: false
+            });
+        }
+
+        // 清除时间
+        var timer = null;
+        // 执行进度条
+        function ProgressStart() {
+            // 设置初始进度
+            var progress = 10;
+            // 创建进度条 及 css样式
+            var div = document.createElement('div');
+            div.className = 'pjax-progress';
+            document.body.prepend(div);
+            // 定义随机数最大值最小值
+            var max = 10, mini = 3;
+            var result = max - mini;
+            // 清除
+            clearInterval(timer);
+            // 0.5秒内累加进度
+            timer = setInterval(function () {
+                // 随机数
+                var num = parseInt(Math.random() * result);
+                var randomResult = num + mini;
+                // 累加
+                progress += randomResult
+                document.getElementsByClassName('pjax-progress')[0].style.width = progress + '%';
+                // 当进度达到95%时停止
+                if (progress > 95) progress = 95
+            }, 500)
+        }
+        // 加载进度条加载完毕
+        function ProgressFinish() {
+            clearInterval(timer);
+            // 页面加载完毕后进度100% 并在0.7秒后删除
+            var progress = document.getElementsByClassName('pjax-progress');
+            progress[0].style.width = '100%';
+            timer = setTimeout(function () {
+                progress[0].parentNode.removeChild(progress[0])
+            }, 700);
+        }
+
+        // 开始 PJAX 执行的函数
+        document.addEventListener('pjax:send', function () {
+            // 执行进度条
+            ProgressStart()
+        });
+        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+        document.addEventListener('pjax:complete', function () {
+
+            // 加载进度条加载完毕
+            ProgressFinish()
+            // 执行所有方法
+            exeAllFn()
+
+            
+                // 图片懒加载
+                ImgLazyLoad('body img[data-img]', 'data-img')
+            
+
+
+            document.querySelectorAll('script[data-pjax]').forEach(item => {
+                const newScript = document.createElement('script')
+                const content = item.text || item.textContent || item.innerHTML || ''
+                Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+                newScript.appendChild(document.createTextNode(content))
+                item.parentNode.replaceChild(newScript, item)
+            })
+        });
+
+        // Pjax请求错误时，跳转到404页面
+        document.addEventListener('pjax:error', (err) => {
+            if (err.request.status === 404) {
+                pjax.loadUrl('/404.html')
+            }
+        })
+    </script>
+
+    </div>
+</body>
+
+</html>
