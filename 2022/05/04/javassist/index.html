@@ -1,0 +1,422 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+     
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<title>ch1e的随笔</title>
+<meta name="author" content="ch1e">
+<meta name="copyright" content="ch1e">
+
+<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.ico"> 
+
+
+    <meta name="keywords" content="ch1e的随笔">
+
+
+
+     
+    <meta name="description" content="前言Java中所有的类都被编译为class文件来运行，在编译完class文件之后，类不能再被显示修改，而Javassist就是用来处理编译后的class文件，它可以用来修改方法或者新增方法，并且不需要深入了解字节码，还可以生成一个新的类对象。 创建对象首先要使用maven引入javassist包 12345&lt;dependency&gt;    &lt;groupId&gt;org.javas">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ch1e的随笔">
+<meta property="og:url" content="https://ch1e.cn/2022/05/04/javassist/">
+<meta property="og:site_name" content="ch1e的随笔">
+<meta property="og:description" content="前言Java中所有的类都被编译为class文件来运行，在编译完class文件之后，类不能再被显示修改，而Javassist就是用来处理编译后的class文件，它可以用来修改方法或者新增方法，并且不需要深入了解字节码，还可以生成一个新的类对象。 创建对象首先要使用maven引入javassist包 12345&lt;dependency&gt;    &lt;groupId&gt;org.javas">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+<meta property="article:published_time" content="2022-05-04T09:43:46.068Z">
+<meta property="article:modified_time" content="2022-05-04T09:43:46.069Z">
+<meta property="article:author" content="ch1e">
+<meta property="article:tag" content="ch1e的随笔">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+ 
+
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<link href="//cdn.jsdelivr.net" rel="preconnect">
+<link href="https://ch1e.cn" rel="prefetch">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css " rel="stylesheet">
+<link href="/css/main.css " rel="stylesheet">
+<script src="/js/utlis.js"></script>
+ 
+    
+ 
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+     
+    
+ 
+     
+
+<script>
+    var $config = {
+        tocStyle: "visible",
+        CDN:{
+            fancyboxJs: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js",
+            fancyboxCss: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
+        },
+        
+        
+    }
+</script>
+    
+
+
+
+
+  
+
+
+    <div id="body-wrap">
+        <nav id="nav-wrap">
+  <div class="navbar">
+    <div class="bar">
+      <a href="/" class="title">ch1e的随笔</a>
+
+      
+      <ul class="menu">
+         
+        <li><a href="/">首页</a></li>
+          
+        <li>
+          <a class="menu-child-hover" href="javascript:void(0);">找文章</a>
+          <ul class="menu-child">
+            
+            <li><a href='/tags'>标签</a></li>
+            
+            <li><a href='/archives'>归档</a></li>
+            
+          </ul>
+        </li>
+          
+        <li><a href="/link">友情链接</a></li>
+         
+      </ul>
+      <i class="fas fa-bars open-nav"></i>
+    </div>
+  </div>
+  <div id="mobile-nav">
+    <ul>
+       
+      <li><a href="/">首页</a></li>
+         
+      <li><a href='/tags'>标签</a></li>
+      
+      <li><a href='/archives'>归档</a></li>
+         
+      <li><a href="/link">友情链接</a></li>
+       
+    </ul>
+  </div>
+</nav>
+
+
+        <main id="main">
+            
+
+<article id="post">
+  <div class="post-info">
+    <div class="post-title">
+      <h1>无标题</h1>
+    </div>
+    <div class="post-meta">
+      <div class="post-date">
+        <i class="far fa-calendar-alt fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          发表于
+            2022-05-04 |
+        </span>
+        
+        <i class="fas fa-history fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          更新于
+            2022-05-05
+        </span>
+      </div>
+      <div class="post-meta-wordcount">
+        <i class="far fa-file-word fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">总字数:</span>
+        <span class="word-count">658 | </span>
+        <i class="far fa-clock fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">阅读时长:</span>
+        <span>2分钟</span>
+        
+      </div>
+    </div>
+  </div>
+  <div class="post-content">
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Java中所有的类都被编译为class文件来运行，在编译完class文件之后，类不能再被显示修改，而<code>Javassist</code>就是用来处理编译后的class文件，它可以用来修改方法或者新增方法，并且不需要深入了解字节码，还可以生成一个新的类对象。</p>
+<h1 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h1><p>首先要使用maven引入javassist包</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.javassist<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javassist<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.26.0-GA<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后创建一个Boy对象，这里的话创建的对象不能放到以java开始的包里面，所以这里我自己创建了一个jst的包然后把这个新对象放到这个包下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javassist.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationTargetException;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NotFoundException, CannotCompileException, IOException, InvocationTargetException, IllegalAccessException, NoSuchMethodException </span>&#123;</span><br><span class="line">        ClassPool classPool=ClassPool.getDefault();</span><br><span class="line">        <span class="comment">//新建类</span></span><br><span class="line">        CtClass ctClass = classPool.makeClass(<span class="string">&quot;jst.Boy&quot;</span>);</span><br><span class="line">        <span class="comment">//设置main方法</span></span><br><span class="line">        CtMethod main = <span class="keyword">new</span> CtMethod(CtClass.voidType, <span class="string">&quot;main&quot;</span>, <span class="keyword">new</span> CtClass[]&#123;classPool.get(String[].class.getName())&#125;, ctClass);</span><br><span class="line">        <span class="comment">//main方法public和static关键字</span></span><br><span class="line">        main.setModifiers(Modifier.PUBLIC+Modifier.STATIC);</span><br><span class="line">        <span class="comment">//设置方法体</span></span><br><span class="line">        main.setBody(<span class="string">&quot;&#123;Runtime.getRuntime().exec(\&quot;calc\&quot;);&#125;&quot;</span>);</span><br><span class="line">        <span class="comment">//添加方法</span></span><br><span class="line">        ctClass.addMethod(main);</span><br><span class="line">        ctClass.writeFile();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//反射调用</span></span><br><span class="line">        Class&lt;?&gt; clazz = ctClass.toClass();</span><br><span class="line">        Method mainMethod = clazz.getDeclaredMethod(<span class="string">&quot;main&quot;</span>, String[].class);</span><br><span class="line">        mainMethod.invoke(clazz,<span class="keyword">new</span> String[<span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后生成的Boy的class文件如下</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220503193212764.png" alt="image-20220503193212764"></p>
+<p>ClassPool的主要方法：</p>
+<ul>
+<li>getDefault() 获取ClassPool对象，因为ClassPool是单例模式</li>
+<li>appendClassPath() 把目录添加到ClassPath</li>
+<li>insertClassPath() 在ClassPath插入jar</li>
+<li>get() 根据名称获取CtClass对象</li>
+<li>toClass() 将CtClass转为Class 一旦被转换则不能修改</li>
+<li>makeClass() 创建新的类或接口</li>
+</ul>
+<p>CtClass主要方法：</p>
+<ul>
+<li>addConstructor() 添加构造函数</li>
+<li>addField() 添加字段</li>
+<li>addInterface() 添加接口</li>
+<li>addMethod() 添加方法</li>
+<li>freeze() 冻结类使其不能被修改</li>
+<li>defrost() 解冻使其能被修改</li>
+<li>detach() 从ClassPool中删除类</li>
+<li>toBytecode() 转字节码</li>
+<li>toClass() 转Class对象</li>
+<li>writeFile() 写入.class文件</li>
+<li>setModifiers() 设置修饰符</li>
+</ul>
+<p>CtMethod继承CtBehavior，需要关注的方法：</p>
+<ol>
+<li>insertBefore 在方法的起始位置插入代码</li>
+<li>insterAfter 在方法的所有 return 语句前插入代码</li>
+<li>insertAt 在指定的位置插入代码</li>
+<li>setBody 将方法的内容设置为要写入的代码，当方法被 abstract修饰时，该修饰符被移除</li>
+<li>make 创建一个新的方法</li>
+</ol>
+<p>生成了class文件以后，我们主要用两种方法去进行调用，一是反射调用，二是加载class文件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;?&gt; clazz = ctClass.toClass();</span><br><span class="line">Method mainMethod = clazz.getDeclaredMethod(<span class="string">&quot;main&quot;</span>, String[].class);</span><br><span class="line">mainMethod.invoke(clazz,<span class="keyword">new</span> String[]&#123;&#125;);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ClassPool pool = ClassPool.getDefault();</span><br><span class="line">pool.appendClassPath(<span class="string">&quot;D:\\java\\jst\\Boy.class&quot;</span>);</span><br><span class="line">CtClass BoyClass = pool.get(<span class="string">&quot;jst.Boy&quot;</span>);</span><br><span class="line">Object o = PersonClass.toClass().newInstance();</span><br></pre></td></tr></table></figure>
+  </div>
+   
+   
+
+  
+  <div class="post-copyright">
+    <div class="post-copyright-icon"></div>
+      <div class="post-copyright-author">
+          <span class="post-copyright-meta">文章作者: </span>
+            <span class="post-copyright-info">
+              <a href="mailto:1444440144@qq.com" >ch1e</a>
+            </span>
+      </div>
+      <div class="post-copyright-type">
+          <span class="post-copyright-meta">文章链接: </span>
+            <span class="post-copyright-info">
+              <a href="https://ch1e.cn/2022/05/04/javassist/" >https://ch1e.cn/2022/05/04/javassist/</a>
+            </span>
+      </div><div class="post-copyright-notice">
+          <span class="post-copyright-meta">版权声明: </span>
+            <span class="post-copyright-info">本博客所有文章除特别声明外，均采用
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/ " target="_blank" >
+                  CC BY-NC-SA 4.0 </a> 许可协议。转载请注明来自
+              <a href="https://ch1e.cn/2022/05/04/javassist/" target="_blank" >ch1e</a>
+              ！</span>
+      </div>
+  </div>
+  
+
+
+ 
+
+  
+
+
+
+
+<div class="pagination-post">
+    
+    <a href="/2022/05/05/ezgadget/">
+      <div class="prev-title"><i class="fas fa-chevron-left"></i>CTF:简单的ezgadget</div>
+      <div class="prev-desc">前言摸鱼了好几天，来点康复训练吧，今天来题简单的ctf题，东华杯的ezgadget，先把源码下载，然后反编译。
+正文大致目录结构如下，包括了一个UserBean，一个IndexControlle...</div>
+    </a>
+    
+    
+    <a href="/2022/04/28/beescms/">
+      <div class="next-title">Beescms代码审计<i class="fas fa-chevron-right"></i></div>
+      <div class="next-desc">前言这次来一个无框架的php程序，对于这种无框架的程序我们可以使用Seay源代码审计系统大概过一遍，也就是去寻找危险函数中使用了变量的情况，再去判断变量是否可控即可，因为代码出现问题无非就是用户...</div>
+    </a>
+    
+</div>
+
+</article>
+ 
+
+
+  <div id="toc-wrap">
+    <div id="toc">
+      <div class="toc-title">
+        <div>
+          目录
+            <span class="num">0%</span>
+        </div>
+        <progress class="progress" value="0" max="100"></progress>
+      </div>
+      <div class="toc-list">
+         
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="toc-text">创建对象</span></a></li></ol>
+      </div>
+    </div>
+  </div>
+
+
+        </main>
+        <section id="rightside">
+    
+    <div class="rightside-item">
+        
+        
+         
+        
+        
+            <a id="open-toc" title="目录">
+                <i class="fas fa-list-ul"></i>
+            </a>
+        
+         
+         
+        <a href="javascript:(0)" id="darkmode" title="深色/浅色 ">
+            <i class="fas fa-moon"></i>
+        </a>
+         
+        
+        <a href="#" title="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+         
+
+<footer class="footer" id="footer">
+    <div class="copyright">
+      &copy; 2020 - 2022
+        <i class="fas fa-fan"></i>
+        ch1e
+    </div>
+    <div class="framework-info">
+        <span>框架 </span>
+        <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="footer-separator">|</span>
+        <span>主题 </span>
+        <a href="https://github.com/lete114/hexo-theme-MengD" target="_blank">MengD.(萌典) </a>
+    </div>
+    
+    <div class="custom-text">我相信我可以，但我一直在路上，所以我有无限的可能！！</div>
+</footer>
+    </div>
+    <div id="mask" onclick="closeAll()"></div>
+    
+    <div class="script">
+        <script src="/js/main.js"></script>
+        
+
+
+<script src="/js/lazyload.js"></script>
+
+
+    
+
+
+        
+    <script>
+        getScript('https://cdn.jsdelivr.net/npm/pjax/pjax.min.js',LoadPjax)
+        function LoadPjax() {
+            var pjax = new Pjax({
+                selectors: [
+                    'head title',
+                    'head meta[name="keywords"]',
+                    'head meta[name="description"]',
+                    'main',
+                    '#rightside'
+                ],
+                cache: true,
+                cacheBust: false
+            });
+        }
+
+        // 清除时间
+        var timer = null;
+        // 执行进度条
+        function ProgressStart() {
+            // 设置初始进度
+            var progress = 10;
+            // 创建进度条 及 css样式
+            var div = document.createElement('div');
+            div.className = 'pjax-progress';
+            document.body.prepend(div);
+            // 定义随机数最大值最小值
+            var max = 10, mini = 3;
+            var result = max - mini;
+            // 清除
+            clearInterval(timer);
+            // 0.5秒内累加进度
+            timer = setInterval(function () {
+                // 随机数
+                var num = parseInt(Math.random() * result);
+                var randomResult = num + mini;
+                // 累加
+                progress += randomResult
+                document.getElementsByClassName('pjax-progress')[0].style.width = progress + '%';
+                // 当进度达到95%时停止
+                if (progress > 95) progress = 95
+            }, 500)
+        }
+        // 加载进度条加载完毕
+        function ProgressFinish() {
+            clearInterval(timer);
+            // 页面加载完毕后进度100% 并在0.7秒后删除
+            var progress = document.getElementsByClassName('pjax-progress');
+            progress[0].style.width = '100%';
+            timer = setTimeout(function () {
+                progress[0].parentNode.removeChild(progress[0])
+            }, 700);
+        }
+
+        // 开始 PJAX 执行的函数
+        document.addEventListener('pjax:send', function () {
+            // 执行进度条
+            ProgressStart()
+        });
+        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+        document.addEventListener('pjax:complete', function () {
+
+            // 加载进度条加载完毕
+            ProgressFinish()
+            // 执行所有方法
+            exeAllFn()
+
+            
+                // 图片懒加载
+                ImgLazyLoad('body img[data-img]', 'data-img')
+            
+
+
+            document.querySelectorAll('script[data-pjax]').forEach(item => {
+                const newScript = document.createElement('script')
+                const content = item.text || item.textContent || item.innerHTML || ''
+                Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+                newScript.appendChild(document.createTextNode(content))
+                item.parentNode.replaceChild(newScript, item)
+            })
+        });
+
+        // Pjax请求错误时，跳转到404页面
+        document.addEventListener('pjax:error', (err) => {
+            if (err.request.status === 404) {
+                pjax.loadUrl('/404.html')
+            }
+        })
+    </script>
+
+    </div>
+</body>
+
+</html>
