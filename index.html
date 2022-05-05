@@ -220,35 +220,6 @@
   <div class="post-item">
     
     <div class="post-item-info">
-      <a class="post-title" href="/2022/05/04/javassist/" title="无标题 ">
-        
-        无标题
-        
-      </a>
-      <div class="post-description">
-        
-        前言Java中所有的类都被编译为class文件来运行，在编译完class文件之后，类不能再被显示修改，而Javassist就是用来处理编译后的class文件，它可以用来修改方法或者新增方法，并且不需要深入了解字节码，还可以生成一个新的类对象。创建对象首先要使用maven引入javassist包&amp;lt;dependency&amp;gt;&amp;lt;groupId&amp;gt;org.javassist&amp;lt;/groupId&amp;gt;&amp;lt;artifactId&amp;gt;javassist&amp;lt;/artifactId&amp;gt;&amp;lt;version&amp;gt;3.26.0-GA&amp;lt;/version&amp;gt;&amp;lt;/dependency&amp;gt;然后创建一个Boy对象，这里的话创建的对象不能放到以java开始的包里面，所以这里我自己创建了一个jst的包然后把这个新对象放到这个包下importjavassist.*;importjava.io.IOException;importjava.lang.reflect.InvocationTargetException;importjava.lang.refle...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-05-04
-          </span>
-        </span>
-        
-
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
       <a class="post-title" href="/2022/04/28/beescms/" title="Beescms代码审计 ">
         
         Beescms代码审计
@@ -634,6 +605,59 @@
           
           <a href="/tags/Java%E5%AE%89%E5%85%A8/">
             Java安全
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/04/16/oashenji/" title="Java代码审计练习(二) ">
+        
+        Java代码审计练习(二)
+        
+      </a>
+      <div class="post-description">
+        
+        前言看了好几天RMI，今天看的时候好像在分析源码的时候出问题了，好像分析错了，分析了一天心态崩了，继续来搞个审计练练手吧SQL注入老样子还是先挖SQL注入吧，因为这个现在来说比较简单，只要找到没有预编译的地方，然后拿去跑sqlmap即可注入点一还是老方法，对mapper.xml文件搜索${,找到对应的控制器，对应的baseKey可能存在注入对应的控制器如下，刚刚说到，baseKey参数可能存在注入，但是除此之外还需要看他是否可控，这里明显看出参数可控，应该是存在注入的。找到对应路径抓包，对baseKey这个参数跑sqlmap，结果如下注入点二位于address-mapper.xml的如下位置大概流程和注入点一一样，就是判断是否预编译，然后判断是否存在注入，构造请求包跑sqlmap，直接上图越权访问越权访问别人文件夹位于文件管理处，对应控制器是FileController.java来看其text方法，他是进入指定文件夹的方法，这里是根据session里的userId查询当前用户，然后通过当前用户去找到用户根目录，然后通过传进来的pathid去查找当前目录，这里他可能缺少对一个当前用...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-04-16
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
           </a>
           
           
