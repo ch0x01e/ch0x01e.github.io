@@ -167,6 +167,112 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/05/08/fastjsonMemory/" title="Fastjson反序列化注入内存马 ">
+        
+        Fastjson反序列化注入内存马
+        
+      </a>
+      <div class="post-description">
+        
+        前言学习完shiro反序列化注入内存马后，来学习一下创建的fastjson吧，fastjson和shiro不一样，fastjson是我自己打成功以后才写的文章，shiro确实是本地环境应该有问题，我感觉fastjson比较简单，话不多说，开始学习。环境搭建由于网上没有现成的测试版本，那只好自己随便搭建一个了com.Test.IndexControllerpackagecom.Test;importcom.alibaba.fastjson.JSON;importorg.springframework.stereotype.Controller;importorg.springframework.web.bind.annotation.RequestMapping;importorg.springframework.web.bind.annotation.RequestMethod;importorg.springframework.web.bind.annotation.RequestParam;importorg.springframework.web.bind.annotati...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-05-08
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/05/07/shiroMemory/" title="Shiro反序列化注入内存马 ">
+        
+        Shiro反序列化注入内存马
+        
+      </a>
+      <div class="post-description">
+        
+        前言之前学习了shiro反序列化以及Tomcat和Spring的一些内存马，但是一直没有把两者结合进行利用，今天来学习如何通过shiro反序列化注入内存马，这里其实我是先尝试了很久才写的文章，提前预告一下我踩了很久的坑，在注入内存马的时候我这里一直注入不了，但是同样的方式在别的师傅那能注入成功，我到现在也没搞明白。Shiro反序列化注入内存马之前在学内存马的时候是知道动态注册一个Filter，但是当时是通过jsp去动态注册Filter，但是使用反序列化去注入内存马确实没怎么仔细想，今天准备学习的时候看到师傅们的Exp，其实就明白了，就是通过TemplatesImpl去加载恶意类，然后把动态注册Filter的代码写在反序列化的类的static方法中。这里的话内存马的内容就不说了，想看的师傅可以看之前的笔记。这里我也用了P牛的环境，项目代码地址：https://github.com/phith0n/JavaThings。因为有最大请求头的长度限制，所以我们需要在Tomcat的/conf/server.xml中进行如下修改，添加一个`maxHttpHeaderSize=&amp;quot;40...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-05-07
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/05/05/rome/" title="Rome反序列化链分析 ">
         
         Rome反序列化链分析
@@ -514,119 +620,6 @@
           <span>发表于 </span>
           <span>
             2022-04-21
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-            代码审计
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
-            渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/04/19/unser/" title="Java反序列化链二周目 ">
-        
-        Java反序列化链二周目
-        
-      </a>
-      <div class="post-description">
-        
-        前言最近缺席是学不进去，有点迷茫，不知道该怎么去学，是选择几个源码做一下代码审计还是继续深入研究java呢？也可能和我最近身体状态不好有关吧，只能选择二刷/三刷前面的反序列化链，学了反序列化链也有一段时间了，这次来好好整理一下CC1主要用到ConstantTransformer,InvokerTransformer,ChainedTransformer这几个类。ConstantTransformer类实现了Transformer接口，其transform方法作用是获取一个对象类型publicConstantTransformer(ObjectconstantToReturn)&amp;#123;this.iConstant=constantToReturn;&amp;#125;publicObjecttransform(Objectinput)&amp;#123;returnthis.iConstant;&amp;#125;InvokerTransformer类实现了Transformer和Serializable接口，重写了transform方法，他的transform方法是用反射调用指定的方法并且进行返回他...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-04-19
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
-            反序列化
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/04/18/JavaRMI3/" title="Java中JNDI,RMI,LDAP那些事(三) ">
-        
-        Java中JNDI,RMI,LDAP那些事(三)
-        
-      </a>
-      <div class="post-description">
-        
-        前言这篇来说说看RMI的具体攻击方式，我这里复现一种写一种吧攻击Registry端在使用Registry端的时候，Server会向Registry绑定一个对象，这个对象是Server生成的动态代理类，Registry会进行反序列化操作，然后存在自己的RegistryImpl的bindings中，如果此时有个恶意的Server端生成了一个恶意的类给Registry，在反序列化的时候就可以造成攻击Registry.javapackageRMI;importjava.rmi.RemoteException;importjava.rmi.registry.LocateRegistry;publicclassRegistry&amp;#123;publicstaticvoidmain(String[]args)throwsRemoteException&amp;#123;java.rmi.registry.Registryregistry=LocateRegistry.createRegistry(1099);&amp;#125;&amp;#125;Server.javapackageRMI;importorg.apac...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-04-18
           </span>
         </span>
         

