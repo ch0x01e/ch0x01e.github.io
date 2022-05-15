@@ -137,6 +137,59 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/03/25/Servlet/" title="Java内存马之Servlet内存马 ">
+        
+        Java内存马之Servlet内存马
+        
+      </a>
+      <div class="post-description">
+        
+        前言前面学习完了Filter内存马，现在来学习Servlet内存马，其实两者本质上区别并不大，如果学习过之前的Filter内存马，学习这个Servlet内存马其实是类似的。正文这里为了方便师傅们理解，我随便写了个demoTestServlet.javaimportjavax.servlet.*;importjavax.servlet.annotation.WebServlet;importjava.io.IOException;publicclassTestServletimplementsServlet&amp;#123;@Overridepublicvoidinit(ServletConfigservletConfig)throwsServletException&amp;#123;&amp;#125;@OverridepublicServletConfiggetServletConfig()&amp;#123;returnnull;&amp;#125;@Overridepublicvoidservice(ServletRequestservletRequest,ServletResponseservletResp...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-03-25
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
+            内存马
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/03/24/Filter/" title="Java内存马之Filter内存马 ">
         
         Java内存马之Filter内存马
@@ -562,59 +615,6 @@
           <span>发表于 </span>
           <span>
             2022-02-26
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
-            反序列化
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/02/21/cc1/" title="commons-collections1反序列化链分析 ">
-        
-        commons-collections1反序列化链分析
-        
-      </a>
-      <div class="post-description">
-        
-        commons-collections1反序列化链分析前言最近入了P牛的知识星球，打算搞Java安全这一块了，所以有了这一篇CC链的分析结果，从0到1学习java安全，在学习的路上碰到了不少坑，这里一起记录一下这几天的学习成果，用到的环境是jdk1.7以及commons-collections3.1，这是我第一篇关于java安全的文章，我才疏学浅，希望师傅们多多指点有关的类介绍ConstantTransformerConstantTransformer类实现了Transformer接口，其transform方法作用是获取一个对象类型InvokerTransformerInvokerTransformer类实现了Transformer和Serializable接口，重写了transform方法，他的transform方法是用反射调用指定的方法并且进行返回他的结果，这里我们可以来写个小demopublicclassdemo&amp;#123;publicstaticvoidmain(String[]args)&amp;#123;Transformertransformer=newInvokerTra...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-02-21
           </span>
         </span>
         

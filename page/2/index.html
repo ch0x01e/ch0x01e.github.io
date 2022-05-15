@@ -137,6 +137,66 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/04/21/JavaRMI4/" title="Java中JNDI,RMI,LDAP那些事(四) ">
+        
+        Java中JNDI,RMI,LDAP那些事(四)
+        
+      </a>
+      <div class="post-description">
+        
+        前言说完了RMI，来说说JNDI介绍JNDI(JavaNamingandDirectoryInterface)Java命名和目录接口，通过调用JNDI的API应用程序可以定位资源和其他程序对象NamingService命名服务命名服务将名称和对象进行关联，提供通过名称找到对象的操作，例如：DNS系统将计算机名和IP地址进行关联、文件系统将文件名和文件句柄进行关联等等。DirectoryService目录服务目录服务是命名服务的扩展，除了提供名称和对象的关联，还允许对象具有属性。目录服务中的对象称之为目录对象。目录服务提供创建、添加、删除目录对象以及修改目录对象属性等操作。Reference引用在一些命名服务系统中，系统并不是直接将对象存储在系统中，而是保持对象的引用。引用包含了如何访问实际对象的信息。JNDI目录服务访问JNDI目录时候会首先通过预先设置好环境变量访问对应的服务，如果创建JDNI的Context时未指定环境变量对象，他会自动搜索系统属性(System.getProperty),applet和jndi.properties来个demo//创建环境变量对象Hashta...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-04-21
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/04/19/unser/" title="Java反序列化链二周目 ">
         
         Java反序列化链二周目
@@ -635,59 +695,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/03/25/Servlet/" title="Java内存马之Servlet内存马 ">
-        
-        Java内存马之Servlet内存马
-        
-      </a>
-      <div class="post-description">
-        
-        前言前面学习完了Filter内存马，现在来学习Servlet内存马，其实两者本质上区别并不大，如果学习过之前的Filter内存马，学习这个Servlet内存马其实是类似的。正文这里为了方便师傅们理解，我随便写了个demoTestServlet.javaimportjavax.servlet.*;importjavax.servlet.annotation.WebServlet;importjava.io.IOException;publicclassTestServletimplementsServlet&amp;#123;@Overridepublicvoidinit(ServletConfigservletConfig)throwsServletException&amp;#123;&amp;#125;@OverridepublicServletConfiggetServletConfig()&amp;#123;returnnull;&amp;#125;@Overridepublicvoidservice(ServletRequestservletRequest,ServletResponseservletResp...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-03-25
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
-            内存马
           </a>
           
           

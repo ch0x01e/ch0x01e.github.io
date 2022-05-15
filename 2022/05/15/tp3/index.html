@@ -1,0 +1,478 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+     
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<title>从0到1学习ThinkPHP3.2.3 | ch1e的随笔</title>
+<meta name="author" content="ch1e">
+<meta name="copyright" content="ch1e">
+
+<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.ico"> 
+
+
+    <meta name="keywords" content="web安全,代码审计,渗透测试">
+
+
+
+     
+    <meta name="description" content="前言摆了好几天，java暂时没有啥方向，感觉比较迷茫，出了两天的CTF题，感觉还是得补补php这块 目录结构初始的ThinkPHP结构如下，Application和Public目录都是空的，Application目录默认是空的，但是第一次访问入口文件会自动生成，参考后面的入口文件部分。 123456www  WEB部署目录（或者子目录）├─index.php       入口文件├─README.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从0到1学习ThinkPHP3.2.3">
+<meta property="og:url" content="https://ch1e.cn/2022/05/15/tp3/">
+<meta property="og:site_name" content="ch1e的随笔">
+<meta property="og:description" content="前言摆了好几天，java暂时没有啥方向，感觉比较迷茫，出了两天的CTF题，感觉还是得补补php这块 目录结构初始的ThinkPHP结构如下，Application和Public目录都是空的，Application目录默认是空的，但是第一次访问入口文件会自动生成，参考后面的入口文件部分。 123456www  WEB部署目录（或者子目录）├─index.php       入口文件├─README.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+<meta property="article:published_time" content="2022-05-15T13:35:15.049Z">
+<meta property="article:modified_time" content="2022-05-15T15:41:30.256Z">
+<meta property="article:author" content="ch1e">
+<meta property="article:tag" content="web安全">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+ 
+
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<link href="//cdn.jsdelivr.net" rel="preconnect">
+<link href="https://ch1e.cn" rel="prefetch">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css " rel="stylesheet">
+<link href="/css/main.css " rel="stylesheet">
+<script src="/js/utlis.js"></script>
+ 
+    
+ 
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+     
+    
+ 
+     
+
+<script>
+    var $config = {
+        tocStyle: "visible",
+        CDN:{
+            fancyboxJs: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js",
+            fancyboxCss: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
+        },
+        
+        
+    }
+</script>
+    
+
+
+
+
+  
+
+
+    <div id="body-wrap">
+        <nav id="nav-wrap">
+  <div class="navbar">
+    <div class="bar">
+      <a href="/" class="title">ch1e的随笔</a>
+
+      
+      <ul class="menu">
+         
+        <li><a href="/">首页</a></li>
+          
+        <li>
+          <a class="menu-child-hover" href="javascript:void(0);">找文章</a>
+          <ul class="menu-child">
+            
+            <li><a href='/tags'>标签</a></li>
+            
+            <li><a href='/archives'>归档</a></li>
+            
+          </ul>
+        </li>
+          
+        <li><a href="/link">友情链接</a></li>
+         
+      </ul>
+      <i class="fas fa-bars open-nav"></i>
+    </div>
+  </div>
+  <div id="mobile-nav">
+    <ul>
+       
+      <li><a href="/">首页</a></li>
+         
+      <li><a href='/tags'>标签</a></li>
+      
+      <li><a href='/archives'>归档</a></li>
+         
+      <li><a href="/link">友情链接</a></li>
+       
+    </ul>
+  </div>
+</nav>
+
+
+        <main id="main">
+            
+
+<article id="post">
+  <div class="post-info">
+    <div class="post-title">
+      <h1>从0到1学习ThinkPHP3.2.3</h1>
+    </div>
+    <div class="post-meta">
+      <div class="post-date">
+        <i class="far fa-calendar-alt fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          发表于
+            2022-05-15 |
+        </span>
+        
+        <i class="fas fa-history fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          更新于
+            2022-05-15
+        </span>
+      </div>
+      <div class="post-meta-wordcount">
+        <i class="far fa-file-word fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">总字数:</span>
+        <span class="word-count">2k | </span>
+        <i class="far fa-clock fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">阅读时长:</span>
+        <span>8分钟</span>
+        
+      </div>
+    </div>
+  </div>
+  <div class="post-content">
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>摆了好几天，java暂时没有啥方向，感觉比较迷茫，出了两天的CTF题，感觉还是得补补php这块</p>
+<h1 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h1><p>初始的ThinkPHP结构如下，Application和Public目录都是空的，Application目录默认是空的，但是第一次访问入口文件会自动生成，参考后面的入口文件部分。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">www  WEB部署目录（或者子目录）</span><br><span class="line">├─index.php       入口文件</span><br><span class="line">├─README.md       README文件</span><br><span class="line">├─Application     应用目录</span><br><span class="line">├─Public          资源文件目录</span><br><span class="line">└─ThinkPHP        框架目录</span><br></pre></td></tr></table></figure>
+
+<p>框架目录ThinkPHP的结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">├─ThinkPHP 框架系统目录（可以部署在非web目录下面）</span><br><span class="line">│  ├─Common       核心公共函数目录</span><br><span class="line">│  ├─Conf         核心配置目录 </span><br><span class="line">│  ├─Lang         核心语言包目录</span><br><span class="line">│  ├─Library      框架类库目录</span><br><span class="line">│  │  ├─Think     核心Think类库包目录</span><br><span class="line">│  │  ├─Behavior  行为类库目录</span><br><span class="line">│  │  ├─Org       Org类库包目录</span><br><span class="line">│  │  ├─Vendor    第三方类库目录</span><br><span class="line">│  │  ├─ ...      更多类库目录</span><br><span class="line">│  ├─Mode         框架应用模式目录</span><br><span class="line">│  ├─Tpl          系统模板目录</span><br><span class="line">│  ├─LICENSE.txt  框架授权协议文件</span><br><span class="line">│  ├─logo.png     框架LOGO文件</span><br><span class="line">│  ├─README.txt   框架README文件</span><br><span class="line">│  └─ThinkPHP.php 框架入口文件</span><br></pre></td></tr></table></figure>
+
+<h1 id="入口文件"><a href="#入口文件" class="headerlink" title="入口文件"></a>入口文件</h1><p>默认入口文件如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">// +----------------------------------------------------------------------</span></span><br><span class="line"><span class="comment">// | ThinkPHP [ WE CAN DO IT JUST THINK ]</span></span><br><span class="line"><span class="comment">// +----------------------------------------------------------------------</span></span><br><span class="line"><span class="comment">// | Copyright (c) 2006-2014 http://thinkphp.cn All rights reserved.</span></span><br><span class="line"><span class="comment">// +----------------------------------------------------------------------</span></span><br><span class="line"><span class="comment">// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )</span></span><br><span class="line"><span class="comment">// +----------------------------------------------------------------------</span></span><br><span class="line"><span class="comment">// | Author: liu21st &lt;liu21st@gmail.com&gt;</span></span><br><span class="line"><span class="comment">// +----------------------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 应用入口文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 检测PHP环境</span></span><br><span class="line"><span class="keyword">if</span>(version_compare(PHP_VERSION,<span class="string">&#x27;5.3.0&#x27;</span>,<span class="string">&#x27;&lt;&#x27;</span>))  <span class="keyword">die</span>(<span class="string">&#x27;require PHP &gt; 5.3.0 !&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 开启调试模式 建议开发阶段开启 部署阶段注释或者设为false</span></span><br><span class="line">define(<span class="string">&#x27;APP_DEBUG&#x27;</span>,<span class="literal">True</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义应用目录</span></span><br><span class="line">define(<span class="string">&#x27;APP_PATH&#x27;</span>,<span class="string">&#x27;./Application/&#x27;</span>);</span><br><span class="line"><span class="comment">//添加Admin模块</span></span><br><span class="line">define(<span class="string">&#x27;BIND_MODULE&#x27;</span>,<span class="string">&#x27;Admin&#x27;</span>);</span><br><span class="line"><span class="comment">// 引入ThinkPHP入口文件</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">&#x27;./ThinkPHP/ThinkPHP.php&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>ThinkPHP采用单一入口模式，一个应用都有一个统一的入口，主要完成如下功能</p>
+<ul>
+<li>定义框架路径、项目路径（可选）</li>
+<li>定义调试模式和应用模式（可选）</li>
+<li>定义系统相关常量（可选）</li>
+<li>载入框架入口文件（必须）</li>
+</ul>
+<h1 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h1><p>ThinkPHP采用MVC架构，下面是一个应用目录下的模块结构</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Application      默认应用目录（可以设置）</span><br><span class="line">├─Common         公共模块（不能直接访问）</span><br><span class="line">├─Home           前台模块</span><br><span class="line">├─Admin          后台模块</span><br><span class="line">├─...            其他更多模块</span><br><span class="line">├─Runtime        默认运行时目录（可以设置）</span><br></pre></td></tr></table></figure>
+
+<p>每个模块的结构分别如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">├─Module         模块目录</span><br><span class="line">│  ├─Conf        配置文件目录</span><br><span class="line">│  ├─Common      公共函数目录</span><br><span class="line">│  ├─Controller  控制器目录</span><br><span class="line">│  ├─Model       模型目录</span><br><span class="line">│  ├─Logic       逻辑目录（可选）</span><br><span class="line">│  ├─Service     Service目录（可选）</span><br><span class="line">│  ... 更多分层目录可选</span><br><span class="line">│  └─View        视图目录</span><br></pre></td></tr></table></figure>
+
+<h2 id="公共模块"><a href="#公共模块" class="headerlink" title="公共模块"></a>公共模块</h2><p>Common模块是公共模块，不可以直接访问，访问所有模块前都会先加载公共模块下的配置文件(Conf/config.php)和公共函数文件(Common/function.php)。公共模块可以通过COMMON_PATH常量改变，可在入口文件重新定义COMMON_PATH</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="string">&#x27;COMMON_PATH&#x27;</span>,<span class="string">&#x27;./Common/&#x27;</span>);</span><br><span class="line">define(<span class="string">&#x27;APP_PATH&#x27;</span>,<span class="string">&#x27;./Application/&#x27;</span>);</span><br><span class="line"><span class="keyword">require</span> <span class="string">&#x27;./ThinkPHP/ThinkPHP.php&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="自动生成模块目录"><a href="#自动生成模块目录" class="headerlink" title="自动生成模块目录"></a>自动生成模块目录</h2><p>比如生成一个Admin模块，在应用入口文件处定义</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 绑定Admin模块到当前入口文件</span></span><br><span class="line">define(<span class="string">&#x27;BIND_MODULE&#x27;</span>,<span class="string">&#x27;Admin&#x27;</span>);</span><br><span class="line">define(<span class="string">&#x27;APP_PATH&#x27;</span>,<span class="string">&#x27;./Application/&#x27;</span>);</span><br><span class="line"><span class="keyword">require</span> <span class="string">&#x27;./ThinkPHP/ThinkPHP.php&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>然后访问<a target="_blank" rel="noopener" href="http://localhost/index.php%EF%BC%8C%E5%B0%B1%E4%BC%9A%E7%94%9F%E6%88%90Admin%E6%A8%A1%E5%9D%97%E7%9A%84%E7%9B%AE%E5%BD%95%EF%BC%8C%E5%B9%B6%E4%B8%94%E7%94%9F%E6%88%90%E4%B8%80%E4%B8%AA%E9%BB%98%E8%AE%A4%E7%9A%84%E6%8E%A7%E5%88%B6%E5%99%A8%E7%B1%BBAdmin/Controller/IndexController,%E5%A6%82%E6%9E%9C%E9%9C%80%E8%A6%81%E6%9B%B4%E5%A4%9A%E7%9A%84%E6%8E%A7%E5%88%B6%E5%99%A8%EF%BC%8C%E5%8F%AF%E4%BB%A5%E5%AE%9A%E4%B9%89%60BUILD_CONTROLLER_LIST%60%E5%B8%B8%E9%87%8F">http://localhost/index.php，就会生成Admin模块的目录，并且生成一个默认的控制器类Admin\Controller\IndexController,如果需要更多的控制器，可以定义`BUILD_CONTROLLER_LIST`常量</a></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 绑定Admin模块到当前入口文件</span></span><br><span class="line">define(<span class="string">&#x27;BIND_MODULE&#x27;</span>,<span class="string">&#x27;Admin&#x27;</span>);</span><br><span class="line">define(<span class="string">&#x27;BUILD_CONTROLLER_LIST&#x27;</span>,<span class="string">&#x27;Index,User,Menu&#x27;</span>);</span><br><span class="line">define(<span class="string">&#x27;APP_PATH&#x27;</span>,<span class="string">&#x27;./Application/&#x27;</span>);</span><br><span class="line"><span class="keyword">require</span> <span class="string">&#x27;./ThinkPHP/ThinkPHP.php&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>访问后会自动生成三个控制器类，默认继承Think\Controller</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Admin\Controller\IndexController</span><br><span class="line">Admin\Controller\UserController</span><br><span class="line">Admin\Controller\MenuController</span><br></pre></td></tr></table></figure>
+
+<p>也可以手动调用Think\Build类的方法来生成控制器类</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 生成Admin模块的Role控制器类</span></span><br><span class="line"><span class="comment">// 默认类库为Admin\Controller\RoleController</span></span><br><span class="line"><span class="comment">// 如果已经存在则不会重新生成</span></span><br><span class="line">\Think\Build::buildController(<span class="string">&#x27;Admin&#x27;</span>,<span class="string">&#x27;Role&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="多入口设计"><a href="#多入口设计" class="headerlink" title="多入口设计"></a>多入口设计</h2><p>除了单入口外，可以给相同的应用以及模块设置多个入口，不同的入口文件可以设置不同的应用模块或者绑定模块。</p>
+<p>Example:比如在index.php同目录下新建个admin.php，绑定Admin模块</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 绑定Admin模块到当前入口文件</span></span><br><span class="line">define(<span class="string">&#x27;BIND_MODULE&#x27;</span>,<span class="string">&#x27;Admin&#x27;</span>);</span><br><span class="line">define(<span class="string">&#x27;APP_PATH&#x27;</span>,<span class="string">&#x27;./Application/&#x27;</span>);</span><br><span class="line"><span class="keyword">require</span> <span class="string">&#x27;./ThinkPHP/ThinkPHP.php&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>绑定后，访问Admin模块下的Index控制器的Index方法就如下访问</p>
+<p><a target="_blank" rel="noopener" href="http://tp3.com/admin.php/index%EF%BC%8C%E5%9B%A0%E4%B8%BA%E4%BB%96%E7%BB%91%E5%AE%9A%E4%BA%86Admin%E6%A8%A1%E5%9D%97%EF%BC%8C%E6%89%80%E4%BB%A5%E8%BF%99%E9%87%8C%E5%8F%AA%E9%9C%80%E8%A6%81%E8%BE%93%E5%85%A5%E6%8E%A7%E5%88%B6%E5%99%A8%E5%92%8C%E6%96%B9%E6%B3%95(%E6%88%91%E7%8C%9C%E7%9A%84,%E5%9B%A0%E4%B8%BA%E8%AE%BF%E9%97%AEhttp://tp3.com/admin.php/Admin/Index/index%E6%8F%90%E7%A4%BAAdmin%E6%8E%A7%E5%88%B6%E5%99%A8%E4%B8%8D%E5%AD%98%E5%9C%A8)%E3%80%82%E5%90%8C%E6%A0%B7%EF%BC%8C%E6%88%91%E4%BB%AC%E4%B9%9F%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E5%9C%A8%E5%85%A5%E5%8F%A3%E6%96%87%E4%BB%B6%E7%BB%91%E5%AE%9A%E6%8E%A7%E5%88%B6%E5%99%A8%EF%BC%8C%E9%82%A3%E6%A0%B7%E5%8F%AA%E9%9C%80%E8%A6%81%E8%AE%BF%E9%97%AEhttp://tp3.com/admin.php/index%E3%80%82">http://tp3.com/admin.php/index，因为他绑定了Admin模块，所以这里只需要输入控制器和方法(我猜的,因为访问http://tp3.com/admin.php/Admin/Index/index提示Admin控制器不存在)。同样，我们也可以直接在入口文件绑定控制器，那样只需要访问http://tp3.com/admin.php/index。</a></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="string">&#x27;BIND_MODULE&#x27;</span>, <span class="string">&#x27;Admin&#x27;</span>); <span class="comment">// 绑定Admin模块到当前入口文件</span></span><br><span class="line">define(<span class="string">&#x27;BIND_CONTROLLER&#x27;</span>,<span class="string">&#x27;Index&#x27;</span>); <span class="comment">// 绑定Index控制器到当前入口文件</span></span><br><span class="line">define(<span class="string">&#x27;APP_PATH&#x27;</span>,<span class="string">&#x27;./Application/&#x27;</span>);</span><br><span class="line"><span class="keyword">require</span> <span class="string">&#x27;./ThinkPHP/ThinkPHP.php&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="控制器"><a href="#控制器" class="headerlink" title="控制器"></a>控制器</h1><p>默认情况下，自带Common和Home模块，在Home目录的Controller目录下可以看到一个IndexController.class.php文件，这是默认的index控制器文件，命名方式是驼峰命名的类名+Controller.class.php，来个控制器的Demo</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Home</span>\<span class="title">Controller</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Think</span>\<span class="title">Controller</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;ch1e&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>namespacec是命名空间，每个控制器开头需要命名空间定义，表示当前类是Home模块下的控制器，他和文件的路径是一致的，如果模块名更改，命名空间也需要更改，<code>use Think\Controller</code>表示引入Think\Controller类库直接使用</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Think</span>\<span class="title">Controller</span></span><br><span class="line"><span class="title">class</span> <span class="title">TestController</span> <span class="title">extends</span> <span class="title">Controller</span>&#123;&#125;</span><br><span class="line">等同于</span><br><span class="line"><span class="title">class</span> <span class="title">TestController</span> <span class="title">extends</span> \<span class="title">Think</span>\<span class="title">Controller</span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>按照thinkphp方式去访问,就应该是<a target="_blank" rel="noopener" href="http://localhost/indedx.php/Home/Test/index">http://localhost/indedx.php/Home/Test/index</a>  这里又分为四种模式，规则如下</p>
+<p>PATHINFO模式<br><a target="_blank" rel="noopener" href="http://localhost/index.php/Home/Index/index/name/123/">http://localhost/index.php/Home/Index/index/name/123/</a><br>普通模式<br><a target="_blank" rel="noopener" href="http://localhost/index.php?m=Home&amp;c=Index&amp;f=index&amp;name=123">http://localhost/index.php?m=Home&amp;c=Index&amp;f=index&amp;name=123</a><br>兼容模式<br><a target="_blank" rel="noopener" href="http://localhost/index.php?s=Home/Index/index/name/123">http://localhost/index.php?s=Home/Index/index/name/123</a><br>其中参数s来自于ThinkPHP-&gt;Conf-&gt;convention.php中的VAR_PATH_INFO设置,所以我们也可以改成其他的参数。<br>REWRITE模式<br><a target="_blank" rel="noopener" href="http://localhost/Home/Index/index/name/123/">http://localhost/Home/Index/index/name/123/</a></p>
+<h1 id="多层MVC"><a href="#多层MVC" class="headerlink" title="多层MVC"></a>多层MVC</h1><h2 id="Model层"><a href="#Model层" class="headerlink" title="Model层"></a>Model层</h2><p>MVC即Model-View-Controller，学过Spring的师傅都知道，其中Model又分为三层，逻辑层数据层服务层，这三个模型操作类统一继承Model类即可</p>
+<p>数据层:Home/Model/UserModel.class.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">Home</span>\<span class="title">Model</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Think</span>\<span class="title">Model</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserModel</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>逻辑层:Home/Model/UserLogic.class.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">Home</span>\<span class="title">Logic</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Think</span>\<span class="title">Model</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserLogic</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>服务层:Home/Model/UserService.class.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">Home</span>\<span class="title">Service</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Think</span>\<span class="title">Model</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserService</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在调用的时候只需要使用D方法即可</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">D(<span class="string">&#x27;User&#x27;</span>) <span class="comment">//实例化UserModel</span></span><br><span class="line">D(<span class="string">&#x27;User&#x27;</span>,<span class="string">&#x27;Logic&#x27;</span>) <span class="comment">//实例化UserLogic</span></span><br><span class="line">D(<span class="string">&#x27;User&#x27;</span>,<span class="string">&#x27;Service&#x27;</span>) <span class="comment">//实例化UserService</span></span><br></pre></td></tr></table></figure>
+
+<p>此时默认的模型层是Model，所以在实例化UserModel的时候只需要<code>D(&#39;User&#39;)</code>，可以通过更改<code>DEFAULT_M_LAYER</code>常量,<code>DEFAULT_M_LAYER=&gt;&#39;Logic&#39;</code>，实例化的时候就变成了</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">D(<span class="string">&#x27;User&#x27;</span>) <span class="comment">//实例化UserLogic</span></span><br><span class="line">D(<span class="string">&#x27;User&#x27;</span>,<span class="string">&#x27;Model&#x27;</span>) <span class="comment">//实例化UserModel</span></span><br><span class="line">D(<span class="string">&#x27;User&#x27;</span>,<span class="string">&#x27;Service&#x27;</span>) <span class="comment">//实例化UserService</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Controller层"><a href="#Controller层" class="headerlink" title="Controller层"></a>Controller层</h2><p>ThinkPHP的控制器层由<strong>核心控制器</strong>和<strong>业务控制器</strong>组成，核心控制器由系统内部的App类完成，负责应用（包括模块、控制器和操作）的调度控制，包括HTTP请求拦截和转发、加载配置等。业务控制器则由用户定义的控制器类完成。多层业务控制器的实现原理和模型的分层类似，例如业务控制器和事件控制器：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Controller/UserController //用于用户的业务逻辑控制和调度</span><br><span class="line">Event/UserEvent //用于用户的事件响应操作</span><br></pre></td></tr></table></figure>
+
+<p>访问控制器:Home/Controller/UserController.class.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">Home</span>\<span class="title">Controller</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Think</span>\<span class="title">Controller</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>事件控制器:Home/Event/UserEvent.class.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">Home</span>\<span class="title">Event</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Think</span>\<span class="title">Controller</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserEvent</span> <span class="keyword">extends</span> <span class="title">Controller</span></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>UserController负责外部交互响应，通过URL请求响应，例如 <code>http://serverName/User/index</code>,而 <code>UserEvent</code>负责内部的事件响应，并且只能在内部调用：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A(<span class="string">&#x27;User&#x27;</span>,<span class="string">&#x27;Event&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>控制器和Model一样，也是可以通过修改<code>DEFAULT_C_LAYER=&gt;&#39;Event&#39;</code>来设置默认的控制器</p>
+
+  </div>
+   
+   
+
+  
+  <div class="post-copyright">
+    <div class="post-copyright-icon"></div>
+      <div class="post-copyright-author">
+          <span class="post-copyright-meta">文章作者: </span>
+            <span class="post-copyright-info">
+              <a href="mailto:1444440144@qq.com" >ch1e</a>
+            </span>
+      </div>
+      <div class="post-copyright-type">
+          <span class="post-copyright-meta">文章链接: </span>
+            <span class="post-copyright-info">
+              <a href="https://ch1e.cn/2022/05/15/tp3/" >https://ch1e.cn/2022/05/15/tp3/</a>
+            </span>
+      </div><div class="post-copyright-notice">
+          <span class="post-copyright-meta">版权声明: </span>
+            <span class="post-copyright-info">本博客所有文章除特别声明外，均采用
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/ " target="_blank" >
+                  CC BY-NC-SA 4.0 </a> 许可协议。转载请注明来自
+              <a href="https://ch1e.cn/2022/05/15/tp3/" target="_blank" >ch1e</a>
+              ！</span>
+      </div>
+  </div>
+  
+
+
+ 
+
+  
+    <div class="post-tag">
+        <span>
+            <i class="fa fa-tag"></i>
+             
+            <a href="tags/web安全/"><span>web安全</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/代码审计/"><span>代码审计</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/渗透测试/"><span>渗透测试</span></a>
+                
+            
+        </span>
+    </div>
+  
+
+
+
+
+<div class="pagination-post">
+    
+    
+    <a href="/2022/05/08/fastjsonMemory/">
+      <div class="next-title">Fastjson反序列化注入内存马<i class="fas fa-chevron-right"></i></div>
+      <div class="next-desc">前言学习完shiro反序列化注入内存马后，来学习一下创建的fastjson吧，fastjson和shiro不一样，fastjson是我自己打成功以后才写的文章，shiro确实是本地环境应该有问题...</div>
+    </a>
+    
+</div>
+
+</article>
+ 
+
+
+  <div id="toc-wrap">
+    <div id="toc">
+      <div class="toc-title">
+        <div>
+          目录
+            <span class="num">0%</span>
+        </div>
+        <progress class="progress" value="0" max="100"></progress>
+      </div>
+      <div class="toc-list">
+         
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-text">目录结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%A5%E5%8F%A3%E6%96%87%E4%BB%B6"><span class="toc-text">入口文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97"><span class="toc-text">模块</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AC%E5%85%B1%E6%A8%A1%E5%9D%97"><span class="toc-text">公共模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E6%A8%A1%E5%9D%97%E7%9B%AE%E5%BD%95"><span class="toc-text">自动生成模块目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E5%85%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1"><span class="toc-text">多入口设计</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E5%99%A8"><span class="toc-text">控制器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%9A%E5%B1%82MVC"><span class="toc-text">多层MVC</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Model%E5%B1%82"><span class="toc-text">Model层</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Controller%E5%B1%82"><span class="toc-text">Controller层</span></a></li></ol></li></ol>
+      </div>
+    </div>
+  </div>
+
+
+        </main>
+        <section id="rightside">
+    
+    <div class="rightside-item">
+        
+        
+         
+        
+        
+            <a id="open-toc" title="目录">
+                <i class="fas fa-list-ul"></i>
+            </a>
+        
+         
+         
+        <a href="javascript:(0)" id="darkmode" title="深色/浅色 ">
+            <i class="fas fa-moon"></i>
+        </a>
+         
+        
+        <a href="#" title="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+         
+
+<footer class="footer" id="footer">
+    <div class="copyright">
+      &copy; 2020 - 2022
+        <i class="fas fa-fan"></i>
+        ch1e
+    </div>
+    <div class="framework-info">
+        <span>框架 </span>
+        <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="footer-separator">|</span>
+        <span>主题 </span>
+        <a href="https://github.com/lete114/hexo-theme-MengD" target="_blank">MengD.(萌典) </a>
+    </div>
+    
+    <div class="custom-text">我相信我可以，但我一直在路上，所以我有无限的可能！！</div>
+</footer>
+    </div>
+    <div id="mask" onclick="closeAll()"></div>
+    
+    <div class="script">
+        <script src="/js/main.js"></script>
+        
+
+
+<script src="/js/lazyload.js"></script>
+
+
+    
+
+
+        
+    <script>
+        getScript('https://cdn.jsdelivr.net/npm/pjax/pjax.min.js',LoadPjax)
+        function LoadPjax() {
+            var pjax = new Pjax({
+                selectors: [
+                    'head title',
+                    'head meta[name="keywords"]',
+                    'head meta[name="description"]',
+                    'main',
+                    '#rightside'
+                ],
+                cache: true,
+                cacheBust: false
+            });
+        }
+
+        // 清除时间
+        var timer = null;
+        // 执行进度条
+        function ProgressStart() {
+            // 设置初始进度
+            var progress = 10;
+            // 创建进度条 及 css样式
+            var div = document.createElement('div');
+            div.className = 'pjax-progress';
+            document.body.prepend(div);
+            // 定义随机数最大值最小值
+            var max = 10, mini = 3;
+            var result = max - mini;
+            // 清除
+            clearInterval(timer);
+            // 0.5秒内累加进度
+            timer = setInterval(function () {
+                // 随机数
+                var num = parseInt(Math.random() * result);
+                var randomResult = num + mini;
+                // 累加
+                progress += randomResult
+                document.getElementsByClassName('pjax-progress')[0].style.width = progress + '%';
+                // 当进度达到95%时停止
+                if (progress > 95) progress = 95
+            }, 500)
+        }
+        // 加载进度条加载完毕
+        function ProgressFinish() {
+            clearInterval(timer);
+            // 页面加载完毕后进度100% 并在0.7秒后删除
+            var progress = document.getElementsByClassName('pjax-progress');
+            progress[0].style.width = '100%';
+            timer = setTimeout(function () {
+                progress[0].parentNode.removeChild(progress[0])
+            }, 700);
+        }
+
+        // 开始 PJAX 执行的函数
+        document.addEventListener('pjax:send', function () {
+            // 执行进度条
+            ProgressStart()
+        });
+        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+        document.addEventListener('pjax:complete', function () {
+
+            // 加载进度条加载完毕
+            ProgressFinish()
+            // 执行所有方法
+            exeAllFn()
+
+            
+                // 图片懒加载
+                ImgLazyLoad('body img[data-img]', 'data-img')
+            
+
+
+            document.querySelectorAll('script[data-pjax]').forEach(item => {
+                const newScript = document.createElement('script')
+                const content = item.text || item.textContent || item.innerHTML || ''
+                Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+                newScript.appendChild(document.createTextNode(content))
+                item.parentNode.replaceChild(newScript, item)
+            })
+        });
+
+        // Pjax请求错误时，跳转到404页面
+        document.addEventListener('pjax:error', (err) => {
+            if (err.request.status === 404) {
+                pjax.loadUrl('/404.html')
+            }
+        })
+    </script>
+
+    </div>
+</body>
+
+</html>
