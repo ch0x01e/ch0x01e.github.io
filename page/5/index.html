@@ -137,6 +137,59 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2021/08/07/bluecms/" title="BlueCMS代码审计 ">
+        
+        BlueCMS代码审计
+        
+      </a>
+      <div class="post-description">
+        
+        Bluecms代码审计Bluecms代码审计之union联合查询注入先把我们的源码下载好，并且搭建好打开我们的Seay源代码审计系统，把源码丢进去自动审计一下我们可以看到这里第一条就是可能存在SQL注入的地方，点进去看看我们可以继续跟踪一下这个函数，函数代码如下functiondeep_addslashes($str)&amp;#123;if(is_array($str))&amp;#123;foreach($stras$key=&amp;gt;$val)&amp;#123;$str[$key]=deep_addslashes($val);&amp;#125;&amp;#125;else&amp;#123;$str=addslashes($str);&amp;#125;return$str;&amp;#125;这函数定义的大概意思就是如果传进来的参数是数组，每个过滤一下，如果不是，就直接对传进来的参数先经过一下addslashes这个函数，也就是对某些特殊字符进行转义我们继续回到漏洞可能存在的ad_js.php进行分析这里判断了是否有传入ad_id参数，如果传入了先对他使用一下trim函数，否则为空如果不为空，执行如下的语句$ad=$db-&amp;gt;g...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2021-08-07
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2021/07/07/xhcms/" title="熊海CMS1.0代码审计 ">
         
         熊海CMS1.0代码审计
