@@ -7,32 +7,32 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
-<title>Java代码审计练习(二) | ch1e的随笔</title>
+<title>重生之我在刷Secure Code Warrior | ch1e的随笔</title>
 <meta name="author" content="ch1e">
 <meta name="copyright" content="ch1e">
 
 <link rel="shortcut icon" href="https://ch1e.cn/img/favicon.ico"> 
 
 
-    <meta name="keywords" content="web安全,代码审计,渗透测试">
+    <meta name="keywords" content="web安全,代码审计,Java安全">
 
 
 
      
-    <meta name="description" content="前言看了好几天RMI，今天看的时候好像在分析源码的时候出问题了，好像分析错了，分析了一天心态崩了，继续来搞个审计练练手吧 SQL注入老样子还是先挖SQL注入吧，因为这个现在来说比较简单，只要找到没有预编译的地方，然后拿去跑sqlmap即可 注入点一还是老方法，对mapper.xml文件搜索${,找到对应的控制器，对应的baseKey可能存在注入  对应的控制器如下，刚刚说到，baseKey参数可能">
+    <meta name="description" content="前言这两天好大哥ssn推荐我了这个Secure Code Warrior，就学习了几天，发现他是真不错，接下来就写个刷题记录吧 题一漏洞类别  注入缺陷 - SQL 注入  解题思路SQL注入的审计，直接去看dao层的实现类即可，就是XXXDaoImpl，这里我发现他代码中有如下方法 123456789101112public Integer countLoginAttempt(String pa">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java代码审计练习(二)">
-<meta property="og:url" content="https://ch1e.cn/2022/04/16/oashenji/">
+<meta property="og:title" content="重生之我在刷Secure Code Warrior">
+<meta property="og:url" content="https://ch1e.cn/2022/05/21/Secure_Code_Warrior/">
 <meta property="og:site_name" content="ch1e的随笔">
-<meta property="og:description" content="前言看了好几天RMI，今天看的时候好像在分析源码的时候出问题了，好像分析错了，分析了一天心态崩了，继续来搞个审计练练手吧 SQL注入老样子还是先挖SQL注入吧，因为这个现在来说比较简单，只要找到没有预编译的地方，然后拿去跑sqlmap即可 注入点一还是老方法，对mapper.xml文件搜索${,找到对应的控制器，对应的baseKey可能存在注入  对应的控制器如下，刚刚说到，baseKey参数可能">
+<meta property="og:description" content="前言这两天好大哥ssn推荐我了这个Secure Code Warrior，就学习了几天，发现他是真不错，接下来就写个刷题记录吧 题一漏洞类别  注入缺陷 - SQL 注入  解题思路SQL注入的审计，直接去看dao层的实现类即可，就是XXXDaoImpl，这里我发现他代码中有如下方法 123456789101112public Integer countLoginAttempt(String pa">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
-<meta property="article:published_time" content="2022-04-16T12:06:45.539Z">
-<meta property="article:modified_time" content="2022-04-17T07:03:53.091Z">
+<meta property="article:published_time" content="2022-05-21T05:35:50.706Z">
+<meta property="article:modified_time" content="2022-05-21T14:34:50.666Z">
 <meta property="article:author" content="ch1e">
 <meta property="article:tag" content="web安全">
 <meta property="article:tag" content="代码审计">
-<meta property="article:tag" content="渗透测试">
+<meta property="article:tag" content="Java安全">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
  
@@ -124,14 +124,14 @@
 <article id="post">
   <div class="post-info">
     <div class="post-title">
-      <h1>Java代码审计练习(二)</h1>
+      <h1>重生之我在刷Secure Code Warrior</h1>
     </div>
     <div class="post-meta">
       <div class="post-date">
         <i class="far fa-calendar-alt fa-fw post-meta-icon"></i>
         <span class="post-meta-label">
           发表于
-            2022-04-16 |
+            2022-05-21 |
         </span>
         
         <i class="fas fa-history fa-fw post-meta-icon"></i>
@@ -143,7 +143,7 @@
       <div class="post-meta-wordcount">
         <i class="far fa-file-word fa-fw post-meta-icon"></i>
         <span class="post-meta-label">总字数:</span>
-        <span class="word-count">505 | </span>
+        <span class="word-count">336 | </span>
         <i class="far fa-clock fa-fw post-meta-icon"></i>
         <span class="post-meta-label">阅读时长:</span>
         <span>1分钟</span>
@@ -152,31 +152,19 @@
     </div>
   </div>
   <div class="post-content">
-    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>看了好几天RMI，今天看的时候好像在分析源码的时候出问题了，好像分析错了，分析了一天心态崩了，继续来搞个审计练练手吧</p>
-<h1 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h1><p>老样子还是先挖SQL注入吧，因为这个现在来说比较简单，只要找到没有预编译的地方，然后拿去跑sqlmap即可</p>
-<h2 id="注入点一"><a href="#注入点一" class="headerlink" title="注入点一"></a>注入点一</h2><p>还是老方法，对mapper.xml文件搜索${,找到对应的控制器，对应的baseKey可能存在注入</p>
-<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220416202830488.png" alt="image-20220416202830488"></p>
-<p>对应的控制器如下，刚刚说到，baseKey参数可能存在注入，但是除此之外还需要看他是否可控，这里明显看出参数可控，应该是存在注入的。</p>
-<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220416203032610.png" alt="image-20220416203032610"></p>
-<p>找到对应路径抓包，对baseKey这个参数跑sqlmap，结果如下</p>
-<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417131144360.png" alt="image-20220417131144360"></p>
-<h2 id="注入点二"><a href="#注入点二" class="headerlink" title="注入点二"></a>注入点二</h2><p>位于address-mapper.xml的如下位置</p>
-<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417132523084.png" alt="image-20220417132523084"></p>
-<p>大概流程和注入点一一样，就是判断是否预编译，然后判断是否存在注入，构造请求包跑sqlmap，直接上图</p>
-<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417132612168.png" alt="image-20220417132612168"></p>
-<h1 id="越权访问"><a href="#越权访问" class="headerlink" title="越权访问"></a>越权访问</h1><h2 id="越权访问别人文件夹"><a href="#越权访问别人文件夹" class="headerlink" title="越权访问别人文件夹"></a>越权访问别人文件夹</h2><p>位于文件管理处，对应控制器是FileController.java</p>
-<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417134822559.png" alt="image-20220417134822559"></p>
-<p>来看其text方法，他是进入指定文件夹的方法，这里是根据session里的userId查询当前用户，然后通过当前用户去找到用户根目录，然后通过传进来的pathid去查找当前目录，这里他可能缺少对一个当前用户以及pathid对应的目录的用户进行验证，所以这里可以导致当前用户可以读取别人的目录</p>
-<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417144006381.png" alt="image-20220417144006381"></p>
-<p>具体的pathid存在数据库当中<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417144431679.png" alt="image-20220417144431679"></p>
-<p>直接修改pathid即可</p>
-<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417144510353.png" alt="image-20220417144510353"></p>
-<h2 id="越权下载别人文件"><a href="#越权下载别人文件" class="headerlink" title="越权下载别人文件"></a>越权下载别人文件</h2><p>位于FilteController.java的downFile方法</p>
-<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417145349050.png" alt="image-20220417145349050"></p>
-<p>通过fileid去找对应文件的路径，然后下载，这里没有进行一个验证，导致可以越权下载别人的文件</p>
-<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220417145503361.png" alt="image-20220417145503361"></p>
-<p>其实这个FileController大部分都没做校验，越权的地方可能比较多，就不一一审计了</p>
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这两天好大哥ssn推荐我了这个Secure Code Warrior，就学习了几天，发现他是真不错，接下来就写个刷题记录吧</p>
+<h1 id="题一"><a href="#题一" class="headerlink" title="题一"></a>题一</h1><p>漏洞类别</p>
+<ul>
+<li>注入缺陷 - SQL 注入</li>
+</ul>
+<h2 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h2><p>SQL注入的审计，直接去看dao层的实现类即可，就是XXXDaoImpl，这里我发现他代码中有如下方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Integer <span class="title">countLoginAttempt</span><span class="params">(String param)</span> </span>&#123;</span><br><span class="line">    Date date = Date.from(Instant.now().minusSeconds(FIVE_MINUTES));</span><br><span class="line">    Query query = sessionFactory.getCurrentSession()</span><br><span class="line">            .createQuery(<span class="string">&quot;SELECT L FROM LoginAttemptEntity L &quot;</span> +</span><br><span class="line">                    <span class="string">&quot;LEFT JOIN L.user U ON U = L.user &quot;</span> +</span><br><span class="line">                    <span class="string">&quot;WHERE (U.email = &#x27;&quot;</span> + param  + <span class="string">&quot;&#x27; &quot;</span> +</span><br><span class="line">                    <span class="string">&quot;OR U.login = &#x27;&quot;</span> + param + <span class="string">&quot;&#x27;) &quot;</span> +</span><br><span class="line">                    <span class="string">&quot;AND L.date &gt; &#x27;&quot;</span> + date + <span class="string">&quot;&#x27;&quot;</span>,</span><br><span class="line">                    LoginAttemptEntity.class);</span><br><span class="line">    List result = query.getResultList();</span><br><span class="line">    <span class="keyword">return</span> result.size();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>这里就是使用了拼接，并且还有单引号，存在注入，提交即可</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>他其实给了四个解决方案，需要我们去选择，这里四个方案也很好选，三个方案依旧使用了拼接，所以直接选第四个就好了，具体代码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Integer <span class="title">countLoginAttempt</span><span class="params">(String param)</span> </span>&#123;</span><br><span class="line">    Date date = Date.from(Instant.now().minusSeconds(FIVE_MINUTES));</span><br><span class="line">    Query query = sessionFactory.getCurrentSession()</span><br><span class="line">            .createQuery(<span class="string">&quot;SELECT L FROM LoginAttemptEntity L &quot;</span> +</span><br><span class="line">                    <span class="string">&quot;LEFT JOIN L.user U ON U = L.user &quot;</span> +</span><br><span class="line">                    <span class="string">&quot;WHERE (U.email = &#x27;&quot;</span> + param  + <span class="string">&quot;&#x27; &quot;</span> +</span><br><span class="line">                    <span class="string">&quot;OR U.login = &#x27;&quot;</span> + param + <span class="string">&quot;&#x27;) &quot;</span> +</span><br><span class="line">                    <span class="string">&quot;AND L.date &gt; &#x27;&quot;</span> + date + <span class="string">&quot;&#x27;&quot;</span>,</span><br><span class="line">                    LoginAttemptEntity.class);</span><br><span class="line">    List result = query.getResultList();</span><br><span class="line">    <span class="keyword">return</span> result.size();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="题二"><a href="#题二" class="headerlink" title="题二"></a>题二</h1>
   </div>
    
    
@@ -193,14 +181,14 @@
       <div class="post-copyright-type">
           <span class="post-copyright-meta">文章链接: </span>
             <span class="post-copyright-info">
-              <a href="https://ch1e.cn/2022/04/16/oashenji/" >https://ch1e.cn/2022/04/16/oashenji/</a>
+              <a href="https://ch1e.cn/2022/05/21/Secure_Code_Warrior/" >https://ch1e.cn/2022/05/21/Secure_Code_Warrior/</a>
             </span>
       </div><div class="post-copyright-notice">
           <span class="post-copyright-meta">版权声明: </span>
             <span class="post-copyright-info">本博客所有文章除特别声明外，均采用
               <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/ " target="_blank" >
                   CC BY-NC-SA 4.0 </a> 许可协议。转载请注明来自
-              <a href="https://ch1e.cn/2022/04/16/oashenji/" target="_blank" >ch1e</a>
+              <a href="https://ch1e.cn/2022/05/21/Secure_Code_Warrior/" target="_blank" >ch1e</a>
               ！</span>
       </div>
   </div>
@@ -224,7 +212,7 @@
                     <i class="fas fa-angle-right"></i>
                 
              
-            <a href="tags/渗透测试/"><span>渗透测试</span></a>
+            <a href="tags/Java安全/"><span>Java安全</span></a>
                 
             
         </span>
@@ -236,16 +224,20 @@
 
 <div class="pagination-post">
     
-    <a href="/2022/04/18/JavaRMI3/">
-      <div class="prev-title"><i class="fas fa-chevron-left"></i>Java中JNDI,RMI,LDAP那些事(三)</div>
-      <div class="prev-desc">前言这篇来说说看RMI的具体攻击方式，我这里复现一种写一种吧
-攻击 Registry 端在使用Registry端的时候，Server会向Registry绑定一个对象，这个对象是Server生成的...</div>
+    <a href="/2022/05/22/jizhi/">
+      <div class="prev-title"><i class="fas fa-chevron-left"></i>极致CMS审计</div>
+      <div class="prev-desc">文件架构
+个人看了一下，Home是home模块的目录，A是admin模块的目录，cache是缓存目录，conf是一些配置文件，public是公共静态文件。
+FrPHP目录结构
+
+common 包...</div>
     </a>
     
     
-    <a href="/2022/04/14/dtdl/">
-      <div class="next-title">Java动态代理<i class="fas fa-chevron-right"></i></div>
-      <div class="next-desc">代理模式代理模式是常见的设计模式，Java我们通常通过new一个对象然后调用其对应的方法来访问我们需要的服务。代理模式则是通过创建代理类（proxy）的方式来访问服务，代理类通常会持有一个委托类...</div>
+    <a href="/2022/05/17/tp3unser/">
+      <div class="next-title">thinkphp3.2.3反序列化初探<i class="fas fa-chevron-right"></i></div>
+      <div class="next-desc">前言摆了好几天，好几个人老说我前言说摆烂，确实是在摆烂，前两天浅学了一下thinkphp3，今天来学学thinkphp3反序列化链构造
+反序列化链分析首先我们需要通过thinkphp来写一个反序...</div>
     </a>
     
 </div>
@@ -265,7 +257,7 @@
       </div>
       <div class="toc-list">
          
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5"><span class="toc-text">SQL注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E5%85%A5%E7%82%B9%E4%B8%80"><span class="toc-text">注入点一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E5%85%A5%E7%82%B9%E4%BA%8C"><span class="toc-text">注入点二</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B6%8A%E6%9D%83%E8%AE%BF%E9%97%AE"><span class="toc-text">越权访问</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B6%8A%E6%9D%83%E8%AE%BF%E9%97%AE%E5%88%AB%E4%BA%BA%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-text">越权访问别人文件夹</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B6%8A%E6%9D%83%E4%B8%8B%E8%BD%BD%E5%88%AB%E4%BA%BA%E6%96%87%E4%BB%B6"><span class="toc-text">越权下载别人文件</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%98%E4%B8%80"><span class="toc-text">题一</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%A2%98%E6%80%9D%E8%B7%AF"><span class="toc-text">解题思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%98%E4%BA%8C"><span class="toc-text">题二</span></a></li></ol>
       </div>
     </div>
   </div>

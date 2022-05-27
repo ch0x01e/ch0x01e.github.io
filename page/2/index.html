@@ -137,6 +137,112 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/04/26/lmx/" title="lmxcms代码审计(PHP) ">
+        
+        lmxcms代码审计(PHP)
+        
+      </a>
+      <div class="post-description">
+        
+        前言这几天小摸鱼，今天翻了一下，看到php的代码审计，兴致来了，从新学习一遍php的mvc代码审计，审计的是lmxcms，适合新手，采用的mvc架构前台SQL注入(留言板)位于留言板处，index.php?m=Book&amp;amp;a=index，对应的是Book控制器的index方法，寻找到Book控制器的index方法publicfunctionindex()&amp;#123;if(isset($_POST[&amp;#x27;setbook&amp;#x27;]))&amp;#123;//提交留言$data=$this-&amp;gt;checkData();if($this-&amp;gt;bookModel-&amp;gt;add($data))&amp;#123;$this-&amp;gt;setBookTime();//存储提交时间rewrite::succ($this-&amp;gt;l[&amp;#x27;book_ok&amp;#x27;]);&amp;#125;else&amp;#123;rewrite::error($this-&amp;gt;l[&amp;#x27;book_error&amp;#x27;]);&amp;#125;&amp;#125;//判断是否调用留言数据if($GLOBALS[&amp;#x2...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-04-26
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/04/24/tmall/" title="Java代码审计练习(三) ">
+        
+        Java代码审计练习(三)
+        
+      </a>
+      <div class="post-description">
+        
+        前言继续练习代码审计，今天是Tmall，一个商城系统吧文件上传位于ProductController.java中的uploadProductImage方法@ResponseBody@RequestMapping(value=&amp;quot;admin/uploadProductImage&amp;quot;,method=RequestMethod.POST,produces=&amp;quot;application/json;charset=utf-8&amp;quot;)publicStringuploadProductImage(@RequestParamMultipartFilefile,@RequestParamStringimageType,HttpSessionsession)&amp;#123;StringoriginalFileName=file.getOriginalFilename();logger.info(&amp;quot;获取图片原始文件名：&amp;#123;&amp;#125;&amp;quot;,originalFileName);Stringextension=originalFileName.substr...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-04-24
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/04/22/bypassJsp/" title="Jsp Webshell免杀 ">
         
         Jsp Webshell免杀
@@ -606,123 +712,10 @@
 
   </div>
   
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/04/13/JAVARCE/" title="Java下的命令执行方式 ">
-        
-        Java下的命令执行方式
-        
-      </a>
-      <div class="post-description">
-        
-        前言水文一篇，来整理一下一些学的Java的内容，怕以后忘Runtime类最常见的就是使用Runtime类的exec方法来进行命令执行了，下面随便写一个Runtime类的命令执行的demoimportjava.io.BufferedReader;importjava.io.IOException;importjava.io.InputStream;importjava.io.InputStreamReader;publicclassTest&amp;#123;publicstaticvoidmain(String[]args)throwsIOException&amp;#123;InputStreaminputStream=Runtime.getRuntime().exec(&amp;quot;dir&amp;quot;).getInputStream();InputStreamReaderisr=newInputStreamReader(inputStream,&amp;quot;UTF-8&amp;quot;);BufferedReaderbufferedReader=newBufferedReader(isr);Strin...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-04-13
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-            代码审计
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
-            渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/04/09/Spring_memory_shell/" title="Spring内存马合集 ">
-        
-        Spring内存马合集
-        
-      </a>
-      <div class="post-description">
-        
-        前言前面学了Tomcat的Servlet和Filter内存马，然后学了几天的spring，审了一个程序，就继续顺便把内存马的东西弄完吧。前面说到Servlet和Filter内存马其实都是在配置文件中注册一个Servlet或者Filter，因为他们的生命周期是到服务器结束才结束。其实Spring的controller的内存马也是如此，也是注册一个Controller来实现。因此我们需要了解SpringMVC中Controller注册的流程。Controller注册流程SpringMVC初始化时，在bean的构造方法以及设置属性之后会使用InitializingBean#afterPropertiesSet进行Bean的初始化操作，实现类RequestMappingHandlerMapping用来处理具有@Controller注解类中的方法级别的@RequestMapping以及RequestMappingInfo实例的创建，AbstractHandlerMapping是RequestMappingHandlerMapping的父类，并且AbstractHandlerMapping实...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-04-09
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/">
-            内存马
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
    
 
     <div class="pagination">
-        <a class="extend prev" rel="prev" href="/"><i class='fas fa-chevron-left fa-fw'></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/"><i class='fas fa-chevron-right fa-fw'></i></a>
+        <a class="extend prev" rel="prev" href="/"><i class='fas fa-chevron-left fa-fw'></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class='fas fa-chevron-right fa-fw'></i></a>
     </div>
 
 </div>

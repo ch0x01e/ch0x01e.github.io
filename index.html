@@ -167,6 +167,112 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/05/22/jizhi/" title="极致CMS审计 ">
+        
+        极致CMS审计
+        
+      </a>
+      <div class="post-description">
+        
+        文件架构个人看了一下，Home是home模块的目录，A是admin模块的目录，cache是缓存目录，conf是一些配置文件，public是公共静态文件。FrPHP目录结构common包含系统部分配置、核心公共函数集、错误渲染页面db数据库语句的封装Extend拓展类所在目录libMVC基类Fr.phpFrPHP框架核心加载文件Fr.php主要的是run方法，在很多框架中都是在最后一行调用run方法来实现MVC的操作，来具体看看FrPHP的run方法publicfunctionrun()&amp;#123;spl_autoload_register(array($this,&amp;#x27;loadClass&amp;#x27;));$this-&amp;gt;setDbConfig();$this-&amp;gt;setReporting();$this-&amp;gt;removeMagicQuotes();//$this-&amp;gt;unregisterGlobals();$this-&amp;gt;route();&amp;#125;第一行就是spl_autoload_register方法，他其实是一个自动加载类的机制，了解spl_aut...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-05-22
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
+      <a class="post-title" href="/2022/05/21/Secure_Code_Warrior/" title="重生之我在刷Secure Code Warrior ">
+        
+        重生之我在刷Secure Code Warrior
+        
+      </a>
+      <div class="post-description">
+        
+        前言这两天好大哥ssn推荐我了这个SecureCodeWarrior，就学习了几天，发现他是真不错，接下来就写个刷题记录吧题一漏洞类别注入缺陷-SQL注入解题思路SQL注入的审计，直接去看dao层的实现类即可，就是XXXDaoImpl，这里我发现他代码中有如下方法publicIntegercountLoginAttempt(Stringparam)&amp;#123;Datedate=Date.from(Instant.now().minusSeconds(FIVE_MINUTES));Queryquery=sessionFactory.getCurrentSession().createQuery(&amp;quot;SELECTLFROMLoginAttemptEntityL&amp;quot;+&amp;quot;LEFTJOINL.userUONU=L.user&amp;quot;+&amp;quot;WHERE(U.email=&amp;#x27;&amp;quot;+param+&amp;quot;&amp;#x27;&amp;quot;+&amp;quot;ORU.login=&amp;#x27;&amp;quot;+param+&amp;quot;&amp;#x27;)&amp;quot;+&amp;qu...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-05-21
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/05/17/tp3unser/" title="thinkphp3.2.3反序列化初探 ">
         
         thinkphp3.2.3反序列化初探
@@ -534,116 +640,10 @@
 
   </div>
   
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/04/26/lmx/" title="lmxcms代码审计(PHP) ">
-        
-        lmxcms代码审计(PHP)
-        
-      </a>
-      <div class="post-description">
-        
-        前言这几天小摸鱼，今天翻了一下，看到php的代码审计，兴致来了，从新学习一遍php的mvc代码审计，审计的是lmxcms，适合新手，采用的mvc架构前台SQL注入(留言板)位于留言板处，index.php?m=Book&amp;amp;a=index，对应的是Book控制器的index方法，寻找到Book控制器的index方法publicfunctionindex()&amp;#123;if(isset($_POST[&amp;#x27;setbook&amp;#x27;]))&amp;#123;//提交留言$data=$this-&amp;gt;checkData();if($this-&amp;gt;bookModel-&amp;gt;add($data))&amp;#123;$this-&amp;gt;setBookTime();//存储提交时间rewrite::succ($this-&amp;gt;l[&amp;#x27;book_ok&amp;#x27;]);&amp;#125;else&amp;#123;rewrite::error($this-&amp;gt;l[&amp;#x27;book_error&amp;#x27;]);&amp;#125;&amp;#125;//判断是否调用留言数据if($GLOBALS[&amp;#x2...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-04-26
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-            代码审计
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
-            渗透测试
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/04/24/tmall/" title="Java代码审计练习(三) ">
-        
-        Java代码审计练习(三)
-        
-      </a>
-      <div class="post-description">
-        
-        前言继续练习代码审计，今天是Tmall，一个商城系统吧文件上传位于ProductController.java中的uploadProductImage方法@ResponseBody@RequestMapping(value=&amp;quot;admin/uploadProductImage&amp;quot;,method=RequestMethod.POST,produces=&amp;quot;application/json;charset=utf-8&amp;quot;)publicStringuploadProductImage(@RequestParamMultipartFilefile,@RequestParamStringimageType,HttpSessionsession)&amp;#123;StringoriginalFileName=file.getOriginalFilename();logger.info(&amp;quot;获取图片原始文件名：&amp;#123;&amp;#125;&amp;quot;,originalFileName);Stringextension=originalFileName.substr...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-04-24
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-            代码审计
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
-            渗透测试
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
    
 
     <div class="pagination">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class='fas fa-chevron-right fa-fw'></i></a>
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class='fas fa-chevron-right fa-fw'></i></a>
     </div>
 
 </div>

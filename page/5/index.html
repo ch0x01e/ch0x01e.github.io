@@ -21,7 +21,7 @@
      
     <meta property="og:type" content="website">
 <meta property="og:title" content="ch1e的随笔">
-<meta property="og:url" content="https://ch1e.cn/tags/web%E5%AE%89%E5%85%A8/page/4/index.html">
+<meta property="og:url" content="https://ch1e.cn/page/5/index.html">
 <meta property="og:site_name" content="ch1e的随笔">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
@@ -113,160 +113,88 @@
 
 
         <main id="main">
-             
-
-<div id="page">
-    <div class="page-title">web安全</div>
+            <div id="post-list">
+  <header id="header">
+    <div class="header-author">
+        <a href="/" class="author">
+            <img src="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&amp;spec=100" alt="ch1e" class="author-avatar">
+            <div class="author-name">
+                ch1e
+            </div>
+        </a>
+    </div>
+    <div class="header-description">
+        <p>
+            梦想成为红队的脚本小子
+        </p>
+        <div class="header-icon">
+            
+        </div>
+    </div>
+</header>
+  
+  
+  <div class="post-item">
     
-
-    
-    
+    <div class="post-item-info">
+      <a class="post-title" href="/2021/07/07/xhcms/" title="熊海CMS1.0代码审计 ">
         
-        <h4 class="archive-year">2022</h4>
-    
-        <div class="article-item">
-            
-            <div class="article-item-info">
-                <div class="article-item-date">
-                    <time>
-                        <i class="far fa-calendar-alt"></i>
-                        2022-02-28
-                    </time>
-                </div>
-                <a class="article-item-title" href="/2022/02/28/cc6/">commons-collections6反序列化链分析</a>
-            </div>
-        </div>
-
-    
-    
-        <div class="article-item">
-            
-            <div class="article-item-info">
-                <div class="article-item-date">
-                    <time>
-                        <i class="far fa-calendar-alt"></i>
-                        2022-02-26
-                    </time>
-                </div>
-                <a class="article-item-title" href="/2022/02/26/cc3/">commons-collections3反序列化链分析</a>
-            </div>
-        </div>
-
-    
-    
-        <div class="article-item">
-            
-            <div class="article-item-info">
-                <div class="article-item-date">
-                    <time>
-                        <i class="far fa-calendar-alt"></i>
-                        2022-02-21
-                    </time>
-                </div>
-                <a class="article-item-title" href="/2022/02/21/cc1/">commons-collections1反序列化链分析</a>
-            </div>
-        </div>
-
-    
-    
+        熊海CMS1.0代码审计
         
-        <h4 class="archive-year">2021</h4>
-    
-        <div class="article-item">
-            
-            <div class="article-item-info">
-                <div class="article-item-date">
-                    <time>
-                        <i class="far fa-calendar-alt"></i>
-                        2021-11-12
-                    </time>
-                </div>
-                <a class="article-item-title" href="/2021/11/12/yuanshenglei/">PHP原生类在CTF当中的应用🛴</a>
-            </div>
-        </div>
+      </a>
+      <div class="post-description">
+        
+        熊海CMS1.0代码审计熊海CMS1.0代码审计之反射型XSS首先打开Seay审计系统，把我们的xhcms丢进去审计一下，我们这里是要找XSS，我们直接搜索关键字echo，看看有没有可以利用的地方我们这里审计漏洞必须同时满足参数可控和危险函数两个条件，echo就是一个，我们这里需要找可控变量，如果变量不可控我们没法对他进行利用，因为我们这里先看了一下index.php，发现他是通过传一个参数进去，自动拼接.php来访问files目录下的文件，所以这里可能会有文件包含漏洞，我们在下面会讲，这里只是先说明他前台的功能点应该都在files文件夹下，我们直接审计files目录下的文件即可&amp;lt;?php//单一入口模式error_reporting(0);//关闭错误显示$file=addslashes($_GET[&amp;#x27;r&amp;#x27;]);//接收文件名$action=$file==&amp;#x27;&amp;#x27;?&amp;#x27;index&amp;#x27;:$file;//判断为空或者等于indexinclude(&amp;#x27;files/&amp;#x27;.$action.&amp;#x27;.php&amp;#x...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2021-07-07
+          </span>
+        </span>
+        
 
-    
-    
-        <div class="article-item">
-            
-            <div class="article-item-info">
-                <div class="article-item-date">
-                    <time>
-                        <i class="far fa-calendar-alt"></i>
-                        2021-11-11
-                    </time>
-                </div>
-                <a class="article-item-title" href="/2021/11/11/pop/">PHP反序列化之POP链构造🛴</a>
-            </div>
-        </div>
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
+            渗透测试
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
 
-    
-    
-        <div class="article-item">
-            
-            <div class="article-item-info">
-                <div class="article-item-date">
-                    <time>
-                        <i class="far fa-calendar-alt"></i>
-                        2021-10-13
-                    </time>
-                </div>
-                <a class="article-item-title" href="/2021/10/13/ATT&amp;CK1/">ATT&amp;CK实战系列—红队实战（一）</a>
-            </div>
-        </div>
-
-    
-    
-        <div class="article-item">
-            
-            <div class="article-item-info">
-                <div class="article-item-date">
-                    <time>
-                        <i class="far fa-calendar-alt"></i>
-                        2021-08-09
-                    </time>
-                </div>
-                <a class="article-item-title" href="/2021/08/09/dswdmsj/">某代刷网代码审计</a>
-            </div>
-        </div>
-
-    
-    
-        <div class="article-item">
-            
-            <div class="article-item-info">
-                <div class="article-item-date">
-                    <time>
-                        <i class="far fa-calendar-alt"></i>
-                        2021-08-07
-                    </time>
-                </div>
-                <a class="article-item-title" href="/2021/08/07/bluecms/">BlueCMS代码审计</a>
-            </div>
-        </div>
-
-    
-    
-        <div class="article-item">
-            
-            <div class="article-item-info">
-                <div class="article-item-date">
-                    <time>
-                        <i class="far fa-calendar-alt"></i>
-                        2021-07-07
-                    </time>
-                </div>
-                <a class="article-item-title" href="/2021/07/07/xhcms/">熊海CMS1.0代码审计</a>
-            </div>
-        </div>
-
-     
+  </div>
+  
+   
 
     <div class="pagination">
-        <a class="extend prev" rel="prev" href="/tags/web%E5%AE%89%E5%85%A8/page/3/"><i class='fas fa-chevron-left fa-fw'></i></a><a class="page-number" href="/tags/web%E5%AE%89%E5%85%A8/">1</a><span class="space">&hellip;</span><a class="page-number" href="/tags/web%E5%AE%89%E5%85%A8/page/3/">3</a><span class="page-number current">4</span>
+        <a class="extend prev" rel="prev" href="/page/4/"><i class='fas fa-chevron-left fa-fw'></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
     </div>
 
 </div>
+
+
         </main>
         <section id="rightside">
     
