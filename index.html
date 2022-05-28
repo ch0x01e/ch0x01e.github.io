@@ -167,6 +167,59 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/05/28/tp51/" title="重生之学习thinkphp5.1.x反序列化 ">
+        
+        重生之学习thinkphp5.1.x反序列化
+        
+      </a>
+      <div class="post-description">
+        
+        前言昨天分析完tp5.0的，今天继续5.1的，特地去学了一下phar反序列化，康复训练，tp5.1不提供下载，可以通过composer进行安装安装compoerhttps://install.phpcomposer.com/composer.phar放在php目录下，在PHP安装目录下新建一个composer.bat文件，并将下列代码保存到此文件中@php&amp;quot;%~dp0composer.phar&amp;quot;%*进入web根目录进行安装composercreate-projecttopthink/think=5.1.35tp5.1调用链分析反序列化，先在控制器里写个入口&amp;lt;?phpnamespaceapp\index\controller;classIndex&amp;#123;publicfunctionindex()&amp;#123;return&amp;#x27;&amp;lt;styletype=&amp;quot;text/css&amp;quot;&amp;gt;*&amp;#123;padding:0;margin:0;&amp;#125;div&amp;#123;padding:4px48px;&amp;#125;a&amp;#123;color...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-05-28
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
+            代码审计
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/05/28/phar/" title="PHP反序列化之phar反序列化🛴 ">
         
         PHP反序列化之phar反序列化🛴
@@ -577,59 +630,6 @@
           
           <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
             反序列化
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/05/05/ezgadget/" title="CTF:简单的ezgadget ">
-        
-        CTF:简单的ezgadget
-        
-      </a>
-      <div class="post-description">
-        
-        前言摸鱼了好几天，来点康复训练吧，今天来题简单的ctf题，东华杯的ezgadget，先把源码下载，然后反编译。正文大致目录结构如下，包括了一个UserBean，一个IndexController，一个tools类和一个ToStringBean类User.java，这就是一个普通的实现Serializable接口的一个JavaBeanpackagecom.ezgame.ctf.bean;importjava.io.Serializable;/*loadedfrom:e14568b06e182.jar:BOOT-INF/classes/com/ezgame/ctf/bean/User.class*/publicclassUserimplementsSerializable&amp;#123;privateStringUserName;privateStringPassWord;publicStringgetUserName()&amp;#123;returnthis.UserName;&amp;#125;publicvoidsetUserName(StringuserName)&amp;#123;this.User...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-05-05
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-            代码审计
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
-            渗透测试
           </a>
           
           
