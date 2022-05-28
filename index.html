@@ -167,6 +167,59 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/05/28/phar/" title="PHP反序列化之phar反序列化🛴 ">
+        
+        PHP反序列化之phar反序列化🛴
+        
+      </a>
+      <div class="post-description">
+        
+        Phar简介PHAR(“PhpARchive”)是PHP里类似于JAR的一种打包文件，在PHP5.3或更高版本中默认开启，这个特性使得PHP也可以像Java一样方便地实现应用程序打包和组件化。一个应用程序可以打成一个Phar包，直接放到PHP-FPM中运行。Phar文件结构主要分为三到四个部分，分别是stub，和manifestdescribingthecontents，还有filecontents以及signatureforverifyingPharintegrity，就是存根，描述文件内容的清单，文件内容以及签名格式。stub的基本结构是xxx&amp;lt;?phpxxx;__HALT_COMPILER();?&amp;gt;,必须以__HALT_COMPILER();?&amp;gt;结尾。manifestdescribingthecontents是phar文件中被压缩的文件的信息，Meta-data部分信息会以序列化的形式储存。filecontents是被压缩文件的内容，没有特殊要求情况下，可以随便写Phar反序列化首先来个小demo，要利用phar反序列化，得构建一个phar文件。生成pha...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-05-28
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/CTF/">
+            CTF
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/05/27/tp50/" title="重生之学习thinkphp5.0.x反序列化 ">
         
         重生之学习thinkphp5.0.x反序列化
@@ -259,59 +312,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/05/21/Secure_Code_Warrior/" title="重生之我在刷Secure Code Warrior ">
-        
-        重生之我在刷Secure Code Warrior
-        
-      </a>
-      <div class="post-description">
-        
-        前言这两天好大哥ssn推荐我了这个SecureCodeWarrior，就学习了几天，发现他是真不错，接下来就写个刷题记录吧题一漏洞类别注入缺陷-SQL注入解题思路SQL注入的审计，直接去看dao层的实现类即可，就是XXXDaoImpl，这里我发现他代码中有如下方法publicIntegercountLoginAttempt(Stringparam)&amp;#123;Datedate=Date.from(Instant.now().minusSeconds(FIVE_MINUTES));Queryquery=sessionFactory.getCurrentSession().createQuery(&amp;quot;SELECTLFROMLoginAttemptEntityL&amp;quot;+&amp;quot;LEFTJOINL.userUONU=L.user&amp;quot;+&amp;quot;WHERE(U.email=&amp;#x27;&amp;quot;+param+&amp;quot;&amp;#x27;&amp;quot;+&amp;quot;ORU.login=&amp;#x27;&amp;quot;+param+&amp;quot;&amp;#x27;)&amp;quot;+&amp;qu...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-05-21
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-            代码审计
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
           </a>
           
           
