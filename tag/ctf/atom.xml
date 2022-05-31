@@ -13,6 +13,7 @@
     <category term="免杀" />
     <category term="反序列化" />
     <category term="CTF" />
+    <category term="命令执行" />
     <entry>
         <id>https://ch1e.cn/2022/05/28/phar/</id>
         <title>PHP反序列化之phar反序列化🛴</title>

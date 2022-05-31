@@ -137,6 +137,59 @@
   <div class="post-item">
     
     <div class="post-item-info">
+      <a class="post-title" href="/2022/05/05/rome/" title="Rome反序列化链分析 ">
+        
+        Rome反序列化链分析
+        
+      </a>
+      <div class="post-description">
+        
+        环境搭建下载地址：http://rometools.github.io/rome/ROMEReleases/rome-1.0.jar，下载完以后导入rome包即可。我们可以先使用ysoserial生成payload，然后再下断点进行调试java-jarysoserial.jarROME&amp;#x27;calc&amp;#x27;|base64packagerome;importjava.io.ByteArrayInputStream;importjava.io.IOException;importjava.io.ObjectInputStream;importjava.util.Base64;publicclassTest&amp;#123;publicstaticvoidmain(String[]args)throwsIOException,ClassNotFoundException&amp;#123;Stringbase64_exp=&amp;quot;rO0ABXNyABFqYXZhLnV0aWwuSGFzaE1hcAUH2sHDFmDRAwACRgAKbG9hZEZhY3RvckkACXRocmVz&amp;qu...
+      </div>
+      <div class="post-meta-wrap">
+        <span class="post-meta-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>发表于 </span>
+          <span>
+            2022-05-05
+          </span>
+        </span>
+        
+
+        
+        <span class="post-tag">
+          <i class="fa fa-tag"></i>
+          
+          <a href="/tags/web%E5%AE%89%E5%85%A8/">
+            web安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
+            Java安全
+          </a>
+          
+          <i class="fas fa-angle-right"></i>
+          
+          
+          <a href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">
+            反序列化
+          </a>
+          
+          
+        </span>
+        
+      </div>
+    </div>
+
+  </div>
+  
+  
+  <div class="post-item">
+    
+    <div class="post-item-info">
       <a class="post-title" href="/2022/05/05/ezgadget/" title="CTF:简单的ezgadget ">
         
         CTF:简单的ezgadget
@@ -628,66 +681,6 @@
           
           <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
             渗透测试
-          </a>
-          
-          
-        </span>
-        
-      </div>
-    </div>
-
-  </div>
-  
-  
-  <div class="post-item">
-    
-    <div class="post-item-info">
-      <a class="post-title" href="/2022/04/14/dtdl/" title="Java动态代理 ">
-        
-        Java动态代理
-        
-      </a>
-      <div class="post-description">
-        
-        代理模式代理模式是常见的设计模式，Java我们通常通过new一个对象然后调用其对应的方法来访问我们需要的服务。代理模式则是通过创建代理类（proxy）的方式来访问服务，代理类通常会持有一个委托类对象，代理类不会自己实现真正服务，而是通过调用委托类对象的相关方法，来提供服务，所以其实我们调用的还是委托类的服务，但是中间隔了一个代理类。这么做是有好处的，我们可以在访问服务之前或者之后加一下我们需要的操作。例如Spring的面向切面编程，我们可以在切入点之前执行一些操作，切入点之后执行一些操作。这个切入点就是一个个方法。这些方法所在类肯定就是被代理了，在代理过程中切入了一些其他操作。静态代理在说动态代理之前先说一下静态代理，静态代理是已经写好的，直接使用即可，下面来看个demo我们通过一个模拟租客租房的demo来演示，首先我们需要创建一个接口，来模拟租客租房，文件名是Person.java，有一个rentHouse方法packageProxy;publicinterfacePerson&amp;#123;publicvoidrentHouse();&amp;#125;创建租客Renter类，实现Per...
-      </div>
-      <div class="post-meta-wrap">
-        <span class="post-meta-date">
-          <i class="far fa-calendar-alt"></i>
-          <span>发表于 </span>
-          <span>
-            2022-04-14
-          </span>
-        </span>
-        
-
-        
-        <span class="post-tag">
-          <i class="fa fa-tag"></i>
-          
-          <a href="/tags/web%E5%AE%89%E5%85%A8/">
-            web安全
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">
-            代码审计
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">
-            渗透测试
-          </a>
-          
-          <i class="fas fa-angle-right"></i>
-          
-          
-          <a href="/tags/Java%E5%AE%89%E5%85%A8/">
-            Java安全
           </a>
           
           
