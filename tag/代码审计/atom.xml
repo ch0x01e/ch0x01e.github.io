@@ -10,8 +10,8 @@
     <category term="渗透测试" />
     <category term="Java安全" />
     <category term="内存马" />
-    <category term="反序列化" />
     <category term="免杀" />
+    <category term="反序列化" />
     <category term="CTF" />
     <category term="命令执行" />
     <entry>
