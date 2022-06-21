@@ -10,13 +10,13 @@
     <category term="渗透测试" />
     <category term="Java安全" />
     <category term="内存马" />
-    <category term="免杀" />
     <category term="反序列化" />
+    <category term="免杀" />
     <category term="CTF" />
     <category term="命令执行" />
     <entry>
         <id>https://ch1e.cn/2022/05/31/tp5xrce/</id>
-        <title>Thinkphp5.0.x RCE</title>
+        <title>Thinkphp5.x RCE</title>
         <link rel="alternate" href="https://ch1e.cn/2022/05/31/tp5xrce/"/>
         <content type="html">&lt;h1 id=&#34;漏洞分析&#34;&gt;&lt;a href=&#34;#漏洞分析&#34; class=&#34;headerlink&#34; title=&#34;漏洞分析&#34;&gt;&lt;/a&gt;漏洞分析&lt;/h1&gt;&lt;p&gt;环境:&lt;/p&gt;
 &lt;p&gt;thinkphp5.0.20+php7.3.4+&lt;a href=&#34;https://so.csdn.net/so/search?q=apache&amp;spm=1001.2101.3001.7020&#34;&gt;apache&lt;/a&gt;+phpstorm&lt;/p&gt;

