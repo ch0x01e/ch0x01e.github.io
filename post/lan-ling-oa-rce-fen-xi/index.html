@@ -1,0 +1,282 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>蓝凌OA  RCE分析 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="蓝凌OA  RCE分析 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="正文
+路由是在==/data/sys-common/datajson==处，我们直接在源码中找到该路由的位置，位于WEB-INF/libSrc/com/landray/kmss/common/actions/DataController.j..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              蓝凌OA  RCE分析
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="正文">正文</h1>
+<p>路由是在==/data/sys-common/datajson==处，我们直接在源码中找到该路由的位置，位于<code>WEB-INF/libSrc/com/landray/kmss/common/actions/DataController.java</code>，是在他的datajson方法中</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220817100151403.png" alt="image-20220817100151403" loading="lazy"></figure>
+<p>找到路由所对应的代码，主要代码如下</p>
+<pre><code class="language-java">String s_bean = request.getParameter(&quot;s_bean&quot;);
+JSONArray array = new JSONArray();
+JSONArray jsonArray = null;
+
+try {
+   Assert.notNull(s_bean, &quot;参数s_bean不能为空！&quot;);
+   RequestContext requestInfo = new RequestContext(request, true);
+   String[] beanList = s_bean.split(&quot;;&quot;);
+   List result = null;
+
+   for(int i = 0; i &lt; beanList.length; ++i) {
+      IXMLDataBean treeBean = (IXMLDataBean)SpringBeanUtil.getBean(beanList[i]);
+      result = treeBean.getDataList(requestInfo);
+</code></pre>
+<p>接收了一个s_bean的参数，然后用分号分隔成数组，遍历调用<code>SpringBeanUtil.getBean(beanList[i])</code>，并且遍历调用getBean返回对象的getDataList方法。</p>
+<p>根据payload我们可以知道具体调用的应该是<code>sysFormulaSimulateByJS</code>这个Bean的getDataList方法，来到这个方法</p>
+<pre><code class="language-java">public List getDataList(RequestContext requestContext) throws Exception {
+   String strRequestType = requestContext.getParameter(&quot;requestType&quot;);
+   return &quot;getFdHandlerRoleInfoIds&quot;.equals(strRequestType) ? this.getFdHandlerRoleInfoIds(requestContext) : this.formulaSimula(requestContext);
+}
+</code></pre>
+<p>判断是否传入参数requestType为<code>getFdHandlerRoleInfoIds</code>，如果不是则调用<code>formulaSimula</code>方法。我们这里payload没有传入这个参数，直接来到<code>formulaSimula</code>方法，这里只放主要代码</p>
+<pre><code class="language-java">public List formulaSimula(RequestContext requestContext) throws Exception {
+   List rtnVal = new ArrayList();
+   Map node = new HashMap();
+   String msg = null;
+   String confirm = null;
+   Object result = null;
+
+   try {
+      String script = requestContext.getParameter(&quot;script&quot;);
+      String type = requestContext.getParameter(&quot;returnType&quot;);
+      Enumeration ele = requestContext.getRequest().getParameterNames();
+      JSONObject returnData = new JSONObject();
+
+      while(ele.hasMoreElements()) {
+         String key = ele.nextElement().toString();
+         if (!paramsExcept.contains(key) &amp;&amp; !key.endsWith(&quot;.scriptJstype&quot;)) {
+            String value = requestContext.getParameter(key);
+            String scriptJstype = requestContext.getParameter(key + &quot;.scriptJstype&quot;);
+            Object newValue = FormulaParserByJS.formatValue(value, (String)scriptJstype);
+            returnData.put(key, newValue);
+         }
+      }
+
+      FormulaParser parse = FormulaParserByJS.getInstance(returnData, new SysFormulaSimulateByJS.SimulateVarGetter((SysFormulaSimulateByJS.SimulateVarGetter)null), (String)null);
+      result = parse.parseValueScript(script, type);
+</code></pre>
+<p>接收了script和returnType参数，while循环里的if判断得满足key不在<code>paramsExcept</code>数组里并且不以<code>.scriptJstype</code>结尾会进到if循环</p>
+<pre><code class="language-java">static {
+   paramsExcept.add(&quot;script&quot;);
+   paramsExcept.add(&quot;method&quot;);
+   paramsExcept.add(&quot;s_bean&quot;);
+   paramsExcept.add(&quot;s_ajax&quot;);
+}
+</code></pre>
+<p>我们这有传了个type和script，type不在这数组里，满足条件啊，但是这里我好像暂时没感觉和这个参数有关系？不急，先不看这，先继续往下看。</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220817102041620.png" alt="image-20220817102041620" loading="lazy"></figure>
+<p>然后就是通过getInstance获取一个<code>FormulaParserByJS</code>类的对象，然后调用他的<code>parseValueScript</code>方法，这个方法是俩参数的，但是他有重载方法，是一个参数的，并且在这两个参数的方法里调用了<code>this.parseValueScript(script)</code>，所以我们直接看一个参数的这个方法。由于方法太长，就一部分一部分来讲了。</p>
+<pre><code class="language-java">if (StringUtil.isNull(script)) {
+   return null;
+} else {
+   if (script.startsWith(&quot;#static#&quot;)) {
+      script = script.substring(8);
+   }
+
+   validateScript(script);
+   ScriptEngineManager factory = new ScriptEngineManager();
+   ScriptEngine engine = factory.getEngineByMimeType(&quot;text/javascript&quot;);
+   StringBuffer leftScript = new StringBuffer();
+</code></pre>
+<p>判断script是否为空并且是否以<code>#static#</code>开头，如果是就截取这个后面的部分，然后就是调用了一下<code>validateScript</code>方法，如果不满足条件会抛出异常</p>
+<pre><code class="language-java">public static void validateScript(String script) {
+   if (StringUtil.isNotNull(script) &amp;&amp; script.indexOf(&quot;importPackage(&quot;) &gt; -1) {
+      throw new KmssRuntimeException(new KmssMessage(&quot;公式定义器非法&quot;));
+   }
+}
+</code></pre>
+<p>接着就是工厂模式创建了一个<code>ScriptEngine</code>对象。</p>
+<pre><code class="language-java">try {
+   String rightScript = script.trim();
+   Map funcScriptMap = new HashMap();
+   ScriptContext context = engine.getContext();
+   int k = 0;
+   int index = rightScript.indexOf(&quot;$&quot;);
+</code></pre>
+<p>这里的index是获取<code>script.trim()</code>以后在script中<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">出</mi><mi mathvariant="normal">现</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">下</mi><mi mathvariant="normal">标</mi><mi mathvariant="normal">。</mi><mi mathvariant="normal">到</mi><mi mathvariant="normal">下</mi><mi mathvariant="normal">面</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">这</mi><mi mathvariant="normal">个</mi><mi>w</mi><mi>h</mi><mi>i</mi><mi>l</mi><mi>e</mi><mi mathvariant="normal">方</mi><mi mathvariant="normal">法</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">首</mi><mi mathvariant="normal">先</mi><mi mathvariant="normal">判</mi><mi mathvariant="normal">断</mi><mi>i</mi><mi>n</mi><mi>d</mi><mi>e</mi><mi>x</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">否</mi><mi mathvariant="normal">大</mi><mi mathvariant="normal">于</mi><mo>−</mo><mn>1</mn><mi mathvariant="normal">，</mi><mi mathvariant="normal">我</mi><mi mathvariant="normal">们</mi><mi mathvariant="normal">这</mi><mi mathvariant="normal">里</mi><mi mathvariant="normal">没</mi><mi mathvariant="normal">出</mi><mi mathvariant="normal">现</mi></mrow><annotation encoding="application/x-tex">出现的下标。到下面的这个while方法，首先判断index是否大于-1，我们这里没出现</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord cjk_fallback">出</span><span class="mord cjk_fallback">现</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">下</span><span class="mord cjk_fallback">标</span><span class="mord cjk_fallback">。</span><span class="mord cjk_fallback">到</span><span class="mord cjk_fallback">下</span><span class="mord cjk_fallback">面</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">这</span><span class="mord cjk_fallback">个</span><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="mord mathdefault">h</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">e</span><span class="mord cjk_fallback">方</span><span class="mord cjk_fallback">法</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">首</span><span class="mord cjk_fallback">先</span><span class="mord cjk_fallback">判</span><span class="mord cjk_fallback">断</span><span class="mord mathdefault">i</span><span class="mord mathdefault">n</span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span><span class="mord mathdefault">x</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">否</span><span class="mord cjk_fallback">大</span><span class="mord cjk_fallback">于</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">我</span><span class="mord cjk_fallback">们</span><span class="mord cjk_fallback">这</span><span class="mord cjk_fallback">里</span><span class="mord cjk_fallback">没</span><span class="mord cjk_fallback">出</span><span class="mord cjk_fallback">现</span></span></span></span>,直接跳过判断。</p>
+<pre><code class="language-java">while(true) {
+   if (index &gt; -1) {
+      int nxtIndex = rightScript.indexOf(&quot;$&quot;, index + 1);
+      if (nxtIndex != -1) {
+</code></pre>
+<p>在while循环中的if判断的代码我就不放了，因为进不来，大概就是下面这样</p>
+<pre><code class="language-java">while(true) {
+   String m_script = leftScript.append(rightScript).toString();
+   if (logger.isDebugEnabled()) {
+      logger.debug(&quot;原始公式:&quot; + script);
+      logger.debug(&quot;执行公式:&quot; + m_script);
+   }
+
+   runningData.set(this.contextData);
+   Object var21 = engine.eval(m_script);
+   return var21;
+}
+</code></pre>
+<p>最后是直接通过<code>ScriptEngine</code>对象的eval方法执行<code>m_script</code>,m_script是通过leftScript和rightScript进行拼接以后的结果。leftScript是没东西的，rightScript是传入的那个script。直接通过eval方法造成代码执行。直接本地写个demo测试一下</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220817105201439.png" alt="image-20220817105201439" loading="lazy"></figure>
+<h1 id="疑惑的点">疑惑的点</h1>
+<p>其实还有个问题，如果是单纯这样的话，应该不是前台RCE，经过我的测试我感觉是一个认证绕过+RCE的组合造成的前台RCE，原因是在于我在第一次找路径的时候看到他写的是==/data/sys-common/datajson.js==这个路由，然后我找了半天也没找到，最后还找错了，真是尴尬，但是其实这应该是他的一个绕过认证的手段，因为我尝试了直接访问/data/sys-common/datajson路由是需要认证的，但是访问/data/sys-common/datajson.js或者/data/sys-common/datajson.html这种，是可以直接来到控制器里的，我目前的猜测就是为了绕过filter中写的认证，但是具体在哪进行处理我并未找到。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E6%AD%A3%E6%96%87">正文</a></li>
+<li><a href="#%E7%96%91%E6%83%91%E7%9A%84%E7%82%B9">疑惑的点</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/java-zhi-fan-xu-lie-hua-hui-xian/">
+              <h3 class="post-title">
+                Java之反序列化回显
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,525 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Learn Codeql With L4yn3 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Learn Codeql With L4yn3 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="小弟bingbingzi求着我学习Codeql，那就浅学一下，给小弟点面子。
+Codeql安装
+引擎安装
+去https://github.com/github/codeql-cli-binaries/releases  下载对应系统版本的c..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Learn Codeql With L4yn3
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                13 min read
+              </span>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221016222149948.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p>小弟bingbingzi求着我学习Codeql，那就浅学一下，给小弟点面子。</p>
+<h1 id="codeql安装">Codeql安装</h1>
+<h2 id="引擎安装">引擎安装</h2>
+<p>去https://github.com/github/codeql-cli-binaries/releases  下载对应系统版本的codeql引擎，并且添加到环境变量当中，在cmd中输入codeql可以查看是否设置成功</p>
+<h2 id="sdk安装">SDK安装</h2>
+<pre><code class="language-git">git clone https://github.com/Semmle/ql
+</code></pre>
+<h2 id="vscode插件">VSCode插件</h2>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221016204658168.png" alt="image-20221016204658168" loading="lazy"></figure>
+<p>并且在设置当中设置好codeql可执行文件的路径即可</p>
+<h1 id="codeql使用">Codeql使用</h1>
+<p>使用<a href="https://www.freebuf.com/author/l4yn3l">l4yn3 </a>师傅的靶场   https://github.com/l4yn3/micro_service_seclab/</p>
+<p>为了测试刚刚的环境是否可用，用这个靶场来进行测试,命令如下</p>
+<pre><code>codeql database create ~/CodeQL/databases/micro-service-seclab-database  --language=&quot;java&quot;  --command=&quot;mvn clean install --file pom.xml&quot; --source-root=~/CodeQL/micro-service-seclab/
+</code></pre>
+<p>这里使用maven编译的时候会导致不成功，可以在pom.xml文件中加入如下代码</p>
+<pre><code class="language-xml">			&lt;plugin&gt;
+				&lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+				&lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+				&lt;version&gt;2.22.2&lt;/version&gt;
+				&lt;configuration&gt;
+					&lt;skipTests&gt;true&lt;/skipTests&gt;
+				&lt;/configuration&gt;
+			&lt;/plugin&gt;
+</code></pre>
+<p>先来看看上面的命令的意思，codeql database create就是创建一个数据库，--language就是语言为java，--command就是用这个命令去编译(python和php脚本不需要)，--source-root就是项目路径</p>
+<p>输入命令以后成功即可在vscode中导入数据库，也就是create后面的那个目录</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221016205121599.png" alt="image-20221016205121599" loading="lazy"></figure>
+<p>然后使用vscode打开我们下载的sdk目录，在java/ql目录下可以新建个test.ql，输入<code>select &quot;hello world&quot;</code>即可测试，部分因为版本原因会报错，这时候需要先在 ql 文件同级目录下创建一个名为 <strong>qlpack.yml</strong>，内容如下：</p>
+<pre><code>name: mssql
+version: 0.0.1
+libraryPathDependencies: codeql/java-all
+</code></pre>
+<p>然后右键Codeql:run Query即可运行ql文件</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221016205409506.png" alt="image-20221016205409506" loading="lazy"></figure>
+<h1 id="codeql语法">Codeql语法</h1>
+<p>QL查询的语法结构为</p>
+<pre><code>from [datatype] var
+where condition(var = something)
+select var
+</code></pre>
+<p>经常会用到的ql类库如下:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">名称</th>
+<th style="text-align:center">解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Method</td>
+<td style="text-align:center">方法类，Method method表示获取当前项目中所有的方法</td>
+</tr>
+<tr>
+<td style="text-align:center">MethodAccess</td>
+<td style="text-align:center">方法调用类，MethodAccess call表示获取当前项目当中的所有方法调用</td>
+</tr>
+<tr>
+<td style="text-align:center">Parameter</td>
+<td style="text-align:center">参数类，Parameter表示获取当前项目当中所有的参数</td>
+</tr>
+</tbody>
+</table>
+<h2 id="method">Method</h2>
+<p>获取项目中定义的所有方法:</p>
+<pre><code>import java
+
+from Method method
+select method
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221016210536254.png" alt="image-20221016210536254" loading="lazy"></figure>
+<p>获取名为getStudent的方法名称</p>
+<pre><code>import java
+
+from Method method
+where method.hasName(&quot;getStudent&quot;)
+select method.getName(),method.getDeclaringType()
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221016211112926.png" alt="image-20221016211112926" loading="lazy"></figure>
+<pre><code>method.getName() 获取的是当前方法的名称
+
+method.getDeclaringType() 获取的是当前方法所属class的名称。
+</code></pre>
+<h2 id="谓词">谓词</h2>
+<p>类似于函数，其实就和函数差不多。对于上面的案例，可以修改一下</p>
+<pre><code>import java
+predicate isStudent(Method method){
+    exists(|method.hasName(&quot;getStudent&quot;))
+}
+
+from Method method
+where isStudent(method)
+select method.getName(),method.getDeclaringType()
+</code></pre>
+<p>predicate表示当前方法没有返回值，exists子查询，根据内部子查询返回true或者false，来筛选出数据</p>
+<h2 id="source和sink">Source和Sink</h2>
+<blockquote>
+<p>什么是source和sink</p>
+<p>在代码自动化安全审计的理论当中，有一个最核心的三元组概念，就是(source，sink和sanitizer)。</p>
+<p>source是指漏洞污染链条的输入点。比如获取http请求的参数部分，就是非常明显的Source。</p>
+<p>sink是指漏洞污染链条的执行点，比如SQL注入漏洞，最终执行SQL语句的函数就是sink(这个函数可能叫query或者exeSql，或者其它)。</p>
+<p>sanitizer又叫净化函数，是指在整个的漏洞链条当中，如果存在一个方法阻断了整个传递链，那么这个方法就叫sanitizer。</p>
+<p><strong>只有当source和sink同时存在，并且从source到sink的链路是通的，才表示当前漏洞是存在的。</strong></p>
+</blockquote>
+<p>source通俗的说就是我们可控的变量，Sinkd通俗的说就是危险函数，这也就是代码审计的最基本的可控变量+危险函数。</p>
+<h3 id="设置source">设置Source</h3>
+<p>codeql中通过下面的代码来设置source</p>
+<pre><code>override predicate isSource(DataFlow::Node src) {}
+</code></pre>
+<p>可以看看我们靶场系统中的source是什么，比如</p>
+<pre><code class="language-java">@RequestMapping(value = &quot;/one&quot;)
+public List&lt;Student&gt; one(@RequestParam(value = &quot;username&quot;) String username) {
+    return indexLogic.getStudent(username);
+}
+</code></pre>
+<p>采用了springboot框架，懂的师傅都知道，我们需要对/one路由传入username参数，在这，username就是source</p>
+<pre><code class="language-java">@PostMapping(value = &quot;/object&quot;)
+public List&lt;Student&gt; objectParam(@RequestBody Student user) {
+    return indexLogic.getStudent(user.getUsername());
+}
+</code></pre>
+<p>在这source就是user，和类型无关，本例中我们设置Source的代码为：</p>
+<pre><code>override predicate isSource(DataFlow::Node src) { src instanceof RemoteFlowSource }
+</code></pre>
+<p>这是<code>SDK</code>自带的规则，里面包含了大多常用的Source入口。我们使用的SpringBoot也包含在其中, 我们可以直接使用。</p>
+<h3 id="设置sink">设置Sink</h3>
+<p>在本案例中，我们的sink应该为<code>query</code>方法(Method)的调用(MethodAccess)，所以我们设置Sink为：</p>
+<pre><code>override predicate isSink(DataFlow::Node sink) {
+exists(Method method, MethodAccess call |
+  method.hasName(&quot;query&quot;)
+  and
+  call.getMethod() = method and
+  sink.asExpr() = call.getArgument(0)
+)
+}
+</code></pre>
+<p>上面查询的意思为：查找一个query()方法的调用点，并把它的第一个参数设置为sink。<br>
+在靶场系统(<code>micro-service-seclab</code>)中，sink就是：</p>
+<pre><code>jdbcTemplate.query(sql, ROW_MAPPER);
+</code></pre>
+<h2 id="flow数据流">Flow数据流</h2>
+<blockquote>
+<p>设置好 Source 和 Sink，就相当于搞定了首尾，但是首尾是否能够连通才能决定是否存在漏洞！</p>
+<p>一个受污染的变量，能够毫无阻拦的流转到危险函数，就表示存在漏洞！</p>
+</blockquote>
+<p>我们通过使用<code>config.hasFlowPath(source, sink)</code>方法来判断是否连通。</p>
+<pre><code>from VulConfig config, DataFlow::PathNode source, DataFlow::PathNode sink
+where config.hasFlowPath(source, sink)
+select source.getNode(), source, sink, &quot;source&quot;
+</code></pre>
+<h1 id="初步成果">初步成果</h1>
+<p>我们使用官方提供的TaintTracking::Configuration方法定义source和sink，至于中间是否是通的，这个后面使用CodeQL提供的<code>config.hasFlowPath(source, sink)</code>来帮我们处理。</p>
+<p>我们最终第一版写的demo.ql如下：</p>
+<pre><code>/**
+ * @id java/examples/vuldemo
+ * @name Sql-Injection
+ * @description Sql-Injection
+ * @kind path-problem
+ * @problem.severity warning
+ */
+
+import java
+import semmle.code.java.dataflow.FlowSources
+import semmle.code.java.security.QueryInjection
+import DataFlow::PathGraph
+
+
+class VulConfig extends TaintTracking::Configuration {
+  VulConfig() { this = &quot;SqlInjectionConfig&quot; }
+
+  override predicate isSource(DataFlow::Node src) { src instanceof RemoteFlowSource }
+
+  override predicate isSink(DataFlow::Node sink) {
+    exists(Method method, MethodAccess call |
+      method.hasName(&quot;query&quot;)
+      and
+      call.getMethod() = method and
+      sink.asExpr() = call.getArgument(0)
+    )
+  }
+}
+
+
+from VulConfig config, DataFlow::PathNode source, DataFlow::PathNode sink
+where config.hasFlowPath(source, sink)
+select source.getNode(), source, sink, &quot;source&quot;
+</code></pre>
+<p>CodeQL语法和Java类似，extends代表集成父类TaintTracking::Configuration。</p>
+<p>这个类是官方提供用来做数据流分析的通用类，提供很多数据流分析相关的方法，比如isSource(定义source)，isSink(定义sink)</p>
+<p>src instanceof RemoteFlowSource 表示src 必须是 RemoteFlowSource类型。在RemoteFlowSource里，官方提供很非常全的source定义，我们本次用到的Springboot的Source就已经涵盖了。</p>
+<h1 id="误报解决">误报解决</h1>
+<p>在上面的初版代码中，会存在误报，这里的List泛型是Long，不可能注入的</p>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221016222149948.png" alt="image-20221016222149948" loading="lazy"></figure>
+<p>这说明我们的规则里，对于List<Long>，甚至List<Integer>类型都会产生误报，source误把这种类型的参数涵盖了。可以使用isSanitizer</p>
+<blockquote>
+<p>isSanitizer是CodeQL的类<code>TaintTracking::Configuration</code>提供的净化方法。它的函数原型是：</p>
+<p>override predicate isSanitizer(DataFlow::Node node) {}</p>
+<p>在CodeQL自带的默认规则里，对当前节点是否为基础类型做了判断。</p>
+<p>override predicate isSanitizer(DataFlow::Node node) {<br>
+node.getType() instanceof PrimitiveType or<br>
+node.getType() instanceof BoxedType or<br>
+node.getType() instanceof NumberType<br>
+}</p>
+<p>表示如果当前节点是上面提到的基础类型，那么此污染链将被净化阻断，漏洞将不存在。</p>
+</blockquote>
+<p>所以我们只要在基本的内容上加点特殊的处理即可。</p>
+<pre><code>override predicate isSanitizer(DataFlow::Node node) {
+    node.getType() instanceof PrimitiveType or
+    node.getType() instanceof BoxedType or
+    node.getType() instanceof NumberType or
+    exists(ParameterizedType pt| node.getType() = pt and pt.getTypeArgument(0) instanceof NumberType )
+  }
+</code></pre>
+<p>如果当前node节点的类型为基础类型，数字类型和泛型数字类型(比如List)时，就切断数据流，认为数据流断掉了，不会继续往下检测。</p>
+<h1 id="漏报解决">漏报解决</h1>
+<p>有如下代码</p>
+<pre><code class="language-java">public List&lt;Student&gt; getStudentWithOptional(Optional&lt;String&gt; username) {
+    String sqlWithOptional = &quot;select * from students where username like '%&quot; + username.get() + &quot;%'&quot;;
+    //String sql = &quot;select * from students where username like ?&quot;;
+    return jdbcTemplate.query(sqlWithOptional, ROW_MAPPER);
+}
+</code></pre>
+<p>其中是通过username.get()获取的，应该是这里让他source-sink的链接断了，我们强制接上即可</p>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221016222713604.png" alt="image-20221016222713604" loading="lazy"></figure>
+<blockquote>
+<p>isAdditionalTaintStep方法是CodeQL的类<code>TaintTracking::Configuration</code>提供的的方法，它的原型是：</p>
+<p>override predicate isAdditionalTaintStep(DataFlow::Node node1, DataFlow::Node node2) {}</p>
+<p>它的作用是将一个可控节点<br>
+A强制传递给另外一个节点B，那么节点B也就成了可控节点。</p>
+</blockquote>
+<pre><code>/**
+ * @id java/examples/vuldemo
+ * @name Sql-Injection
+ * @description Sql-Injection
+ * @kind path-problem
+ * @problem.severity warning
+ */
+
+import java
+import semmle.code.java.dataflow.FlowSources
+import semmle.code.java.security.QueryInjection
+import DataFlow::PathGraph
+
+predicate isTaintedString(Expr expSrc, Expr expDest) {
+    exists(Method method, MethodAccess call, MethodAccess call1 | expSrc = call1.getArgument(0) and expDest=call and call.getMethod() = method and method.hasName(&quot;get&quot;) and method.getDeclaringType().toString() = &quot;Optional&lt;String&gt;&quot; and call1.getArgument(0).getType().toString() = &quot;Optional&lt;String&gt;&quot;  )
+}
+
+class VulConfig extends TaintTracking::Configuration {
+  VulConfig() { this = &quot;SqlInjectionConfig&quot; }
+
+  override predicate isSource(DataFlow::Node src) { src instanceof RemoteFlowSource }
+
+  override predicate isSanitizer(DataFlow::Node node) {
+    node.getType() instanceof PrimitiveType or
+    node.getType() instanceof BoxedType or
+    node.getType() instanceof NumberType or
+    exists(ParameterizedType pt| node.getType() = pt and pt.getTypeArgument(0) instanceof NumberType )
+  }
+
+  override predicate isSink(DataFlow::Node sink) {
+    exists(Method method, MethodAccess call |
+      method.hasName(&quot;query&quot;)
+      and
+      call.getMethod() = method and
+      sink.asExpr() = call.getArgument(0)
+    )
+  }
+  override predicate isAdditionalTaintStep(DataFlow::Node node1, DataFlow::Node node2) {
+    isTaintedString(node1.asExpr(), node2.asExpr())
+  }
+}
+
+
+from VulConfig config, DataFlow::PathNode source, DataFlow::PathNode sink
+where config.hasFlowPath(source, sink)
+select source.getNode(), source, sink, &quot;source&quot;
+</code></pre>
+<h1 id="instanceof">instanceof</h1>
+<blockquote>
+<p>instanceof是用来优化代码结构非常好的语法糖。</p>
+<p>我们都知道，我们可以使用exists(|)这种子查询的方式定义source和sink，但是如果source/sink特别复杂（比如我们为了规则通用，可能要适配springboot， Thrift RPC，Servlet等source），如果我们把这些都在一个子查询内完成，比如 condition 1 or conditon 2 or condition 3, 这样一直下去，我们可能后面都看不懂了，更别说可维护性了。<br>
+况且有些情况如果一个子查询无法完成，那么就更没法写了。</p>
+</blockquote>
+<p>instanceof给我们提供了一种机制，我们只需要定义一个abstract class，比如这个案例当中的:</p>
+<pre><code>/** A data flow source of remote user input. */
+abstract class RemoteFlowSource extends DataFlow::Node {
+  /** Gets a string that describes the type of this remote flow source. */
+  abstract string getSourceType();
+}
+</code></pre>
+<p>然后在isSource方法里进行instanceof，判断src是 RemoteFlowSource类型就可以了。</p>
+<pre><code>override predicate isSource(DataFlow::Node src) {
+    src instanceof RemoteFlowSource
+}
+</code></pre>
+<h1 id="lombok问题">Lombok问题</h1>
+<p>Lombok会自动生成get和set方法，正常代码就是</p>
+<pre><code class="language-java">package com.l4yn3.microserviceseclab.data;
+import lombok.Data;
+
+@Data
+public class Student {
+    private int id;
+    private String username;
+    private int sex;
+    private int age;
+}
+</code></pre>
+<p>但是由于lombok的实现机制，导致CodeQL无法获取到lombok自动生成的代码，所以就导致使用了lombok的代码即使存在漏洞，也无法被识别的问题。</p>
+<p>还好CodeQL官方的issue里面，有人给出了这个问题的解决办法（[查看](https://github.com/github/codeql/issues/4984#:~:text=Unfortunately Lombok does not work with the CodeQL,the source files before running CodeQL as follows%3A)）。</p>
+<pre><code># get a copy of lombok.jar
+wget https://projectlombok.org/downloads/lombok.jar -O &quot;lombok.jar&quot;
+# run &quot;delombok&quot; on the source files and write the generated files to a folder named &quot;delombok&quot;
+java -jar &quot;lombok.jar&quot; delombok -n --onlyChanged . -d &quot;delombok&quot;
+# remove &quot;generated by&quot; comments
+find &quot;delombok&quot; -name '*.java' -exec sed '/Generated by delombok/d' -i '{}' ';'
+# remove any left-over import statements
+find &quot;delombok&quot; -name '*.java' -exec sed '/import lombok/d' -i '{}' ';'
+# copy delombok'd files over the original ones
+cp -r &quot;delombok/.&quot; &quot;./&quot;
+# remove the &quot;delombok&quot; folder
+rm -rf &quot;delombok&quot;
+</code></pre>
+<p>上面的代码，实现的功能是：去掉代码里的lombok注解，并还原setter和getter方法的java代码，从而使CodeQL的Flow流能够顺利走下去，从而检索到安全漏洞。</p>
+<h1 id="参考">参考</h1>
+<p>https://www.freebuf.com/articles/web/283795.html</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#codeql%E5%AE%89%E8%A3%85">Codeql安装</a>
+<ul>
+<li><a href="#%E5%BC%95%E6%93%8E%E5%AE%89%E8%A3%85">引擎安装</a></li>
+<li><a href="#sdk%E5%AE%89%E8%A3%85">SDK安装</a></li>
+<li><a href="#vscode%E6%8F%92%E4%BB%B6">VSCode插件</a></li>
+</ul>
+</li>
+<li><a href="#codeql%E4%BD%BF%E7%94%A8">Codeql使用</a></li>
+<li><a href="#codeql%E8%AF%AD%E6%B3%95">Codeql语法</a>
+<ul>
+<li><a href="#method">Method</a></li>
+<li><a href="#%E8%B0%93%E8%AF%8D">谓词</a></li>
+<li><a href="#source%E5%92%8Csink">Source和Sink</a>
+<ul>
+<li><a href="#%E8%AE%BE%E7%BD%AEsource">设置Source</a></li>
+<li><a href="#%E8%AE%BE%E7%BD%AEsink">设置Sink</a></li>
+</ul>
+</li>
+<li><a href="#flow%E6%95%B0%E6%8D%AE%E6%B5%81">Flow数据流</a></li>
+</ul>
+</li>
+<li><a href="#%E5%88%9D%E6%AD%A5%E6%88%90%E6%9E%9C">初步成果</a></li>
+<li><a href="#%E8%AF%AF%E6%8A%A5%E8%A7%A3%E5%86%B3">误报解决</a></li>
+<li><a href="#%E6%BC%8F%E6%8A%A5%E8%A7%A3%E5%86%B3">漏报解决</a></li>
+<li><a href="#instanceof">instanceof</a></li>
+<li><a href="#lombok%E9%97%AE%E9%A2%98">Lombok问题</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/weblogic-cve-2020-2555/">
+              <h3 class="post-title">
+                Weblogic CVE-2020-2555
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

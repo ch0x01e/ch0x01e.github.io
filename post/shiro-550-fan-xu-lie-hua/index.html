@@ -1,0 +1,333 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shiro-550反序列化 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Shiro-550反序列化 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="前言
+最近摸鱼了比较久了，处理了一些协会内的事然后也想着稍微让自己轻松一点，就休息了几天哈哈，所以就自从上次把博客整体换了个主题以后，就比较摆烂，中途还看了一遍关于内网的书，整理了一些笔记，然后准备继续学习关于Java安全的东西，学完了CC..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Shiro-550反序列化
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                8 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="前言">前言</h1>
+<p>最近摸鱼了比较久了，处理了一些协会内的事然后也想着稍微让自己轻松一点，就休息了几天哈哈，所以就自从上次把博客整体换了个主题以后，就比较摆烂，中途还看了一遍关于内网的书，整理了一些笔记，然后准备继续学习关于Java安全的东西，学完了CC CB jdk7u21这些链，我准备先看几个组件漏洞吧，本来是计划学习jdk8u20那条链，但是由于找不到对应的openjdk版本，就暂时没打算先看，因为对shiro比较熟悉，选择了从shiro入手开始。这里为啥标题叫浅析呢，因为我也是比较菜不是很懂开发，所以不能带师傅们进行深入的了解，所以说如果文章里有哪些地方有问题希望师傅们多多指出</p>
+<h1 id="漏洞分析">漏洞分析</h1>
+<p>Apache Shiro是一个使用比较多的Java安全框架，他执行身份验证，授权，加密和会话管理，可以通过Shiro易于理解的Api，快速轻松地保护你的程序</p>
+<p>Apache Shiro框架功能主要由以下几个部分组成：</p>
+<ul>
+<li>Authentication：身份认证-登录</li>
+<li>Authorization：授权-权限验证</li>
+<li>Session Manager：会话管理</li>
+<li>Cryptography：加密</li>
+<li>Web Support：Web 支持</li>
+<li>Caching：缓存</li>
+<li>Concurrency：多线程</li>
+<li>Testing：测试模块</li>
+<li>Run As：允许一个用户假装为另一个用户</li>
+<li>Remember Me：记住我-Session过期后再次登录无需再次登录</li>
+</ul>
+<p>Shiro-550这个漏洞的主要原因就是在服务端会rememberMe的cookie值进行先base64解码然后AES解密然后进行反序列化，但是我们如果此时知道了这个AES加密的密钥，我们就可以构造恶意的rememberMe的cookie值，来传入我们精心构造的Payload，那么就可以达到命令执行的效果，所以我们最重要的就是要找到AES加密的密钥，但是在很多地方，都使用了默认的AES密钥，导致远程命令执行的问题。Payload的产生过程如下:</p>
+<p><code>命令-&gt;反序列化-&gt;AES加密-&gt;base64编码</code></p>
+<p>这个漏洞主要存在的版本是Apache Shiro &lt; 1.2.4因为在高版本中，shiro每次启动都会随机生成一个新的Key</p>
+<p>额这里的话因为我也不熟悉Java开发的一些相关知识，我也就直接从网上找了一个Shiro的源码来进行分析。</p>
+<p>由于Shiro中的Cookie是rememberMe，那么我们直接全局搜索含有rememberMe的地方<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174336720.png" alt="image-20220411174336720" loading="lazy"></p>
+<p>这里的话定义了一个<code>DEFAULT_REMEMBER_ME_COOKIE_NAME = &quot;rememberMe&quot;;</code>，根据英文可以看出来是默认的rememberMe的Cookie名字，大概猜测就是这里吧，这里位于CookieRememberMeManager，看类名应该也是这，RememberMe的Cookie管理，来看看他的构造函数</p>
+<pre><code class="language-java">public CookieRememberMeManager() {
+    Cookie cookie = new SimpleCookie(DEFAULT_REMEMBER_ME_COOKIE_NAME);
+    cookie.setHttpOnly(true);
+    //One year should be long enough - most sites won't object to requiring a user to log in if they haven't visited
+    //in a year:
+    cookie.setMaxAge(Cookie.ONE_YEAR);
+    this.cookie = cookie;
+}
+</code></pre>
+<p>把cookie给到了自身的cookie属性，接着继续往下翻，其中的getRememberedSerializedIdentity引起了我的注意，单从方法名上看是和rememberMe的反序列化有关的</p>
+<pre><code class="language-java">/**
+ * Returns a previously serialized identity byte array or {@code null} if the byte array could not be acquired.
+ * This implementation retrieves an HTTP cookie, Base64-decodes the cookie value, and returns the resulting byte
+ * array.
+ * &lt;p/&gt;
+ * The {@code SubjectContext} instance is expected to be a {@link WebSubjectContext} instance with an HTTP
+ * Request/Response pair so an HTTP cookie can be retrieved from the incoming request.  If it is not a
+ * {@code WebSubjectContext} or that {@code WebSubjectContext} does not have an HTTP Request/Response pair, this
+ * implementation returns {@code null}.
+ *
+ * @param subjectContext the contextual data, usually provided by a {@link Subject.Builder} implementation, that
+ *                       is being used to construct a {@link Subject} instance.  To be used to assist with data
+ *                       lookup.
+ * @return a previously serialized identity byte array or {@code null} if the byte array could not be acquired.
+ */
+protected byte[] getRememberedSerializedIdentity(SubjectContext subjectContext) {
+
+    if (!WebUtils.isHttp(subjectContext)) {
+        if (log.isDebugEnabled()) {
+            String msg = &quot;SubjectContext argument is not an HTTP-aware instance.  This is required to obtain a &quot; +
+                    &quot;servlet request and response in order to retrieve the rememberMe cookie. Returning &quot; +
+                    &quot;immediately and ignoring rememberMe operation.&quot;;
+            log.debug(msg);
+        }
+        return null;
+    }
+
+    WebSubjectContext wsc = (WebSubjectContext) subjectContext;
+    if (isIdentityRemoved(wsc)) {
+        return null;
+    }
+
+    HttpServletRequest request = WebUtils.getHttpRequest(wsc);
+    HttpServletResponse response = WebUtils.getHttpResponse(wsc);
+
+    String base64 = getCookie().readValue(request, response);
+    // Browsers do not always remove cookies immediately (SHIRO-183)
+    // ignore cookies that are scheduled for removal
+    if (Cookie.DELETED_COOKIE_VALUE.equals(base64)) return null;
+
+    if (base64 != null) {
+        base64 = ensurePadding(base64);
+        if (log.isTraceEnabled()) {
+            log.trace(&quot;Acquired Base64 encoded identity [&quot; + base64 + &quot;]&quot;);
+        }
+        byte[] decoded = Base64.decode(base64);
+        if (log.isTraceEnabled()) {
+            log.trace(&quot;Base64 decoded byte array length: &quot; + (decoded != null ? decoded.length : 0) + &quot; bytes.&quot;);
+        }
+        return decoded;
+    } else {
+        //no cookie set - new site visitor?
+        return null;
+    }
+}
+</code></pre>
+<p>注释里是这么说的，Base64-decodes the cookie value, and returns the resulting byte，用base64解码了Cookie的值，返回了结果的字节，主要在<code>base64 = getCookie().readValue(request, response);</code>实现了base64解密，这里的话还进入了ensurePadding方法，本质上就是判断base64是否是4的倍数，如果不是就补上等号</p>
+<pre><code class="language-java">private String ensurePadding(String base64) {
+    int length = base64.length();
+    if (length % 4 != 0) {
+        StringBuilder sb = new StringBuilder(base64);
+        for (int i = 0; i &lt; length % 4; ++i) {
+            sb.append('=');
+        }
+        base64 = sb.toString();
+    }
+    return base64;
+}
+</code></pre>
+<p>上面也说了，rememberMe的cookie值是经过序列化以后再经过AES加密再用base64编码得到的，这里对Cookie进行base64解码，猜测是否这里是处理rememberMe的cookie值的一部分呢？因此我们往前去找是哪个方法调用了getRememberedSerializedIdentity方法</p>
+<pre><code class="language-java">public PrincipalCollection getRememberedPrincipals(SubjectContext subjectContext) {
+    PrincipalCollection principals = null;
+    try {
+        byte[] bytes = getRememberedSerializedIdentity(subjectContext);
+        //SHIRO-138 - only call convertBytesToPrincipals if bytes exist:
+        if (bytes != null &amp;&amp; bytes.length &gt; 0) {
+            principals = convertBytesToPrincipals(bytes, subjectContext);
+        }
+    } catch (RuntimeException re) {
+        principals = onRememberedPrincipalFailure(re, subjectContext);
+    }
+
+    return principals;
+}
+</code></pre>
+<p>发现有这么一个抽象类AbstractRememberMeManager实现了RememberMeManager接口，在他的类中存在着一个getRememberedPrincipals方法对getRememberedSerializedIdentity进行了一个调用，上面说到了getRememberedSerializedIdentity是对cookie进行base64解码然后返回字节，如果返回回来的字节不为空的话就进入到convertBytesToPrincipals方法，我们继续跟进</p>
+<pre><code class="language-java">protected PrincipalCollection convertBytesToPrincipals(byte[] bytes, SubjectContext subjectContext) {
+    if (getCipherService() != null) {
+        bytes = decrypt(bytes);
+    }
+    return deserialize(bytes);
+}
+</code></pre>
+<p>代码很少，直接是使用了decrypt对传进来的字节数组进行了解密，这里的话看方法名也很清楚，把字节转换成凭证，继续跟进</p>
+<pre><code class="language-java">protected byte[] decrypt(byte[] encrypted) {
+    byte[] serialized = encrypted;
+    CipherService cipherService = getCipherService();
+    if (cipherService != null) {
+        ByteSource byteSource = cipherService.decrypt(encrypted, getDecryptionCipherKey());
+        serialized = byteSource.getBytes();
+    }
+    return serialized;
+}
+</code></pre>
+<p>首先get到一个CipherService对象，然后使用decrypt方法对传入的字节数组进行处理，第二个参数是getDecryptionCipherKey()的结果，看名字应该是获取解密的密钥</p>
+<pre><code class="language-java">public byte[] getDecryptionCipherKey() {
+    return decryptionCipherKey;
+}
+</code></pre>
+<p>这里继续跟进getDecryptionCipherKey方法，他是返回自身的decryptionCipherKey属性，那么我们可以对应去找找有无set方法进行了设置</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174344343.png" alt="image-20220411174344343" loading="lazy"></figure>
+<p>确实有找到setDecryptionCipherKey方法对密钥进行了一个赋值，我们寻找一下是哪里调用了这个setter</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174347219.png" alt="image-20220411174347219" loading="lazy"></figure>
+<pre><code class="language-java">public void setCipherKey(byte[] cipherKey) {
+    //Since this method should only be used in symmetric ciphers
+    //(where the enc and dec keys are the same), set it on both:
+    setEncryptionCipherKey(cipherKey);
+    setDecryptionCipherKey(cipherKey);
+}
+</code></pre>
+<p>继续寻找调用setCipherKey的方法，然后我们就找到了AbstractRememberMeManager的构造函数</p>
+<pre><code class="language-java">public AbstractRememberMeManager() {
+    this.serializer = new DefaultSerializer&lt;PrincipalCollection&gt;();
+    this.cipherService = new AesCipherService();
+    setCipherKey(DEFAULT_CIPHER_KEY_BYTES);
+}
+</code></pre>
+<p>这里的话使用DEFAULT_CIPHER_KEY_BYTES作为里面的key，我们寻找一下这个DEFAULT_CIPHER_KEY_BYTES</p>
+<pre><code class="language-java">private static final byte[] DEFAULT_CIPHER_KEY_BYTES = Base64.decode(&quot;kPH+bIxk5D2deZiIxcaaaA==&quot;);
+</code></pre>
+<p>额，到这里其实就差不多了，可以发现他这里的这个密钥是写死的，kPH+bIxk5D2deZiIxcaaaA==这个密钥也是个默认密钥，所以可能触发Shiro-550反序列化，这也就是这个漏洞的问题所在。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90">漏洞分析</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/servlet-memory-shell/">
+              <h3 class="post-title">
+                Servlet Memory Shell
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

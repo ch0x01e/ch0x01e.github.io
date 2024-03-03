@@ -1,0 +1,808 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>glibc下malloc实现原理 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="glibc下malloc实现原理 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="在分析源码之前得先去了解各种有关的数据类型，可以参照下面这个网址。
+
+https://ctf-wiki.org/pwn/linux/user-mode/heap/ptmalloc2/heap-structure
+
+一般情况下我们申请一个内存..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              glibc下malloc实现原理
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-12-16
+              </span>
+              <span>
+                18 min read
+              </span>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221214203250782.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p>在分析源码之前得先去了解各种有关的数据类型，可以参照下面这个网址。</p>
+<blockquote>
+<p>https://ctf-wiki.org/pwn/linux/user-mode/heap/ptmalloc2/heap-structure</p>
+</blockquote>
+<p>一般情况下我们申请一个内存通常是使用malloc函数，但是看glibc的源码我们就可以知道，其实malloc函数只是对<code>__libc__malloc</code>函数的一个封装。但是在<code>__libc__malloc</code>函数中，主要是调用的<code>_int_malloc</code>函数，所以我们读源码的重点就是<code>_int_malloc</code>函数</p>
+<h1 id="变量定义初始检查">变量定义&amp;初始检查</h1>
+<pre><code class="language-c">static void *
+_int_malloc (mstate av, size_t bytes)
+{
+  INTERNAL_SIZE_T nb;               /* normalized request size */
+  unsigned int idx;                 /* associated bin index */
+  mbinptr bin;                      /* associated bin */
+
+  mchunkptr victim;                 /* inspected/selected chunk */
+  INTERNAL_SIZE_T size;             /* its size */
+  int victim_index;                 /* its bin index */
+
+  mchunkptr remainder;              /* remainder from a split */
+  unsigned long remainder_size;     /* its size */
+
+  unsigned int block;               /* bit map traverser */
+  unsigned int bit;                 /* bit map traverser */
+  unsigned int map;                 /* current word of binmap */
+
+  mchunkptr fwd;                    /* misc temp for linking */
+  mchunkptr bck;                    /* misc temp for linking */
+
+  const char *errstr = NULL;
+
+  /*
+     Convert request size to internal form by adding SIZE_SZ bytes
+     overhead plus possibly more to obtain necessary alignment and/or
+     to obtain a size of at least MINSIZE, the smallest allocatable
+     size. Also, checked_request2size traps (returning 0) request sizes
+     that are so large that they wrap around zero when padded and
+     aligned.
+   */
+
+  checked_request2size (bytes, nb);
+
+  /* There are no usable arenas.  Fall back to sysmalloc to get a chunk from
+     mmap.  */
+  //没有可用的arena，去系统调用获取一个来自mmap的chunk
+  if (__glibc_unlikely (av == NULL))
+    {
+      void *p = sysmalloc (nb, av);
+      if (p != NULL)
+   alloc_perturb (p, bytes);
+      return p;
+    }
+</code></pre>
+<p>关于在该函数中所用到的定义都在最开始给出了，在前面主要关注几个变量，nb和victim，nb是需要申请的内存的大小，victim是指向满足需求的chunk的指针，最后会返回victim指向的chunk的fd字段的地址。在定义完成这些变量后，判断了一下是否有可用的线程arena，如果没有就通过系统调用去获取。</p>
+<h1 id="从fastbins中获取chunk">从fastbins中获取chunk</h1>
+<pre><code class="language-c">//如果申请的大小小于fastbin最大的大小
+  if ((unsigned long) (nb) &lt;= (unsigned long) (get_max_fast ()))
+    {
+      //记录这个大小的fastbin的索引
+      idx = fastbin_index (nb);
+      //得到这个fastbin对应的头指针
+      mfastbinptr *fb = &amp;fastbin (av, idx);
+      mchunkptr pp = *fb;
+
+      do
+        {
+          victim = pp;
+          if (victim == NULL)
+            break;
+        }
+      while ((pp = catomic_compare_and_exchange_val_acq (fb, victim-&gt;fd, victim))
+             != victim);
+      //存在可以利用的chunk
+      if (victim != 0)
+        {
+          //如果取到的chunk大小和fastbin的索引不一致
+          if (__builtin_expect (fastbin_index (chunksize (victim)) != idx, 0))
+            {
+              errstr = &quot;malloc(): memory corruption (fast)&quot;;
+            errout:
+              malloc_printerr (check_action, errstr, chunk2mem (victim), av);
+              return NULL;
+            }
+          //debug情况下会调用
+          check_remalloced_chunk (av, victim, nb);
+          //chunk转化成mem的形式
+          void *p = chunk2mem (victim);
+          alloc_perturb (p, bytes);
+          return p;
+        }
+    }
+</code></pre>
+<p>最外层的if判断需要申请的内存大小是否小于fastbin的最大大小，在if循环体中，获取了相应大小的fastbin的索引和这个fastbin对应的头指针，在do-while循环中有一个catomic_compare_and_exchange_val_acq宏，他的作用如下:</p>
+<blockquote>
+<p>对于catomic_compare_and_exchange_val_acq(mem, newval, oldval)</p>
+<p>如果mem指向的内容和oldval相等，会把mem指向的内容改为newval，并且返回oldval</p>
+<pre><code class="language-c">if(*mem == oldver){
+ *mem = newval;
+ return oldver;
+}
+</code></pre>
+</blockquote>
+<p>对于执行该函数前的各个变量的值，看下图</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221214194215287.png" alt="image-20221214194215287" loading="lazy"></figure>
+<p>一般情况下来说，这个宏函数只执行一次，对于<code>catomic_compare_and_exchange_val_acq (fb, victim-&gt;fd, victim)</code>，此时fb和victim都指向的是chunk1，该宏函数就是把victim-&gt;fd给到了fb，并且返回了victim所以此时fb应该是指向的chunk2，所以执行后的各个变量如图</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221214194859416.png" alt="image-20221214194859416" loading="lazy"></figure>
+<p>此时的chunk1已经脱离链表了，可以看出，fastbin是LIFO表了(Last In First Out)。</p>
+<h1 id="从smallbins获取chunk">从smallbins获取chunk</h1>
+<pre><code class="language-c">  if (in_smallbin_range (nb))
+    {
+      //获取smallbin中大小为内存块大小的索引
+      idx = smallbin_index (nb);
+      //获取对应smallbin中的chunk指针
+      bin = bin_at (av, idx);
+      //如果victim=bin 则说明bin为空
+      //如果victim!=bin，则有两种情况
+      //一种是victim为0，说明smallbin还没有初始化
+      if ((victim = last (bin)) != bin)
+        {
+          if (victim == 0) /* initialization check */
+              //还没有初始化，把fastbins中的chunk合并
+            malloc_consolidate (av);
+          else
+            {
+              //获取victim后的一个chunk
+              bck = victim-&gt;bk;
+              //这里防止chunk伪造
+   if (__glibc_unlikely (bck-&gt;fd != victim))
+                {
+                  errstr = &quot;malloc(): smallbin double linked list corrupted&quot;;
+                  goto errout;
+                }
+    //设置 victim 对应的 inuse 位
+              set_inuse_bit_at_offset (victim, nb);
+    //这里就完成了取出victim，从bin和bck中间取出
+              bin-&gt;bk = bck;
+              bck-&gt;fd = bin;
+// 如果不是 main_arena，设置对应的标志
+              if (av != &amp;main_arena)
+                victim-&gt;size |= NON_MAIN_ARENA;
+              check_malloced_chunk (av, victim, nb);
+              void *p = chunk2mem (victim);
+              alloc_perturb (p, bytes);
+              return p;
+            }
+        }
+    }
+</code></pre>
+<p>判断如果请求的内存大小在smallbins的范围中，获取smallbin中大小为请求的内存块大小的索引，然后获取了对应的smallbin中的chunk指针，并且通过<code>(victim = last (bin)) != bin</code>判断bin是否是空的。通过<code>bck-&gt;fd != victim</code>来验证chunk是否是伪造的。然后设置inuse位，从bin和bck中间取出victim，判断是否是主线程，设置了对应的值。这里的smallbin是FIFO表(First In First Out)</p>
+<p>取出chunk1前</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221214202808926.png" alt="image-20221214202808926" loading="lazy"></figure>
+<p>取出chunk1后</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221214203250782.png" alt="image-20221214203250782" loading="lazy"></figure>
+<p>此时chunk1已经从bin中脱离出来了。</p>
+<h1 id="从largebins中获取chunk">从largebins中获取chunk</h1>
+<pre><code class="language-c">else
+  {
+    //获取下标
+    idx = largebin_index (nb);
+    //如果有fastbin的话，会处理fastbin
+    if (have_fastchunks (av))
+      malloc_consolidate (av);
+  }
+</code></pre>
+<h1 id="从unsortedbin中获取chunk">从unsortedbin中获取chunk</h1>
+<h2 id="获取对应chunk的size">获取对应chunk的size</h2>
+<pre><code class="language-c">for (;; )
+  {
+    int iters = 0;
+    //如果unsorted bin 不为空
+    while ((victim = unsorted_chunks (av)-&gt;bk) != unsorted_chunks (av))
+      {
+        //victim为最后一个chunk，
+        //bck为倒数第二个chunk
+        bck = victim-&gt;bk;
+        //限定chunk的大小
+        if (__builtin_expect (victim-&gt;size &lt;= 2 * SIZE_SZ, 0)
+            || __builtin_expect (victim-&gt;size &gt; av-&gt;system_mem, 0))
+          malloc_printerr (check_action, &quot;malloc(): memory corruption&quot;,
+                           chunk2mem (victim), av);
+        //获取了chunk的size
+        size = chunksize (victim);
+</code></pre>
+<h2 id="尝试分割last_remainder">尝试分割last_remainder</h2>
+<pre><code class="language-c">          if (in_smallbin_range (nb) &amp;&amp;
+              bck == unsorted_chunks (av) &amp;&amp;
+              victim == av-&gt;last_remainder &amp;&amp;
+              (unsigned long) (size) &gt; (unsigned long) (nb + MINSIZE))
+            {
+              /* split and reattach remainder */
+              //重新计算remainder的大小
+              remainder_size = size - nb;
+              //获取新的remainder的位置
+              remainder = chunk_at_offset (victim, nb);
+              //更新unsorted bin的情况
+              unsorted_chunks (av)-&gt;bk = unsorted_chunks (av)-&gt;fd = remainder;
+              //更新av中的last_remainder
+              av-&gt;last_remainder = remainder;
+              //更新remainder的指针
+              remainder-&gt;bk = remainder-&gt;fd = unsorted_chunks (av);
+              if (!in_smallbin_range (remainder_size))
+                {
+                  remainder-&gt;fd_nextsize = NULL;
+                  remainder-&gt;bk_nextsize = NULL;
+                }
+//设置victim的头部
+              set_head (victim, nb | PREV_INUSE |
+                        (av != &amp;main_arena ? NON_MAIN_ARENA : 0));
+              //设置remainder的头部
+              set_head (remainder, remainder_size | PREV_INUSE);
+              //设置remainder的foot
+              set_foot (remainder, remainder_size);
+//
+              check_malloced_chunk (av, victim, nb);
+              void *p = chunk2mem (victim);
+              alloc_perturb (p, bytes);
+              return p;
+            }
+</code></pre>
+<p>开始判断了申请的内存大小是否在smallbin的范围内，并且要满足下面三个条件:</p>
+<ul>
+<li>unsorted bin中只有一个唯一的chunk</li>
+<li>唯一的chunk是last_remainder</li>
+<li>last_remainder的大小要大于申请的大小加上最小值</li>
+</ul>
+<p>然后就进行了一些分割last_remainder的操作以及创建一个新的chunk</p>
+<h2 id="移除当前元素与直接返回">移除当前元素与直接返回</h2>
+<pre><code>          unsorted_chunks (av)-&gt;bk = bck;
+          bck-&gt;fd = unsorted_chunks (av);
+
+          /* Take now instead of binning if exact fit */
+//如果取出来的大小和想要的大小刚好合适，那就直接取出
+          if (size == nb)
+            {
+              //设置inuse位
+              set_inuse_bit_at_offset (victim, size);
+              //如果av不是main_arena，设置victim-&gt;size
+              if (av != &amp;main_arena)
+                victim-&gt;size |= NON_MAIN_ARENA;
+              check_malloced_chunk (av, victim, nb);
+              void *p = chunk2mem (victim);
+              alloc_perturb (p, bytes);
+              return p;
+            }
+</code></pre>
+<h2 id="将当前元素放入对应的bin中">将当前元素放入对应的bin中</h2>
+<pre><code>          if (in_smallbin_range (size))
+            {
+              //获取对应chunk的下标  把取出来的 chunk 放到对应的 small bin 中。
+              victim_index = smallbin_index (size);
+              bck = bin_at (av, victim_index);
+              fwd = bck-&gt;fd;
+            }
+          else
+            {
+              victim_index = largebin_index (size);
+              bck = bin_at (av, victim_index);
+              fwd = bck-&gt;fd;
+
+              /* maintain large bins in sorted order */
+              //bin不为空
+              if (fwd != bck)
+                {
+                  /* Or with inuse bit to speed comparisons */
+                  size |= PREV_INUSE;
+                  /* if smaller than smallest, bypass loop below */
+                  //如果
+                  assert ((bck-&gt;bk-&gt;size &amp; NON_MAIN_ARENA) == 0);
+                  //如果chunk的大小小于bck-&gt;bk的大小
+                  if ((unsigned long) (size) &lt; (unsigned long) (bck-&gt;bk-&gt;size))
+                    {
+                      fwd = bck;
+                      bck = bck-&gt;bk;
+
+                      victim-&gt;fd_nextsize = fwd-&gt;fd;
+                      victim-&gt;bk_nextsize = fwd-&gt;fd-&gt;bk_nextsize;
+                      fwd-&gt;fd-&gt;bk_nextsize = victim-&gt;bk_nextsize-&gt;fd_nextsize = victim;
+                    }
+                  else
+                    {
+                      assert ((fwd-&gt;size &amp; NON_MAIN_ARENA) == 0);
+                      while ((unsigned long) size &lt; fwd-&gt;size)
+                        {
+                          fwd = fwd-&gt;fd_nextsize;
+                          assert ((fwd-&gt;size &amp; NON_MAIN_ARENA) == 0);
+                        }
+
+                      if ((unsigned long) size == (unsigned long) fwd-&gt;size)
+                        /* Always insert in the second position.  */
+                        fwd = fwd-&gt;fd;
+                      else
+                        {
+                          victim-&gt;fd_nextsize = fwd;
+                          victim-&gt;bk_nextsize = fwd-&gt;bk_nextsize;
+                          fwd-&gt;bk_nextsize = victim;
+                          victim-&gt;bk_nextsize-&gt;fd_nextsize = victim;
+                        }
+                      bck = fwd-&gt;bk;
+                    }
+                }
+              else
+                victim-&gt;fd_nextsize = victim-&gt;bk_nextsize = victim;
+            }
+
+          mark_bin (av, victim_index);
+          victim-&gt;bk = bck;
+          victim-&gt;fd = fwd;
+          fwd-&gt;bk = victim;
+          bck-&gt;fd = victim;
+
+#define MAX_ITERS       10000
+          if (++iters &gt;= MAX_ITERS)
+            break;
+        }
+</code></pre>
+<p>判断了size属于smallbin还是largebin的范围，然后执行对应的代码，比如chunk在smallbin支持的范围内时，会把victim放到smallbins当中</p>
+<pre><code class="language-c">if (in_smallbin_range (size))
+  {
+    //获取对应chunk的下标  把取出来的 chunk 放到对应的 small bin 中。
+    victim_index = smallbin_index (size);
+    bck = bin_at (av, victim_index);
+    fwd = bck-&gt;fd;
+  }
+</code></pre>
+<p>执行完if中的语句后，执行如下语句，完成了把victim插入到smallbins的过程</p>
+<pre><code class="language-c">mark_bin (av, victim_index);
+victim-&gt;bk = bck;
+victim-&gt;fd = fwd;
+fwd-&gt;bk = victim;
+bck-&gt;fd = victim;
+</code></pre>
+<p>执行的结果如下</p>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221216153541815.png" alt="image-20221216153541815" loading="lazy"></figure>
+<p>对于largebins，情况又与smallbins不同，largebin中存储的chunk的size不相同，在一个区间里，所以就需要进行一些判断。</p>
+<p>这里的话分为两种情况，一种是 victim的size小于当前bin中最小chunk的size，第二种是 victim的size不小于当前bin中最小chunk的size</p>
+<blockquote>
+<p>victim的size小于当前bin中最小chunk的size</p>
+</blockquote>
+<p>此时执行的代码如下</p>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221214220720735.png" alt="image-20221214220720735" loading="lazy"></figure>
+<p>执行前的结果如下，让fwd指向bin，自己指向bin-&gt;bk</p>
+<p>执行到<code>if (fwd != bck)</code>的时候，数据结构布局如下</p>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221214221747776.png" alt="image-20221214221747776" loading="lazy"></figure>
+<p>执行后的结果如下</p>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221216155929304.png" alt="image-20221216155929304" loading="lazy"></figure>
+<p>最后在执行</p>
+<pre><code class="language-c">mark_bin (av, victim_index);
+victim-&gt;bk = bck;
+victim-&gt;fd = fwd;
+fwd-&gt;bk = victim;
+bck-&gt;fd = victim;
+</code></pre>
+<p>结果如下</p>
+<figure data-type="image" tabindex="9"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221216160807590.png" alt="image-20221216160807590" loading="lazy"></figure>
+<blockquote>
+<p>victim的size不小于当前bin中最小chunk的size</p>
+</blockquote>
+<pre><code class="language-c">else
+  {
+    assert ((fwd-&gt;size &amp; NON_MAIN_ARENA) == 0);
+    while ((unsigned long) size &lt; fwd-&gt;size)
+      {
+        fwd = fwd-&gt;fd_nextsize;
+        assert ((fwd-&gt;size &amp; NON_MAIN_ARENA) == 0);
+      }
+
+    if ((unsigned long) size == (unsigned long) fwd-&gt;size)
+      /* Always insert in the second position.  */
+      fwd = fwd-&gt;fd;
+    else
+      {
+        victim-&gt;fd_nextsize = fwd;
+        victim-&gt;bk_nextsize = fwd-&gt;bk_nextsize;
+        fwd-&gt;bk_nextsize = victim;
+        victim-&gt;bk_nextsize-&gt;fd_nextsize = victim;
+      }
+    bck = fwd-&gt;bk;
+  }
+</code></pre>
+<p>用fd_nextsieze遍历链表，遇到size相同的时候，会插入到第二个位置</p>
+<figure data-type="image" tabindex="10"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221216165056000.png" alt="image-20221216165056000" loading="lazy"></figure>
+<p>在victim和chunk1的size相等的时候，会在chunk1的fd方向插入这个bin链表，并且不会处理victim的两个nextsize字段，当victim的size和chunk1不相等的时候会对nextsize进行处理</p>
+<p>在else块中，会把victim插入到chunk1和chunk2之间。</p>
+<figure data-type="image" tabindex="11"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221216165638081.png" alt="image-20221216165638081" loading="lazy"></figure>
+<h2 id="从largebin中获取chunk">从largebin中获取chunk</h2>
+<pre><code class="language-c">   if (!in_smallbin_range (nb))
+     {
+       bin = bin_at (av, idx);
+
+       /* skip scan if empty or largest chunk is too small */
+       if ((victim = first (bin)) != bin &amp;&amp;
+           (unsigned long) (victim-&gt;size) &gt;= (unsigned long) (nb))
+         {
+           victim = victim-&gt;bk_nextsize;
+           while (((unsigned long) (size = chunksize (victim)) &lt;
+                   (unsigned long) (nb)))
+             victim = victim-&gt;bk_nextsize;
+
+           /* Avoid removing the first entry for a size so that the skip
+              list does not have to be rerouted.  */
+           if (victim != last (bin) &amp;&amp; victim-&gt;size == victim-&gt;fd-&gt;size)
+             victim = victim-&gt;fd;
+
+           remainder_size = size - nb;
+           unlink (av, victim, bck, fwd);
+
+           /* Exhaust */
+           if (remainder_size &lt; MINSIZE)
+             {
+               set_inuse_bit_at_offset (victim, size);
+               if (av != &amp;main_arena)
+                 victim-&gt;size |= NON_MAIN_ARENA;
+             }
+           /* Split */
+           else
+             {
+               remainder = chunk_at_offset (victim, nb);
+               /* We cannot assume the unsorted list is empty and therefore
+                  have to perform a complete insert here.  */
+               bck = unsorted_chunks (av);
+               fwd = bck-&gt;fd;
+if (__glibc_unlikely (fwd-&gt;bk != bck))
+                 {
+                   errstr = &quot;malloc(): corrupted unsorted chunks&quot;;
+                   goto errout;
+                 }
+               remainder-&gt;bk = bck;
+               remainder-&gt;fd = fwd;
+               bck-&gt;fd = remainder;
+               fwd-&gt;bk = remainder;
+               if (!in_smallbin_range (remainder_size))
+                 {
+                   remainder-&gt;fd_nextsize = NULL;
+                   remainder-&gt;bk_nextsize = NULL;
+                 }
+               set_head (victim, nb | PREV_INUSE |
+                         (av != &amp;main_arena ? NON_MAIN_ARENA : 0));
+               set_head (remainder, remainder_size | PREV_INUSE);
+               set_foot (remainder, remainder_size);
+             }
+           check_malloced_chunk (av, victim, nb);
+           void *p = chunk2mem (victim);
+           alloc_perturb (p, bytes);
+           return p;
+         }
+     }
+</code></pre>
+<p>第一个if确保他不在smallbin的范围内，第二个if确保victim的size大于要申请的空间大小，也就是确保bin中最大的chunk大于要申请的空间，如果不满足就之间跳过这个if了。然后一直遍历bin，从大的开始找找到小于需要申请空间的大小的victim。并且这个victim不能是最后一个。然后会重新计算remainder大小，调用unlink把victim从链中脱出来，并且对remainder的size进行比较，如果小于minsize，就不需要切割了。如果大于minsize，则需要切割，会先把他加入到unsortedbin中，为<code>victim_remainder</code>构造相应的chunk信息</p>
+<h2 id="从更大的bin获取chunk">从更大的bin获取chunk</h2>
+<pre><code class="language-c">    /*
+       Search for a chunk by scanning bins, starting with next largest
+       bin. This search is strictly by best-fit; i.e., the smallest
+       (with ties going to approximately the least recently used) chunk
+       that fits is selected.
+       The bitmap avoids needing to check that most blocks are nonempty.
+       The particular case of skipping all bins during warm-up phases
+       when no chunks have been returned yet is faster than it might look.
+     */
+
+    ++idx;
+    bin   = bin_at(av, idx);
+    block = idx2block(idx);
+    map   = av-&gt;binmap[ block ];
+    bit   = idx2bit(idx);
+
+    for (;;) {
+        /* Skip rest of block if there are no more set bits in this block.
+         */
+        if (bit &gt; map || bit == 0) {
+            do {
+                if (++block &gt;= BINMAPSIZE) /* out of bins */
+                    goto use_top;
+            } while ((map = av-&gt;binmap[ block ]) == 0);
+
+            bin = bin_at(av, (block &lt;&lt; BINMAPSHIFT));
+            bit = 1;
+        }
+
+        /* Advance to bin with set bit. There must be one. */
+        while ((bit &amp; map) == 0) {
+            bin = next_bin(bin);
+            bit &lt;&lt;= 1;
+            assert(bit != 0);
+        }
+
+        /* Inspect the bin. It is likely to be non-empty */
+        victim = last(bin);
+
+        /*  If a false alarm (empty bin), clear the bit. */
+        if (victim == bin) {
+            av-&gt;binmap[ block ] = map &amp;= ~bit; /* Write through */
+            bin                 = next_bin(bin);
+            bit &lt;&lt;= 1;
+        }
+
+        else {
+            size = chunksize(victim);
+
+            /*  We know the first chunk in this bin is big enough to use. */
+            assert((unsigned long) (size) &gt;= (unsigned long) (nb));
+
+            remainder_size = size - nb;
+
+            /* unlink */
+            unlink(av, victim, bck, fwd);
+
+            /* Exhaust */
+            if (remainder_size &lt; MINSIZE) {
+                set_inuse_bit_at_offset(victim, size);
+                if (av != &amp;main_arena) set_non_main_arena(victim);
+            }
+
+            /* Split */
+            else {
+                remainder = chunk_at_offset(victim, nb);
+
+                /* We cannot assume the unsorted list is empty and therefore
+                   have to perform a complete insert here.  */
+                bck = unsorted_chunks(av);
+                fwd = bck-&gt;fd;
+                if (__glibc_unlikely(fwd-&gt;bk != bck)) {
+                    errstr = &quot;malloc(): corrupted unsorted chunks 2&quot;;
+                    goto errout;
+                }
+                remainder-&gt;bk = bck;
+                remainder-&gt;fd = fwd;
+                bck-&gt;fd       = remainder;
+                fwd-&gt;bk       = remainder;
+
+                /* advertise as last remainder */
+                if (in_smallbin_range(nb)) av-&gt;last_remainder = remainder;
+                if (!in_smallbin_range(remainder_size)) {
+                    remainder-&gt;fd_nextsize = NULL;
+                    remainder-&gt;bk_nextsize = NULL;
+                }
+                set_head(victim,
+                         nb | PREV_INUSE |
+                             (av != &amp;main_arena ? NON_MAIN_ARENA : 0));
+                set_head(remainder, remainder_size | PREV_INUSE);
+                set_foot(remainder, remainder_size);
+            }
+            check_malloced_chunk(av, victim, nb);
+            void *p = chunk2mem(victim);
+            alloc_perturb(p, bytes);
+            return p;
+        }
+    }
+</code></pre>
+<p>前面是通过idx获取了一个bin，这里的idx是前面没有成果取出chunk的那个bin的idx，可能是smallbins也可能是largebins</p>
+<blockquote>
+<p>第一个if语句在逻辑上的含义为：当前map数字中是否存在位阶比bit更高的二进制位不为0，如果不存在，也就是bit &gt; map成立，就说明当前map对应的一系列bins中不存在size比nb大的chunk</p>
+<p>然后程序会判定更高的map中是否含有chunk，如果都没有的话，就去切割top chunk来获得返回的chunk。如果有，就获取这个map对应的一系列bin中序号最小的bin</p>
+<p>然后程序会开始寻找这个map中第一个含有chunk的bin</p>
+<p>总之，这个被找到的bin，其最后一个chunk会被分割，分割出来的部分返回给用户，剩余部分，如果还满足MINSIZE的话，就加入unsorted bin</p>
+</blockquote>
+<h2 id="从topchunk中获取chunk">从topchunk中获取chunk</h2>
+<pre><code class="language-c">use_top:
+  /*
+     If large enough, split off the chunk bordering the end of memory
+     (held in av-&gt;top). Note that this is in accord with the best-fit
+     search rule.  In effect, av-&gt;top is treated as larger (and thus
+     less well fitting) than any other available chunk since it can
+     be extended to be as large as necessary (up to system
+     limitations).
+
+     We require that av-&gt;top always exists (i.e., has size &gt;=
+     MINSIZE) after initialization, so if it would otherwise be
+     exhausted by current request, it is replenished. (The main
+     reason for ensuring it exists is that we may need MINSIZE space
+     to put in fenceposts in sysmalloc.)
+   */
+
+  victim = av-&gt;top;
+  size = chunksize (victim);
+
+  if ((unsigned long) (size) &gt;= (unsigned long) (nb + MINSIZE))
+    {
+      remainder_size = size - nb;
+      remainder = chunk_at_offset (victim, nb);
+      av-&gt;top = remainder;
+      set_head (victim, nb | PREV_INUSE |
+                (av != &amp;main_arena ? NON_MAIN_ARENA : 0));
+      set_head (remainder, remainder_size | PREV_INUSE);
+
+      check_malloced_chunk (av, victim, nb);
+      void *p = chunk2mem (victim);
+      alloc_perturb (p, bytes);
+      return p;
+    }
+
+  /* When we are using atomic ops to free fast chunks we can get
+     here for all block sizes.  */
+  else if (have_fastchunks (av))
+    {
+      malloc_consolidate (av);
+      /* restore original bin index */
+      if (in_smallbin_range (nb))
+        idx = smallbin_index (nb);
+      else
+        idx = largebin_index (nb);
+    }
+
+  /*
+     Otherwise, relay to handle system-dependent cases
+   */
+  else
+    {
+      void *p = sysmalloc (nb, av);
+      if (p != NULL)
+        alloc_perturb (p, bytes);
+      return p;
+    }
+}
+</code></pre>
+<p>直接从topchunk中切割。</p>
+<ul>
+<li>检查大小</li>
+<li>更新<code>malloc_state</code>中的top chunk的地址</li>
+<li>为切割后的top chunk构造相关数据</li>
+</ul>
+<h1 id="参考">参考</h1>
+<p>https://blog.csdn.net/weixin_44215692/article/details/123930658</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%8F%98%E9%87%8F%E5%AE%9A%E4%B9%89%E5%88%9D%E5%A7%8B%E6%A3%80%E6%9F%A5">变量定义&amp;初始检查</a></li>
+<li><a href="#%E4%BB%8Efastbins%E4%B8%AD%E8%8E%B7%E5%8F%96chunk">从fastbins中获取chunk</a></li>
+<li><a href="#%E4%BB%8Esmallbins%E8%8E%B7%E5%8F%96chunk">从smallbins获取chunk</a></li>
+<li><a href="#%E4%BB%8Elargebins%E4%B8%AD%E8%8E%B7%E5%8F%96chunk">从largebins中获取chunk</a></li>
+<li><a href="#%E4%BB%8Eunsortedbin%E4%B8%AD%E8%8E%B7%E5%8F%96chunk">从unsortedbin中获取chunk</a>
+<ul>
+<li><a href="#%E8%8E%B7%E5%8F%96%E5%AF%B9%E5%BA%94chunk%E7%9A%84size">获取对应chunk的size</a></li>
+<li><a href="#%E5%B0%9D%E8%AF%95%E5%88%86%E5%89%B2last_remainder">尝试分割last_remainder</a></li>
+<li><a href="#%E7%A7%BB%E9%99%A4%E5%BD%93%E5%89%8D%E5%85%83%E7%B4%A0%E4%B8%8E%E7%9B%B4%E6%8E%A5%E8%BF%94%E5%9B%9E">移除当前元素与直接返回</a></li>
+<li><a href="#%E5%B0%86%E5%BD%93%E5%89%8D%E5%85%83%E7%B4%A0%E6%94%BE%E5%85%A5%E5%AF%B9%E5%BA%94%E7%9A%84bin%E4%B8%AD">将当前元素放入对应的bin中</a></li>
+<li><a href="#%E4%BB%8Elargebin%E4%B8%AD%E8%8E%B7%E5%8F%96chunk">从largebin中获取chunk</a></li>
+<li><a href="#%E4%BB%8E%E6%9B%B4%E5%A4%A7%E7%9A%84bin%E8%8E%B7%E5%8F%96chunk">从更大的bin获取chunk</a></li>
+<li><a href="#%E4%BB%8Etopchunk%E4%B8%AD%E8%8E%B7%E5%8F%96chunk">从topchunk中获取chunk</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/cong-ctf-ti-kan-spel-biao-da-shi-zhu-ru/">
+              <h3 class="post-title">
+                从CTF题看SpEL表达式注入
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

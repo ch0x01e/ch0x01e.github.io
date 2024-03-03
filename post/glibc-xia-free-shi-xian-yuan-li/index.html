@@ -1,0 +1,497 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>glibc下free实现原理 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="glibc下free实现原理 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="_int_free函数
+free函数也和malloc一样，只是经过包装后的，最主要的处理逻辑还是在_int_free函数当中，主要是__libc_free函数调用的_int_free函数
+__libc_free (void *mem)
+{
+..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              glibc下free实现原理
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-12-16
+              </span>
+              <span>
+                8 min read
+              </span>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221216203014497.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="_int_free函数">_int_free函数</h1>
+<p>free函数也和malloc一样，只是经过包装后的，最主要的处理逻辑还是在<code>_int_free</code>函数当中，主要是__libc_free函数调用的<code>_int_free</code>函数</p>
+<pre><code class="language-c">__libc_free (void *mem)
+{
+  mstate ar_ptr;
+  mchunkptr p;                          /* chunk corresponding to mem */
+
+  void (*hook) (void *, const void *)
+    = atomic_forced_read (__free_hook);
+  if (__builtin_expect (hook != NULL, 0))
+    {
+      (*hook)(mem, RETURN_ADDRESS (0));
+      return;
+    }
+
+  if (mem == 0)                              /* free(0) has no effect */
+    return;
+
+  p = mem2chunk (mem);
+
+  if (chunk_is_mmapped (p))                       /* release mmapped memory. */
+    {
+      /* see if the dynamic brk/mmap threshold needs adjusting */
+      if (!mp_.no_dyn_threshold
+          &amp;&amp; p-&gt;size &gt; mp_.mmap_threshold
+          &amp;&amp; p-&gt;size &lt;= DEFAULT_MMAP_THRESHOLD_MAX)
+        {
+          mp_.mmap_threshold = chunksize (p);
+          mp_.trim_threshold = 2 * mp_.mmap_threshold;
+          LIBC_PROBE (memory_mallopt_free_dyn_thresholds, 2,
+                      mp_.mmap_threshold, mp_.trim_threshold);
+        }
+      munmap_chunk (p);
+      return;
+    }
+
+  ar_ptr = arena_for_chunk (p);
+  _int_free (ar_ptr, p, 0);
+}
+</code></pre>
+<h1 id="变量定义和初始化">变量定义和初始化</h1>
+<pre><code class="language-c">static void
+_int_free (mstate av, mchunkptr p, int have_lock)
+{
+  INTERNAL_SIZE_T size;        /* its size */
+  mfastbinptr *fb;             /* associated fastbin */
+  mchunkptr nextchunk;         /* next contiguous chunk */
+  INTERNAL_SIZE_T nextsize;    /* its size */
+  int nextinuse;               /* true if nextchunk is used */
+  INTERNAL_SIZE_T prevsize;    /* size of previous contiguous chunk */
+  mchunkptr bck;               /* misc temp for linking */
+  mchunkptr fwd;               /* misc temp for linking */
+
+  const char *errstr = NULL;
+  int locked = 0;
+
+  size = chunksize (p);
+</code></pre>
+<p>这些在上篇差不多都见过了，bck和fwd就是个中间变量，size就是chunk的大小，等等这些就不说了。</p>
+<h1 id="基础检查">基础检查</h1>
+<pre><code class="language-c">/* Little security check which won't hurt performance: the
+   allocator never wrapps around at the end of the address space.
+   Therefore we can exclude some size values which might appear
+   here by accident or by &quot;design&quot; from some intruder.  */
+if (__builtin_expect ((uintptr_t) p &gt; (uintptr_t) -size, 0)
+    || __builtin_expect (misaligned_chunk (p), 0))
+  {
+    errstr = &quot;free(): invalid pointer&quot;;
+  errout:
+    if (!have_lock &amp;&amp; locked)
+      (void) mutex_unlock (&amp;av-&gt;mutex);
+    malloc_printerr (check_action, errstr, chunk2mem (p), av);
+    return;
+  }
+/* We know that each chunk is at least MINSIZE bytes in size or a
+   multiple of MALLOC_ALIGNMENT.  */
+if (__glibc_unlikely (size &lt; MINSIZE || !aligned_OK (size)))
+  {
+    errstr = &quot;free(): invalid size&quot;;
+    goto errout;
+  }
+
+check_inuse_chunk(av, p);
+</code></pre>
+<p>需要满足以下几个条件</p>
+<ul>
+<li>p&gt;-size   这里我还是不是很懂</li>
+<li>size&gt;MINSIZE   这里需要chunk的大小大于最小值</li>
+<li>aligned_OK (size)的结果为true，这里主要是满足每个chunk的size是MALLOC_ALIGNMENT的整数倍</li>
+</ul>
+<h1 id="尝试把-chunk放入fastbins">尝试把 chunk放入fastbins</h1>
+<pre><code class="language-c">  if ((unsigned long)(size) &lt;= (unsigned long)(get_max_fast ())
+
+#if TRIM_FASTBINS
+      /*
+   If TRIM_FASTBINS set, don't place chunks
+   bordering top into fastbins
+      */
+      &amp;&amp; (chunk_at_offset(p, size) != av-&gt;top)
+#endif
+      ) {
+
+    if (__builtin_expect (chunk_at_offset (p, size)-&gt;size &lt;= 2 * SIZE_SZ, 0)
+   || __builtin_expect (chunksize (chunk_at_offset (p, size))
+              &gt;= av-&gt;system_mem, 0))
+      {
+   /* We might not have a lock at this point and concurrent modifications
+      of system_mem might have let to a false positive.  Redo the test
+      after getting the lock.  */
+   if (have_lock
+       || ({ assert (locked == 0);
+        mutex_lock(&amp;av-&gt;mutex);
+        locked = 1;
+        chunk_at_offset (p, size)-&gt;size &lt;= 2 * SIZE_SZ
+          || chunksize (chunk_at_offset (p, size)) &gt;= av-&gt;system_mem;
+         }))
+     {
+       errstr = &quot;free(): invalid next size (fast)&quot;;
+       goto errout;
+     }
+   if (! have_lock)
+     {
+       (void)mutex_unlock(&amp;av-&gt;mutex);
+       locked = 0;
+     }
+      }
+
+    free_perturb (chunk2mem(p), size - 2 * SIZE_SZ);
+
+    set_fastchunks(av);
+      //获取被释放的chunk的下标
+    unsigned int idx = fastbin_index(size);
+      //获取被释放的chunk的指针
+    fb = &amp;fastbin (av, idx);
+
+    /* Atomically link P to its fastbin: P-&gt;FD = *FB; *FB = P;  */
+      //定义了两个变量，一个初始化了
+    mchunkptr old = *fb, old2;
+    unsigned int old_idx = ~0u;
+    do
+      {
+   /* Check that the top of the bin is not the record we are going to add
+      (i.e., double free).  */
+   if (__builtin_expect (old == p, 0))
+     {
+       errstr = &quot;double free or corruption (fasttop)&quot;;
+       goto errout;
+     }
+   /* Check that size of fastbin chunk at the top is the same as
+      size of the chunk that we are adding.  We can dereference OLD
+      only if we have the lock, otherwise it might have already been
+      deallocated.  See use of OLD_IDX below for the actual check.  */
+   if (have_lock &amp;&amp; old != NULL)
+     old_idx = fastbin_index(chunksize(old));
+   p-&gt;fd = old2 = old;
+      }
+    while ((old = catomic_compare_and_exchange_val_rel (fb, p, old2)) != old2);
+
+    if (have_lock &amp;&amp; old != NULL &amp;&amp; __builtin_expect (old_idx != idx, 0))
+      {
+   errstr = &quot;invalid fastbin entry (free)&quot;;
+   goto errout;
+      }
+  }
+</code></pre>
+<p>在<code>free_perturb (chunk2mem(p), size - 2 * SIZE_SZ);</code>也就是37行前都是进行一些检查，然后在下面是把chunk放入fastbins，对于<code>set_fastchunks</code>，宏定义为<code>#define set_fastchunks(M) catomic_and(&amp;(M)-&gt;flags, ~FASTCHUNKS_BIT)</code>,就是让malloc_state中的flag中标记是否含有fastbin的标志位为0。然后就是一个do-while循环，这个do-while循环在之前见过差不多的，用到了<code>catomic_compare_and_exchange_val_rel</code>宏函数.</p>
+<p>执行do前</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221216203014497.png" alt="image-20221216203014497" loading="lazy"></figure>
+<p>执行do后,还没执行while</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221216203259266.png" alt="image-20221216203259266" loading="lazy"></figure>
+<p>执行while后</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221216203435491.png" alt="image-20221216203435491" loading="lazy"></figure>
+<p>此时chunk_p就已经放到了fastbin当中了</p>
+<h1 id="合并相邻空闲chunk">合并相邻空闲chunk</h1>
+<p>先做一些必要的检查</p>
+<pre><code class="language-c">else if (!chunk_is_mmapped(p)) {
+   if (! have_lock) {
+     (void)mutex_lock(&amp;av-&gt;mutex);
+     locked = 1;
+   }
+
+   nextchunk = chunk_at_offset(p, size);
+
+   /* Lightweight tests: check whether the block is already the
+      top block.  */
+   if (__glibc_unlikely (p == av-&gt;top))
+     {
+errstr = &quot;double free or corruption (top)&quot;;
+goto errout;
+     }
+   /* Or whether the next chunk is beyond the boundaries of the arena.  */
+   if (__builtin_expect (contiguous (av)
+        &amp;&amp; (char *) nextchunk
+        &gt;= ((char *) av-&gt;top + chunksize(av-&gt;top)), 0))
+     {
+errstr = &quot;double free or corruption (out)&quot;;
+goto errout;
+     }
+   /* Or whether the block is actually not marked used.  */
+   if (__glibc_unlikely (!prev_inuse(nextchunk)))
+     {
+errstr = &quot;double free or corruption (!prev)&quot;;
+goto errout;
+     }
+
+   nextsize = chunksize(nextchunk);
+   if (__builtin_expect (nextchunk-&gt;size &lt;= 2 * SIZE_SZ, 0)
+|| __builtin_expect (nextsize &gt;= av-&gt;system_mem, 0))
+     {
+errstr = &quot;free(): invalid next size (normal)&quot;;
+goto errout;
+     }
+
+   free_perturb (chunk2mem(p), size - 2 * SIZE_SZ);
+</code></pre>
+<p>进行合并</p>
+<pre><code class="language-c">   /* consolidate backward */
+   if (!prev_inuse(p)) {
+     prevsize = p-&gt;prev_size;
+     size += prevsize;
+     p = chunk_at_offset(p, -((long) prevsize));
+     unlink(av, p, bck, fwd);
+   }
+
+   if (nextchunk != av-&gt;top) {
+     /* get and clear inuse bit */
+     nextinuse = inuse_bit_at_offset(nextchunk, nextsize);
+
+     /* consolidate forward */
+     if (!nextinuse) {
+unlink(av, nextchunk, bck, fwd);
+size += nextsize;
+     } else
+clear_inuse_bit_at_offset(nextchunk, 0);
+
+     /*
+Place the chunk in unsorted chunk list. Chunks are
+not placed into regular bins until after they have
+been given one chance to be used in malloc.
+     */
+
+     bck = unsorted_chunks(av);
+     fwd = bck-&gt;fd;
+     if (__glibc_unlikely (fwd-&gt;bk != bck))
+{
+  errstr = &quot;free(): corrupted unsorted chunks&quot;;
+  goto errout;
+}
+     p-&gt;fd = fwd;
+     p-&gt;bk = bck;
+     if (!in_smallbin_range(size))
+{
+  p-&gt;fd_nextsize = NULL;
+  p-&gt;bk_nextsize = NULL;
+}
+     bck-&gt;fd = p;
+     fwd-&gt;bk = p;
+
+     set_head(p, size | PREV_INUSE);
+     set_foot(p, size);
+
+     check_free_chunk(av, p);
+   }
+</code></pre>
+<ul>
+<li>如果前面有个chunk是free的,合并这个chunk</li>
+<li>如果下一个chunk是topchunk.直接并入</li>
+<li>如果下个chunk不是topchunk并且不在使用,会进行合并,清空使用状态</li>
+<li>如果下个chunk是topchunk,并且正在使用,会放入到unsorted bin当中</li>
+</ul>
+<h1 id="返还内存">返还内存</h1>
+<pre><code class="language-c">    /*
+      If freeing a large space, consolidate possibly-surrounding
+      chunks. Then, if the total unused topmost memory exceeds trim
+      threshold, ask malloc_trim to reduce top.
+
+      Unless max_fast is 0, we don't know if there are fastbins
+      bordering top, so we cannot tell for sure whether threshold
+      has been reached unless fastbins are consolidated.  But we
+      don't want to consolidate on each free.  As a compromise,
+      consolidation is performed if FASTBIN_CONSOLIDATION_THRESHOLD
+      is reached.
+    */
+//size大于FASTBIN_CONSOLIDATION_THRESHOLD 向系统返还内存
+    if ((unsigned long)(size) &gt;= FASTBIN_CONSOLIDATION_THRESHOLD) {
+      if (have_fastchunks(av))
+   malloc_consolidate(av);
+
+      if (av == &amp;main_arena) {
+#ifndef MORECORE_CANNOT_TRIM
+   if ((unsigned long)(chunksize(av-&gt;top)) &gt;=
+       (unsigned long)(mp_.trim_threshold))
+     systrim(mp_.top_pad, av);
+#endif
+      } else {
+   /* Always try heap_trim(), even if the top chunk is not
+      large, because the corresponding heap might go away.  */
+   heap_info *heap = heap_for_ptr(top(av));
+
+   assert(heap-&gt;ar_ptr == av);
+   heap_trim(heap, mp_.top_pad);
+      }
+    }
+
+    if (! have_lock) {
+      assert (locked);
+      (void)mutex_unlock(&amp;av-&gt;mutex);
+    }
+  }
+  /*
+    If the chunk was allocated via mmap, release via munmap().
+  */
+
+  else {
+      //释放mmap的chunk
+    munmap_chunk (p);
+  }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#_int_free%E5%87%BD%E6%95%B0">_int_free函数</a></li>
+<li><a href="#%E5%8F%98%E9%87%8F%E5%AE%9A%E4%B9%89%E5%92%8C%E5%88%9D%E5%A7%8B%E5%8C%96">变量定义和初始化</a></li>
+<li><a href="#%E5%9F%BA%E7%A1%80%E6%A3%80%E6%9F%A5">基础检查</a></li>
+<li><a href="#%E5%B0%9D%E8%AF%95%E6%8A%8A-chunk%E6%94%BE%E5%85%A5fastbins">尝试把 chunk放入fastbins</a></li>
+<li><a href="#%E5%90%88%E5%B9%B6%E7%9B%B8%E9%82%BB%E7%A9%BA%E9%97%B2chunk">合并相邻空闲chunk</a></li>
+<li><a href="#%E8%BF%94%E8%BF%98%E5%86%85%E5%AD%98">返还内存</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/glibc-xia-malloc-shi-xian-yuan-li/">
+              <h3 class="post-title">
+                glibc下malloc实现原理
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

