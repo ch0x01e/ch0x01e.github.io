@@ -1,0 +1,433 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JEP290 Bypass | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="JEP290 Bypass | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="什么是JEP?
+JDK Enhancement Proposal 简称JEP，是 JDK 增强提议的一个项目，目前索引编号已经达到了JEP415，本文重点来谈谈什么是JEP290，JEP290做了哪些事，JEP290绕过的方法总结等。
+什么..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              JEP290 Bypass
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                10 min read
+              </span>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220923202241151.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="什么是jep">什么是JEP?</h1>
+<p><code>JDK Enhancement Proposal</code> 简称<code>JEP</code>，是 JDK 增强提议的一个<a href="https://openjdk.java.net/jeps/0">项目</a>，目前索引编号已经达到了<a href="https://openjdk.java.net/jeps/415">JEP415</a>，本文重点来谈谈什么是<code>JEP290</code>，<code>JEP290</code>做了哪些事，<code>JEP290</code>绕过的方法总结等。</p>
+<h1 id="什么是jep290">什么是JEP290?</h1>
+<p><code>JEP290</code>的描述是<code>Filter Incoming Serialization Data</code>，即过滤传入的序列化数据</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">F Clo 9</th>
+<th style="text-align:left">core/io:serialization</th>
+<th style="text-align:left">290</th>
+<th style="text-align:left"><a href="https://openjdk.java.net/jeps/290">Filter Incoming Serialization Data</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+</tbody>
+</table>
+<p>JEP290 <code>是 Java 为了防御反序列化攻击而设置的一种过滤器，其在 JEP 项目中编号为290，因而通常被简称为</code>JEP290</p>
+<h1 id="jep290的适用范围">JEP290的适用范围</h1>
+<p>Java™ SE Development Kit 8, Update 121 (JDK 8u121)</p>
+<p>Java™ SE Development Kit 7, Update 131 (JDK 7u131)</p>
+<p>Java™ SE Development Kit 6, Update 141 (JDK 6u141)</p>
+<h1 id="jep290-的作用">JEP290 的作用</h1>
+<ul>
+<li>Provide a flexible mechanism to narrow the classes that can be deserialized from any class available to an application down to a context-appropriate set of classes. [提供一个限制反序列化类的机制，白名单或者黑名单]</li>
+<li>Provide metrics to the filter for graph size and complexity during deserialization to validate normal graph behaviors. [限制反序列化的深度和复杂度]</li>
+<li>Provide a mechanism for RMI-exported objects to validate the classes expected in invocations. [ 为RMI远程调用对象提供了一个验证类的机制]</li>
+<li>The filter mechanism must not require subclassing or modification to existing subclasses of ObjectInputStream. [定义一个可配置的过滤机制，比如可以通过配置 properties文件的形式来定义过滤器]</li>
+</ul>
+<h1 id="jep290-具体内容">JEP290 具体内容</h1>
+<h2 id="1-限制的情况">1、限制的情况：</h2>
+<ul>
+<li>反序列化类数组时的数组元素数 ( <a href="https://docs.oracle.com/javase/9/docs/api/java/io/ObjectInputFilter.FilterInfo.html#arrayLength--">arrayLength</a> )</li>
+<li>每个嵌套对象的<a href="https://docs.oracle.com/javase/9/docs/api/java/io/ObjectInputFilter.FilterInfo.html#depth--">深度</a>( <a href="https://docs.oracle.com/javase/9/docs/api/java/io/ObjectInputFilter.FilterInfo.html#depth--">depth</a> )</li>
+<li>当前数量对象引用 ( <a href="https://docs.oracle.com/javase/9/docs/api/java/io/ObjectInputFilter.FilterInfo.html#references--">references</a> ) 的数量</li>
+<li>当前消耗的字节数 ( <a href="https://docs.oracle.com/javase/9/docs/api/java/io/ObjectInputFilter.FilterInfo.html#streamBytes--">streamBytes</a> )</li>
+</ul>
+<h2 id="2-支持-3-种配置过滤器的方式">2、支持 3 种配置过滤器的方式</h2>
+<ul>
+<li>自定义过滤器</li>
+<li>进程范围过滤器（也称为全局过滤器）</li>
+<li>用于 RMI 注册表和分布式垃圾收集 (DGC)使用的内置过滤器</li>
+</ul>
+<h2 id="3-自定义过滤器">3、自定义过滤器</h2>
+<p>当反序列化要求与整个应用程序中的任何其他反序列化过程不同时，就会出现自定义过滤器的配置场景；可以通过实现<code>ObjectInputFilter</code>接口并覆盖<code>checkInput(FilterInfo filterInfo)</code>方法来创建自定义过滤器：</p>
+<p>如以下示例：</p>
+<pre><code class="language-java">static class VehicleFilter implements ObjectInputFilter {
+        final Class&lt;?&gt; clazz = Vehicle.class;
+        final long arrayLength = -1L;
+        final long totalObjectRefs = 1L;
+        final long depth = 1l;
+        final long streamBytes = 95L;
+
+        public Status checkInput(FilterInfo filterInfo) {
+            if (filterInfo.arrayLength() &lt; this.arrayLength || filterInfo.arrayLength() &gt; this.arrayLength
+                    || filterInfo.references() &lt; this.totalObjectRefs || filterInfo.references() &gt; this.totalObjectRefs
+                    || filterInfo.depth() &lt; this.depth || filterInfo.depth() &gt; this.depth || filterInfo.streamBytes() &lt; this.streamBytes
+                    || filterInfo.streamBytes() &gt; this.streamBytes) {
+                return Status.REJECTED;
+            }
+
+            if (filterInfo.serialClass() == null) {
+                return Status.UNDECIDED;
+            }
+
+            if (filterInfo.serialClass() != null &amp;&amp; filterInfo.serialClass() == this.clazz) {
+                return Status.ALLOWED;
+            } else {
+                return Status.REJECTED;
+            }
+        }
+    }
+</code></pre>
+<h2 id="4-进程范围全局过滤器">4、进程范围（全局）过滤器</h2>
+<p>可以通过将<code>jdk.serialFilter</code>设置为系统属性或安全属性来配置进程范围的过滤器（其实就是在启动Java应用时添加命令行参数，如：<code>-Djdk.serialFilter=&lt;白名单类1&gt;;&lt;白名单类2&gt;;!&lt;黑名单类&gt;</code>）。如果定义了系统属性，则用于配置过滤器；否则过滤器会检查安全属性（JDK 8、7、6： <code>$JAVA_HOME/lib/security/java.security</code> ；JDK 9 及更高版本： <code>$JAVA_HOME/conf/security/java.security</code>）以配置过滤器</p>
+<p>此外，也可以在启动Java应用时设置<code>-Djava.security.properties=&lt;黑白名单配置文件名&gt;</code></p>
+<p>具体来说，通过检查类名或传入字节流属性的限制，<code>jdk.serialFilter</code>的值被过滤器被配置为一系列模式，每个模式要么与流中类的名称匹配，要么与限制匹配。模式由分号分隔，空格也被认为是模式的一部分。无论模式序列的配置顺序如何，都会在类之前检查限制。以下是可在配置期间使用的限制属性：</p>
+<ul>
+<li><code>maxdepth=value</code> — 图的最大深度</li>
+<li><code>maxrefs=value</code> — 内部参考的最大数量</li>
+<li><code>maxbytes=value</code> — 输入流中的最大字节数</li>
+<li><code>maxarray=value</code> — 允许的最大数组大小</li>
+</ul>
+<p>其他模式与<code>Class.getName()</code>返回的类或包名称匹配*。<code>Class/Package</code>模式也接受星号 (<code>*</code>)、双星号 (<code>**</code>)、句点 (<code>.</code>) 和正斜杠 (<code>/</code>) 符号。以下是可能发生的几种模式场景：</p>
+<pre><code class="language-java">//匹配特定的类并拒绝非列表中的类
+&quot;jdk.serialFilter=org.example.Vehicle;!*&quot; 
+
+ //匹配包和所有子包中的类并拒绝非列表中的类
+- &quot;jdk.serialFilter=org.example.**;!*&quot; 
+
+// 匹配包中的所有类并拒绝非列表中的类
+- &quot;jdk.serialFilter=org.example.*;!*&quot; 
+
+ // 匹配任何以设置样式为前缀的类
+- &quot;jdk.serialFilter=*;
+</code></pre>
+<h2 id="5-内置过滤器">5、内置过滤器</h2>
+<p>内置过滤器用于<code>RMI Registry</code>、RMI 分布式垃圾收集器(DCG)和 Java 管理扩展(JMX)</p>
+<p><code>RMI Registry </code>有一个内置的白名单过滤器，允许将对象绑定到注册表中。它包括的情况如下：</p>
+<ul>
+<li><code>java.rmi.Remote</code></li>
+<li>``java.lang.Number`</li>
+<li><code>java.lang.reflect.Proxy</code></li>
+<li><code>java.rmi.server.UnicastRef</code></li>
+<li>``java.rmi.activation.ActivationId`</li>
+<li><code>java.rmi.server.UID</code></li>
+<li>``java.rmi.server.RMIClientSocketFactory`</li>
+<li><code>java.rmi.server.RMIServerSocketFactory</code></li>
+</ul>
+<p>内置过滤器包括大小限制：</p>
+<pre><code>maxarray=1000000,maxdepth=20
+</code></pre>
+<p>RMI 分布式垃圾收集器有一个内置的白名单过滤器，它接受一组有限的类。它包括的情况如下：</p>
+<ul>
+<li><code>java.rmi.server.ObjID</code></li>
+<li>``java.rmi.server.UID`</li>
+<li><code>java.rmi.dgc.VMID</code></li>
+<li><code>java.rmi.dgc.Lease</code></li>
+</ul>
+<p>内置过滤器包括大小限制：</p>
+<pre><code>maxarray=1000000,maxdepth=20
+</code></pre>
+<p>除了这些类之外，用户还可以使用<code>sun.rmi.registry.registryFilter</code>（针对<code>RMI Registry</code>）和<code>sun.rmi.transport.dgcFilter</code>（针对DGC）系统或安全属性添加自己的自定义过滤器</p>
+<p>对于<code>JMX 过滤器</code>，可以在进行<code>RMIServer.newClient</code>远程调用以及通过 RMI 向服务器发送反序列化参数时，指定要使用的反序列化过滤器模式字符串；还可以使用该<code>management.properties</code>文件向默认代理提供过滤器模式字符串</p>
+<h1 id="jep290-值得注意的点">JEP290 值得注意的点</h1>
+<ul>
+<li>JEP290需要手动设置，只有设置了之后才会有过滤，没有设置的话就还是可以正常的反序列化漏洞利用</li>
+<li>JEP290默认只为 RMI 注册表（RMI Register层）、 RMI分布式垃圾收集器（DGC层）以及 JMX 提供了相应的内置过滤器</li>
+</ul>
+<h1 id="jep290的实际限制">JEP290的实际限制</h1>
+<p>来一个RMIServer</p>
+<pre><code class="language-java">package com.ch1e;
+
+import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
+
+public class RMIServer {
+    public static String HOST = &quot;127.0.0.1&quot;;
+    public static int PORT = 1099;
+    public static String RMI_PATH = &quot;/hello&quot;;
+    public static final String RMI_NAME = &quot;rmi://&quot; + HOST + &quot;:&quot; + PORT + RMI_PATH;
+
+    public static void main(String[] args) {
+        try {
+            // 注册RMI端口
+            LocateRegistry.createRegistry(PORT);
+            // 创建一个服务
+            Hello hello = new HelloImpl();
+            // 服务命名绑定
+            Naming.rebind(RMI_NAME, hello);
+
+            System.out.println(&quot;启动RMI服务在&quot; + RMI_NAME);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>然后来个Hello接口</p>
+<pre><code class="language-java">package com.ch1e;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface Hello extends Remote {
+    String hello() throws RemoteException;
+    String hello(String name) throws RemoteException;
+    String hello(Object object) throws RemoteException;
+}
+</code></pre>
+<p>来个Hello接口的实现类</p>
+<pre><code class="language-java">package com.ch1e;
+
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+public class HelloImpl extends UnicastRemoteObject implements Hello{
+    protected HelloImpl() throws RemoteException {
+    }
+
+    @Override
+    public String hello() throws RemoteException {
+        return &quot;hello world&quot;;
+    }
+
+    @Override
+    public String hello(String name) throws RemoteException {
+        return &quot;hello&quot;+name;
+    }
+
+    @Override
+    public String hello(Object object) throws RemoteException {
+        System.out.println(object);
+        return &quot;hello &quot;+object.toString();
+    }
+}
+</code></pre>
+<p>在java8u65的环境下用CC1打RMI，攻击成功。</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220923202115337.png" alt="image-20220923202115337" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220923202130129.png" alt="image-20220923202130129" loading="lazy"></figure>
+<p>切换成java8u341就会报错</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220923202241151.png" alt="image-20220923202241151" loading="lazy"></figure>
+<pre><code>信息: ObjectInputFilter REJECTED: class sun.reflect.annotation.AnnotationInvocationHandler, array length: -1, nRefs: 8, depth: 2, bytes: 296, ex: n/a
+</code></pre>
+<h1 id="jep290的过滤过程">JEP290的过滤过程</h1>
+<p>本地先写一个Client客户端</p>
+<pre><code class="language-java">package com.ch1e;
+
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
+public class Client {
+    public static void main(String[] args) throws NotBoundException, RemoteException {
+        Registry registry= LocateRegistry.getRegistry(&quot;127.0.0.1&quot;,1099);
+        HelloImpl remote = (HelloImpl) registry.lookup(&quot;rmi://127.0.0.1:1099/hello&quot;);
+        System.out.println(remote.hello());
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="assets/image-20220927192233098.png" alt="image-20220927192233098" loading="lazy"></figure>
+<p>在RMI的流程中，远程引用层和客户端服务端两个交互的类是RegistryImpl_Skel和RegistryImpl_Stub，在服务端的<code>RegistryImpl_Skel</code>类中，向注册中心进行bind、rebind操作时均进行了readObject操作以此拿到Remote远程对象引用。</p>
+<p>在<code>RegistryImpl_Skel</code>类的dispatch方法下断点，会调用到ObjectInputStream#readObject方法，然后回调用到<code>readObject0</code>方法</p>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220927205741826.png" alt="image-20220927205741826" loading="lazy"></figure>
+<p>在readObject0中会对tc有一个switch循环，然后调用了readOrdinaryObject方法</p>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220927205825906.png" alt="image-20220927205825906" loading="lazy"></figure>
+<p>调用到readClassDesc方法</p>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220927210036863.png" alt="image-20220927210036863" loading="lazy"></figure>
+<p>继续调用readProxyDesc方法</p>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220927210214182.png" alt="image-20220927210214182" loading="lazy"></figure>
+<p>接着走到了filterCheck方法，继续跟进</p>
+<figure data-type="image" tabindex="9"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220927210306846.png" alt="image-20220927210306846" loading="lazy"></figure>
+<p>继续调用checkInput方法</p>
+<figure data-type="image" tabindex="10"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220927210538406.png" alt="image-20220927210538406" loading="lazy"></figure>
+<p>来看看代码，有些地方是返回了REJECTED，说明被过滤了，大概就是深度超过20以及<code>return String.class != var2 &amp;&amp; !Number.class.isAssignableFrom(var2) &amp;&amp; !Remote.class.isAssignableFrom(var2) &amp;&amp; !Proxy.class.isAssignableFrom(var2) &amp;&amp; !UnicastRef.class.isAssignableFrom(var2) &amp;&amp; !RMIClientSocketFactory.class.isAssignableFrom(var2) &amp;&amp; !RMIServerSocketFactory.class.isAssignableFrom(var2) &amp;&amp; !ActivationID.class.isAssignableFrom(var2) &amp;&amp; !UID.class.isAssignableFrom(var2) ? Status.REJECTED : Status.ALLOWED;</code>为真的情况下</p>
+<figure data-type="image" tabindex="11"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220927210612973.png" alt="image-20220927210612973" loading="lazy"></figure>
+<h1 id="jep290的绕过">JEP290的绕过</h1>
+<p>在RMI远程方法调用过程中，方法参数需要先序列化，从本地JVM发送到远程JVM，然后在远程JVM上反序列化，执行完后，将结果序列化，发送回本地JVM，而在本地的参数是我们可以控制的，我们可以控制参数是反序列化链</p>
+<p>如果目标的RMI服务暴漏了Object参数类型的方法，我们就可以注入payload进去。主要是在sun.rmi.server.UnicastRef#unmarshalValue中判断了远程调用方法的参数类型</p>
+<figure data-type="image" tabindex="12"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220927212145587.png" alt="image-20220927212145587" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFjep">什么是JEP?</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFjep290">什么是JEP290?</a></li>
+<li><a href="#jep290%E7%9A%84%E9%80%82%E7%94%A8%E8%8C%83%E5%9B%B4">JEP290的适用范围</a></li>
+<li><a href="#jep290-%E7%9A%84%E4%BD%9C%E7%94%A8">JEP290 的作用</a></li>
+<li><a href="#jep290-%E5%85%B7%E4%BD%93%E5%86%85%E5%AE%B9">JEP290 具体内容</a>
+<ul>
+<li><a href="#1-%E9%99%90%E5%88%B6%E7%9A%84%E6%83%85%E5%86%B5">1、限制的情况：</a></li>
+<li><a href="#2-%E6%94%AF%E6%8C%81-3-%E7%A7%8D%E9%85%8D%E7%BD%AE%E8%BF%87%E6%BB%A4%E5%99%A8%E7%9A%84%E6%96%B9%E5%BC%8F">2、支持 3 种配置过滤器的方式</a></li>
+<li><a href="#3-%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%87%E6%BB%A4%E5%99%A8">3、自定义过滤器</a></li>
+<li><a href="#4-%E8%BF%9B%E7%A8%8B%E8%8C%83%E5%9B%B4%E5%85%A8%E5%B1%80%E8%BF%87%E6%BB%A4%E5%99%A8">4、进程范围（全局）过滤器</a></li>
+<li><a href="#5-%E5%86%85%E7%BD%AE%E8%BF%87%E6%BB%A4%E5%99%A8">5、内置过滤器</a></li>
+</ul>
+</li>
+<li><a href="#jep290-%E5%80%BC%E5%BE%97%E6%B3%A8%E6%84%8F%E7%9A%84%E7%82%B9">JEP290 值得注意的点</a></li>
+<li><a href="#jep290%E7%9A%84%E5%AE%9E%E9%99%85%E9%99%90%E5%88%B6">JEP290的实际限制</a></li>
+<li><a href="#jep290%E7%9A%84%E8%BF%87%E6%BB%A4%E8%BF%87%E7%A8%8B">JEP290的过滤过程</a></li>
+<li><a href="#jep290%E7%9A%84%E7%BB%95%E8%BF%87">JEP290的绕过</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/controlleradvicebean-memory-shell/">
+              <h3 class="post-title">
+                ControllerAdviceBean Memory Shell
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

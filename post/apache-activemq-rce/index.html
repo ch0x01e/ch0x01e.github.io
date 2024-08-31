@@ -1,0 +1,233 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Apache ActiveMQ  RCE | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Apache ActiveMQ  RCE | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="影响版本
+Apache ActiveMQ &lt; 5.18.3
+利用条件
+需要访问到61616端口(默认)。
+漏洞分析
+这里需要的是Apache ActiveMQ &lt; 5.18.3,我这里直接下的5.18.2
+https://git..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Apache ActiveMQ  RCE
+            </h2>
+            <div class="post-info">
+              <span>
+                2023-10-29
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h2 id="影响版本">影响版本</h2>
+<p>Apache ActiveMQ &lt; 5.18.3</p>
+<h2 id="利用条件">利用条件</h2>
+<p>需要访问到61616端口(默认)。</p>
+<h2 id="漏洞分析">漏洞分析</h2>
+<p>这里需要的是Apache ActiveMQ &lt; 5.18.3,我这里直接下的5.18.2</p>
+<p>https://github.com/apache/activemq/commit/958330df26cf3d5cdb63905dc2c6882e98781d8f</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20231029005205594.png" alt="image-20231029005205594" loading="lazy"></figure>
+<p>在新版本中添加了一个<code>OpenWireUtil.validateIsThrowable(clazz);</code>在5.18.2中的代码如下</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20231029005512964.png" alt="image-20231029005512964" loading="lazy"></figure>
+<p>把5.18.3的代码下下来，看看<code>validateIsThrowable</code>方法，代码如下</p>
+<pre><code class="language-java">package org.apache.activemq.openwire;
+
+public class OpenWireUtil {
+
+    /**
+     * Verify that the provided class extends {@link Throwable} and throw an
+     * {@link IllegalArgumentException} if it does not.
+     *
+     * @param clazz
+     */
+    public static void validateIsThrowable(Class&lt;?&gt; clazz) {
+        if (!Throwable.class.isAssignableFrom(clazz)) {
+            throw new IllegalArgumentException(&quot;Class &quot; + clazz + &quot; is not assignable to Throwable&quot;);
+        }
+    }
+}
+</code></pre>
+<p>这里如果传进来的clazz不是继承自Throwable类，就会抛出异常。在上面是通过反射获取一个类，然后调用对应的构造方法。在5.18.3在中对这个反射获取到的类进行了过滤。 现在就需要找到一个可以命令执行的类去反射获取。这里是用的<code>BaseDataStreamMarshaller</code>的classloader。</p>
+<p>找到BaseDataStreamMarshaller的子类ExceptionResponseMarshaller，在其中的tightUnmarshal方法中调用了tightUnmarsalThrowable，具体代码如下</p>
+<pre><code class="language-java">public void tightUnmarshal(OpenWireFormat wireFormat, Object o, DataInput dataIn, BooleanStream bs) throws IOException {
+    super.tightUnmarshal(wireFormat, o, dataIn, bs);
+    ExceptionResponse info = (ExceptionResponse)o;
+    info.setException((java.lang.Throwable) tightUnmarsalThrowable(wireFormat, dataIn, bs));
+}
+</code></pre>
+<p>tightUnmarsalThrowable具体代码如下</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20231029011220306.png" alt="image-20231029011220306" loading="lazy"></figure>
+<p>在其中说到了上文当中的createThrowable，可以反射获取一个类并且调用对应的含一个string参数的构造方法，其中<code>ExceptionResponseMarshaller</code>类是对ExceptionResponse进行序列化操作的类</p>
+<p>来看<code>tightUnmarsalThrowable</code>的主要逻辑</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20231029011551743.png" alt="image-20231029011551743" loading="lazy"></figure>
+<p>从BooleanStream读入一个Boolean的数据，分别调用tightUnmarshalString去获取clazz和message，应该是把类名和message从clazz从二进制流中读取出来，然后作为参数调用<code>createThrowable</code>方法，tightUnmarsalThrowable方法最后返回了一个o，根据如下代码，这个o应该是ExceptionResponse的Exception属性</p>
+<pre><code class="language-java">public void tightUnmarshal(OpenWireFormat wireFormat, Object o, DataInput dataIn, BooleanStream bs) throws IOException {
+    super.tightUnmarshal(wireFormat, o, dataIn, bs);
+
+    ExceptionResponse info = (ExceptionResponse)o;
+    info.setException((java.lang.Throwable) tightUnmarsalThrowable(wireFormat, dataIn, bs));
+
+}
+</code></pre>
+<p>我们这只要构造一个ExceptionResponse包含恶意的类名和message发送给服务器，服务器接受到并且反序列化就可以调用<code>createThrowable</code></p>
+<h2 id="exp">Exp:</h2>
+<p>没有，本人在考研，就随便跟着代码先理论理解一下了，本文也是根据@X1r0z师傅的文章所写,为了不把东西忘干净，争取每天抽1h学习</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%BD%B1%E5%93%8D%E7%89%88%E6%9C%AC">影响版本</a></li>
+<li><a href="#%E5%88%A9%E7%94%A8%E6%9D%A1%E4%BB%B6">利用条件</a></li>
+<li><a href="#%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90">漏洞分析</a></li>
+<li><a href="#exp">Exp:</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/apache-rocketmq-cve-2023-33246/">
+              <h3 class="post-title">
+                Apache RocketMQ-CVE-2023-33246
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

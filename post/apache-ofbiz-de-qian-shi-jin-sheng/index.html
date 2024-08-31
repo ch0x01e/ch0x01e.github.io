@@ -1,0 +1,337 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Apache OFBiz的前世今生 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Apache OFBiz的前世今生 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="Apache OFBiz的前世今生
+前世
+OFBiz 是开放的电子商务平台，是一个非常著名的开源项目，提供了创建基于最新J2EE/XML规范和技术标准，构建大中型企业级、跨平台、跨数据库、跨应用服务器的多层、分布式电子商务类WEB应用系统的..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Apache OFBiz的前世今生
+            </h2>
+            <div class="post-info">
+              <span>
+                2024-01-13
+              </span>
+              <span>
+                8 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <p>Apache OFBiz的前世今生</p>
+<h1 id="前世">前世</h1>
+<p>OFBiz 是开放的电子商务平台，是一个非常著名的开源项目，提供了创建基于最新J2EE/XML规范和技术标准，构建大中型企业级、跨平台、跨数据库、跨应用服务器的多层、分布式电子商务类WEB应用系统的框架。 OFBiz最主要的特点是OFBiz提供了一整套的开发基于Java的web应用程序的组件和工具。包括实体引擎, 服务引擎, 消息引擎, 工作流引擎, 规则引擎等。</p>
+<h2 id="cve-2020-9496">CVE-2020-9496</h2>
+<p>已知条件是漏洞的路由在<code>/webtools/control/xmlrpc</code>,直接搜xmlrpc无法找到对应路由，只能在 <code>framework/webtools/webapp/webtools/WEB-INF/controller.xml</code>下找到，但是这还是看不出来啥。</p>
+<pre><code class="language-xml">&lt;request-map uri=&quot;xmlrpc&quot; track-serverhit=&quot;false&quot; track-visit=&quot;false&quot;&gt;
+    &lt;security https=&quot;false&quot;/&gt;
+    &lt;event type=&quot;xmlrpc&quot;/&gt;
+    &lt;response name=&quot;error&quot; type=&quot;none&quot;/&gt;
+    &lt;response name=&quot;success&quot; type=&quot;none&quot;/&gt;
+&lt;/request-map&gt;
+</code></pre>
+<p>选择搜索<code>/control/*</code>，很多xml文件都存在这个路由，但是大致都差不多，都配置了一个<code>ControlServlet</code></p>
+<pre><code class="language-xml">&lt;servlet&gt;
+    &lt;description&gt;Main Control Servlet&lt;/description&gt;
+    &lt;display-name&gt;ControlServlet&lt;/display-name&gt;
+    &lt;servlet-name&gt;ControlServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.apache.ofbiz.webapp.control.ControlServlet&lt;/servlet-class&gt;
+    &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;ControlServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/control/*&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</code></pre>
+<p>找到该类对应的代码<code>framework/webapp/src/main/java/org/apache/ofbiz/webapp/control/ControlServlet.java</code>,<code>doPost</code>方法调用了<code>doGet</code>方法，直接看<code>doGet</code>方法。代码很多，挑了关键的几行</p>
+<pre><code class="language-java">public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    .....
+        RequestHandler requestHandler = this.getRequestHandler();
+        .....
+                try {
+            // the ServerHitBin call for the event is done inside the doRequest method
+            requestHandler.doRequest(request, response, null, userLogin, delegator);
+        ......
+        }
+    }
+</code></pre>
+<p>调用了<code>requestHandler.doRequest</code></p>
+<pre><code class="language-java">public void doRequest(HttpServletRequest request, HttpServletResponse response, String requestUri) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
+    HttpSession session = request.getSession();
+    Delegator delegator = (Delegator) request.getAttribute(&quot;delegator&quot;);
+    GenericValue userLogin = (GenericValue) session.getAttribute(&quot;userLogin&quot;);
+    doRequest(request, response, requestUri, userLogin, delegator);
+}
+</code></pre>
+<p>他这里继续调用了自己的<code>doRequest</code>方法，调用自身<code>getControllerConfig</code>方法</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20240101111810930.png" alt="image-20240101111810930" loading="lazy"></figure>
+<p>自身getControllerConfig方法中调用<code>ConfigXMLReader.getControllerConfig</code>,这个其实就是很明显去获取控制器的配置了，</p>
+<pre><code class="language-java">public ConfigXMLReader.ControllerConfig getControllerConfig() {
+    try {
+        return ConfigXMLReader.getControllerConfig(this.controllerConfigURL);
+    } catch (WebAppConfigurationException e) {
+        // FIXME: controller.xml errors should throw an exception.
+        Debug.logError(e, &quot;Exception thrown while parsing controller.xml file: &quot;, module);
+    }
+    return null;
+}
+</code></pre>
+<p>此时传入的参数是<code>RequestHandler.controllerConfigURL</code>，controllerConfigURL在初始化的时候是通过<code>ConfigXMLReader.getControllerConfigURL(context)</code>去获取值的</p>
+<figure data-type="image" tabindex="2"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20240101112235112.png" alt="image-20240101112235112" loading="lazy"></figure>
+<p><code>ConfigXMLReader.getControllerConfigURL(context)</code>的具体内容如下</p>
+<pre><code class="language-java">public static URL getControllerConfigURL(ServletContext context) {
+    try {
+        return context.getResource(controllerXmlFileName);
+    } catch (MalformedURLException e) {
+        Debug.logError(e, &quot;Error Finding XML Config File: &quot; + controllerXmlFileName, module);
+        return null;
+    }
+}
+</code></pre>
+<p>此时的<code>controllerXmlFileName</code>就是<code>/WEB-INF/controller.xml</code></p>
+<pre><code class="language-java">public class ConfigXMLReader {
+
+    public static final String module = ConfigXMLReader.class.getName();
+    public static final String controllerXmlFileName = &quot;/WEB-INF/controller.xml&quot;;
+    private static final UtilCache&lt;URL, ControllerConfig&gt; controllerCache = UtilCache.createUtilCache(&quot;webapp.ControllerConfig&quot;);
+    private static final UtilCache&lt;String, List&lt;ControllerConfig&gt;&gt; controllerSearchResultsCache = UtilCache.createUtilCache(&quot;webapp.ControllerSearchResults&quot;);
+    public static final RequestResponse emptyNoneRequestResponse = RequestResponse.createEmptyNoneRequestResponse();
+</code></pre>
+<p>也就是上文搜xmlrpc的地方。</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20240101112415633.png" alt="image-20240101112415633" loading="lazy"></figure>
+<p>在RequestHandler的doRequest方法当中，调用了对应的类和方法</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20240101183415473.png" alt="image-20240101183415473" loading="lazy"></figure>
+<p>在runEvent方法中通过类型去获取对应事件处理器</p>
+<pre><code class="language-java">public String runEvent(HttpServletRequest request, HttpServletResponse response,
+        ConfigXMLReader.Event event, ConfigXMLReader.RequestMap requestMap, String trigger) throws EventHandlerException {
+    EventHandler eventHandler = eventFactory.getEventHandler(event.type);
+    String eventReturn = eventHandler.invoke(event, requestMap, request, response);
+    if (Debug.verboseOn() || (Debug.infoOn() &amp;&amp; &quot;request&quot;.equals(trigger))) Debug.logInfo(&quot;Ran Event [&quot; + event.type + &quot;:&quot; + event.path + &quot;#&quot; + event.invoke + &quot;] from [&quot; + trigger + &quot;], result is [&quot; + eventReturn + &quot;]&quot;, module);
+    return eventReturn;
+}
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20240101184036125.png" alt="image-20240101184036125" loading="lazy"></figure>
+<p>然后调用了对应的EventHandler的invoke方法，我们这是xmlrpc，所以直接看<code>XmlRpcEventHandler#invoke()</code>,invoke里调用了execute()方法，直接看这个关键的execute方法吧。</p>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20240101185650786.png" alt="image-20240101185650786" loading="lazy"></figure>
+<p>进入getRequest方法，用XmlRpcRequestParser进行解析，XmlRpcRequestParser是在<code>xmlrpc-common-3.1.3.jar</code>包中，是Java中处理XML-RPC的第三方库</p>
+<pre><code class="language-java">    protected XmlRpcRequest getRequest(final XmlRpcStreamRequestConfig pConfig, InputStream pStream)
+            throws XmlRpcException {
+        final XmlRpcRequestParser parser = new XmlRpcRequestParser(pConfig, getTypeFactory());
+        final XMLReader xr = SAXParsers.newXMLReader();
+        xr.setContentHandler(parser);
+        try {
+            xr.setFeature(&quot;http://apache.org/xml/features/disallow-doctype-decl&quot;, true);
+            xr.setFeature(&quot;http://apache.org/xml/features/nonvalidating/load-external-dtd&quot;, false);
+            xr.setFeature(&quot;http://xml.org/sax/features/external-general-entities&quot;, false);
+            xr.setFeature(&quot;http://xml.org/sax/features/external-parameter-entities&quot;, false);
+            xr.parse(new InputSource(pStream));
+        } catch (SAXException | IOException e) {
+            throw new XmlRpcException(&quot;Failed to parse / read XML-RPC request: &quot; + e.getMessage(), e);
+        }
+        final List&lt;?&gt; params = parser.getParams();
+        return new XmlRpcRequest() {
+            public XmlRpcRequestConfig getConfig() {
+                return pConfig;
+            }
+            public String getMethodName() {
+                return parser.getMethodName();
+            }
+            public int getParameterCount() {
+                return params == null ? 0 : params.size();
+            }
+            public Object getParameter(int pIndex) {
+                return params.get(pIndex);
+            }
+        };
+    }
+</code></pre>
+<p>到后面其实就差不多了，就是<code>CVE-2016-5003</code>的内容了。</p>
+<h2 id="修复及绕过">修复及绕过</h2>
+<p>漏洞出现后，官方对这个接口进行了修复，diff如下:https://github.com/apache/ofbiz-framework/commit/d955b03fdc226d600d81d19d273e773f84b5c000。仅仅只是添加了鉴权，对该接口并没有完全修复反序列化，因此在后续的diff当中，过滤了<code>&lt;/serializable&gt;</code>,commit如下https://github.com/apache/ofbiz-framework/commit/15c209a475cb50525a6cbd1e24601355c7be1b0a，但是后续又发现<code>&lt;serializable&gt;</code>可以通过<code>&lt;serializable &gt;</code>绕过，于是又改成过滤<code>&lt;serializable</code></p>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20240107162119257.png" alt="image-20240107162119257" loading="lazy"></figure>
+<h1 id="今生">今生</h1>
+<h2 id="cve-2023-49070">CVE-2023-49070</h2>
+<h3 id="分析">分析</h3>
+<p>上文说到，对该接口的防护主要有以下两个</p>
+<ul>
+<li>为<code>/webtools/control/xmlrpc</code>接口添加了鉴权</li>
+<li>过滤了<code>&lt;serilizable</code>关键字</li>
+</ul>
+<p>去<a href="https://archive.apache.org/dist/ofbiz/">Ofbiz官网</a>下载Ofbiz 18.12.09版本，使用vulhub的远程调试，在对应的cacheFilter打下断点。发送CVE-2020-9496的payload,可以看到，先是获取了uri是否等于<code>/control/xmlrpc</code>，并且判断是否存在<code>&lt;serilizable</code>关键字，有则直接return。</p>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20240107171327178.png" alt="image-20240107171327178" loading="lazy"></figure>
+<p>由于对<code>&lt;serilizable</code>关键字的校验在uri之后，我们此时让<code>&quot;/control/xmlrpc&quot;.equals(uri.toLowerCase())</code>的执行结果为false，则不会对<code>&lt;serializable</code>进行校验。在Java中，分号在权限绕过的场景冲多次出现，我们可以利用分号来进行绕过。此时POST的接口为<code>/webtools/control/xmlrpc;/</code></p>
+<figure data-type="image" tabindex="9"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20240107171921443.png" alt="image-20240107171921443" loading="lazy"></figure>
+<p>其次，我们来到LoginWorker类的checkLogin方法，需要我们的<code>login()</code>方法的返回结果不是error</p>
+<figure data-type="image" tabindex="10"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20240107173423732.png" alt="image-20240107173423732" loading="lazy"></figure>
+<p>进入<code>login()</code>方法，我们这要尽可能让他返回的结果不是error，直接找到返回error的代码</p>
+<figure data-type="image" tabindex="11"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20240107173603687.png" alt="image-20240107173603687" loading="lazy"></figure>
+<p>这里只需要传入参数<code>requirePasswordChange=Y</code>即可绕过登录了。</p>
+<h3 id="修复">修复</h3>
+<p>官方直接在https://github.com/apache/ofbiz-framework/commit/c59336f604f503df5b2f7c424fd5e392d5923a27这个commit中移除了XMLRPC相关的处理，但是并没有对登录绕过进行修复。</p>
+<h2 id="cve-2023-51467">CVE-2023-51467</h2>
+<p>该漏洞主要是由于上文的认证绕过+自带的Groovy的代码执行功能导致。</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%89%8D%E4%B8%96">前世</a>
+<ul>
+<li><a href="#cve-2020-9496">CVE-2020-9496</a></li>
+<li><a href="#%E4%BF%AE%E5%A4%8D%E5%8F%8A%E7%BB%95%E8%BF%87">修复及绕过</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BB%8A%E7%94%9F">今生</a>
+<ul>
+<li><a href="#cve-2023-49070">CVE-2023-49070</a>
+<ul>
+<li><a href="#%E5%88%86%E6%9E%90">分析</a></li>
+<li><a href="#%E4%BF%AE%E5%A4%8D">修复</a></li>
+</ul>
+</li>
+<li><a href="#cve-2023-51467">CVE-2023-51467</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/apache-activemq-rce/">
+              <h3 class="post-title">
+                Apache ActiveMQ  RCE
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

